@@ -2854,6 +2854,7 @@ function migrateDB(){
       if(first){ first.isOwner=true; first.role='admin'; first.status='active'; }
     }
     db.users.forEach(u=>{ if(u.email) u.email=String(u.email).trim().toLowerCase(); });
+    if(typeof reconcileUsers==='function') try{ reconcileUsers(); }catch(e){}
   }
   db.seedVersion = SEED_VERSION;
   persist();
@@ -5102,7 +5103,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b3';
+const APP_BUILD = '2026.07.12-b4';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -5112,7 +5113,43 @@ const REMEMBER_KEY = 'rxclinic_remember_uid';
 function normEmail(s){ return String(s||'').trim().toLowerCase(); }
 function loginId(u){ return u ? (u.email||u.uid||'') : ''; }
 function findUserByLogin(idStr){ const e=normEmail(idStr), raw=String(idStr||'').trim();
-  return (db.users||[]).find(u=> (u.email && normEmail(u.email)===e) || (u.uid && String(u.uid)===raw)); }
+  const matches=(db.users||[]).filter(u=> (u.email && normEmail(u.email)===e) || (u.uid && String(u.uid)===raw));
+  return matches.find(u=>u.status==='active') || matches[0] || null; }
+function looksLikeInvite(s){ try{ const o=JSON.parse(atob(String(s||'').trim())); return !!(o && o.u && o.k); }catch(e){ return false; } }
+/* If the same person ends up with more than one record (registered on two devices, etc.),
+   keep the approved one with the real name & access, and drop stray duplicates. */
+function reconcileUsers(){
+  if(!Array.isArray(db.users) || !db.users.length) return;
+  const groups={};
+  db.users.forEach(u=>{ const k=u.email?normEmail(u.email):('id:'+(u.id||'')); (groups[k]=groups[k]||[]).push(u); });
+  const keep=[]; let changed=false;
+  Object.keys(groups).forEach(k=>{
+    const g=groups[k];
+    if(g.length>1){
+      changed=true;
+      g.sort((a,b)=>{
+        if((!!b.isOwner)-(!!a.isOwner)) return (!!b.isOwner)-(!!a.isOwner);
+        const as=a.status==='active'?1:0, bs=b.status==='active'?1:0; if(bs-as) return bs-as;
+        const ap=(a.perms===null?999:(a.perms?Object.keys(a.perms).length:0)), bp=(b.perms===null?999:(b.perms?Object.keys(b.perms).length:0)); if(bp-ap) return bp-ap;
+        return String(b.updatedAt||'').localeCompare(String(a.updatedAt||''));
+      });
+      const best=g[0];
+      g.slice(1).forEach(d=>{ if(!best.pwHash && d.pwHash) best.pwHash=d.pwHash;
+        if(looksLikeInvite(best.name) && d.name && !looksLikeInvite(d.name)) best.name=d.name; });
+      keep.push(best);
+    } else keep.push(g[0]);
+  });
+  // a name that is actually an invite code → fall back to the email name
+  keep.forEach(u=>{ if(looksLikeInvite(u.name)){ u.name=(u.email? String(u.email).split('@')[0] : 'User'); changed=true; } });
+  if(changed){ db.users=keep; persist(); }
+}
+/* Re-point the live session at the freshest copy of its own record and refresh access. */
+function refreshCurrentUser(){
+  if(!currentUser) return;
+  const fresh = db.users.find(u=>u.id===currentUser.id) || findUserByLogin(loginId(currentUser));
+  if(fresh){ const changed = fresh!==currentUser || JSON.stringify(fresh.perms)!==JSON.stringify(currentUser.perms) || fresh.status!==currentUser.status;
+    currentUser=fresh; if(changed && typeof applyPerms==='function') applyPerms(); }
+}
 function hasOwner(){ return (db.users||[]).some(u=>u.isOwner); }
 function ownerUser(){ return (db.users||[]).find(u=>u.isOwner)||null; }
 function rememberedUser(){
@@ -5234,6 +5271,7 @@ async function registerUser(){
   const c = syncCfg();
   if(invite){ if(!applyInvite(invite)){ lockErr('That invite code doesn’t look right — copy it again from the owner'); return; } }
   if(!name){ lockErr('Enter your full name'); return; }
+  if(looksLikeInvite(name)){ lockErr('That looks like the invite code — paste the code in the “Invite code” box, and type your real name in the Name box'); return; }
   if(!validEmail(email)){ lockErr('Enter a valid email address'); return; }
   if(!validPw(p1)){ lockErr('Password must be at least 6 characters'); return; }
   if(p1!==p2){ lockErr('Passwords do not match'); return; }
@@ -5435,6 +5473,7 @@ function renderUserList(){
       if(!isSelf) btns += '<button class="btn btn-ghost btn-sm" onclick="denyUser(\''+u.id+'\')">Reject</button> '; }
     if(u.role!=='admin')
       btns += '<button class="btn btn-primary btn-sm" onclick="editUserPerms(\''+u.id+'\')">🔑 Access…</button> ';
+    btns += '<button class="btn btn-ghost btn-sm" onclick="renameUser(\''+u.id+'\')">Rename</button> ';
     btns += '<button class="btn btn-ghost btn-sm" onclick="resetUserPw(\''+u.id+'\')">Reset password</button> ';
     if(u.status!=='pending' && !lastAdmin && !isSelf)
       btns += '<button class="btn btn-ghost btn-sm" onclick="toggleUserRole(\''+u.id+'\')">'+(u.role==='admin'?'Make staff':'Make admin')+'</button> ';
@@ -5538,6 +5577,15 @@ function denyUser(id){
   if(typeof syncPushSoon==='function') syncPushSoon();
   if(typeof renderNotif==='function') renderNotif();
   toast('Request removed');
+}
+function renameUser(id){
+  const u = db.users.find(x=>x.id===id); if(!u) return;
+  const nm = prompt('Display name for this person:', looksLikeInvite(u.name)?'':(u.name||''));
+  if(nm===null) return;
+  const v=nm.trim(); if(!v){ toast('Name can’t be empty'); return; }
+  u.name=v; u.updatedAt=new Date().toISOString(); persist(); renderUserList();
+  if(typeof pushUsersNow==='function') pushUsersNow('Name updated for '+v);
+  if(currentUser && currentUser.id===u.id && typeof renderHome==='function') renderHome();
 }
 async function resetUserPw(id){
   const u = db.users.find(x=>x.id===id); if(!u) return;
@@ -8038,12 +8086,14 @@ async function cloudSignUpOrIn(email, pw){
   return session;
 }
 async function cloudAuthInBackground(email, pw){
-  try{ const c=syncCfg(); if(c.url && c.anonKey && email && pw && navigator.onLine){ await cloudSignUpOrIn(email, pw); if(c.auto) startAutoSync(); } }catch(e){ /* offline is fine */ }
+  // Any signed-in user with cloud configured keeps in sync automatically (staff can't open the Sync tab).
+  try{ const c=syncCfg(); if(c.url && c.anonKey && email && pw && navigator.onLine){ await cloudSignUpOrIn(email, pw); startAutoSync(); } }catch(e){ /* offline is fine */ }
 }
 async function cloudPullUsers(){
   const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
   const {data,error}=await c.from('records').select('id,kind,payload').eq('kind','users'); if(error) throw error;
-  (data||[]).forEach(r=>applyRemoteRecord('users', r.id, r.payload)); persist();
+  (data||[]).forEach(r=>applyRemoteRecord('users', r.id, r.payload));
+  reconcileUsers(); refreshCurrentUser(); persist();
 }
 async function syncPushUsers(){
   const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
@@ -8128,6 +8178,7 @@ async function syncPull(replace){
   const {data,error}=await c.from('records').select('id,kind,payload'); if(error) throw error;
   if(replace){ SYNC_COLLS.forEach(k=>{ if(data.some(r=>r.kind===k)) db[k]=[]; }); }
   data.forEach(r=>applyRemoteRecord(r.kind, r.id, r.payload));
+  reconcileUsers(); refreshCurrentUser();
   syncCfg().lastSync=new Date().toISOString(); if(typeof syncSnapshotKnown==='function') syncSnapshotKnown(); persist(); refreshAllViews(); renderSync();
 }
 function computeSyncPlan(local, cloud, state, isAdmin, decisions){
@@ -8204,13 +8255,15 @@ async function syncNow(){
     let plan=computeSyncPlan(local, cloud, state, isAdmin, {});
     if(isAdmin && plan.pendingForAdmin.length){ const decisions=await askDeleteApprovals(plan.pendingForAdmin); plan=computeSyncPlan(local, cloud, state, isAdmin, decisions); }
     SYNC_COLLS.forEach(k=>{ db[k]=plan.newLocal[k]; });
+    reconcileUsers();
     const delIds=[...new Set(plan.deleteRowIds)];
     for(const id of delIds){ await c.from('records').delete().eq('id', id); }
     for(let i=0;i<plan.pushRows.length;i+=400){ const pe=await c.from('records').upsert(plan.pushRows.slice(i,i+400)); if(pe.error) throw pe.error; }
     syncCfg().knownIds=plan.newState.knownIds; syncCfg().suppressed=plan.newState.suppressed; syncCfg().lastSync=state.now; persist();
     await syncPushAccess(); await syncPullAccess();
     await syncPushActivity(); await syncPullActivity();
-    await syncPushPending(); await syncPullPending(); persist();
+    await syncPushPending(); await syncPullPending();
+    reconcileUsers(); refreshCurrentUser(); persist();
     refreshAllViews(); renderSync();
     if(typeof renderNotif==='function') renderNotif();
     if(typeof renderUserList==='function') renderUserList();
@@ -8225,6 +8278,7 @@ async function startAutoSync(){
     syncRealtimeChan=c.channel('rxclinic-records').on('postgres_changes',{event:'*',schema:'public',table:'records'},()=>{ if(window.__syncDebounce) clearTimeout(window.__syncDebounce); window.__syncDebounce=setTimeout(()=>{ if(navigator.onLine) syncNow(); }, 2500); }).subscribe();
     syncTimer=setInterval(()=>{ if(navigator.onLine) syncNow(); }, 90000);
     syncCfg().auto=true; persist();
+    if(navigator.onLine){ setTimeout(()=>{ try{ syncNow(); }catch(e){} }, 400); }   // pull latest (incl. access) right away
   }catch(e){ /* stays offline */ }
 }
 function stopAutoSync(){ if(syncTimer){ clearInterval(syncTimer); syncTimer=null; } if(syncRealtimeChan){ try{sb.removeChannel(syncRealtimeChan);}catch(_){ } syncRealtimeChan=null; } }
