@@ -662,7 +662,25 @@ body.dark .ro-badge, body[data-theme=dark] .ro-badge{background:rgba(154,91,0,.1
 @media(max-width:768px){ #notifBtn{display:none} #notifPanel{top:calc(56px + env(safe-area-inset-top));right:8px} }
 @media(min-width:769px){ #mBell{display:none} }
 .online-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;vertical-align:middle;box-shadow:0 0 0 2px rgba(34,197,94,.25)}
+.hsync{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+.hsync .hs-dot{width:9px;height:9px;border-radius:50%;flex:none}
+.hsync .hs-dot.on{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+.hsync .hs-dot.off{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.2)}
+.hsync .hs-dot.err{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.2)}
+.hsync .hs-main{flex:1;min-width:180px}
+.hsync .hs-sub{color:var(--muted);font-size:11.5px;margin-top:2px}
+.hsync .hs-err{color:#b91c1c}
 body.no-user #notifBtn, body.no-user #mBell, body.no-user #notifPanel{display:none!important}
+/* subtle sync spinner (replaces the syncing/complete toasts) */
+.sync-spin{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--teal);opacity:0;transition:opacity .2s;animation:spin .7s linear infinite;flex:none}
+#dSyncSpin{position:fixed;top:22px;right:68px;z-index:57;border-top-color:#0e7490}
+#mtopbar .sync-spin{margin-left:auto;border-color:rgba(255,255,255,.35);border-top-color:#fff}
+#mtopbar #mBell{margin-left:8px}
+body.syncing .sync-spin{opacity:.9}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:768px){ #dSyncSpin{display:none} }
+@media(min-width:769px){ #mtopbar .sync-spin{display:none} }
+body.no-user .sync-spin{display:none!important}
 .pending-banner{background:#fff7ed;border:1px solid #fed7aa;color:#9a5b00;border-radius:10px;padding:9px 13px;margin-bottom:12px;font-size:13px}
 body.dark .pending-banner,body[data-theme=dark] .pending-banner{background:rgba(154,91,0,.16);border-color:rgba(254,215,170,.35);color:#f6c88a}
 .sg-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;flex-wrap:wrap;gap:6px}
@@ -1071,7 +1089,8 @@ window.addEventListener('error', function(ev){
   </div>
 </aside>
 <div id="content">
-<div id="mtopbar"><button id="mHamb" aria-label="Open menu" onclick="toggleDrawer()">☰</button><span id="mTitle">Clinic</span><button id="mBell" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="mBellBadge">0</span></button></div>
+<div id="mtopbar"><button id="mHamb" aria-label="Open menu" onclick="toggleDrawer()">☰</button><span id="mTitle">Clinic</span><span class="sync-spin" title="Syncing…"></span><button id="mBell" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="mBellBadge">0</span></button></div>
+<span class="sync-spin" id="dSyncSpin" title="Syncing…"></span>
 <div id="navBackdrop" onclick="closeDrawer()"></div>
 <!-- notifications -->
 <button id="notifBtn" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="notifBadge">0</span></button>
@@ -1094,6 +1113,7 @@ window.addEventListener('error', function(ev){
     <div class="hh-logo rx-logo">&#8478;</div>
   </div>
   <div id="homeApproval"></div>
+  <div id="homeSync"></div>
   <div class="home-tiles" id="homeTiles"></div>
   <div class="home-actions">
     <button class="ha-card" onclick="showTab('visit')"><span class="ha-ic">📝</span><span class="ha-t">New prescription</span><span class="ha-s">Write &amp; print for the next patient</span></button>
@@ -4071,11 +4091,70 @@ function animateCounts(container){
     requestAnimationFrame(step);
   });
 }
+/* ---- cloud connection status + manual refresh + diagnostics (visible to everyone, incl. staff) ---- */
+let __cloudSess = null;   // null=unknown, 'checking', true, false
+async function checkCloudSession(){
+  const c = syncCfg();
+  if(!c.url || !c.anonKey){ __cloudSess=false; return; }
+  __cloudSess='checking';
+  try{ const cl=await syncClient(); const s=await cl.auth.getSession(); __cloudSess=!!(s && s.data && s.data.session); }
+  catch(e){ __cloudSess=false; }
+  if(typeof renderHomeSync==='function') renderHomeSync();
+}
+function accessLine(){
+  if(isOwnerNow()) return 'Your access: everything (owner)';
+  const m=permMap(currentUser);
+  if(m===null) return 'Your access: full';
+  const ks=Object.keys(m||{});
+  return ks.length ? ('Your access: '+ks.map(t=>(TAB_LABELS_DEFAULT[t]||t)+' ('+m[t]+')').join(', '))
+                   : 'Your access: none granted yet — ask the clinic owner to give you sections';
+}
+function renderHomeSync(){
+  const host=$('homeSync'); if(!host) return;
+  const c=syncCfg(); const configured=!!(c.url && c.anonKey);
+  if(!configured){ host.innerHTML=''; return; }   // single-device use → hide
+  const online=navigator.onLine;
+  if(__cloudSess===null && online){ checkCloudSession(); }
+  let dot='off', state, sub='';
+  if(!online){ dot='off'; state='Offline — will sync when internet returns'; }
+  else if(c.lastError){ dot='err'; state='Sync problem'; sub='<span class="hs-err">'+esc(c.lastError)+'</span>'; }
+  else if(__cloudSess===false){ dot='off'; state='Not connected to the cloud'; sub='Tap Refresh, or sign out and in again while online.'; }
+  else if(__cloudSess==='checking'||__cloudSess===null){ dot='off'; state='Checking connection…'; }
+  else { dot='on'; state='Connected & synced'; sub = c.lastSync ? ('Last updated '+timeAgo(c.lastSync)) : 'Syncing…'; }
+  host.innerHTML='<div class="hsync"><span class="hs-dot '+dot+'"></span>'+
+    '<div class="hs-main"><b>'+esc(state)+'</b><div class="hs-sub">'+esc(accessLine())+'</div>'+(sub?'<div class="hs-sub">'+sub+'</div>':'')+'</div>'+
+    '<button class="btn btn-ghost btn-sm" onclick="manualRefresh()">🔄 Refresh</button>'+
+    '<button class="btn btn-ghost btn-sm" onclick="showDiag()">Details</button></div>';
+}
+function manualRefresh(){
+  const c=syncCfg(); if(!c.url||!c.anonKey){ toast('Cloud sync isn’t set up on this device'); return; }
+  if(!navigator.onLine){ toast('You’re offline — reconnect to the internet first'); return; }
+  try{ startAutoSync(); }catch(e){}
+  try{ syncNow(true).then(()=>checkCloudSession()); }catch(e){ checkCloudSession(); }
+}
+function showDiag(){
+  const c=syncCfg(); const u=currentUser||{};
+  const lines=[
+    'App version: '+(typeof APP_BUILD!=='undefined'?APP_BUILD:'?'),
+    'Cloud set up: '+((c.url&&c.anonKey)?'yes':'NO'),
+    'Internet: '+(navigator.onLine?'online':'OFFLINE'),
+    'Cloud login active: '+(__cloudSess===true?'yes':(__cloudSess===false?'NO':'checking')),
+    'Last sync: '+(c.lastSync?timeAgo(c.lastSync):'never'),
+    'Last error: '+(c.lastError||'none'),
+    'Signed in as: '+(u.email||u.uid||'-'),
+    'Account status: '+(u.status||'-')+(u.isOwner?' (owner)':''),
+    'My access: '+(isOwnerNow()?'owner / all':JSON.stringify(u.perms||{})),
+    'Accounts on this device: '+((db.users||[]).length),
+    'Records here: patients '+((db.patients||[]).length)+', registry '+((db.registry||[]).length)
+  ];
+  alert('DIAGNOSTICS — screenshot this and send it:\n\n'+lines.join('\n'));
+}
 function renderHome(){
   const h = new Date().getHours();
   const greet = h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : 'Good evening';
   const who = currentUser ? currentUser.name : (db.settings.docName||'');
   $('hhGreet').textContent = greet+', '+who;
+  if(typeof renderHomeSync==='function') renderHomeSync();
   $('hhDate').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long', year:'numeric'});
   $('hhClinic').textContent = [db.settings.brandTag, db.settings.clinicName, db.settings.address].filter(Boolean).join(' · ');
   const soc = [
@@ -5103,7 +5182,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b4';
+const APP_BUILD = '2026.07.12-b6';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -5375,6 +5454,8 @@ function initAuth(forceLock){
     if(u){ currentUser = u; applyPerms(); $('lockScreen').classList.add('hidden'); resetIdle(); markActive();
       try{ showTab(firstAllowedTab()); }catch(e){}
       if(typeof renderNotif==='function') renderNotif();
+      // reopened from a saved session (common on phones) → resume cloud sync so access & data stay current
+      try{ const c=syncCfg(); if(c.url && c.anonKey && navigator.onLine && typeof startAutoSync==='function') startAutoSync(); }catch(e){}
       return; }
   }
   currentUser = null; applyPerms(); showLock();
@@ -8244,10 +8325,10 @@ function askDeleteApprovals(list){
     m.querySelector('#daConfirm').onclick=()=>{ const dec={}; list.forEach((d,i)=>{ const sel=m.querySelector('input[name=da'+i+']:checked'); dec[d.key]=sel?sel.value:'keep'; }); m.classList.add('hidden'); resolve(dec); };
   });
 }
-async function syncNow(){
+async function syncNow(loud){
+  document.body.classList.add('syncing');
   try{
     const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) throw new Error('Sign in first');
-    toast('↻ Syncing…');
     const res=await c.from('records').select('id,kind,payload'); if(res.error) throw res.error; const cloud=res.data||[];
     const local={}; SYNC_COLLS.forEach(k=>local[k]=db[k]||[]);
     const isAdmin=!currentUser || currentUser.role==='admin';
@@ -8255,11 +8336,11 @@ async function syncNow(){
     let plan=computeSyncPlan(local, cloud, state, isAdmin, {});
     if(isAdmin && plan.pendingForAdmin.length){ const decisions=await askDeleteApprovals(plan.pendingForAdmin); plan=computeSyncPlan(local, cloud, state, isAdmin, decisions); }
     SYNC_COLLS.forEach(k=>{ db[k]=plan.newLocal[k]; });
-    reconcileUsers();
+    reconcileUsers(); refreshCurrentUser();   // apply any access changes immediately, before later steps
     const delIds=[...new Set(plan.deleteRowIds)];
     for(const id of delIds){ await c.from('records').delete().eq('id', id); }
     for(let i=0;i<plan.pushRows.length;i+=400){ const pe=await c.from('records').upsert(plan.pushRows.slice(i,i+400)); if(pe.error) throw pe.error; }
-    syncCfg().knownIds=plan.newState.knownIds; syncCfg().suppressed=plan.newState.suppressed; syncCfg().lastSync=state.now; persist();
+    syncCfg().knownIds=plan.newState.knownIds; syncCfg().suppressed=plan.newState.suppressed; syncCfg().lastSync=state.now; syncCfg().lastError=''; persist();
     await syncPushAccess(); await syncPullAccess();
     await syncPushActivity(); await syncPullActivity();
     await syncPushPending(); await syncPullPending();
@@ -8267,8 +8348,10 @@ async function syncNow(){
     refreshAllViews(); renderSync();
     if(typeof renderNotif==='function') renderNotif();
     if(typeof renderUserList==='function') renderUserList();
-    toast('✅ Sync complete');
-  }catch(e){ toast('⚠ '+(e.message||'Sync failed')); }
+    if(typeof renderHomeSync==='function') renderHomeSync();
+    if(loud) toast('✅ Up to date');
+  }catch(e){ syncCfg().lastError=(e&&e.message)||'Sync failed'; try{persist();}catch(_){ } if(typeof renderHomeSync==='function') renderHomeSync(); if(loud) toast('⚠ '+(e.message||'Couldn’t sync')); }
+  finally{ document.body.classList.remove('syncing'); }
 }
 function refreshAllViews(){ const t=activeTabName(); if(t && typeof showTab==='function') showTab(t); }
 async function startAutoSync(){
@@ -8282,6 +8365,12 @@ async function startAutoSync(){
   }catch(e){ /* stays offline */ }
 }
 function stopAutoSync(){ if(syncTimer){ clearInterval(syncTimer); syncTimer=null; } if(syncRealtimeChan){ try{sb.removeChannel(syncRealtimeChan);}catch(_){ } syncRealtimeChan=null; } }
+/* Phones pause background timers & drop the websocket — so sync whenever the app returns
+   to the foreground or the connection comes back. */
+function kickSyncIfNeeded(){ try{ const c=syncCfg(); if(currentUser && c.url && c.anonKey && navigator.onLine){ startAutoSync(); syncNow(); } if(typeof renderHomeSync==='function') renderHomeSync(); }catch(e){} }
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) kickSyncIfNeeded(); });
+window.addEventListener('online', kickSyncIfNeeded);
+window.addEventListener('offline', ()=>{ if(typeof renderHomeSync==='function') renderHomeSync(); });
 function syncSaveCfg(){ const c=syncCfg(); c.url=$('syncUrl').value.trim(); c.anonKey=$('syncKey').value.trim(); sb=null; persist(); toast('Sync settings saved'); renderSync(); }
 function syncToggleAuto(on){ syncCfg().auto=on; persist(); if(on) startAutoSync(); else stopAutoSync(); }
 const SYNC_SQL=`-- Run this once in Supabase → SQL Editor → New query → Run
