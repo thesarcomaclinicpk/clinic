@@ -1041,6 +1041,7 @@ window.addEventListener('error', function(ev){
     </div>
 
     <p class="small" id="lockErr" style="color:var(--danger);margin-top:8px;min-height:18px;text-align:center"></p>
+    <p class="small" style="text-align:center;color:var(--muted);opacity:.7;margin-top:4px">Version <span id="appBuild"></span></p>
   </div>
   </div>
 </div>
@@ -5101,6 +5102,8 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
+const APP_BUILD = '2026.07.12-b3';
+try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
 let liFails = 0, liLockedUntil = 0, liRemembered = false;
@@ -5513,9 +5516,8 @@ function savePermEdit(){
   const u=db.users.find(x=>x.id===permEditId); if(!u) return;
   const m={}; Object.keys(permDraft).forEach(t=>{ if(permDraft[t]==='view'||permDraft[t]==='edit') m[t]=permDraft[t]; });
   u.perms=m; u.updatedAt=new Date().toISOString(); persist(); closePermModal(); renderUserList();
-  if(typeof syncPushSoon==='function') syncPushSoon();
-  toast('Access updated for '+u.name);
   if(currentUser && currentUser.id===u.id){ applyPerms(); }
+  if(typeof pushUsersNow==='function') pushUsersNow('Access saved & sent to '+u.name+' — they can sign in now'); else toast('Access updated for '+u.name);
 }
 function closePermModal(){ if($('permModal')) $('permModal').classList.add('hidden'); permEditId=null; }
 function approveUser(id){
@@ -5523,7 +5525,7 @@ function approveUser(id){
   u.status='active'; u.approvedBy = byTag(); u.updatedAt=new Date().toISOString();
   persist(); renderUserList();
   logActivity('approve','user',u.name);
-  if(typeof syncPushSoon==='function') syncPushSoon();
+  if(typeof pushUsersNow==='function') pushUsersNow();
   if(typeof renderNotif==='function') renderNotif();
   toast(u.name+' approved — now choose what they can access');
   editUserPerms(id);
@@ -8050,6 +8052,14 @@ async function syncPushUsers(){
 }
 let __pushSoonT=null;
 function syncPushSoon(){ const c=syncCfg(); if(!c.url||!c.anonKey) return; clearTimeout(__pushSoonT); __pushSoonT=setTimeout(()=>{ if(navigator.onLine) syncPushUsers().catch(()=>{}); }, 1200); }
+/* push the members list to the cloud right now, with clear feedback (used on approve / access changes) */
+async function pushUsersNow(okMsg){
+  const c=syncCfg();
+  if(!c.url || !c.anonKey) return;   // not using cloud → nothing to push
+  if(!navigator.onLine){ toast('Saved — it will sync to your team the next time you’re online'); return; }
+  try{ await syncPushUsers(); if(okMsg) toast(okMsg); }
+  catch(e){ toast('⚠ Couldn’t reach the cloud just now — open Cloud Sync and tap “Sync now” to send this to your team'); }
+}
 /* ---- access log (who signed in, when) ---- */
 function logAccess(u, action){
   db.accesslog = db.accesslog||[];
