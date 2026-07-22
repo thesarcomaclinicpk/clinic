@@ -5195,7 +5195,20 @@ async function trySignIn(){
     lockErr('Too many wrong attempts — wait '+Math.ceil((liLockedUntil-Date.now())/1000)+' seconds'); return;
   }
   const idStr = $('liUid').value.trim(), pw = $('liPw').value;
-  const u = findUserByLogin(idStr);
+  let u = findUserByLogin(idStr);
+  const cfg = syncCfg();
+  // Cloud refresh: if we have no active local record (e.g. the owner just approved this account
+  // on another device, or this is a brand-new device), ask the cloud before deciding.
+  if(cfg.url && cfg.anonKey && navigator.onLine && (!u || u.status!=='active')){
+    lockErr('Checking with the clinic…');
+    try{
+      await cloudSignUpOrIn(idStr, pw);   // establish a cloud session (account already exists)
+      await cloudPullUsers();             // pull the latest members list (with approval + access)
+      persist();
+      u = findUserByLogin(idStr);
+    }catch(e){ /* offline or wrong password → fall through to the local check below */ }
+    lockErr('');
+  }
   const idForHash = u ? loginId(u) : idStr;
   if(!u || await userHashInput(idForHash, pw) !== u.pwHash){
     liFails++;
@@ -5203,7 +5216,7 @@ async function trySignIn(){
     else lockErr('Wrong email or password — try again');
     $('liPw').value=''; return;
   }
-  if(u.status==='pending'){ lockErr('Your account is still awaiting approval by the clinic owner'); return; }
+  if(u.status==='pending'){ lockErr('Your account is still awaiting approval by the clinic owner. Ask them to approve you (and to be online so it syncs), then try again.'); return; }
   try{
     if(liRemembered || $('liRemember').checked) localStorage.setItem(REMEMBER_KEY, loginId(u));
     else localStorage.removeItem(REMEMBER_KEY);
@@ -8007,12 +8020,20 @@ function applyRemoteRecord(kind, id, payload){
 /* ---- centralised accounts: cloud auth + members ---- */
 async function cloudSignUpOrIn(email, pw){
   const c=await syncClient();
-  const r=await c.auth.signUp({email:email, password:pw});
-  if(r.error){
-    const s=await c.auth.signInWithPassword({email:email, password:pw});
+  let session=null;
+  // already signed in with these creds? reuse the session
+  try{ const cur=await c.auth.getSession(); if(cur && cur.data && cur.data.session){ const em=cur.data.session.user && cur.data.session.user.email; if(em && normEmail(em)===normEmail(email)) session=cur.data.session; } }catch(e){}
+  if(!session){
+    const r=await c.auth.signUp({email:email, password:pw});
+    if(r && r.data && r.data.session) session=r.data.session;   // new account, email-confirm off
+  }
+  if(!session){
+    const s=await c.auth.signInWithPassword({email:email, password:pw});   // existing account
     if(s.error) throw new Error(s.error.message||'Could not sign in');
+    session=s.data.session;
   }
   syncCfg().email=email; persist();
+  return session;
 }
 async function cloudAuthInBackground(email, pw){
   try{ const c=syncCfg(); if(c.url && c.anonKey && email && pw && navigator.onLine){ await cloudSignUpOrIn(email, pw); if(c.auto) startAutoSync(); } }catch(e){ /* offline is fine */ }
