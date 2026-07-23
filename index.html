@@ -1039,13 +1039,23 @@ window.addEventListener('error', function(ev){
     <!-- FIRST-RUN SETUP -->
     <div id="lockSetup" class="hidden" style="text-align:left">
       <div style="font-weight:600;font-size:15px;margin-bottom:4px;text-align:center">Welcome</div>
-      <p class="small muted" style="margin-bottom:14px;text-align:center">Set up your own clinic, or join one you’ve been invited to.</p>
+      <p class="small muted" style="margin-bottom:14px;text-align:center">First time here on this device? Choose what fits.</p>
       <div class="lock-choice" id="suChoice">
-        <button class="btn btn-green" style="width:100%;justify-content:center" onclick="suMode('create')">🏥 Create my clinic (I’m the owner)</button>
-        <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px" onclick="lockMode('register')">👥 Join a clinic with an invite</button>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="suMode('signin')">🔑 Sign in — I already have an account</button>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px" onclick="lockMode('register')">👥 Join a clinic — request a new account</button>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px" onclick="suMode('create')">🏥 Create a brand-new clinic (I’m the owner)</button>
+      </div>
+      <!-- existing user (owner or staff) signing in on a new device -->
+      <div id="suSignin" class="hidden" style="margin-top:6px">
+        <p class="small muted" style="margin-bottom:12px;text-align:center">Sign in with the email &amp; password you already use. Paste your invite code once so this device can reach your clinic.</p>
+        <div class="fl-field" id="esInviteWrap"><input type="text" id="esInvite" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder=" "><label for="esInvite">Invite / connection code from the owner</label></div>
+        <div class="fl-field"><input type="email" id="esUid" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder=" "><label for="esUid">Your email</label></div>
+        <div class="fl-field"><input type="password" id="esPw" autocomplete="current-password" placeholder=" "><label for="esPw">Your password</label></div>
+        <button class="btn btn-green" style="width:100%;margin-top:10px;justify-content:center" onclick="existingSignIn()">Sign in</button>
+        <button class="lock-link" onclick="suMode('choice')">← Back</button>
       </div>
       <div id="suForm" class="hidden" style="margin-top:6px">
-        <p class="small muted" style="margin-bottom:12px;text-align:center">You’ll be the <b>owner</b> — you approve new users and control settings, income and backups.</p>
+        <p class="small muted" style="margin-bottom:12px;text-align:center">Only for the very first setup of a new clinic. You’ll be the <b>owner</b>. If your clinic already exists, use <b>Sign in</b> instead.</p>
         <div id="suLegacyWrap" class="hidden">
           <div class="fl-field"><input type="password" id="suLegacyPin" autocomplete="off" placeholder=" "><label for="suLegacyPin">Current app PIN (to authorize)</label></div>
         </div>
@@ -5182,7 +5192,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b6';
+const APP_BUILD = '2026.07.12-b7';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -5241,7 +5251,26 @@ function userHashInput(idStr, pw){ return sha256('rx:'+normEmail(idStr)+':'+pw);
 function validEmail(s){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(s||'').trim()); }
 function validPw(s){ return typeof s==='string' && s.length>=6; }
 function lockErr(msg){ $('lockErr').textContent = msg||''; }
-function suMode(m){ if($('suChoice')) $('suChoice').classList.toggle('hidden', m!=='choice'); if($('suForm')) $('suForm').classList.toggle('hidden', m!=='create'); lockErr(''); if(m==='create') setTimeout(()=>{ if($('suName')) $('suName').focus(); },40); }
+function suMode(m){
+  if($('suChoice')) $('suChoice').classList.toggle('hidden', m!=='choice');
+  if($('suForm')) $('suForm').classList.toggle('hidden', m!=='create');
+  if($('suSignin')) $('suSignin').classList.toggle('hidden', m!=='signin');
+  lockErr('');
+  if(m==='create') setTimeout(()=>{ if($('suName')) $('suName').focus(); },40);
+  if(m==='signin'){ const c=syncCfg(); if($('esInviteWrap')) $('esInviteWrap').classList.toggle('hidden', !!(c.url&&c.anonKey)); setTimeout(()=>{ if($((c.url?'esUid':'esInvite'))) $((c.url?'esUid':'esInvite')).focus(); },40); }
+}
+async function existingSignIn(){
+  const invite=($('esInvite').value||'').trim();
+  const email=normEmail($('esUid').value), pw=$('esPw').value;
+  if(invite){ if(!applyInvite(invite)){ lockErr('That invite / connection code doesn’t look right — copy it again from the owner'); return; } }
+  const c=syncCfg();
+  if(!c.url || !c.anonKey){ lockErr('Paste your invite code so this device can connect to your clinic'); return; }
+  if(!validEmail(email)){ lockErr('Enter your email'); return; }
+  if(!pw){ lockErr('Enter your password'); return; }
+  // reuse the main sign-in (it pulls your existing account from the cloud and signs you in)
+  $('liUid').value=email; $('liPw').value=pw;
+  await trySignIn();
+}
 /* ---- invite codes (carry the clinic's cloud URL + anon key) ---- */
 function makeInvite(){ const c=syncCfg(); if(!c.url||!c.anonKey) return ''; try{ return btoa(JSON.stringify({u:c.url,k:c.anonKey})); }catch(e){ return ''; } }
 function applyInvite(code){ try{ const o=JSON.parse(atob(String(code||'').trim())); if(!o.u||!o.k) return false; const c=syncCfg(); c.url=String(o.u).trim(); c.anonKey=String(o.k).trim(); sb=null; persist(); return true; }catch(e){ return false; } }
@@ -5291,7 +5320,7 @@ function showLock(){
   if($('lkTag')) $('lkTag').textContent = db.settings.brandTag || 'The Sarcoma Clinic PK';
   if($('lkFoot')) $('lkFoot').textContent = db.settings.clinicName || '';
   $('lockScreen').classList.remove('hidden');
-  ['liUid','liPw','rgName','rgUid','rgPw1','rgPw2','rgAdmUid','rgAdmPw','suLegacyPin','suName','suUid','suPw1','suPw2'].forEach(id=>{ if($(id)) $(id).value=''; });
+  ['liUid','liPw','rgInvite','rgName','rgUid','rgPw1','rgPw2','suLegacyPin','suName','suUid','suPw1','suPw2','esInvite','esUid','esPw'].forEach(id=>{ if($(id)) $(id).value=''; });
   lockMode(db.users.length ? 'signin' : 'setup');
 }
 function completeSignIn(u){
