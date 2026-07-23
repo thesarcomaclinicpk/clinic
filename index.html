@@ -671,16 +671,17 @@ body.dark .ro-badge, body[data-theme=dark] .ro-badge{background:rgba(154,91,0,.1
 .hsync .hs-sub{color:var(--muted);font-size:11.5px;margin-top:2px}
 .hsync .hs-err{color:#b91c1c}
 body.no-user #notifBtn, body.no-user #mBell, body.no-user #notifPanel{display:none!important}
-/* subtle sync spinner (replaces the syncing/complete toasts) */
-.sync-spin{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--teal);opacity:0;transition:opacity .2s;animation:spin .7s linear infinite;flex:none}
+/* clickable sync ring — always available, spins only while syncing */
+.sync-spin{display:none;width:17px;height:17px;padding:0;border-radius:50%;border:2px solid var(--line);border-top-color:var(--teal);background:transparent;opacity:.5;cursor:pointer;transition:opacity .2s;flex:none}
+.sync-spin:hover{opacity:1}
+body.cloud-on:not(.no-user) .sync-spin{display:inline-block}
 #dSyncSpin{position:fixed;top:22px;right:68px;z-index:57;border-top-color:#0e7490}
-#mtopbar .sync-spin{margin-left:auto;border-color:rgba(255,255,255,.35);border-top-color:#fff}
+#mtopbar .sync-spin{margin-left:auto;border-color:rgba(255,255,255,.4);border-top-color:#fff;opacity:.75}
 #mtopbar #mBell{margin-left:8px}
-body.syncing .sync-spin{opacity:.9}
+body.syncing .sync-spin{opacity:1;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:768px){ #dSyncSpin{display:none} }
-@media(min-width:769px){ #mtopbar .sync-spin{display:none} }
-body.no-user .sync-spin{display:none!important}
+@media(max-width:768px){ #dSyncSpin{display:none!important} }
+@media(min-width:769px){ #mtopbar .sync-spin{display:none!important} }
 .pending-banner{background:#fff7ed;border:1px solid #fed7aa;color:#9a5b00;border-radius:10px;padding:9px 13px;margin-bottom:12px;font-size:13px}
 body.dark .pending-banner,body[data-theme=dark] .pending-banner{background:rgba(154,91,0,.16);border-color:rgba(254,215,170,.35);color:#f6c88a}
 .sg-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;flex-wrap:wrap;gap:6px}
@@ -1008,25 +1009,30 @@ window.addEventListener('error', function(ev){
     </div>
   <div class="lock-card">
 
-    <!-- SIGN IN -->
+    <!-- SIGN IN (primary, unified) -->
     <div id="lockSignin">
       <div id="liWho" class="hidden">
         <div class="li-avatar" id="liAvatar">A</div>
         <div class="li-name" id="liWhoName"></div>
         <div class="li-sub">Welcome back — enter your password</div>
       </div>
+      <div class="fl-field hidden" id="liInviteWrap"><input type="text" id="liInvite" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder=" "><label for="liInvite">Invite code (first time on this device)</label></div>
       <div class="fl-field" id="liUidWrap"><input type="email" id="liUid" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder=" "><label for="liUid">Email</label></div>
       <div class="fl-field"><input type="password" id="liPw" autocomplete="current-password" placeholder=" "><label for="liPw">Password</label></div>
       <label class="li-remember hidden" id="liRememberWrap"><input type="checkbox" id="liRemember"> Keep me signed in on this device</label>
       <button class="btn btn-primary" style="width:100%;margin-top:12px;justify-content:center" onclick="trySignIn()">Sign in</button>
       <button class="lock-link hidden" id="liSwitch" onclick="useAnotherAccount()">Use another account</button>
-      <button class="lock-link" onclick="lockMode('register')">Joining a clinic? Request access →</button>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:6px">
+        <button class="lock-link" onclick="lockMode('register')">New staff? Request access</button>
+        <button class="lock-link" onclick="lockMode('setup')">Create a new clinic</button>
+        <button class="lock-link" onclick="openEraseModal()">Erase this device</button>
+      </div>
     </div>
 
-    <!-- REGISTER / JOIN -->
+    <!-- REGISTER / JOIN (new staff) -->
     <div id="lockRegister" class="hidden" style="text-align:left">
-      <div style="font-weight:600;font-size:15px;margin-bottom:4px;text-align:center">Join a clinic</div>
-      <p class="small muted" style="margin-bottom:12px;text-align:center">Create your login, then the clinic owner approves it and chooses what you can see.</p>
+      <div style="font-weight:600;font-size:15px;margin-bottom:4px;text-align:center">Request a new account</div>
+      <p class="small muted" style="margin-bottom:12px;text-align:center">For new staff. Create your login, then the clinic owner approves it and chooses what you can see.</p>
       <div class="fl-field" id="rgInviteWrap"><input type="text" id="rgInvite" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder=" "><label for="rgInvite">Invite code from the clinic owner</label></div>
       <div class="fl-field"><input type="text" id="rgName" autocomplete="name" placeholder=" "><label for="rgName">Your full name</label></div>
       <div class="fl-field"><input type="email" id="rgUid" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder=" "><label for="rgUid">Your email</label></div>
@@ -1036,36 +1042,19 @@ window.addEventListener('error', function(ev){
       <button class="lock-link" onclick="lockMode('signin')">← Back to sign in</button>
     </div>
 
-    <!-- FIRST-RUN SETUP -->
+    <!-- CREATE A NEW CLINIC (owner, first ever) -->
     <div id="lockSetup" class="hidden" style="text-align:left">
-      <div style="font-weight:600;font-size:15px;margin-bottom:4px;text-align:center">Welcome</div>
-      <p class="small muted" style="margin-bottom:14px;text-align:center">First time here on this device? Choose what fits.</p>
-      <div class="lock-choice" id="suChoice">
-        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="suMode('signin')">🔑 Sign in — I already have an account</button>
-        <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px" onclick="lockMode('register')">👥 Join a clinic — request a new account</button>
-        <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px" onclick="suMode('create')">🏥 Create a brand-new clinic (I’m the owner)</button>
+      <div style="font-weight:600;font-size:15px;margin-bottom:4px;text-align:center">Create a new clinic</div>
+      <p class="small muted" style="margin-bottom:12px;text-align:center">Only for the very first setup. You’ll be the <b>owner</b>. If your clinic already exists, go <b>Back to sign in</b> instead.</p>
+      <div id="suLegacyWrap" class="hidden">
+        <div class="fl-field"><input type="password" id="suLegacyPin" autocomplete="off" placeholder=" "><label for="suLegacyPin">Current app PIN (to authorize)</label></div>
       </div>
-      <!-- existing user (owner or staff) signing in on a new device -->
-      <div id="suSignin" class="hidden" style="margin-top:6px">
-        <p class="small muted" style="margin-bottom:12px;text-align:center">Sign in with the email &amp; password you already use. Paste your invite code once so this device can reach your clinic.</p>
-        <div class="fl-field" id="esInviteWrap"><input type="text" id="esInvite" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder=" "><label for="esInvite">Invite / connection code from the owner</label></div>
-        <div class="fl-field"><input type="email" id="esUid" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder=" "><label for="esUid">Your email</label></div>
-        <div class="fl-field"><input type="password" id="esPw" autocomplete="current-password" placeholder=" "><label for="esPw">Your password</label></div>
-        <button class="btn btn-green" style="width:100%;margin-top:10px;justify-content:center" onclick="existingSignIn()">Sign in</button>
-        <button class="lock-link" onclick="suMode('choice')">← Back</button>
-      </div>
-      <div id="suForm" class="hidden" style="margin-top:6px">
-        <p class="small muted" style="margin-bottom:12px;text-align:center">Only for the very first setup of a new clinic. You’ll be the <b>owner</b>. If your clinic already exists, use <b>Sign in</b> instead.</p>
-        <div id="suLegacyWrap" class="hidden">
-          <div class="fl-field"><input type="password" id="suLegacyPin" autocomplete="off" placeholder=" "><label for="suLegacyPin">Current app PIN (to authorize)</label></div>
-        </div>
-        <div class="fl-field"><input type="text" id="suName" autocomplete="name" placeholder=" "><label for="suName">Your full name</label></div>
-        <div class="fl-field"><input type="email" id="suUid" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder=" "><label for="suUid">Your email</label></div>
-        <div class="fl-field"><input type="password" id="suPw1" autocomplete="new-password" placeholder=" "><label for="suPw1">Choose a password (min 6)</label></div>
-        <div class="fl-field"><input type="password" id="suPw2" autocomplete="new-password" placeholder=" "><label for="suPw2">Confirm password</label></div>
-        <button class="btn btn-green" style="width:100%;margin-top:10px;justify-content:center" onclick="setupPrimary()">Create my owner account</button>
-        <button class="lock-link" onclick="suMode('choice')">← Back</button>
-      </div>
+      <div class="fl-field"><input type="text" id="suName" autocomplete="name" placeholder=" "><label for="suName">Your full name</label></div>
+      <div class="fl-field"><input type="email" id="suUid" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder=" "><label for="suUid">Your email</label></div>
+      <div class="fl-field"><input type="password" id="suPw1" autocomplete="new-password" placeholder=" "><label for="suPw1">Choose a password (min 6)</label></div>
+      <div class="fl-field"><input type="password" id="suPw2" autocomplete="new-password" placeholder=" "><label for="suPw2">Confirm password</label></div>
+      <button class="btn btn-green" style="width:100%;margin-top:10px;justify-content:center" onclick="setupPrimary()">Create my owner account</button>
+      <button class="lock-link" onclick="lockMode('signin')">← Back to sign in</button>
     </div>
 
     <p class="small" id="lockErr" style="color:var(--danger);margin-top:8px;min-height:18px;text-align:center"></p>
@@ -1099,8 +1088,8 @@ window.addEventListener('error', function(ev){
   </div>
 </aside>
 <div id="content">
-<div id="mtopbar"><button id="mHamb" aria-label="Open menu" onclick="toggleDrawer()">☰</button><span id="mTitle">Clinic</span><span class="sync-spin" title="Syncing…"></span><button id="mBell" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="mBellBadge">0</span></button></div>
-<span class="sync-spin" id="dSyncSpin" title="Syncing…"></span>
+<div id="mtopbar"><button id="mHamb" aria-label="Open menu" onclick="toggleDrawer()">☰</button><span id="mTitle">Clinic</span><button class="sync-spin" onclick="spinnerSync()" title="Sync now" aria-label="Sync now"></button><button id="mBell" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="mBellBadge">0</span></button></div>
+<button class="sync-spin" id="dSyncSpin" onclick="spinnerSync()" title="Sync now" aria-label="Sync now"></button>
 <div id="navBackdrop" onclick="closeDrawer()"></div>
 <!-- notifications -->
 <button id="notifBtn" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="notifBadge">0</span></button>
@@ -4180,8 +4169,10 @@ function manualRefresh(){
   const c=syncCfg(); if(!c.url||!c.anonKey){ toast('Cloud sync isn’t set up on this device'); return; }
   if(!navigator.onLine){ toast('You’re offline — reconnect to the internet first'); return; }
   try{ startAutoSync(); }catch(e){}
-  try{ syncNow(true).then(()=>checkCloudSession()); }catch(e){ checkCloudSession(); }
+  try{ syncNow(true, true).then(()=>checkCloudSession()); }catch(e){ checkCloudSession(); }
 }
+/* the little spinning ring is also a tap-to-sync button */
+function spinnerSync(){ if(currentUser) manualRefresh(); }
 function showDiag(){
   const c=syncCfg(); const u=currentUser||{};
   const lines=[
@@ -5232,7 +5223,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b8';
+const APP_BUILD = '2026.07.12-b9';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -5326,6 +5317,10 @@ function lockMode(mode){
   if(mode==='signin'){
     const rem = rememberedUser();
     liRemembered = !!rem;
+    const c=syncCfg(); const connected=!!(c.url&&c.anonKey);
+    // only ask for an invite code if this device has never been connected to a clinic
+    if($('liInviteWrap')) $('liInviteWrap').classList.toggle('hidden', connected);
+    if($('liInvite')) $('liInvite').value='';
     $('liWho').classList.toggle('hidden', !rem);
     $('liUidWrap').style.display = rem ? 'none' : '';
     $('liSwitch').classList.toggle('hidden', !rem);
@@ -5336,25 +5331,20 @@ function lockMode(mode){
       $('liRememberWrap').classList.add('hidden');
     } else {
       $('liUid').value = '';
-      updateRememberVis();
+      $('liRememberWrap').classList.remove('hidden');
     }
-    setTimeout(()=>$(rem?'liPw':'liUid').focus(), 50);
+    setTimeout(()=>$(rem?'liPw':(connected?'liUid':'liInvite')).focus(), 50);
   }
   if(mode==='register'){
-    // hide the invite box if this device is already connected to a clinic
     const c=syncCfg(); if($('rgInviteWrap')) $('rgInviteWrap').classList.toggle('hidden', !!(c.url&&c.anonKey));
     setTimeout(()=>$((syncCfg().url? 'rgName':'rgInvite')).focus(), 50);
   }
   if(mode==='setup'){
     $('suLegacyWrap').classList.toggle('hidden', !db.settings.pinHash);
-    suMode('choice');
+    setTimeout(()=>{ if($('suName')) $('suName').focus(); }, 50);
   }
 }
-function updateRememberVis(){
-  if(liRemembered) return;
-  const u = findUserByLogin($('liUid').value.trim());
-  $('liRememberWrap').classList.toggle('hidden', !(u && u.status==='active'));
-}
+function updateRememberVis(){ if(!liRemembered && $('liRememberWrap')) $('liRememberWrap').classList.remove('hidden'); }
 function useAnotherAccount(){
   try{ localStorage.removeItem(REMEMBER_KEY); }catch(e){}
   $('liPw').value = '';
@@ -5364,8 +5354,9 @@ function showLock(){
   if($('lkTag')) $('lkTag').textContent = db.settings.brandTag || 'The Sarcoma Clinic PK';
   if($('lkFoot')) $('lkFoot').textContent = db.settings.clinicName || '';
   $('lockScreen').classList.remove('hidden');
-  ['liUid','liPw','rgInvite','rgName','rgUid','rgPw1','rgPw2','suLegacyPin','suName','suUid','suPw1','suPw2','esInvite','esUid','esPw'].forEach(id=>{ if($(id)) $(id).value=''; });
-  lockMode(db.users.length ? 'signin' : 'setup');
+  ['liInvite','liUid','liPw','rgInvite','rgName','rgUid','rgPw1','rgPw2','suLegacyPin','suName','suUid','suPw1','suPw2'].forEach(id=>{ if($(id)) $(id).value=''; });
+  const _c=syncCfg();
+  lockMode((db.users.length || (_c.url && _c.anonKey)) ? 'signin' : 'setup');
 }
 function completeSignIn(u){
   currentUser = u;
@@ -5388,7 +5379,18 @@ async function trySignIn(){
   }
   const idStr = $('liUid').value.trim(), pw = $('liPw').value;
   let u = findUserByLogin(idStr);
-  const cfg = syncCfg();
+  let cfg = syncCfg();
+  // if an invite/connection code was entered (first time on this device), apply it now
+  const inv = ($('liInvite') && $('liInvite').value || '').trim();
+  if(inv){ if(!applyInvite(inv)){ lockErr('That invite code doesn’t look right — copy it again from the owner'); return; }
+    cfg = syncCfg(); try{ document.body.classList.add('cloud-on'); }catch(e){} }
+  // this device isn't connected to any clinic yet, and we don't know this account locally → need the invite
+  if((!cfg.url || !cfg.anonKey) && !u){
+    if($('liInviteWrap')) $('liInviteWrap').classList.remove('hidden');
+    lockErr('First time on this device — paste your invite code above (or tap “Create a new clinic”).');
+    if($('liInvite')) $('liInvite').focus();
+    return;
+  }
   // Cloud refresh: if we have no active local record (e.g. the owner just approved this account
   // on another device, or this is a brand-new device), ask the cloud before deciding.
   if(cfg.url && cfg.anonKey && navigator.onLine && (!u || u.status!=='active')){
@@ -5506,6 +5508,7 @@ function resetIdle(){
 function applyPerms(){
   document.body.dataset.role = currentUser ? currentUser.role : '';
   document.body.classList.toggle('no-user', !currentUser);
+  try{ const sc=(db.settings&&db.settings.sync)||{}; document.body.classList.toggle('cloud-on', !!(sc.url&&sc.anonKey)); }catch(e){}
   if(typeof renderNotif==='function') renderNotif();
   { const si=$('signedInAs'); if(si) si.textContent = currentUser ? (currentUser.name+' · '+loginId(currentUser)) : ''; }
   const sr = $('signedRow'); if(sr) sr.style.display = currentUser ? '' : 'none';
@@ -8398,7 +8401,11 @@ function askDeleteApprovals(list){
     m.querySelector('#daConfirm').onclick=()=>{ const dec={}; list.forEach((d,i)=>{ const sel=m.querySelector('input[name=da'+i+']:checked'); dec[d.key]=sel?sel.value:'keep'; }); m.classList.add('hidden'); resolve(dec); };
   });
 }
-async function syncNow(loud){
+let __lastSyncAt=0;
+async function syncNow(loud, force){
+  // background syncs are throttled so they don't fire constantly; manual/forced ones always run
+  if(!force && (Date.now()-__lastSyncAt) < 25000) return;
+  if(document.body.classList.contains('syncing')) return;   // never overlap
   document.body.classList.add('syncing');
   try{
     const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) throw new Error('Sign in first');
@@ -8422,6 +8429,7 @@ async function syncNow(loud){
     if(typeof renderNotif==='function') renderNotif();
     if(typeof renderUserList==='function') renderUserList();
     if(typeof renderHomeSync==='function') renderHomeSync();
+    __lastSyncAt=Date.now();
     if(loud) toast('✅ Up to date');
   }catch(e){ syncCfg().lastError=(e&&e.message)||'Sync failed'; try{persist();}catch(_){ } if(typeof renderHomeSync==='function') renderHomeSync(); if(loud) toast('⚠ '+(e.message||'Couldn’t sync')); }
   finally{ document.body.classList.remove('syncing'); }
@@ -8431,16 +8439,18 @@ async function startAutoSync(){
   try{
     const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     stopAutoSync();
-    syncRealtimeChan=c.channel('rxclinic-records').on('postgres_changes',{event:'*',schema:'public',table:'records'},()=>{ if(window.__syncDebounce) clearTimeout(window.__syncDebounce); window.__syncDebounce=setTimeout(()=>{ if(navigator.onLine) syncNow(); }, 2500); }).subscribe();
-    syncTimer=setInterval(()=>{ if(navigator.onLine) syncNow(); }, 90000);
+    // realtime: when another device changes something, refresh — but throttled so it isn't constant
+    syncRealtimeChan=c.channel('rxclinic-records').on('postgres_changes',{event:'*',schema:'public',table:'records'},()=>{ if(window.__syncDebounce) clearTimeout(window.__syncDebounce); window.__syncDebounce=setTimeout(()=>{ if(navigator.onLine) syncNow(false,false); }, 6000); }).subscribe();
+    // steady background poll: about once a minute
+    syncTimer=setInterval(()=>{ if(navigator.onLine) syncNow(false,false); }, 60000);
     syncCfg().auto=true; persist();
-    if(navigator.onLine){ setTimeout(()=>{ try{ syncNow(); }catch(e){} }, 400); }   // pull latest (incl. access) right away
+    if(navigator.onLine){ setTimeout(()=>{ try{ syncNow(false,true); }catch(e){} }, 400); }   // one fresh pull right after connecting
   }catch(e){ /* stays offline */ }
 }
 function stopAutoSync(){ if(syncTimer){ clearInterval(syncTimer); syncTimer=null; } if(syncRealtimeChan){ try{sb.removeChannel(syncRealtimeChan);}catch(_){ } syncRealtimeChan=null; } }
 /* Phones pause background timers & drop the websocket — so sync whenever the app returns
    to the foreground or the connection comes back. */
-function kickSyncIfNeeded(){ try{ const c=syncCfg(); if(currentUser && c.url && c.anonKey && navigator.onLine){ startAutoSync(); syncNow(); } if(typeof renderHomeSync==='function') renderHomeSync(); }catch(e){} }
+function kickSyncIfNeeded(){ try{ const c=syncCfg(); if(currentUser && c.url && c.anonKey && navigator.onLine){ if(!syncTimer) startAutoSync(); else syncNow(false,false); } if(typeof renderHomeSync==='function') renderHomeSync(); }catch(e){} }
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) kickSyncIfNeeded(); });
 window.addEventListener('online', kickSyncIfNeeded);
 window.addEventListener('offline', ()=>{ if(typeof renderHomeSync==='function') renderHomeSync(); });
