@@ -2973,15 +2973,16 @@ function firstAllowedTab(){
   for(const t of GRANTABLE_TABS){ if(canTab(t)) return t; }
   return 'home';
 }
-function showTab(name){
+function showTab(name, isRefresh){
   if(currentUser && !canTab(name)){
     toast('⚠ You don’t have access to '+(TAB_LABELS_DEFAULT[name]||name)); return;
   }
   document.querySelectorAll('nav button[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
   const ab = document.querySelector('nav button[data-tab="'+name+'"]');
   if(ab) ab.appendChild(navDots);
-  // open the group that holds the active tab, but never auto-collapse the others (that caused flicker on sync)
-  document.querySelectorAll('.nav-group').forEach(g=>{ if(g.querySelector('button[data-tab="'+name+'"]')) g.classList.add('open'); });
+  // Only when the USER navigates: open the group holding this tab (so you can see where you are).
+  // On a background-sync refresh we leave the groups exactly as the user set them — no auto open/close.
+  if(!isRefresh){ document.querySelectorAll('.nav-group').forEach(g=>{ if(g.querySelector('button[data-tab="'+name+'"]')) g.classList.add('open'); }); }
   document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id==='tab-'+name));
   if(name==='home') renderHome();
   if(name==='appts'){ renderAppts(); renderReminders(); }
@@ -3264,6 +3265,7 @@ async function doErase(){
     try{ if(typeof stopAutoSync==='function') stopAutoSync(); }catch(e){}
     try{ if(sb) await sb.auth.signOut(); }catch(e){}   // drop the cloud session so nothing re-downloads
     db = freshDB(); persist();
+    if(typeof reconcileNav==='function') reconcileNav();   // keep Cloud Sync & extra tabs in the fresh menu
     closeEraseModal();
     loadSettingsForm(); renderPatientList(); renderMedList(); renderDataStats(); clearVisitForm(false);
     toast(alsoCloud ? 'Erased from the cloud and this device' : 'This device erased');
@@ -5223,7 +5225,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b9';
+const APP_BUILD = '2026.07.12-b10';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -7634,6 +7636,7 @@ function leafBtnHTML(tab){
 }
 function renderSidebar(){
   const nav=$('sideNav'); if(!nav) return;
+  if(typeof reconcileNav==='function') reconcileNav();   // make sure Cloud Sync & other extra tabs are always present (e.g. after an erase)
   const model=navModel();
   const navShow=tab=>userAllowed(currentUser, tab);
   let h='';
@@ -8434,7 +8437,7 @@ async function syncNow(loud, force){
   }catch(e){ syncCfg().lastError=(e&&e.message)||'Sync failed'; try{persist();}catch(_){ } if(typeof renderHomeSync==='function') renderHomeSync(); if(loud) toast('⚠ '+(e.message||'Couldn’t sync')); }
   finally{ document.body.classList.remove('syncing'); }
 }
-function refreshAllViews(){ const t=activeTabName(); if(t && typeof showTab==='function') showTab(t); }
+function refreshAllViews(){ const t=activeTabName(); if(t && typeof showTab==='function') showTab(t, true); }
 async function startAutoSync(){
   try{
     const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
