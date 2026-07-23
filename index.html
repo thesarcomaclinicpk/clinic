@@ -96,12 +96,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .nav-gh{position:relative}
 .nav-gh .chev{margin-left:auto;width:14px!important;height:14px!important;opacity:.55;
   transition:transform .28s cubic-bezier(.4,0,.2,1)}
-.nav-group:hover .chev, .nav-group.open .chev{transform:rotate(180deg);opacity:.9}
+.nav-group.open .chev{transform:rotate(180deg);opacity:.9}
 .nav-gh span{text-transform:uppercase;font-size:11.5px;letter-spacing:.9px;font-weight:700;color:#7fb6c6}
 .nav-sub{max-height:0;opacity:0;overflow:hidden;margin-left:10px;padding-left:8px;
   border-left:1px solid rgba(255,255,255,.12);
   transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .22s ease .05s, margin .32s}
-.nav-group:hover .nav-sub, .nav-group.open .nav-sub{max-height:230px;opacity:1;margin-bottom:4px}
+.nav-group.open .nav-sub{max-height:230px;opacity:1;margin-bottom:4px}
+/* mouse computers (Mac/PC) also get hover-to-expand; touch phones stay tap-only to avoid the sticky-hover bug */
+@media (hover:hover) and (pointer:fine){
+  .nav-group:hover .chev{transform:rotate(180deg);opacity:.9}
+  .nav-group:hover .nav-sub{max-height:230px;opacity:1;margin-bottom:4px}
+}
 .nav-sub button{padding:8.5px 11px;font-size:13px}
 /* three-dot activity loader on the active tab */
 .nav-dots{display:inline-flex;gap:3.5px;margin-left:auto;align-items:center;flex:none}
@@ -2177,7 +2182,7 @@ window.addEventListener('error', function(ev){
     <p class="muted small" style="margin-bottom:10px">Recent sign-ins across all devices, and a running log of what was added, changed or deleted (synced from everyone).</p>
     <div class="grid g2">
       <div><div class="reg-subhead">Recent sign-ins</div><div id="accessLogBody" class="small"></div></div>
-      <div><div class="reg-subhead">Recent changes</div><div id="activityLogBody" class="small"></div></div>
+      <div><div class="reg-subhead" style="display:flex;justify-content:space-between;align-items:center">Recent changes <button class="btn btn-ghost btn-sm" style="padding:1px 10px;font-size:11px" onclick="clearActivity()">Clear</button></div><div id="activityLogBody" class="small"></div></div>
     </div>
   </div>
   <div class="card">
@@ -2980,9 +2985,13 @@ function showTab(name, isRefresh){
   document.querySelectorAll('nav button[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
   const ab = document.querySelector('nav button[data-tab="'+name+'"]');
   if(ab) ab.appendChild(navDots);
-  // Only when the USER navigates: open the group holding this tab (so you can see where you are).
-  // On a background-sync refresh we leave the groups exactly as the user set them — no auto open/close.
-  if(!isRefresh){ document.querySelectorAll('.nav-group').forEach(g=>{ if(g.querySelector('button[data-tab="'+name+'"]')) g.classList.add('open'); }); }
+  // Only when the USER navigates: open the group holding this tab (so you can see where you are),
+  // and remember it. Background-sync refreshes leave groups exactly as the user set them.
+  if(!isRefresh){
+    const grp = navModel().find(g=>g.type==='group' && (g.children||[]).some(c=>c.tab===name));
+    if(grp && !grp.open){ grp.open=true; try{persist();}catch(e){} }
+    document.querySelectorAll('.nav-group').forEach(g=>{ if(g.querySelector('button[data-tab="'+name+'"]')) g.classList.add('open'); });
+  }
   document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id==='tab-'+name));
   if(name==='home') renderHome();
   if(name==='appts'){ renderAppts(); renderReminders(); }
@@ -5225,7 +5234,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b10';
+const APP_BUILD = '2026.07.12-b12';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -5578,7 +5587,7 @@ function renderNotif(){
       '</div></div>'; });
   }
   if(d.acts.length){
-    h+='<div class="notif-sec">Recent activity</div>';
+    h+='<div class="notif-sec" style="display:flex;justify-content:space-between;align-items:center">Recent activity <button class="btn btn-ghost btn-sm" style="padding:1px 9px;font-size:11px" onclick="clearActivity()">Clear</button></div>';
     d.acts.slice(0,40).forEach(a=>{ h+='<div class="notif-item'+(a.read?'':' unread')+'"><span class="ni-ic">'+actIcon(a.action)+'</span>'+
       '<div class="ni-tx">'+esc(actVerb(a.action))+' '+esc(a.kind||'')+' <b>'+esc(a.label||'')+'</b>'+
       '<div class="ni-sub">'+esc(a.who||'someone')+' · '+timeAgo(a.at)+'</div></div></div>'; });
@@ -5594,6 +5603,14 @@ function toggleNotif(e, forceClose){
   if(show){ renderNotif(); setTimeout(()=>{ (db.activity||[]).forEach(a=>a.read=true); persist(); renderNotif(); }, 1500); }
 }
 function markNotifRead(){ (db.activity||[]).forEach(a=>a.read=true); persist(); renderNotif(); }
+async function clearActivity(){
+  if(!confirm('Clear the recent-activity list? (Records aren’t affected — this only clears the activity feed.)')) return;
+  db.activity=[]; db.settings.activityClearedAt=new Date().toISOString(); persist();
+  renderNotif(); if(typeof renderActivityLog==='function') renderActivityLog();
+  toast('Activity cleared');
+  // owner + online: also remove it from the cloud so it doesn't sync back or clutter other devices
+  try{ if(isOwnerNow() && navigator.onLine){ const c=syncCfg(); if(c.url&&c.anonKey){ const cl=await syncClient(); const s=await cl.auth.getSession(); if(s.data.session){ await cl.from('records').delete().eq('kind','activity'); } } } }catch(e){}
+}
 function copyInvite(){
   const code=makeInvite();
   if(!code){ toast('Connect Cloud Sync first (Settings → Cloud Sync) to create an invite'); return; }
@@ -7657,8 +7674,7 @@ function renderSidebar(){
   const cur=document.querySelector('section.tab.active');
   const name=cur?cur.id.replace('tab-',''):null;
   if(name){ const ab=nav.querySelector('button[data-tab="'+name+'"]');
-    if(ab){ ab.classList.add('active'); if(typeof navDots!=='undefined'&&navDots) ab.appendChild(navDots);
-      document.querySelectorAll('.nav-group').forEach(g=>g.classList.toggle('open', !!g.querySelector('button[data-tab="'+name+'"]')||isGrpOpen(g.id))); } }
+    if(ab){ ab.classList.add('active'); if(typeof navDots!=='undefined'&&navDots) ab.appendChild(navDots); } }
   if(typeof updateQNavCount==='function') updateQNavCount();
   applyLabelOverrides();
 }
@@ -8311,7 +8327,8 @@ async function syncPullActivity(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     const {data,error}=await c.from('records').select('id,payload').eq('kind','activity'); if(error) return;
     db.activity=db.activity||[]; const byId={}; db.activity.forEach(a=>byId[String(a.id)]=a);
-    (data||[]).forEach(r=>{ const ex=byId[String(r.id)]; if(!ex){ const p=Object.assign({},r.payload); if(p.read===undefined) p.read=false; db.activity.push(p); byId[String(r.id)]=p; } });
+    const cutoff = db.settings.activityClearedAt||'';   // don't re-add activity the user already cleared
+    (data||[]).forEach(r=>{ if(cutoff && String((r.payload&&r.payload.at)||'')<=cutoff) return; const ex=byId[String(r.id)]; if(!ex){ const p=Object.assign({},r.payload); if(p.read===undefined) p.read=false; db.activity.push(p); byId[String(r.id)]=p; } });
     db.activity.sort((a,b)=>String(a.at).localeCompare(String(b.at)));
     if(db.activity.length>800) db.activity=db.activity.slice(-800);
   }catch(e){}
