@@ -2181,7 +2181,7 @@ window.addEventListener('error', function(ev){
     <h2>Who’s been in &amp; activity</h2>
     <p class="muted small" style="margin-bottom:10px">Recent sign-ins across all devices, and a running log of what was added, changed or deleted (synced from everyone).</p>
     <div class="grid g2">
-      <div><div class="reg-subhead">Recent sign-ins</div><div id="accessLogBody" class="small"></div></div>
+      <div><div class="reg-subhead" style="display:flex;justify-content:space-between;align-items:center">Recent sign-ins <button class="btn btn-ghost btn-sm" style="padding:1px 10px;font-size:11px" onclick="clearAccessLog()">Clear</button></div><div id="accessLogBody" class="small"></div></div>
       <div><div class="reg-subhead" style="display:flex;justify-content:space-between;align-items:center">Recent changes <button class="btn btn-ghost btn-sm" style="padding:1px 10px;font-size:11px" onclick="clearActivity()">Clear</button></div><div id="activityLogBody" class="small"></div></div>
     </div>
   </div>
@@ -3860,7 +3860,7 @@ function renderPatientList(){
       '<td>'+vs.length+'</td>'+
       '<td>'+last+'</td>'+
       '<td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" onclick="openPatient(\''+p.id+'\')">Open</button> '+
-      '<button class="btn btn-ghost btn-sm" onclick="editPatient(\''+p.id+'\')" title="Edit this patient’s details">✎</button> '+
+      '<button class="btn btn-ghost btn-sm" onclick="editPatientRx(\''+p.id+'\')" title="Reopen the prescription to edit — saves as a new version">✎ Rx</button> '+
       '<button class="btn btn-danger btn-sm" onclick="deletePatient(\''+p.id+'\')" title="Delete this patient and their visits">✕</button></td>'+
     '</tr>';
   }).join('');
@@ -3922,11 +3922,12 @@ function openPatient(pid){
     '<td class="small">'+esc((v.meds||[]).map(m=>m.name).join(', ')||'—')+'</td>'+
     '<td>'+
       '<button class="btn btn-ghost btn-sm" onclick="reprintVisit(\''+v.id+'\')">🖨 Print</button> '+
-      '<button class="btn btn-ghost btn-sm" onclick="copyVisitToForm(\''+v.id+'\')" title="Start a follow-up prescription pre-filled from this visit">↺ Follow-up visit</button> '+
+      '<button class="btn btn-primary btn-sm" onclick="copyVisitToForm(\''+v.id+'\')" title="Reopen the whole prescription to edit anything — saving creates a new version">✎ Edit / re-issue</button> '+
       '<button class="btn btn-ghost btn-sm" onclick="dischargeFromVisit(\''+v.id+'\')" title="Create a discharge summary pre-filled from this visit">🏥 Discharge</button> '+
       '<button class="btn btn-ghost btn-sm" onclick="reprintVisitPlain(\''+v.id+'\')" title="Prints with full letterhead — for blank paper or Save as PDF">📄 PDF</button> '+
       '<button class="btn btn-ghost btn-sm" onclick="waVisit(\''+v.id+'\')" title="Open WhatsApp with the prescription as text">📤 WA</button>'+
       ((v.images&&v.images.length)?' <button class="btn btn-ghost btn-sm" onclick="viewVisitImages(\''+v.id+'\')" title="View attached images">📎 '+v.images.length+'</button>':'')+
+      ' <button class="btn btn-danger btn-sm" onclick="deleteVisit(\''+v.id+'\')" title="Delete this prescription version">✕</button>'+
     '</td></tr>'
   ).join('') : '<tr><td colspan="4" class="muted">No visits recorded.</td></tr>';
 }
@@ -4018,7 +4019,28 @@ function copyVisitToForm(vid){
   if(typeof renderRxQrSelect==='function'){ renderRxQrSelect(); if($('cQrSel')) $('cQrSel').value=v.qrId||''; }
   (v.meds||[]).forEach(m=>addRxRow(m));
   showTab('visit');
-  toast('Form pre-filled from visit on '+fmtDate(v.date));
+  toast('Prescription reopened for editing — saving will create a new version');
+}
+/* patient-list ✎ Rx → reopen the patient's latest prescription for full editing (new version on save) */
+function editPatientRx(pid){
+  if(!requireEdit()) return;
+  const vs = db.visits.filter(v=>v.patientId===pid).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  if(vs.length){ copyVisitToForm(vs[vs.length-1].id); }
+  else { clearVisitForm(false); linkPatient(pid); showTab('visit'); toast('No previous prescription — start a new one'); }
+}
+/* delete a single visit / prescription version */
+function deleteVisit(vid){
+  if(!requireEdit()) return;
+  const v = db.visits.find(x=>x.id===vid); if(!v) return;
+  const p = db.patients.find(x=>x.id===v.patientId);
+  if(!confirm('Delete this prescription version from '+fmtDate(v.date)+'?\nOnly this visit is removed — the patient and their other prescriptions are kept.')) return;
+  (v.images||[]).forEach(id=>{ try{ imgDel(id); }catch(e){} });
+  db.visits = db.visits.filter(x=>x.id!==vid);
+  logActivity('delete','prescription',(p?p.name+' · ':'')+fmtDate(v.date));
+  persist();
+  if(currentPatientId===v.patientId){ openPatient(v.patientId); }
+  renderPatientList(); renderFollowups(); if(typeof updateRxCount==='function') updateRxCount();
+  toast('Prescription version deleted');
 }
 
 /* ================= MEDICINES TAB ================= */
@@ -5234,7 +5256,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b12';
+const APP_BUILD = '2026.07.12-b13';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -5610,6 +5632,13 @@ async function clearActivity(){
   toast('Activity cleared');
   // owner + online: also remove it from the cloud so it doesn't sync back or clutter other devices
   try{ if(isOwnerNow() && navigator.onLine){ const c=syncCfg(); if(c.url&&c.anonKey){ const cl=await syncClient(); const s=await cl.auth.getSession(); if(s.data.session){ await cl.from('records').delete().eq('kind','activity'); } } } }catch(e){}
+}
+async function clearAccessLog(){
+  if(!confirm('Clear the recent sign-ins list? (This only clears the log — it doesn’t sign anyone out.)')) return;
+  db.accesslog=[]; db.settings.accessClearedAt=new Date().toISOString(); persist();
+  if(typeof renderAccessLog==='function') renderAccessLog();
+  toast('Sign-in list cleared');
+  try{ if(isOwnerNow() && navigator.onLine){ const c=syncCfg(); if(c.url&&c.anonKey){ const cl=await syncClient(); const s=await cl.auth.getSession(); if(s.data.session){ await cl.from('records').delete().eq('kind','accesslog'); } } } }catch(e){}
 }
 function copyInvite(){
   const code=makeInvite();
@@ -8302,7 +8331,8 @@ async function syncPullAccess(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     const {data,error}=await c.from('records').select('id,payload').eq('kind','accesslog'); if(error) return;
     db.accesslog=db.accesslog||[]; const have=new Set(db.accesslog.map(a=>String(a.id)));
-    (data||[]).forEach(r=>{ if(!have.has(String(r.id))){ db.accesslog.push(r.payload); have.add(String(r.id)); } });
+    const cutoff=db.settings.accessClearedAt||'';   // don't re-add sign-ins the user already cleared
+    (data||[]).forEach(r=>{ if(cutoff && String((r.payload&&r.payload.at)||'')<=cutoff) return; if(!have.has(String(r.id))){ db.accesslog.push(r.payload); have.add(String(r.id)); } });
     db.accesslog.sort((a,b)=>String(a.at).localeCompare(String(b.at)));
     if(db.accesslog.length>800) db.accesslog=db.accesslog.slice(-800);
   }catch(e){}
