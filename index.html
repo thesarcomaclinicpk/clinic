@@ -96,13 +96,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .nav-gh{position:relative}
 .nav-gh .chev{margin-left:auto;width:14px!important;height:14px!important;opacity:.55;
   transition:transform .28s cubic-bezier(.4,0,.2,1)}
-.nav-group.open .chev{transform:rotate(180deg);opacity:.9}
 .nav-gh span{text-transform:uppercase;font-size:11.5px;letter-spacing:.9px;font-weight:700;color:#7fb6c6}
 .nav-sub{max-height:0;opacity:0;overflow:hidden;margin-left:10px;padding-left:8px;
   border-left:1px solid rgba(255,255,255,.12);
   transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .22s ease .05s, margin .32s}
-.nav-group.open .nav-sub{max-height:230px;opacity:1;margin-bottom:4px}
-/* mouse computers (Mac/PC) also get hover-to-expand; touch phones stay tap-only to avoid the sticky-hover bug */
+/* TOUCH devices (phones/tablets): tap the section header to open/close — the pinned .open state controls it */
+@media (hover:none), (pointer:coarse){
+  .nav-group.open .chev{transform:rotate(180deg);opacity:.9}
+  .nav-group.open .nav-sub{max-height:230px;opacity:1;margin-bottom:4px}
+}
+/* MOUSE computers (Mac/PC): pure hover — expand while the cursor is over the section, collapse when it leaves */
 @media (hover:hover) and (pointer:fine){
   .nav-group:hover .chev{transform:rotate(180deg);opacity:.9}
   .nav-group:hover .nav-sub{max-height:230px;opacity:1;margin-bottom:4px}
@@ -5256,7 +5259,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b13';
+const APP_BUILD = '2026.07.12-b14';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
