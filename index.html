@@ -569,15 +569,18 @@ tr.cls-row td{background:transparent;color:var(--muted,#64748b);font-weight:600;
 .combo-cust-wrap, .dur-wrap, .dur-cust-wrap{display:flex;gap:3px;align-items:center}
 .combo-cust-wrap.hidden, .dur-wrap.hidden, .dur-cust-wrap.hidden, select.combo-sel.hidden{display:none}
 .combo-cust, .rx-dur-cust{flex:1;min-width:0}
-.combo-back, .dur-back, .dur-plus{flex:none;width:28px;height:34px;border:1px solid var(--field-bd);
+.combo-back, .dur-back, .dur-plus, .dur-minus{flex:none;width:28px;height:34px;border:1px solid var(--field-bd);
   background:var(--hover);border-radius:8px;cursor:pointer;font-size:14px;line-height:1;color:var(--teal-dark);
   display:flex;align-items:center;justify-content:center;transition:background .12s;padding:0}
-.combo-back:hover, .dur-back:hover, .dur-plus:hover{background:var(--teal-light)}
-.dur-plus{font-weight:700;font-size:16px}
+.combo-back:hover, .dur-back:hover, .dur-plus:hover, .dur-minus:hover{background:var(--teal-light)}
+.dur-plus, .dur-minus{font-weight:700;font-size:16px}
+.dur-minus{width:24px}
+.dur-plus{width:24px}
+.dur-preset{flex:none;width:30px;min-width:30px;padding:0 1px;border-radius:8px}
 .dur-wrap{gap:2px}
-.dur-wrap .rx-dur-n{width:38px;flex:none;text-align:center;padding-left:2px;padding-right:2px}
-.dur-wrap .rx-dur-u{flex:1;min-width:52px;padding-left:4px;padding-right:2px}
-html[data-theme="dark"] .combo-back, html[data-theme="dark"] .dur-back, html[data-theme="dark"] .dur-plus{background:#16242f;border-color:#2b3d4f;color:#bfe9f4}
+.dur-wrap .rx-dur-n{width:34px;flex:none;text-align:center;padding-left:2px;padding-right:2px}
+.dur-wrap .rx-dur-u{flex:1;min-width:48px;padding-left:4px;padding-right:2px}
+html[data-theme="dark"] .combo-back, html[data-theme="dark"] .dur-back, html[data-theme="dark"] .dur-plus, html[data-theme="dark"] .dur-minus{background:#16242f;border-color:#2b3d4f;color:#bfe9f4}
 /* Urdu row in the Rx form */
 tr.rx-main-row td{border-bottom:none;padding-bottom:3px}
 tr.rx-ur-row td{padding:0 10px 9px;border-bottom:1px solid var(--line)}
@@ -994,14 +997,19 @@ html[data-theme="dark"] .ne-group{background:#0f2530}
 window.__bootError=null;
 window.addEventListener('error', function(ev){
   try{
+    // Once the app has finished starting, ignore stray errors (e.g. a button tapped a split-second
+    // before the script finished loading) — they are not startup failures and must not alarm the user.
+    if(window.__appReady) return;
     var msg=(ev && ev.message)||'Startup error';
     if(ev && ev.filename) msg+=' ('+String(ev.filename).split('/').pop()+':'+ev.lineno+')';
     window.__bootError=msg;
     var ls=document.getElementById('lockScreen'); if(ls) ls.classList.remove('hidden');
     var le=document.getElementById('lockErr'); if(le) le.textContent='Startup problem: '+msg;
-    var bn=document.getElementById('bootErrBar'); if(bn){ bn.style.display='block'; bn.textContent='⚠ Startup problem — '+msg+'. Please screenshot this and send it.'; }
+    var bn=document.getElementById('bootErrBar'); if(bn){ bn.style.display='block'; bn.textContent='⚠ Loading… if this stays, reload the page.'; }
   }catch(_e){}
 });
+// Safety net: if the app somehow didn't finish starting within 8s, the bar stays; otherwise clear it.
+setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById('bootErrBar'); if(b) b.style.display='none'; } }catch(e){} }, 8000);
 </script>
 </head>
 <body>
@@ -1461,8 +1469,12 @@ window.addEventListener('error', function(ev){
       <div class="grid g3">
         <div class="field"><label>Name (with form &amp; strength) <span class="req">*</span></label><input type="text" id="mfName" placeholder="e.g. Tab Augmentin 625mg"></div>
         <div class="field"><label>Generic name</label><input type="text" id="mfGeneric" placeholder="e.g. Co-amoxiclav"></div>
-        <div class="field"><label>Category</label><input type="text" id="mfCat" list="medCatList" placeholder="e.g. Painkillers"></div>
-        <div class="field"><label>Class / sub-category (library only — never printed)</label><input type="text" id="mfCls" placeholder="e.g. Cephalosporin — 3rd generation"></div>
+        <div class="field"><label>Category — where it appears in the directory</label>
+          <select id="mfCat" onchange="onMfCatChange()"></select>
+          <input type="text" id="mfCatNew" class="hidden" style="margin-top:6px" placeholder="Type new category name"></div>
+        <div class="field"><label>Class / sub-category (library only — never printed)</label>
+          <select id="mfCls" onchange="onMfClsChange()"></select>
+          <input type="text" id="mfClsNew" class="hidden" style="margin-top:6px" placeholder="Type new sub-category"></div>
         <div class="field"><label>Company (shown in library only — never printed)</label><input type="text" id="mfCo" placeholder="e.g. Getz"></div>
         <div class="field"><label>Default dosage</label><input type="text" id="mfDose" placeholder="e.g. 1 tablet"></div>
         <div class="field"><label>Default frequency</label><input type="text" id="mfFreq" list="freqList" placeholder="e.g. BD (1+0+1)"></div>
@@ -2714,10 +2726,46 @@ const SEED_MEDS = [
 ["Tab Xarelto 10mg","Rivaroxaban","Blood thinners (DVT prevention)","1 tablet","OD (once daily)","2 weeks","Post-op DVT prophylaxis as advised","Bayer","Oral anticoagulant (DOAC)"],
 ["Tab Eliquis 2.5mg","Apixaban","Blood thinners (DVT prevention)","1 tablet","BD (1+0+1)","2 weeks","Post-op DVT prophylaxis as advised","Pfizer / BMS","Oral anticoagulant (DOAC)"],
 ["Tab Loprin 75mg","Aspirin","Blood thinners (DVT prevention)","1 tablet","OD (once daily)","Ongoing","After breakfast","Highnoon","Antiplatelet"],
-["Tab Ascard 75mg","Aspirin","Blood thinners (DVT prevention)","1 tablet","OD (once daily)","Ongoing","After breakfast","Atco","Antiplatelet"]
+["Tab Ascard 75mg","Aspirin","Blood thinners (DVT prevention)","1 tablet","OD (once daily)","Ongoing","After breakfast","Atco","Antiplatelet"],
+// ============================================ ADDED (b16) — more painkillers ============================================
+["Tab Arcoxia 60mg","Etoricoxib","Painkillers","1 tablet","OD (once daily)","1 week","After meals","MSD","NSAID — COX-2 selective"],
+["Tab Arcoxia 120mg","Etoricoxib","Painkillers","1 tablet","OD (once daily)","5 days","After meals; short course (e.g. acute gout)","MSD","NSAID — COX-2 selective"],
+["Tab Etorix 60mg","Etoricoxib","Painkillers","1 tablet","OD (once daily)","1 week","After meals","Hilton","NSAID — COX-2 selective"],
+["Tab Etorix 120mg","Etoricoxib","Painkillers","1 tablet","OD (once daily)","5 days","After meals; short course (e.g. acute gout)","Hilton","NSAID — COX-2 selective"],
+["Cap Celbex 100mg","Celecoxib","Painkillers","1 capsule","BD (1+0+1)","1 week","After meals; gentler on stomach","Getz","NSAID — COX-2 selective"],
+["Cap Celebrex 100mg","Celecoxib","Painkillers","1 capsule","BD (1+0+1)","1 week","After meals; gentler on stomach","Pfizer","NSAID — COX-2 selective"],
+["Tab Brexin 20mg","Piroxicam β-cyclodextrin","Painkillers","1 tablet","OD (once daily)","5 days","After meals; faster-absorbed piroxicam","Chiesi","NSAID — traditional"],
+["Tab Ultracet","Tramadol 37.5mg + Paracetamol 325mg","Painkillers","1 tablet","TDS (1+1+1)","5 days","May cause drowsiness / nausea","Janssen / Grünenthal","Opioid combination"],
+["Tab Toradol 10mg","Ketorolac (oral)","Painkillers","1 tablet","TDS (1+1+1)","3 days","Short course only (max 5 days); after meals","Roche","NSAID — traditional"],
+// ============================================ ADDED (b16) — more Nuberol-type muscle relaxants ============================================
+["Tab Norgesic","Orphenadrine 35mg + Paracetamol 450mg","Muscle relaxants","1 tablet","TDS (1+1+1)","5 days","After meals; may cause dry mouth","iNova",""],
+["Tab Nuberol","Orphenadrine 35mg + Paracetamol 450mg","Muscle relaxants","1 tablet","TDS (1+1+1)","5 days","After meals; may cause dry mouth","Searle",""],
+// ============================================ ADDED (b16) — more oral antibiotics ============================================
+["Tab Rofid 200mg","Cefpodoxime proxetil","Antibiotics — oral","1 tablet","BD (1+0+1)","7 days","After meals","Getz","Cephalosporin — 3rd generation"],
+["Tab Rulide 150mg","Roxithromycin","Antibiotics — oral","1 tablet","BD (1+0+1)","7 days","Before meals","Sanofi","Macrolide"],
+["Cap Distaclor 250mg","Cefaclor","Antibiotics — oral","1 capsule","TDS (1+1+1)","7 days","After meals","generic (multiple)","Cephalosporin — 2nd generation"],
+["Cap Ospexin 500mg","Cephalexin","Antibiotics — oral","1 capsule","QID (6 hourly)","7 days","After meals","Sandoz","Cephalosporin — 1st generation"],
+// ============================================ ADDED (b16) — more Vitamin D & calcium ============================================
+["Cap OptD 200,000 IU","Vitamin D3 (200,000 IU)","Bone & calcium (bisphosphonates, Vit D)","1 capsule","Once monthly","3 months","With milk or a meal","CCL","Vitamin D"],
+["Cap OptD 50,000 IU","Vitamin D3 (weekly)","Bone & calcium (bisphosphonates, Vit D)","1 capsule","Once weekly","8 weeks","With milk or a meal","CCL","Vitamin D"],
+["Cap Ostvit-D 200,000 IU","Vitamin D3","Bone & calcium (bisphosphonates, Vit D)","1 capsule","Once monthly","3 months","With milk or a meal","Werrick","Vitamin D"],
+["Cap Cholecalciferol 50,000 IU","Vitamin D3 (weekly)","Bone & calcium (bisphosphonates, Vit D)","1 capsule","Once weekly","8 weeks","With milk or a meal","generic (multiple)","Vitamin D"],
+["Tab Mobical","Calcium + Vitamin D3","Bone & calcium (bisphosphonates, Vit D)","1 tablet","OD (once daily)","1 month","After meals","Sami","Calcium combination"],
+["Tab Chewcal","Calcium carbonate + Vit D3 (chewable)","Bone & calcium (bisphosphonates, Vit D)","1 tablet","OD–BD","1 month","Chew after meals","Hilton","Calcium carbonate"],
+["Tab Kalsob","Calcium + Vitamin D3","Bone & calcium (bisphosphonates, Vit D)","1 tablet","OD (once daily)","1 month","After meals","","Calcium combination"],
+// ============================================ ADDED (b16) — RA: steroids, folate, JAK, biologics ============================================
+["Tab Folic Acid 5mg","Folic acid","Arthritis & gout — steroids & DMARDs","1 tablet","OD (once daily)","1 month","Folate supplement; if on methotrexate, take on non-MTX days","generic (multiple)","Supplement with MTX"],
+["Tab Deltacortil EC 5mg","Prednisolone (enteric-coated)","Arthritis & gout — steroids & DMARDs","As advised (e.g. 4 tabs = 20mg loading)","OD (once daily)","As directed (tapering)","RA: loading dose then taper as advised; after breakfast; do not stop abruptly","Pfizer","Corticosteroid"],
+["Tab Tofcib 5mg","Tofacitinib","Arthritis & gout — steroids & DMARDs","1 tablet","BD (1+0+1)","3 months","Screen for TB / hepatitis before starting","BF Biosciences","JAK inhibitor"],
+["Inf Mabthera 500mg","Rituximab (anti-CD20)","Arthritis & gout — steroids & DMARDs","IV infusion (two doses 2 weeks apart)","As advised","As advised","Specialist administration; premedicate; screen for infection / hepatitis","Roche","Biologic DMARD"],
+["Inj Simponi 50mg","Golimumab (anti-TNF)","Arthritis & gout — steroids & DMARDs","50mg S/C","Once monthly","3 months","Screen for TB first; store in fridge","Janssen","Biologic DMARD"],
+// ============================================ ADDED (b16) — more gels & topicals ============================================
+["Moov Cream","Diclofenac diethylamine + Menthol + Methyl salicylate","Gels & topical","Apply small amount","TDS (1+1+1)","2 weeks","Massage gently over affected area","Reckitt","Counter-irritant"],
+["Deep Heat Cream","Methyl salicylate + Menthol","Gels & topical","Apply small amount","BD (1+0+1)","2 weeks","Massage until absorbed; avoid broken skin","Mentholatum","Counter-irritant"],
+["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 26;
+const SEED_VERSION = 27;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -2798,6 +2846,10 @@ function migrateDB(){
   if(db.settings.mrnPrefix===undefined) db.settings.mrnPrefix='FH';
   // v8: editable instruction library + logo
   if(!db.instrPresets) db.instrPresets = seedInstrPresets();
+  else { // merge any newly-shipped standard presets not already present (matched by label)
+    const haveLabels = new Set(db.instrPresets.map(p=>(p.label||'').trim().toLowerCase()));
+    seedInstrPresets().forEach(sp=>{ if(!haveLabels.has((sp.label||'').trim().toLowerCase())) db.instrPresets.push({id:uid('ip'), label:sp.label, en:sp.en, ur:sp.ur}); });
+  }
   if(db.settings.logo===undefined) db.settings.logo='';
   // v9: QR codes + profit tracking
   if(db.settings.qrRx===undefined) db.settings.qrRx='on';
@@ -3425,7 +3477,13 @@ const INSTR_PRESETS = [
 "پانی زیادہ پئیں — روزانہ 10 سے 12 گلاس۔\nسرخ گوشت، کلیجی، گردے اور مغز کم سے کم کریں۔\nدالیں، پالک اور مشروم اعتدال میں استعمال کریں۔\nکولڈ ڈرنکس اور میٹھے مشروبات سے پرہیز کریں۔\nوزن آہستہ آہستہ کم کریں۔"],
 ["Osteoporosis — ہڈیوں کی کمزوری",
 "Take 15–20 minutes of sunlight daily. Use milk, yogurt, cheese and calcium-rich foods. Walk and do light exercise daily. Prevent falls: beware of slippery bathrooms, keep a night light on.",
-"روزانہ 15 سے 20 منٹ دھوپ لیں۔\nدودھ، دہی، پنیر اور کیلشیم والی غذائیں استعمال کریں۔\nروزانہ واک اور ہلکی ورزش کریں۔\nگرنے سے بچاؤ: باتھ روم میں پھسلن سے احتیاط کریں اور رات کو روشنی رکھیں۔"]
+"روزانہ 15 سے 20 منٹ دھوپ لیں۔\nدودھ، دہی، پنیر اور کیلشیم والی غذائیں استعمال کریں۔\nروزانہ واک اور ہلکی ورزش کریں۔\nگرنے سے بچاؤ: باتھ روم میں پھسلن سے احتیاط کریں اور رات کو روشنی رکھیں۔"],
+["Rheumatoid arthritis — care & medicines — گٹھیا (RA)",
+"Take your arthritis medicines (DMARDs) regularly even when you feel well — they work slowly over several weeks. Do not stop steroids suddenly. Keep the joints moving with gentle daily exercises, but rest very swollen joints. Apply a warm compress to stiff joints, especially in the morning. Stay active and keep a healthy weight. Report promptly any fever, cough, sore throat or other infection — some of these medicines lower immunity. Get flu and pneumonia vaccines as advised, and avoid live vaccines. Come for your blood tests on time.",
+"گٹھیا کی دوائیں (DMARDs) باقاعدگی سے لیں چاہے طبیعت ٹھیک محسوس ہو — یہ کئی ہفتوں میں آہستہ آہستہ اثر کرتی ہیں۔\nسٹیرائیڈ دوا اچانک بند نہ کریں۔\nجوڑوں کو روزانہ ہلکی ورزش سے حرکت میں رکھیں، مگر زیادہ سوجے ہوئے جوڑ کو آرام دیں۔\nصبح کے وقت اکڑے جوڑوں پر گرم ٹکور کریں۔\nمتحرک رہیں اور مناسب وزن برقرار رکھیں۔\nبخار، کھانسی، گلے کی خراش یا کوئی بھی انفیکشن ہو تو فوراً بتائیں — بعض دوائیں قوتِ مدافعت کم کرتی ہیں۔\nمشورے کے مطابق فلو اور نمونیا کے ٹیکے لگوائیں؛ زندہ (live) ویکسین سے پرہیز کریں۔\nخون کے ٹیسٹ وقت پر کروائیں۔"],
+["Methotrexate safety (RA) — میتھوٹریکسیٹ احتیاط",
+"Methotrexate is taken ONCE A WEEK only — on the same day each week. NEVER take it daily; a daily dose can be dangerous. Take folic acid on a different day as prescribed. Avoid alcohol completely. Have your blood tests (blood count and liver) done regularly as advised. Before starting any new medicine, tell the doctor or pharmacist that you take methotrexate. Report mouth ulcers, unusual cough or breathlessness, fever, or yellowing of the eyes. Do not become pregnant / father a child while on methotrexate — please discuss contraception.",
+"میتھوٹریکسیٹ ہفتے میں صرف ایک بار لینی ہے — ہر ہفتے وہی مقررہ دن۔\nاسے روزانہ ہرگز نہ لیں؛ روزانہ خوراک خطرناک ہو سکتی ہے۔\nفولک ایسڈ ہدایت کے مطابق الگ دن لیں۔\nشراب سے مکمل پرہیز کریں۔\nخون کے ٹیسٹ (خون کی مکمل گنتی اور جگر) باقاعدگی سے کرواتے رہیں۔\nکوئی نئی دوا شروع کرنے سے پہلے ڈاکٹر یا فارماسسٹ کو بتائیں کہ آپ میتھوٹریکسیٹ لے رہے ہیں۔\nمنہ کے چھالے، غیر معمولی کھانسی یا سانس کی تنگی، بخار یا آنکھوں کی زردی ہو تو بتائیں۔\nمیتھوٹریکسیٹ کے دوران حمل نہ ٹھہرے / بچہ پیدا کرنے سے گریز کریں — مانع حمل کے بارے میں مشورہ کریں۔"]
 ];
 function seedInstrPresets(){
   return INSTR_PRESETS.map((p,i)=>({id:'ip'+(i+1), label:p[0], en:p[1], ur:p[2]}));
@@ -3538,9 +3596,16 @@ function durCellHTML(value){
   const uOpts = DUR_UNITS.map(u=>'<option'+(u===unit?' selected':'')+'>'+u+'</option>').join('');
   return '<input type="hidden" class="rx-dur" value="'+esc(value||'')+'">'+
     '<span class="dur-wrap'+(custom?' hidden':'')+'">'+
+      '<button type="button" class="dur-minus" title="One less">−</button>'+
       '<input type="number" class="rx-dur-n" min="0" step="1" value="'+esc(n)+'">'+
       '<select class="rx-dur-u">'+uOpts+'</select>'+
-      '<button type="button" class="dur-plus" title="Add one">＋</button>'+
+      '<button type="button" class="dur-plus" title="One more">＋</button>'+
+      '<select class="dur-preset" title="Continue / as needed / custom">'+
+        '<option value="">⋯</option>'+
+        '<option value="Continue (until advised otherwise)">Continue…</option>'+
+        '<option value="As needed">As needed</option>'+
+        '<option value="__cust">Custom text…</option>'+
+      '</select>'+
     '</span>'+
     '<span class="dur-cust-wrap'+(custom?'':' hidden')+'">'+
       '<input type="text" class="rx-dur-cust" value="'+esc(custom?value:'')+'">'+
@@ -3595,6 +3660,16 @@ function addRxRow(m, bodyId){
       return;
     }
     if(e.target.classList.contains('rx-dur-u')){ syncDur(tr); regenRow(tr); }
+    if(e.target.classList.contains('dur-preset')){
+      const val = e.target.value; e.target.value='';
+      if(!val) return;
+      tr.querySelector('.dur-wrap').classList.add('hidden');
+      const cw = tr.querySelector('.dur-cust-wrap'); cw.classList.remove('hidden');
+      const ci = tr.querySelector('.rx-dur-cust'); ci.value = (val==='__cust') ? '' : val;
+      tr.querySelector('input.rx-dur').value = ci.value;
+      if(val==='__cust') ci.focus();
+      regenRow(tr); return;
+    }
   });
   tr.addEventListener('input', e=>{
     const t = e.target;
@@ -3606,6 +3681,9 @@ function addRxRow(m, bodyId){
   tr.addEventListener('click', e=>{
     if(e.target.closest('.dur-plus')){
       const nI = tr.querySelector('.rx-dur-n'); nI.value = (parseInt(nI.value)||0)+1; syncDur(tr); regenRow(tr); return;
+    }
+    if(e.target.closest('.dur-minus')){
+      const nI = tr.querySelector('.rx-dur-n'); nI.value = Math.max(0,(parseInt(nI.value)||0)-1); syncDur(tr); regenRow(tr); return;
     }
     if(e.target.closest('.combo-back')){
       const base = e.target.dataset.base;
@@ -4073,12 +4151,48 @@ function renderMedList(){
   $('medListBody').innerHTML = html;
   $('medCountLabel').textContent = rows.length+' of '+db.meds.length+' medicines';
 }
+function medCategories(){
+  return [...new Set(db.meds.map(m=>(m.cat||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+}
+function medClassesFor(cat){
+  return [...new Set(db.meds.filter(m=>(m.cat||'')===cat).map(m=>(m.cls||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+}
+function populateMedCatSelect(sel){
+  const cats = medCategories();
+  $('mfCat').innerHTML = '<option value="">— Choose category —</option>' +
+    cats.map(c=>'<option value="'+esc(c)+'"'+(c===sel?' selected':'')+'>'+esc(c)+'</option>').join('') +
+    '<option value="__new">＋ New category…</option>';
+}
+function populateMedClsSelect(cat, sel){
+  const clss = medClassesFor(cat);
+  $('mfCls').innerHTML = '<option value="">— (no sub-category) —</option>' +
+    clss.map(c=>'<option value="'+esc(c)+'"'+(c===sel?' selected':'')+'>'+esc(c)+'</option>').join('') +
+    '<option value="__new">＋ New sub-category…</option>';
+}
+function onMfCatChange(){
+  const v = $('mfCat').value;
+  const isNew = v==='__new';
+  $('mfCatNew').classList.toggle('hidden', !isNew);
+  if(isNew){ $('mfCatNew').focus(); populateMedClsSelect('', ''); }
+  else populateMedClsSelect(v, '');
+  onMfClsChange();
+}
+function onMfClsChange(){
+  $('mfClsNew').classList.toggle('hidden', $('mfCls').value!=='__new');
+  if($('mfCls').value==='__new') $('mfClsNew').focus();
+}
 function openMedForm(id){
   editingMedId = id||null;
   const m = id ? db.meds.find(x=>x.id===id) : {name:'',generic:'',cat:'',cls:'',co:'',dose:'',freq:'',dur:'',instr:''};
   $('medFormTitle').textContent = id ? 'Edit medicine' : 'Add medicine';
-  $('mfName').value=m.name; $('mfGeneric').value=m.generic||''; $('mfCat').value=m.cat||''; $('mfCls').value=m.cls||''; $('mfCo').value=m.co||''; $('mfDose').value=m.dose;
+  $('mfName').value=m.name; $('mfGeneric').value=m.generic||''; $('mfCo').value=m.co||''; $('mfDose').value=m.dose;
   $('mfFreq').value=m.freq; $('mfDur').value=m.dur; $('mfInstr').value=m.instr||'';
+  // category / sub-category dropdowns
+  const cat = m.cat||'';
+  populateMedCatSelect(cat);
+  $('mfCatNew').value=''; $('mfCatNew').classList.add('hidden');
+  populateMedClsSelect(cat, m.cls||'');
+  $('mfClsNew').value=''; $('mfClsNew').classList.add('hidden');
   $('medFormCard').classList.remove('hidden');
   refreshFieldStatus();
   $('mfName').focus();
@@ -4087,7 +4201,9 @@ function closeMedForm(){ $('medFormCard').classList.add('hidden'); editingMedId=
 function saveMedForm(){
   const name = $('mfName').value.trim();
   if(!name){ toast('⚠ Medicine name is required'); return; }
-  const data = {name, generic:$('mfGeneric').value.trim(), cat:$('mfCat').value.trim()||'Other', cls:$('mfCls').value.trim(), co:$('mfCo').value.trim(), dose:$('mfDose').value.trim(),
+  let cat = $('mfCat').value; if(cat==='__new') cat = $('mfCatNew').value.trim();
+  let cls = $('mfCls').value; if(cls==='__new') cls = $('mfClsNew').value.trim();
+  const data = {name, generic:$('mfGeneric').value.trim(), cat:(cat||'').trim()||'Other', cls:(cls||'').trim(), co:$('mfCo').value.trim(), dose:$('mfDose').value.trim(),
     freq:$('mfFreq').value.trim(), dur:$('mfDur').value.trim(), instr:$('mfInstr').value.trim()};
   if(editingMedId){
     Object.assign(db.meds.find(x=>x.id===editingMedId), data);
@@ -5259,7 +5375,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b14';
+const APP_BUILD = '2026.07.12-b16';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -8570,6 +8686,8 @@ try{ initAuth(); }
 catch(e){ try{ console.error('initAuth failed:', e); var ls=document.getElementById('lockScreen'); if(ls) ls.classList.remove('hidden'); }catch(_){ } }
 _initStep(initAutoBackup);
 _initStep(()=>{ if(typeof renderNotif==='function') renderNotif(); });
+/* app finished starting up — from here, a stray click-time error must NOT show the "startup problem" bar */
+try{ window.__appReady = true; var _beb=document.getElementById('bootErrBar'); if(_beb) _beb.style.display='none'; }catch(e){}
 /* ---- auto-capitalise sentence starts (first letter, and after each new line) ---- */
 function autoCapField(el){
   const v = el.value; if(!v) return;
