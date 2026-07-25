@@ -111,6 +111,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
   .nav-group:hover .nav-sub{max-height:230px;opacity:1;margin-bottom:4px}
 }
 .nav-sub button{padding:8.5px 11px;font-size:13px}
+.edit-banner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fef3c7;border:1px solid #fcd34d;
+  color:#92400e;border-radius:11px;padding:10px 14px;margin-bottom:16px;font-size:13.5px;font-weight:600}
+html[data-theme="dark"] .edit-banner{background:#3a2f16;border-color:#6b551f;color:#fde68a}
+.edit-banner.newv{background:#dcfce7;border-color:#86efac;color:#166534}
+html[data-theme="dark"] .edit-banner.newv{background:#14321f;border-color:#2f6b45;color:#bbf7d0}
+/* pinned nav group: keep the submenu open across navigation (both mouse & touch) */
+.nav-group.pinned .nav-sub{max-height:260px;opacity:1;margin-bottom:4px}
+.nav-group.pinned .chev{transform:rotate(180deg);opacity:.9}
+.nav-pin{flex:none;margin-left:6px;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:6px;font-size:12px;opacity:.4;cursor:pointer;transition:opacity .15s,background .15s}
+.nav-gh:hover .nav-pin{opacity:.7}
+.nav-pin:hover{opacity:1;background:rgba(255,255,255,.14)}
+.nav-pin.on{opacity:1;color:#67e8f9}
+@media(max-width:920px){.nav-pin{display:none}}
 /* three-dot activity loader on the active tab */
 .nav-dots{display:inline-flex;gap:3.5px;margin-left:auto;align-items:center;flex:none}
 .nav-dots i{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:navDot 1.15s ease-in-out infinite}
@@ -1154,6 +1168,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <section class="tab active" id="tab-visit">
   <div class="page-head">New Prescription</div>
 
+  <div id="editVisitBanner" class="edit-banner hidden">
+    <span id="editVisitText">✎ Editing an existing prescription — saving updates this same visit.</span>
+    <button type="button" class="btn btn-ghost btn-sm" onclick="makeFollowupVisit()">＋ Make this a new follow-up visit instead</button>
+  </div>
+
   <div class="card">
     <h2><span class="step">1</span> Patient</h2>
     <div class="med-search-wrap" style="margin-bottom:12px">
@@ -1181,6 +1200,15 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 
   <div class="card">
     <h2><span class="step">2</span> Clinical notes</h2>
+    <div class="btn-bar" style="margin-bottom:12px">
+      <div class="med-search-wrap" style="flex:1;min-width:200px">
+        <input type="text" id="ntSearch" placeholder="🔍 Search clinical-notes templates…" autocomplete="off">
+        <div class="med-suggest" id="ntSuggest"></div>
+      </div>
+      <select id="ntSelect" style="max-width:240px"><option value="">🗒️ Insert clinical-notes template…</option></select>
+      <button class="btn btn-ghost btn-sm" onclick="insertNoteTemplate()">Insert</button>
+      <button class="btn btn-ghost btn-sm" onclick="saveAsNoteTemplate()" title="Save just the clinical notes (complaints, findings, diagnosis, investigations, advice, plan) as a reusable notes template — medicines are NOT included">💾 Save notes as template</button>
+    </div>
     <div class="grid g2">
       <div class="field"><label>Presenting complaints</label><textarea id="cComplaints" placeholder="e.g. Right knee pain × 3 months, worse on stairs and prolonged standing"></textarea></div>
       <div class="field"><label>Clinical findings</label><textarea id="cFindings" placeholder="e.g. Tenderness over medial joint line, crepitus, painful terminal flexion…"></textarea></div>
@@ -1202,14 +1230,14 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <h2><span class="step">3</span> Prescription <span class="rx-count" id="rxCount">0</span></h2>
     <div class="btn-bar" style="margin-bottom:12px">
       <div class="med-search-wrap" style="flex:1;min-width:220px">
-        <input type="text" id="tplSearch" placeholder="🔍 Search templates — e.g. “OA”, “post-op”…" autocomplete="off">
+        <input type="text" id="tplSearch" placeholder="🔍 Search prescription templates — e.g. “OA”, “post-op”…" autocomplete="off">
         <div class="med-suggest" id="tplSuggest"></div>
       </div>
       <select id="tplSelect" style="max-width:260px">
-        <option value="">📋 Insert a template…</option>
+        <option value="">💊 Insert prescription (medicines)…</option>
       </select>
       <button class="btn btn-ghost btn-sm" onclick="insertTemplate()">Insert</button>
-      <button class="btn btn-ghost btn-sm" onclick="saveAsTemplate()" title="Saves everything currently on this form (notes, meds, advice) as a reusable template">💾 Save current form as template</button>
+      <button class="btn btn-ghost btn-sm" onclick="saveAsTemplate()" title="Saves the current medicines as a reusable prescription template (clinical notes are saved separately in Step 2)">💾 Save medicines as template</button>
     </div>
     <div class="fav-bar" id="favBar"></div>
     <div class="med-search-wrap" style="margin-bottom:12px">
@@ -1334,6 +1362,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="field"><label>Phone</label><input type="text" id="apPhone" placeholder="03xx-xxxxxxx" autocomplete="off"></div>
     </div>
     <div class="grid g3 mt">
+      <div class="field"><label>Age</label><input type="text" id="apAge" placeholder="e.g. 34 y" autocomplete="off"></div>
+      <div class="field"><label>Sex</label><select id="apSex"><option value=""></option><option>Male</option><option>Female</option></select></div>
+      <div class="field"><label>Address</label><input type="text" id="apAddress" placeholder="Town / area" autocomplete="off"></div>
+    </div>
+    <div class="grid g3 mt">
       <div class="field"><label>Date</label><input type="date" id="apDate"></div>
       <div class="field"><label>Time (optional)</label><input type="time" id="apTime"></div>
       <div class="field"><label>Reason / note</label><input type="text" id="apNote" placeholder="e.g. Stitch removal, X-ray review…"></div>
@@ -1428,7 +1461,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button class="btn btn-ghost btn-sm" onclick="patClearSel()">Clear</button>
     </div>
     <table class="list">
-      <thead><tr><th style="width:34px"><input type="checkbox" id="patSelAll" title="Select all shown" onclick="patToggleSelAll(this.checked)"></th><th>MR #</th><th>Name</th><th>Age / Sex</th><th>Phone</th><th>Visits</th><th>Last visit</th><th style="width:150px"></th></tr></thead>
+      <thead><tr><th style="width:34px"><input type="checkbox" id="patSelAll" title="Select all shown" onclick="patToggleSelAll(this.checked)"></th><th>MR #</th><th>Name</th><th>Age / Sex</th><th>Diagnosis</th><th>Phone</th><th>Visits</th><th>Last visit</th><th style="width:150px"></th></tr></thead>
       <tbody id="patListBody"></tbody>
     </table>
     <div class="empty hidden" id="patEmpty"><span class="ei">🗂</span><b>No patients yet</b><br>They're added automatically when you save a prescription.</div>
@@ -1866,7 +1899,14 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </div>
     <div class="btn-bar mt"><button class="btn btn-green" onclick="qrSave()">Save QR code</button></div>
   </div>
-  <div class="card"><h2>Your QR codes</h2><div class="qr-grid" id="qrList"></div></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <h2 style="margin:0">Your QR codes</h2>
+      <button class="btn btn-ghost btn-sm" onclick="qrResetToRecommended()" title="Remove duplicates and reset to the recommended curated set (keeps your saved links for matching items)">↺ Tidy up / reset to recommended set</button>
+    </div>
+    <p class="muted small" style="margin:6px 0 12px">Recommended set: your socials, Google review, and 5 more — knee physio, lower-back and shoulder exercise videos, plus 2 spare slots.</p>
+    <div class="qr-grid" id="qrList"></div>
+  </div>
 </section>
 
 <!-- ============ TAB: LEAFLETS ============ -->
@@ -2145,11 +2185,19 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   </div>
 
   <div class="card">
-    <h2>Prescription templates</h2>
-    <p class="muted small" style="margin-bottom:10px">Create templates from the New Prescription tab (“Save current form as template”). Manage them here.</p>
+    <h2>Prescription templates <span class="muted small" style="font-weight:400">(medicines)</span></h2>
+    <p class="muted small" style="margin-bottom:10px">Reusable sets of medicines. Create them on the New Prescription tab (Step 3 → “Save current form as template”). These insert medicines only.</p>
     <table class="list">
       <thead><tr><th>Template</th><th>Diagnosis</th><th>Medicines</th><th style="width:80px"></th></tr></thead>
       <tbody id="tplListBody"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Clinical-notes templates</h2>
+    <p class="muted small" style="margin-bottom:10px">Reusable clinical notes (complaints, findings, diagnosis, investigations, advice, plan) — no medicines. Create them on the New Prescription tab (Step 2 → “Save notes as template”).</p>
+    <table class="list">
+      <thead><tr><th>Template</th><th>Diagnosis</th><th>Notes</th><th style="width:80px"></th></tr></thead>
+      <tbody id="noteTplListBody"></tbody>
     </table>
   </div>
   <div class="card">
@@ -2765,7 +2813,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 27;
+const SEED_VERSION = 29;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -2779,7 +2827,7 @@ function freshDB(){
       liUrl:'https://www.linkedin.com/in/draliijaz',
       waBiz:'0315-7459655'},
     meds: SEED_MEDS.map((m,i)=>({id:'m'+(i+1),name:m[0],generic:m[1],cat:m[2],dose:m[3],freq:m[4],dur:m[5],instr:m[6],co:m[7]||'',cls:m[8]||''})),
-    patients:[], visits:[], templates: seedTemplates(), documents:[], surgeries:[], expenses:[],
+    patients:[], visits:[], templates: seedTemplates(), noteTemplates:[], documents:[], surgeries:[], expenses:[],
     users:[], queue:[], appts:[], videos:[], registry:[], inventory:[], qrcodes:[], leaflets:[], recalls:[],
     instrPresets: seedInstrPresets(),
     seq:{mrn:1, med:SEED_MEDS.length+1, mrnDay:null}, seedVersion: SEED_VERSION
@@ -2836,6 +2884,17 @@ function migrateDB(){
   db.meds.sort((a,b)=>a.name.localeCompare(b.name));
   // v4: templates, documents, fees
   if(!db.templates) db.templates = seedTemplates();
+  // b17: separate clinical-notes templates from prescription (medicine) templates.
+  // Carry the notes half of any existing template into a matching clinical-notes template so nothing is lost.
+  if(!db.noteTemplates){
+    db.noteTemplates=[];
+    (db.templates||[]).forEach(t=>{
+      if(t.complaints||t.findings||t.diagnosis||t.tests||t.plan||t.proc||t.followUp){
+        db.noteTemplates.push({id:'nt_'+t.id, name:t.name, complaints:t.complaints||'', findings:t.findings||'',
+          diagnosis:t.diagnosis||'', tests:t.tests||'', plan:t.plan||'', proc:t.proc||'', followUp:t.followUp||''});
+      }
+    });
+  }
   if(!db.documents) db.documents = [];
   if(db.settings.defFee===undefined) db.settings.defFee='';
   // v5: bilingual printing
@@ -2846,9 +2905,18 @@ function migrateDB(){
   if(db.settings.mrnPrefix===undefined) db.settings.mrnPrefix='FH';
   // v8: editable instruction library + logo
   if(!db.instrPresets) db.instrPresets = seedInstrPresets();
-  else { // merge any newly-shipped standard presets not already present (matched by label)
-    const haveLabels = new Set(db.instrPresets.map(p=>(p.label||'').trim().toLowerCase()));
-    seedInstrPresets().forEach(sp=>{ if(!haveLabels.has((sp.label||'').trim().toLowerCase())) db.instrPresets.push({id:uid('ip'), label:sp.label, en:sp.en, ur:sp.ur}); });
+  else { // b18: give every SHIPPED standard preset a STABLE id (so the instruction library syncs cleanly, no duplicates),
+         // keep the user's edits to shipped presets, keep their custom presets, and drop duplicate labels.
+    const seeded = seedInstrPresets();
+    const norm = s => (s||'').trim().toLowerCase();
+    const shippedLabels = new Set(seeded.map(s=>norm(s.label)));
+    const prevByLabel = {}; db.instrPresets.forEach(p=>{ const k=norm(p.label); if(!(k in prevByLabel)) prevByLabel[k]=p; });
+    // shipped presets: stable seed id, but keep the user's edited English/Urdu text if they'd changed it
+    const shipped = seeded.map(s=>{ const prev=prevByLabel[norm(s.label)]; return prev ? {id:s.id, label:s.label, en:prev.en, ur:prev.ur, updatedAt:prev.updatedAt} : s; });
+    // custom presets the user added (labels not in the shipped set), de-duplicated by label
+    const seen=new Set(); const custom=[];
+    db.instrPresets.forEach(p=>{ const k=norm(p.label); if(shippedLabels.has(k)||seen.has(k)) return; seen.add(k); custom.push(p); });
+    db.instrPresets = shipped.concat(custom);
   }
   if(db.settings.logo===undefined) db.settings.logo='';
   // v9: QR codes + profit tracking
@@ -2918,14 +2986,7 @@ function migrateDB(){
     const regPat=new Set(); db.registry.forEach(r=>{ if(r.patientId) regPat.add(r.patientId); });
     db.patients.forEach(p=>{ if(regPat.has(p.id) && !active.has(p.id)) p.regOnly=true; });
   }
-  if(db.qrcodes && db.qrcodes.length){
-    const labels=new Set(db.qrcodes.map(q=>q.label));
-    [['Knee exercises (YouTube)','https://www.youtube.com/results?search_query=knee+strengthening+exercises'],
-     ['Low-back exercises (YouTube)','https://www.youtube.com/results?search_query=lower+back+pain+exercises'],
-     ['Shoulder exercises (YouTube)','https://www.youtube.com/results?search_query=shoulder+rehab+exercises']].forEach(e=>{
-       if(!labels.has(e[0])) db.qrcodes.push({id:uid('qr'),label:e[0],text:e[1],note:'Paste your own video link'});
-    });
-  }
+  // (v25 auto-added exercise QR codes — removed in b17; the QR library is now a curated set with a “Reset to recommended set” button)
   // v26: centralised accounts — pin exactly one owner; give legacy accounts an email fallback
   if(Array.isArray(db.users) && db.users.length){
     if(!db.users.some(u=>u.isOwner)){
@@ -2985,6 +3046,8 @@ function mrnPreview(){  // non-consuming — shown in the MR # box before saving
   return (db.settings.mrnStyle||'date')==='seq' ? mrnSeq(false) : mrnDateCounter(false);
 }
 function uid(p){ return p + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+/* stamp a record with an edit time so cloud-sync keeps the NEWEST version instead of always preferring the cloud copy */
+function syncTouch(rec){ if(rec && typeof rec==='object') rec.updatedAt = new Date().toISOString(); return rec; }
 function isNoAllergy(s){
   s = (s||'').trim().toLowerCase().replace(/[.۔]+$/,'');
   return /^(nkda|nka|none|nil|no|n\/a|na|no known( drug)? allerg(y|ies)|no allerg(y|ies)( known)?)$/.test(s);
@@ -3066,7 +3129,7 @@ function showTab(name, isRefresh){
   if(name==='visit' && typeof renderRxQrSelect==='function') renderRxQrSelect();
   if(typeof applyCardTints==='function') applyCardTints();
   if(name==='analytics') renderAnalytics();
-  if(name==='settings'){ renderDataStats(); renderTplList(); renderIpList(); renderUserList(); renderAccessLog(); renderActivityLog();
+  if(name==='settings'){ renderDataStats(); renderTplList(); renderNoteTplList(); renderIpList(); renderUserList(); renderAccessLog(); renderActivityLog();
     if($('inviteHint')) $('inviteHint').textContent = makeInvite()? '' : 'Set up Cloud Sync first to create an invite.'; }
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
   if(typeof applyLabelOverrides==='function') applyLabelOverrides();
@@ -3340,6 +3403,7 @@ function wipeData(){ openEraseModal(); }   // back-compat
 
 /* ================= VISIT FORM / RX BUILDER ================= */
 let linkedPatientId = null;
+let editingVisitId = null;   // set when re-opening an existing prescription to edit in place (no new visit on save)
 
 function setupSuggest(inputId, boxId, getItems, renderItem, onPick){
   const input = $(inputId), box = $(boxId);
@@ -3394,7 +3458,7 @@ function linkPatient(pid){
   linkedPatientId = pid;
   $('pName').value=p.name; $('pAge').value=p.age||''; $('pSex').value=p.sex||'';
   $('pPhone').value=p.phone||''; $('pMrn').value=p.mrn||''; $('pAddress').value=p.address||'';
-  $('pAllergies').value=p.allergies||''; $('pMedHx').value=p.medHx||''; $('pSurgHx').value=p.surgHx||'';
+  $('pAllergies').value=p.allergies||'NKDA'; $('pMedHx').value=p.medHx||''; $('pSurgHx').value=p.surgHx||'';
   tintAllergyBox();
   const nVisits = db.visits.filter(v=>v.patientId===pid).length;
   $('ptLinkedLabel').textContent = '📋 Existing patient: '+p.name+' ('+p.mrn+') — '+nVisits+' previous visit'+(nVisits===1?'':'s');
@@ -3546,8 +3610,8 @@ function saveIpForm(){
   const label = $('ipLabel').value.trim();
   if(!label){ toast('⚠ Give the preset a title'); return; }
   const data = {label, en:$('ipEn').value.trim(), ur:$('ipUr').value.trim()};
-  if(editingIpId) Object.assign(db.instrPresets.find(x=>x.id===editingIpId), data);
-  else db.instrPresets.push({id:uid('ip'), ...data});
+  if(editingIpId) syncTouch(Object.assign(db.instrPresets.find(x=>x.id===editingIpId), data));
+  else db.instrPresets.push(syncTouch({id:uid('ip'), ...data}));
   persist(); refreshPresetSelects(); renderIpList(); closeIpForm();
   toast('Preset saved — all future inserts use this version');
 }
@@ -3764,32 +3828,51 @@ function saveVisit(andPrint){
     p = db.patients.find(x=>x.id===linkedPatientId);
     Object.assign(p, f.patient, {mrn: p.mrn}); // keep original MRN
     if(f.patient.mrn) p.mrn = f.patient.mrn;
+    syncTouch(p);
   } else {
     p = {id: uid('p'), ...f.patient, createdAt: new Date().toISOString()};
     p.mrn = nextMrn();   // always assign a fresh number (the box only showed a preview)
+    syncTouch(p);
     db.patients.push(p);
     linkedPatientId = p.id;
   }
-  const visit = {
-    id: uid('v'), patientId: p.id, date: new Date().toISOString(),
-    complaints: f.complaints, findings: f.findings,
-    diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc, followUp: f.followUp,
-    followUpDate: f.followUpDate, fuDone: false, fee: f.fee, qrId: f.qrId, meds: f.meds,
-    images: visitImgs.map(x=>x.id),
-    by: byTag(),
-    dur: Math.round(vtElapsedMs()/1000)
-  };
-  db.visits.push(visit);
-  logActivity('add','prescription',p.name+' ('+p.mrn+')');
-  // if this prescription was started from today's queue, mark that token as seen
+  const editing = editingVisitId ? db.visits.find(v=>v.id===editingVisitId) : null;
+  let visit;
+  if(editing){
+    // update THIS SAME prescription in place — no new visit is created (stays 1 visit)
+    Object.assign(editing, {
+      complaints: f.complaints, findings: f.findings,
+      diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc, followUp: f.followUp,
+      followUpDate: f.followUpDate, fee: f.fee, qrId: f.qrId, meds: f.meds,
+      images: (editing.images||[]).concat(visitImgs.map(x=>x.id)),
+      editedAt: new Date().toISOString(), editedBy: byTag()
+    });
+    syncTouch(editing);
+    visit = editing;
+    logActivity('edit','prescription',p.name+' ('+p.mrn+')');
+  } else {
+    visit = syncTouch({
+      id: uid('v'), patientId: p.id, date: new Date().toISOString(),
+      complaints: f.complaints, findings: f.findings,
+      diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc, followUp: f.followUp,
+      followUpDate: f.followUpDate, fuDone: false, fee: f.fee, qrId: f.qrId, meds: f.meds,
+      images: visitImgs.map(x=>x.id),
+      by: byTag(),
+      dur: Math.round(vtElapsedMs()/1000)
+    });
+    db.visits.push(visit);
+    logActivity('add','prescription',p.name+' ('+p.mrn+')');
+  }
+  // if this prescription was started from today's queue, mark that token as seen (visit completed)
   if(activeQueueId){
     const q = db.queue.find(x=>x.id===activeQueueId);
-    if(q){ q.status='done'; q.visitId = visit.id; if(!q.patientId) q.patientId = p.id; }
+    if(q){ q.status='done'; q.visitId = visit.id; if(!q.patientId) q.patientId = p.id; syncTouch(q); }
     activeQueueId = null;
     updateQNavCount();
   }
+  editingVisitId = null;
   persist();
-  toast('Visit saved for '+p.name+' ('+p.mrn+')');
+  toast((editing?'Prescription updated for ':'Visit saved for ')+p.name+' ('+p.mrn+')');
   if(andPrint) printVisit(visit, p);
   clearVisitForm(false);
 }
@@ -3829,7 +3912,11 @@ $('pName').addEventListener('input', function(){ if(this.value.trim()) startVisi
 function clearVisitForm(ask){
   if(ask && !confirm('Clear the whole form?')) return;
   stopVisitTimer();
+  editingVisitId = null;
+  if(typeof updateEditBanner==='function') updateEditBanner();
   unlinkPatient();
+  $('pAllergies').value = 'NKDA';   // default: no known drug allergies (edit if the patient has any)
+  tintAllergyBox();
   ['cComplaints','cFindings','cDiagnosis','cTests','cPlan','cProc','cFollowUp','ptSearch','medSearch'].forEach(id=>$(id).value='');
   $('rxBody').innerHTML=''; updateRxCount();
   if($('rxAlerts')) $('rxAlerts').innerHTML='';
@@ -3930,6 +4017,8 @@ function renderPatientList(){
   $('patListBody').innerHTML = rows.map(p=>{
     const vs = db.visits.filter(v=>v.patientId===p.id);
     const last = vs.length ? fmtDate(vs[vs.length-1].date) : '—';
+    const dxRaw = (vs.slice().reverse().find(v=>(v.diagnosis||'').trim())||{}).diagnosis || '';
+    const dx = dxRaw ? dxRaw.replace(/\s*\n\s*/g,'; ') : '—';
     const chk = patSel.has(p.id)?' checked':'';
     return '<tr'+(chk?' class="reg-rowsel"':'')+'>'+
       '<td><input type="checkbox" class="pat-cb" data-id="'+p.id+'"'+chk+' onclick="patToggleOne(\''+p.id+'\',this.checked)"></td>'+
@@ -3937,6 +4026,7 @@ function renderPatientList(){
       '<td><span class="linklike" onclick="openPatient(\''+p.id+'\')">'+esc(p.name)+'</span>'+
         (p.allergies?' <span class="'+(isNoAllergy(p.allergies)?'allergy-ok':'allergy-flag')+'" title="Allergies: '+esc(p.allergies)+'">'+(isNoAllergy(p.allergies)?'✓':'⚠')+'</span>':'')+'</td>'+
       '<td>'+esc(p.age||'')+' '+esc(p.sex? '/ '+p.sex:'')+'</td>'+
+      '<td class="small" title="'+esc(dxRaw)+'">'+esc(dx.length>42?dx.slice(0,42)+'…':dx)+'</td>'+
       '<td>'+esc(p.phone||'')+'</td>'+
       '<td>'+vs.length+'</td>'+
       '<td>'+last+'</td>'+
@@ -4097,10 +4187,31 @@ function copyVisitToForm(vid){
   $('cComplaints').value=v.complaints||''; $('cFindings').value=v.findings||'';
   $('cDiagnosis').value=v.diagnosis||''; $('cTests').value=v.tests||'';
   $('cPlan').value=v.plan||''; $('cProc').value=v.proc||''; $('cFollowUp').value=v.followUp||'';
+  if(v.followUpDate && $('cFuDate')) $('cFuDate').value=v.followUpDate;
   if(typeof renderRxQrSelect==='function'){ renderRxQrSelect(); if($('cQrSel')) $('cQrSel').value=v.qrId||''; }
   (v.meds||[]).forEach(m=>addRxRow(m));
+  editingVisitId = vid;
+  updateEditBanner(v);
   showTab('visit');
-  toast('Prescription reopened for editing — saving will create a new version');
+  toast('Prescription reopened — saving updates this same visit (press “new follow-up” to make a new one)');
+}
+function updateEditBanner(v){
+  const b=$('editVisitBanner'); if(!b) return;
+  if(editingVisitId && v){
+    b.classList.remove('hidden','newv');
+    $('editVisitText').textContent = '✎ Editing the prescription from '+fmtDate(v.date)+' — saving updates this same visit (no extra visit is counted).';
+  } else if(editingVisitId===null && v==='newfollowup'){
+    b.classList.remove('hidden'); b.classList.add('newv');
+    $('editVisitText').textContent = '＋ New follow-up visit — saving will create a new, separate visit for this patient.';
+  } else {
+    b.classList.add('hidden'); b.classList.remove('newv');
+  }
+}
+/* explicit follow-up: turn an in-place edit into a brand-new visit on save */
+function makeFollowupVisit(){
+  editingVisitId = null;
+  updateEditBanner('newfollowup');
+  toast('Switched to a new follow-up visit — saving now creates a separate visit');
 }
 /* patient-list ✎ Rx → reopen the patient's latest prescription for full editing (new version on save) */
 function editPatientRx(pid){
@@ -4409,6 +4520,7 @@ setupSuggest('apPtSearch','apPtSuggest',
     ).slice(0,8),
   p => '<b>'+esc(p.name)+'</b> <span class="g">'+esc(p.mrn)+' · '+esc(p.phone||'')+'</span>',
   p => { apPatientId = p.id; $('apPtSearch').value = p.name; $('apPhone').value = p.phone||''; $('apName').value='';
+         $('apAge').value = p.age||''; $('apSex').value = p.sex||''; $('apAddress').value = p.address||'';
          $('apLinkedLabel').textContent = '📋 '+p.name+' ('+p.mrn+')'; }
 );
 $('apPtSearch').addEventListener('input', function(){ if(!this.value.trim()){ apPatientId=null; $('apLinkedLabel').textContent=''; } });
@@ -4419,12 +4531,16 @@ function bookAppt(){
   const date = $('apDate').value;
   if(!name){ toast('⚠ Pick an existing patient or type a name'); $('apName').focus(); return; }
   if(!date){ toast('⚠ Choose a date'); $('apDate').focus(); return; }
-  db.appts.push({id:uid('a'), date, time:$('apTime').value||'', name, phone:$('apPhone').value.trim(),
-    patientId:pid, note:$('apNote').value.trim(), status:'booked', createdAt:new Date().toISOString(), by:byTag()});
+  const time=$('apTime').value||'';
+  db.appts.push(syncTouch({id:uid('a'), date, time, name, phone:$('apPhone').value.trim(),
+    age:$('apAge').value.trim(), sex:$('apSex').value, address:$('apAddress').value.trim(),
+    patientId:pid, note:$('apNote').value.trim(), status:'booked', createdAt:new Date().toISOString(), by:byTag()}));
   apPatientId=null;
-  ['apPtSearch','apName','apPhone','apTime','apNote'].forEach(id=>$(id).value='');
+  ['apPtSearch','apName','apPhone','apAge','apAddress','apTime','apNote'].forEach(id=>$(id).value='');
+  $('apSex').value='';
   $('apLinkedLabel').textContent='';
   $('apViewDate').value = date;
+  logActivity('add','appointment', name+' — '+fmtDate(date)+(time?' '+time:''));
   persist(); renderAppts(); renderReminders();
   toast('📅 Appointment booked for '+fmtDate(date));
 }
@@ -4438,15 +4554,17 @@ function apptToQueue(id){
   const tq = todayQueue();
   if(a.patientId && tq.some(q=>q.patientId===a.patientId && q.status==='waiting')){ toast('⚠ Already in today\'s queue'); return; }
   const token = tq.reduce((m,q)=>Math.max(m,q.token),0) + 1;
-  db.queue.push({id:uid('q'), date:localISO(), token, name:a.name, phone:a.phone||'',
-    patientId:a.patientId, status:'waiting', at:new Date().toISOString(), by:byTag()});
-  a.status = 'arrived';
-  persist(); renderAppts(); updateQNavCount();
+  db.queue.push(syncTouch({id:uid('q'), date:localISO(), token, name:a.name, phone:a.phone||'',
+    age:a.age||'', sex:a.sex||'', address:a.address||'',
+    patientId:a.patientId, status:'waiting', at:new Date().toISOString(), by:byTag()}));
+  a.status = 'arrived'; syncTouch(a);
+  logActivity('add','to queue', 'Token '+token+' — '+a.name);
+  persist(); renderAppts(); updateQNavCount(); if(typeof renderQueue==='function') renderQueue();
   toast('🎫 Token '+token+' — '+a.name);
 }
 function setApptStatus(id, st){
   const a = db.appts.find(x=>x.id===id); if(!a) return;
-  a.status = st;
+  a.status = st; syncTouch(a);
   persist(); renderAppts();
 }
 function deleteAppt(id){
@@ -4648,9 +4766,12 @@ function addToQueue(){
   const tq = todayQueue();
   if(pid && tq.some(q=>q.patientId===pid && q.status==='waiting')){ toast('⚠ '+name+' is already waiting in the queue'); return; }
   const token = tq.reduce((m,q)=>Math.max(m,q.token),0) + 1;
-  db.queue.push({id:uid('q'), date:localISO(), token, name, phone, patientId:pid,
-    status:'waiting', at:new Date().toISOString(), by:byTag()});
+  const lp = pid ? db.patients.find(x=>x.id===pid) : null;
+  db.queue.push(syncTouch({id:uid('q'), date:localISO(), token, name, phone, patientId:pid,
+    age:(lp&&lp.age)||'', sex:(lp&&lp.sex)||'', address:(lp&&lp.address)||'',
+    status:'waiting', at:new Date().toISOString(), by:byTag()}));
   qPatientId=null; $('qPtSearch').value=''; $('qName').value=''; $('qPhone').value=''; $('qLinkedLabel').textContent='';
+  logActivity('add','to queue', 'Token '+token+' — '+name);
   persist(); renderQueue();
   toast('🎫 Token '+token+' — '+name);
 }
@@ -4658,7 +4779,7 @@ function startFromQueue(id){
   const q = db.queue.find(x=>x.id===id); if(!q) return;
   clearVisitForm(false);
   if(q.patientId) linkPatient(q.patientId);
-  else { $('pName').value=q.name; $('pPhone').value=q.phone||''; }
+  else { $('pName').value=q.name; $('pPhone').value=q.phone||''; $('pAge').value=q.age||''; $('pSex').value=q.sex||''; $('pAddress').value=q.address||''; }
   startVisitTimer();
   activeQueueId = id;
   showTab('visit');
@@ -4666,7 +4787,7 @@ function startFromQueue(id){
 }
 function setQueueStatus(id, st){
   const q = db.queue.find(x=>x.id===id); if(!q) return;
-  q.status = st;
+  q.status = st; syncTouch(q);
   persist(); renderQueue();
 }
 function removeFromQueue(id){
@@ -4710,21 +4831,21 @@ function renderQueue(){
   updateQNavCount();
 }
 
-/* ================= PRESCRIPTION TEMPLATES ================= */
+/* ================= PRESCRIPTION TEMPLATES (medicines only) ================= */
 function refreshTplSelect(){
   const sel = $('tplSelect');
-  sel.innerHTML = '<option value="">📋 Insert a template…</option>' +
+  sel.innerHTML = '<option value="">💊 Insert prescription (medicines)…</option>' +
     db.templates.map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');
 }
 function applyTemplate(t){
   if(!t) return;
-  const setIf = (id,val)=>{ if(!val) return; const el=$(id); el.value = el.value.trim()? el.value.replace(/\s+$/,'')+'\n'+val : val; };
-  setIf('cComplaints',t.complaints); setIf('cFindings',t.findings); setIf('cDiagnosis',t.diagnosis);
-  setIf('cTests',t.tests); setIf('cPlan',t.plan); setIf('cProc',t.proc);
-  if(t.followUp && !$('cFollowUp').value) $('cFollowUp').value = t.followUp;
+  // prescription template inserts MEDICINES only — clinical notes live in their own template library
   (t.meds||[]).forEach(m=>addRxRow(m));
+  if(!(t.meds||[]).length){ // legacy notes-only template with no meds
+    toast('“'+t.name+'” has no medicines — use a clinical-notes template for its notes'); return;
+  }
   refreshFieldStatus();
-  toast('Template “'+t.name+'” inserted — adjust for this patient');
+  toast('Medicines from “'+t.name+'” added — adjust for this patient');
 }
 function insertTemplate(){
   const sel = $('tplSelect');
@@ -4741,12 +4862,61 @@ setupSuggest('tplSearch','tplSuggest',
 );
 function saveAsTemplate(){
   const f = collectVisitForm();
-  if(!f.diagnosis && !f.meds.length){ toast('⚠ Fill the form first (at least diagnosis or medicines)'); return; }
-  const name = prompt('Template name (e.g. OA Knee, Post-op ORIF):', f.diagnosis||'');
+  if(!f.meds.length){ toast('⚠ Add at least one medicine first (prescription templates hold medicines)'); return; }
+  const name = prompt('Prescription template name (e.g. OA Knee meds, Post-op ORIF):', f.diagnosis||'');
   if(!name) return;
-  db.templates.push({id:uid('t'), name:name.trim(), complaints:f.complaints, findings:f.findings,
-    diagnosis:f.diagnosis, tests:f.tests, plan:f.plan, proc:f.proc, followUp:f.followUp, meds:f.meds});
-  persist(); refreshTplSelect(); toast('Template saved');
+  db.templates.push(syncTouch({id:uid('t'), name:name.trim(), diagnosis:f.diagnosis, meds:f.meds}));
+  persist(); refreshTplSelect(); toast('Prescription template saved');
+}
+
+/* ================= CLINICAL-NOTES TEMPLATES (notes only — no medicines) ================= */
+function refreshNoteTplSelect(){
+  const sel = $('ntSelect'); if(!sel) return;
+  sel.innerHTML = '<option value="">🗒️ Insert clinical-notes template…</option>' +
+    (db.noteTemplates||[]).map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');
+}
+function applyNoteTemplate(t){
+  if(!t) return;
+  const setIf = (id,val)=>{ if(!val) return; const el=$(id); if(!el) return; el.value = el.value.trim()? el.value.replace(/\s+$/,'')+'\n'+val : val; };
+  setIf('cComplaints',t.complaints); setIf('cFindings',t.findings); setIf('cDiagnosis',t.diagnosis);
+  setIf('cTests',t.tests); setIf('cPlan',t.plan); setIf('cProc',t.proc);
+  if(t.followUp && !$('cFollowUp').value) $('cFollowUp').value = t.followUp;
+  refreshFieldStatus();
+  toast('Clinical notes from “'+t.name+'” added — adjust for this patient');
+}
+function insertNoteTemplate(){
+  const sel = $('ntSelect');
+  const t = (db.noteTemplates||[]).find(x=>x.id===sel.value);
+  if(!t){ toast('Choose a clinical-notes template first'); return; }
+  applyNoteTemplate(t); sel.value='';
+}
+setupSuggest('ntSearch','ntSuggest',
+  q => (db.noteTemplates||[]).filter(t => (t.name+' '+(t.diagnosis||'')+' '+(t.complaints||'')).toLowerCase().includes(q)).slice(0,12),
+  t => '<b>'+esc(t.name)+'</b> <span class="g">'+esc(t.diagnosis||'')+'</span><br><span class="defaults">'+esc((t.complaints||t.plan||'').slice(0,90))+'</span>',
+  t => { applyNoteTemplate(t); $('ntSearch').value=''; }
+);
+function saveAsNoteTemplate(){
+  const f = collectVisitForm();
+  if(!f.complaints && !f.findings && !f.diagnosis && !f.tests && !f.plan && !f.proc){ toast('⚠ Fill some clinical notes first'); return; }
+  const name = prompt('Clinical-notes template name (e.g. OA Knee notes, Post-op review):', f.diagnosis||'');
+  if(!name) return;
+  db.noteTemplates.push(syncTouch({id:uid('nt'), name:name.trim(), complaints:f.complaints, findings:f.findings,
+    diagnosis:f.diagnosis, tests:f.tests, plan:f.plan, proc:f.proc, followUp:f.followUp}));
+  persist(); refreshNoteTplSelect(); if(typeof renderNoteTplList==='function') renderNoteTplList(); toast('Clinical-notes template saved');
+}
+function renderNoteTplList(){
+  const host=$('noteTplListBody'); if(!host) return;
+  host.innerHTML = (db.noteTemplates||[]).map(t=>
+    '<tr><td><b>'+esc(t.name)+'</b></td><td class="small">'+esc(t.diagnosis||'—')+'</td>'+
+    '<td class="small">'+esc((t.complaints||t.plan||t.findings||'—').slice(0,60))+'</td>'+
+    '<td><button class="btn btn-danger btn-sm" onclick="deleteNoteTpl(\''+t.id+'\')">✕</button></td></tr>'
+  ).join('') || '<tr><td colspan="4" class="muted">No clinical-notes templates yet — save one from the New Prescription form.</td></tr>';
+}
+function deleteNoteTpl(id){
+  const t=(db.noteTemplates||[]).find(x=>x.id===id); if(!t) return;
+  if(!confirm('Delete clinical-notes template “'+t.name+'”?')) return;
+  db.noteTemplates = db.noteTemplates.filter(x=>x.id!==id);
+  persist(); refreshNoteTplSelect(); renderNoteTplList();
 }
 function renderTplList(){
   $('tplListBody').innerHTML = db.templates.map(t=>
@@ -5375,7 +5545,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b16';
+const APP_BUILD = '2026.07.12-b18';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -7811,9 +7981,11 @@ function renderSidebar(){
     else if(item.type==='group'){
       const kids=(item.children||[]).filter(c=>!c.hidden && navShow(c.tab));
       if(!kids.length) return;   // hide a group with nothing this user can access
-      h+='<div class="nav-group'+(item.open?' open':'')+'" id="'+esc(item.id)+'">'+
+      h+='<div class="nav-group'+(item.open?' open':'')+(item.pinned?' pinned':'')+'" id="'+esc(item.id)+'">'+
          '<button type="button" class="nav-gh" onclick="toggleNavGroup(\''+esc(item.id)+'\')">'+grpIcon(item)+
-         '<span>'+esc(grpTitle(item))+'</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>'+
+         '<span>'+esc(grpTitle(item))+'</span>'+
+         '<span class="nav-pin'+(item.pinned?' on':'')+'" title="'+(item.pinned?'Unpin — allow this menu to collapse':'Pin — keep this menu open while you work')+'" onclick="event.stopPropagation();toggleNavPin(\''+esc(item.id)+'\')">📌</span>'+
+         '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>'+
          '<div class="nav-sub">'+kids.map(c=>leafBtnHTML(c.tab)).join('')+'</div></div>';
     }
   });
@@ -7830,6 +8002,13 @@ function isGrpOpen(gid){ const g=navModel().find(x=>x.type==='group'&&x.id===gid
 function toggleNavGroup(gid){
   const el=document.getElementById(gid); if(el) el.classList.toggle('open');
   const g=navModel().find(x=>x.type==='group'&&x.id===gid); if(g){ g.open=el?el.classList.contains('open'):!g.open; persist(); }
+}
+/* pin a menu so its sub-items stay open across navigation (on Mac/PC too, not just on tap) */
+function toggleNavPin(gid){
+  const g=navModel().find(x=>x.type==='group'&&x.id===gid); if(!g) return;
+  g.pinned=!g.pinned; if(g.pinned) g.open=true;
+  persist(); renderSidebar();
+  toast(g.pinned?'📌 Menu pinned open':'Menu unpinned');
 }
 
 /* ---------- tree operations (path = array of indices) ---------- */
@@ -8160,8 +8339,10 @@ function favMeds(){ return db.settings.favMeds=db.settings.favMeds||[]; }
 function favTpls(){ return db.settings.favTpls=db.settings.favTpls||[]; }
 function isFavMed(id){ return favMeds().includes(id); }
 function isFavTpl(id){ return favTpls().includes(id); }
-function toggleFavMed(id){ const a=favMeds(); const i=a.indexOf(id); if(i<0) a.push(id); else a.splice(i,1); persist(); renderFavBar(); if(typeof renderMedList==='function') renderMedList(); }
-function toggleFavTpl(id){ const a=favTpls(); const i=a.indexOf(id); if(i<0) a.push(id); else a.splice(i,1); persist(); renderFavBar(); if(typeof renderTplList==='function') renderTplList(); }
+function toggleFavMed(id){ const a=favMeds(); const i=a.indexOf(id); if(i<0) a.push(id); else a.splice(i,1); db.settings.favMedsAt=new Date().toISOString(); persist(); renderFavBar(); if(typeof renderMedList==='function') renderMedList();
+  if(typeof syncPushFavs==='function' && navigator.onLine){ clearTimeout(window.__favPush); window.__favPush=setTimeout(()=>syncPushFavs().catch(()=>{}),1200); } }
+function toggleFavTpl(id){ const a=favTpls(); const i=a.indexOf(id); if(i<0) a.push(id); else a.splice(i,1); db.settings.favMedsAt=new Date().toISOString(); persist(); renderFavBar(); if(typeof renderTplList==='function') renderTplList();
+  if(typeof syncPushFavs==='function' && navigator.onLine){ clearTimeout(window.__favPush); window.__favPush=setTimeout(()=>syncPushFavs().catch(()=>{}),1200); } }
 function renderFavBar(){
   const bar=$('favBar'); if(!bar) return;
   const meds=favMeds().map(id=>db.meds.find(m=>m.id===id)).filter(Boolean);
@@ -8177,14 +8358,34 @@ function qrSeed(){
   const s=db.settings;
   return [
     {id:uid('qr'),label:'Google review',text:'https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID',note:'Replace with your clinic\'s Google review link'},
-    {id:uid('qr'),label:'Facebook page',text:s.fbUrl||'https://facebook.com',note:''},
-    {id:uid('qr'),label:'Instagram',text:s.igUrl||'https://instagram.com',note:''},
-    {id:uid('qr'),label:'WhatsApp',text:'https://wa.me/'+String(s.waBiz||'').replace(/[^0-9]/g,''),note:''},
-    {id:uid('qr'),label:'Physiotherapy — general (YouTube)',text:'https://www.youtube.com/results?search_query=physiotherapy+exercises',note:'Paste your own video/playlist link'},
-    {id:uid('qr'),label:'Knee exercises (YouTube)',text:'https://www.youtube.com/results?search_query=knee+strengthening+exercises',note:'Paste your own video link'},
-    {id:uid('qr'),label:'Low-back exercises (YouTube)',text:'https://www.youtube.com/results?search_query=lower+back+pain+exercises',note:'Paste your own video link'},
-    {id:uid('qr'),label:'Shoulder exercises (YouTube)',text:'https://www.youtube.com/results?search_query=shoulder+rehab+exercises',note:'Paste your own video link'}
+    {id:uid('qr'),label:'Facebook page',text:s.fbUrl||'https://facebook.com',note:'Your clinic Facebook page link'},
+    {id:uid('qr'),label:'Instagram',text:s.igUrl||'https://instagram.com',note:'Your clinic Instagram link'},
+    {id:uid('qr'),label:'WhatsApp',text:'https://wa.me/'+String(s.waBiz||'').replace(/[^0-9]/g,''),note:'Your clinic WhatsApp'},
+    {id:uid('qr'),label:'Knee physiotherapy (video)',text:'https://www.youtube.com/results?search_query=knee+strengthening+exercises',note:'Paste your own knee-exercise video link'},
+    {id:uid('qr'),label:'Lower-back pain exercises (video)',text:'https://www.youtube.com/results?search_query=lower+back+pain+exercises',note:'Paste your own back-exercise video link'},
+    {id:uid('qr'),label:'Shoulder exercises (video)',text:'https://www.youtube.com/results?search_query=shoulder+rehab+exercises',note:'Paste your own shoulder-exercise video link'},
+    {id:uid('qr'),label:'Spare QR 1',text:'',note:'Free slot — add a link later (e.g. another exercise video or a leaflet)'},
+    {id:uid('qr'),label:'Spare QR 2',text:'',note:'Free slot — add a link later'}
   ];
+}
+/* replace the whole QR library with the recommended curated set, keeping your saved links where the label matches */
+function qrResetToRecommended(){
+  if(!confirm('Tidy the QR Code Library?\n\nThis replaces the current list with the recommended set (your socials, Google review, knee / lower-back / shoulder exercise videos, and 2 spare slots).\n\nYour saved links for matching items (Google review, Facebook, Instagram, WhatsApp, and the three exercise videos) are kept.')) return;
+  const old=db.qrcodes||[];
+  const byLabel={}; old.forEach(q=>{ if(!byLabel[q.label]) byLabel[q.label]=q; });
+  // also match old exercise-video labels to the new ones so custom links survive the rename
+  const alias={'Knee physiotherapy (video)':'Knee exercises (YouTube)','Lower-back pain exercises (video)':'Low-back exercises (YouTube)','Shoulder exercises (video)':'Shoulder exercises (YouTube)'};
+  db.qrcodes = qrSeed().map(seed=>{
+    const prev = byLabel[seed.label] || byLabel[alias[seed.label]];
+    if(prev && prev.text && !/YOUR_PLACE_ID|results\?search_query|^https:\/\/(facebook|instagram)\.com$|wa\.me\/$/.test(prev.text)){
+      return {id:uid('qr'), label:seed.label, text:prev.text, note:prev.note||seed.note};
+    }
+    return seed;
+  });
+  // if the old default QR is gone, clear it so prescriptions don't reference a deleted code
+  if(db.settings.defQrId && !db.qrcodes.some(q=>q.id===db.settings.defQrId)) db.settings.defQrId='';
+  persist(); renderQrLib(); if(typeof renderRxQrSelect==='function') renderRxQrSelect();
+  toast('QR library tidied to the recommended set');
 }
 let qrEditId=null;
 function qrSvgFor(text, mm){ try{ if(typeof QRenc==='undefined') return ''; return QRenc.svg(text, mm||44); }catch(e){ return ''; } }
@@ -8352,7 +8553,7 @@ function setShortcuts(on){ db.settings.shortcuts = on?'on':'off'; persist(); }
 /* ===== Cloud sync module ===== */
 
 /* ==================== CLOUD SYNC (Supabase) — dormant until configured ==================== */
-const SYNC_COLLS=['users','patients','visits','registry','documents','surgeries','inventory','appts','recalls','qrcodes','leaflets','expenses','queue'];
+const SYNC_COLLS=['users','patients','visits','registry','documents','surgeries','inventory','appts','recalls','qrcodes','leaflets','expenses','queue','templates','noteTemplates','instrPresets'];
 let sb=null, syncRealtimeChan=null, syncTimer=null;
 function syncCfg(){ const c=db.settings.sync = db.settings.sync || {url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false}; if(!c.knownIds) c.knownIds={}; if(!c.suppressed) c.suppressed={}; return c; }
 function loadSupabaseLib(){
@@ -8482,6 +8683,27 @@ async function syncPullActivity(){
     if(db.activity.length>800) db.activity=db.activity.slice(-800);
   }catch(e){}
 }
+/* ---- pinned / favourite medicines (and templates): one shared list, newest edit wins across devices ---- */
+async function syncPushFavs(){
+  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
+    const payload={ids:(db.settings.favMeds||[]), tpls:(db.settings.favTpls||[]), defQrId:db.settings.defQrId||'', at:db.settings.favMedsAt||new Date().toISOString()};
+    await c.from('records').upsert([{id:'favmeds', kind:'favmeds', payload, updated_at:payload.at}]);
+  }catch(e){}
+}
+async function syncPullFavs(){
+  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
+    const {data,error}=await c.from('records').select('id,payload').eq('kind','favmeds').limit(1); if(error) return;
+    const row=(data||[])[0]; if(!row||!row.payload) return;
+    const cloudAt=row.payload.at||''; const localAt=db.settings.favMedsAt||'';
+    if(cloudAt && cloudAt>localAt){   // cloud list is newer → adopt it
+      db.settings.favMeds = Array.isArray(row.payload.ids)? row.payload.ids : (db.settings.favMeds||[]);
+      if(Array.isArray(row.payload.tpls)) db.settings.favTpls = row.payload.tpls;
+      db.settings.favMedsAt = cloudAt; persist();
+      if(typeof renderFavBar==='function') renderFavBar();
+      if(typeof renderMedList==='function') renderMedList();
+    }
+  }catch(e){}
+}
 /* ---- pending changes: registry adds/edits by non-owners wait for the owner's approval ---- */
 async function syncPushPending(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
@@ -8543,7 +8765,13 @@ function computeSyncPlan(local, cloud, state, isAdmin, decisions){
     }
     const merged={};
     Object.keys(cloudNorm[k]).forEach(id=>{ const key=k+'|'+id; if(tombs.has(key)||newTombKeys.has(key)) return; if(nextSupp.has(id)) return; merged[id]=cloudNorm[k][id]; });
-    Object.keys(localById).forEach(id=>{ const key=k+'|'+id; if(tombs.has(key)||newTombKeys.has(key)) return; if(nextSupp.has(id)) return; if(!(id in merged)) merged[id]=localById[id]; });
+    Object.keys(localById).forEach(id=>{ const key=k+'|'+id; if(tombs.has(key)||newTombKeys.has(key)) return; if(nextSupp.has(id)) return;
+      if(!(id in merged)) merged[id]=localById[id];
+      else { // both sides have it → keep whichever was edited most recently (local wins only if it carries a strictly newer updatedAt)
+        const lu=(localById[id]&&localById[id].updatedAt)||'', cu=(merged[id]&&merged[id].updatedAt)||'';
+        if(lu && lu>cu) merged[id]=localById[id];
+      }
+    });
     const arr=Object.values(merged);
     newLocal[k]=arr;
     arr.forEach(rec=>pushRows.push({id:String(rec.id), kind:k, payload:rec, updated_at:state.now}));
@@ -8593,6 +8821,7 @@ async function syncNow(loud, force){
     await syncPushAccess(); await syncPullAccess();
     await syncPushActivity(); await syncPullActivity();
     await syncPushPending(); await syncPullPending();
+    await syncPullFavs(); await syncPushFavs();
     reconcileUsers(); refreshCurrentUser(); persist();
     refreshAllViews(); renderSync();
     if(typeof renderNotif==='function') renderNotif();
@@ -8671,6 +8900,7 @@ _initStep(renderPatientList);
 _initStep(renderDataStats);
 _initStep(updateRxCount);
 _initStep(refreshTplSelect);
+_initStep(refreshNoteTplSelect);
 _initStep(()=>{ if($('docDate')) $('docDate').value = localISO(); if($('docFrom')) $('docFrom').value = localISO(); if($('incDate')) $('incDate').value = localISO(); });
 _initStep(updateDocFields);
 _initStep(()=>{ if($('cFee') && !$('cFee').value) $('cFee').value = db.settings.defFee || ''; });
