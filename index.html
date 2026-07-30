@@ -683,6 +683,8 @@ body.dark .ro-badge, body[data-theme=dark] .ro-badge{background:rgba(154,91,0,.1
 .notif-item .ni-sub{color:var(--muted);font-size:11.5px;margin-top:2px}
 .notif-item.unread{background:var(--teal-light,rgba(20,140,140,.07))}
 .notif-empty{padding:26px 14px;text-align:center;color:var(--muted);font-size:13px}
+.notif-item.notif-undone{opacity:.62}
+.notif-item.notif-undone .ni-tx b{text-decoration:line-through}
 .notif-sec{padding:8px 14px 2px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
 @media(max-width:768px){ #notifBtn{display:none} #notifPanel{top:calc(56px + env(safe-area-inset-top));right:8px} }
 @media(min-width:769px){ #mBell{display:none} }
@@ -803,9 +805,8 @@ html[data-theme="dark"] .calc-result.bad{background:#2f1416;border-color:#7f2a2e
 html[data-theme="dark"] .calc-result.good .cr-band{color:#6ee7b7}
 html[data-theme="dark"] .calc-result.warn .cr-band{color:#fcd34d}
 html[data-theme="dark"] .calc-result.bad .cr-band{color:#fca5a5}
-.dose-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:820px){.dose-grid{grid-template-columns:1fr}}
-.dose-out{margin-top:12px;border-radius:10px;padding:14px;background:var(--teal-light);border:1px solid var(--line);text-align:center;min-height:64px}
+.reg-prov{color:#b45309;font-size:11px;cursor:help}
+html[data-theme="dark"] .reg-prov{color:#fcd34d}
 .inv-low td{background:rgba(220,38,38,.06)}
 html[data-theme="dark"] .inv-low td{background:rgba(248,113,113,.09)}
 /* drug monitoring panel (screen only) */
@@ -1535,8 +1536,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <input type="text" id="dsPtSearch" placeholder="Search existing patient… (or type details manually)" autocomplete="off">
       <div class="med-suggest" id="dsPtSuggest"></div>
     </div>
-    <div class="grid g4">
+    <div class="grid g5">
       <div class="field" style="grid-column:span 2"><label>Patient name <span class="req">*</span></label><input type="text" id="dsName"></div>
+      <div class="field"><label>MR number <span class="muted small" style="font-weight:400">(hospital)</span></label><input type="text" id="dsMrn" placeholder="hospital MR number" title="Prints on the discharge summary. Fills in from the clinic record, but you can overwrite it with the hospital's own MR number."></div>
       <div class="field"><label>Age</label><input type="text" id="dsAge"></div>
       <div class="field"><label>Sex</label><select id="dsSex"><option value=""></option><option>Male</option><option>Female</option></select></div>
     </div>
@@ -1807,48 +1809,6 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="card" id="calcDetail" style="margin:0"></div>
     </div>
     <p class="muted small mt">For clinical decision support only — always correlate with the full clinical picture.</p>
-  </div>
-</section>
-
-<!-- ============ TAB: DOSE CALCULATOR ============ -->
-<section class="tab" id="tab-dosecalc">
-  <div class="page-head">Dose Calculator</div>
-  <div id="doseWrap">
-    <div class="card">
-      <h2>Weight-based dose</h2>
-      <p class="muted small" style="margin-top:-4px">Pick a common drug or enter mg/kg manually.</p>
-      <div class="calc-list" id="dosePresets" style="flex-direction:row;flex-wrap:wrap;gap:8px;margin-bottom:14px"></div>
-      <div class="grid g3">
-        <div class="field"><label>Body weight (kg)</label><input type="number" step="any" id="doseWt" oninput="computeDose()" placeholder="e.g. 18"></div>
-        <div class="field"><label>Dose (mg/kg)</label><input type="number" step="any" id="doseMgkg" oninput="computeDose()" placeholder="e.g. 15"></div>
-        <div class="field"><label>Doses per day</label><input type="number" step="any" id="doseFreq" oninput="computeDose()" placeholder="e.g. 3"></div>
-      </div>
-      <div class="dose-out" id="doseOut"></div>
-      <p class="muted small mt" id="doseNote"></p>
-    </div>
-    <div class="dose-grid">
-      <div class="card">
-        <h2>Creatinine clearance</h2>
-        <p class="muted small" style="margin-top:-4px">Cockcroft-Gault — for renal drug dosing.</p>
-        <div class="grid g2">
-          <div class="field"><label>Age (years)</label><input type="number" id="crAge" oninput="computeDose()"></div>
-          <div class="field"><label>Weight (kg)</label><input type="number" step="any" id="crWt" oninput="computeDose()"></div>
-          <div class="field"><label>Serum creatinine</label><input type="number" step="any" id="crScr" oninput="computeDose()"></div>
-          <div id="crUnitField"></div>
-          <div id="crSexField"></div>
-        </div>
-        <div class="dose-out" id="crOut"></div>
-      </div>
-      <div class="card">
-        <h2>Body surface area</h2>
-        <p class="muted small" style="margin-top:-4px">Mosteller — for chemotherapy dosing.</p>
-        <div class="grid g2">
-          <div class="field"><label>Height (cm)</label><input type="number" step="any" id="bsaHt" oninput="computeDose()"></div>
-          <div class="field"><label>Weight (kg)</label><input type="number" step="any" id="bsaWt" oninput="computeDose()"></div>
-        </div>
-        <div class="dose-out" id="bsaOut"></div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -2813,7 +2773,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 29;
+const SEED_VERSION = 30;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -2996,6 +2956,31 @@ function migrateDB(){
     db.users.forEach(u=>{ if(u.email) u.email=String(u.email).trim().toLowerCase(); });
     if(typeof reconcileUsers==='function') try{ reconcileUsers(); }catch(e){}
   }
+  // ---- v30 ----
+  // 1. the Dose Calculator has been removed: take it out of saved menus and staff permissions
+  (function(){
+    function strip(list){
+      if(!Array.isArray(list)) return list;
+      return list.filter(function(node){
+        if(!node) return false;
+        if(node.type==='group'){ node.children=strip(node.children||[]); return true; }
+        return node.tab!=='dosecalc';
+      });
+    }
+    if(Array.isArray(db.settings.nav)) db.settings.nav=strip(db.settings.nav);
+    if(db.settings.navLabels) delete db.settings.navLabels.dosecalc;
+    (db.users||[]).forEach(function(u){ if(u && u.perms) delete u.perms.dosecalc; });
+  })();
+  // 2. discharge summaries: carry the MR number onto the summary itself so it prints
+  (db.documents||[]).forEach(function(d){
+    if(d && d.type==='discharge' && !d.mrn && d.patientId){
+      const p=(db.patients||[]).find(function(x){ return x.id===d.patientId; });
+      if(p && p.mrn){ d.mrn=String(p.mrn); if(typeof syncTouch==='function') syncTouch(d); }
+    }
+  });
+  // 3. tumour registry: renumber every existing case as YYMMDD + running count for that year,
+  //    driven by the date of surgery
+  try{ if(typeof regRenumberAll==='function') regRenumberAll(); }catch(e){}
   db.seedVersion = SEED_VERSION;
   persist();
 }
@@ -3073,7 +3058,7 @@ navDots.innerHTML = '<i></i><i></i><i></i>';
 (()=>{ const ib = document.querySelector('nav button[data-tab].active'); if(ib) ib.appendChild(navDots); })();
 /* ---- access control (per-user, per-section view/edit levels) ---- */
 const ADMIN_ONLY_TABS=['income','analytics','settings','sync'];
-const GRANTABLE_TABS=['visit','registry','queue','appts','patients','discharge','documents','oplog','medicines','videos','scores','dosecalc','inventory'];
+const GRANTABLE_TABS=['visit','registry','queue','appts','patients','discharge','documents','oplog','medicines','videos','scores','inventory'];
 /* Returns the access level for a user on a tab: 'edit' | 'view' | null (no access). */
 function userLevel(u,tab){
   if(!u) return 'edit';                        // setup / no sign-in yet → full
@@ -3122,7 +3107,7 @@ function showTab(name, isRefresh){
   if(name==='income') renderIncome();
   if(name==='oplog') renderOpLog();
   if(name==='registry') renderRegistry();
-  if(name==='scores'||name==='dosecalc'||name==='inventory') renderToolsTab(name);
+  if(name==='scores'||name==='inventory') renderToolsTab(name);
   if(name==='qrcodes'||name==='leaflets'||name==='recalls') renderExtrasTab(name);
   if(name==='sync' && typeof renderSync==='function'){ renderSync(); if($('syncSql')) $('syncSql').value=SYNC_SQL; }
   if(name==='visit' && typeof renderFavBar==='function') renderFavBar();
@@ -3837,6 +3822,7 @@ function saveVisit(andPrint){
     linkedPatientId = p.id;
   }
   const editing = editingVisitId ? db.visits.find(v=>v.id===editingVisitId) : null;
+  const visitBefore = editing ? undoSnap(editing) : null;
   let visit;
   if(editing){
     // update THIS SAME prescription in place — no new visit is created (stays 1 visit)
@@ -3849,7 +3835,7 @@ function saveVisit(andPrint){
     });
     syncTouch(editing);
     visit = editing;
-    logActivity('edit','prescription',p.name+' ('+p.mrn+')');
+    logActivity('edit','prescription',p.name+' ('+p.mrn+')', undoOne('visits', visitBefore, editing));
   } else {
     visit = syncTouch({
       id: uid('v'), patientId: p.id, date: new Date().toISOString(),
@@ -3861,7 +3847,7 @@ function saveVisit(andPrint){
       dur: Math.round(vtElapsedMs()/1000)
     });
     db.visits.push(visit);
-    logActivity('add','prescription',p.name+' ('+p.mrn+')');
+    logActivity('add','prescription',p.name+' ('+p.mrn+')', undoOne('visits', null, visit));
   }
   // if this prescription was started from today's queue, mark that token as seen (visit completed)
   if(activeQueueId){
@@ -4056,12 +4042,13 @@ function deleteSelectedPatients(){
   const ids=[...patSel]; if(!ids.length) return;
   const names=ids.map(id=>{ const p=db.patients.find(x=>x.id===id); return p?p.name:''; }).filter(Boolean);
   const totalVis=db.visits.filter(v=>ids.includes(v.patientId)).length;
-  if(!confirm('Delete '+ids.length+' patient(s) and their '+totalVis+' visit(s)/prescriptions?\n\n'+names.slice(0,8).join(', ')+(names.length>8?' …':'')+'\n\nDischarge summaries and op-log entries are kept. This cannot be undone.')) return;
+  if(!confirm('Delete '+ids.length+' patient(s) and their '+totalVis+' visit(s)/prescriptions?\n\n'+names.slice(0,8).join(', ')+(names.length>8?' …':'')+'\n\nDischarge summaries and op-log entries are kept.\nYou can undo this from 🔔 Notifications (attached images are not restored).')) return;
   if(!confirm('Are you completely sure? Deleting '+ids.length+' patient record(s) — last chance.')) return;
   ids.forEach(pid=>{
-    db.visits.filter(v=>v.patientId===pid).forEach(v=>(v.images||[]).forEach(id=>{ try{ imgDel(id); }catch(e){} }));
+    const vsOf=db.visits.filter(v=>v.patientId===pid);
     const p=db.patients.find(x=>x.id===pid);
-    logActivity('delete','patient',p?p.name:pid);
+    logActivity('delete','patient',p?p.name:pid, undoPack([undoItem('patients', p, null)].concat(vsOf.map(v=>undoItem('visits', v, null)))));
+    vsOf.forEach(v=>(v.images||[]).forEach(id=>{ try{ imgDel(id); }catch(e){} }));
     if(linkedPatientId===pid) unlinkPatient();
   });
   db.visits = db.visits.filter(v=>!ids.includes(v.patientId));
@@ -4111,14 +4098,15 @@ function deletePatient(pid){
   if(!requireEdit()) return;
   const p = db.patients.find(x=>x.id===pid); if(!p) return;
   const vs = db.visits.filter(v=>v.patientId===pid);
-  if(!confirm('Delete "'+p.name+'" ('+p.mrn+')?\n\nThis permanently removes the patient and their '+vs.length+' visit(s), prescriptions and attached images.\nSaved discharge summaries, certificates and operation-log entries are kept.\n\nThis cannot be undone.')) return;
+  if(!confirm('Delete "'+p.name+'" ('+p.mrn+')?\n\nThis removes the patient and their '+vs.length+' visit(s), prescriptions and attached images.\nSaved discharge summaries, certificates and operation-log entries are kept.\n\nYou can undo this from 🔔 Notifications (attached images are not restored).')) return;
   if(!confirm('Are you completely sure? Deleting '+p.name+' — last chance.')) return;
+  const undoItems = [undoItem('patients', p, null)].concat(vs.map(v=>undoItem('visits', v, null)));
   // remove attached images from the image store
   vs.forEach(v=>(v.images||[]).forEach(id=>{ try{ imgDel(id); }catch(e){} }));
   db.visits = db.visits.filter(v=>v.patientId!==pid);
   db.queue = (db.queue||[]).filter(q=>q.patientId!==pid || q.status!=='waiting');
   db.patients = db.patients.filter(x=>x.id!==pid);
-  logActivity('delete','patient',p.name);
+  logActivity('delete','patient',p.name, undoPack(undoItems));
   if(linkedPatientId===pid) unlinkPatient();
   if(currentPatientId===pid) closePatientDetail();
   persist(); renderPatientList(); renderFollowups(); updateQNavCount();
@@ -4160,11 +4148,12 @@ function editPatient(pid){
 function savePatEdit(){
   const p=db.patients.find(x=>x.id===patEditId); if(!p) return;
   const nm=$('peName').value.trim(); if(!nm){ toast('⚠ Name is required'); return; }
+  const patBefore = undoSnap(p);
   p.name=nm; p.mrn=$('peMrn').value.trim(); p.age=$('peAge').value.trim(); p.sex=$('peSex').value;
   p.phone=$('pePhone').value.trim(); p.address=$('peAddr').value.trim();
   p.allergies=$('peAllergies').value.trim(); p.medHx=$('peMedHx').value.trim(); p.surgHx=$('peSurgHx').value.trim();
   p.updatedAt=new Date().toISOString();
-  logActivity('edit','patient',p.name);
+  logActivity('edit','patient',p.name, undoOne('patients', patBefore, p));
   persist(); closePatModal(); renderPatientList();
   if(currentPatientId===p.id && !$('patientDetailCard').classList.contains('hidden')) openPatient(p.id);
   toast('Patient details updated');
@@ -4225,10 +4214,11 @@ function deleteVisit(vid){
   if(!requireEdit()) return;
   const v = db.visits.find(x=>x.id===vid); if(!v) return;
   const p = db.patients.find(x=>x.id===v.patientId);
-  if(!confirm('Delete this prescription version from '+fmtDate(v.date)+'?\nOnly this visit is removed — the patient and their other prescriptions are kept.')) return;
+  if(!confirm('Delete this prescription version from '+fmtDate(v.date)+'?\nOnly this visit is removed — the patient and their other prescriptions are kept.\n\nYou can undo this from 🔔 Notifications (attached images are not restored).')) return;
+  const vSnap = undoSnap(v);
   (v.images||[]).forEach(id=>{ try{ imgDel(id); }catch(e){} });
   db.visits = db.visits.filter(x=>x.id!==vid);
-  logActivity('delete','prescription',(p?p.name+' · ':'')+fmtDate(v.date));
+  logActivity('delete','prescription',(p?p.name+' · ':'')+fmtDate(v.date), undoOne('visits', vSnap, null));
   persist();
   if(currentPatientId===v.patientId){ openPatient(v.patientId); }
   renderPatientList(); renderFollowups(); if(typeof updateRxCount==='function') updateRxCount();
@@ -4532,15 +4522,16 @@ function bookAppt(){
   if(!name){ toast('⚠ Pick an existing patient or type a name'); $('apName').focus(); return; }
   if(!date){ toast('⚠ Choose a date'); $('apDate').focus(); return; }
   const time=$('apTime').value||'';
-  db.appts.push(syncTouch({id:uid('a'), date, time, name, phone:$('apPhone').value.trim(),
+  const newAppt = syncTouch({id:uid('a'), date, time, name, phone:$('apPhone').value.trim(),
     age:$('apAge').value.trim(), sex:$('apSex').value, address:$('apAddress').value.trim(),
-    patientId:pid, note:$('apNote').value.trim(), status:'booked', createdAt:new Date().toISOString(), by:byTag()}));
+    patientId:pid, note:$('apNote').value.trim(), status:'booked', createdAt:new Date().toISOString(), by:byTag()});
+  db.appts.push(newAppt);
   apPatientId=null;
   ['apPtSearch','apName','apPhone','apAge','apAddress','apTime','apNote'].forEach(id=>$(id).value='');
   $('apSex').value='';
   $('apLinkedLabel').textContent='';
   $('apViewDate').value = date;
-  logActivity('add','appointment', name+' — '+fmtDate(date)+(time?' '+time:''));
+  logActivity('add','appointment', name+' — '+fmtDate(date)+(time?' '+time:''), undoOne('appts', null, newAppt));
   persist(); renderAppts(); renderReminders();
   toast('📅 Appointment booked for '+fmtDate(date));
 }
@@ -4564,13 +4555,18 @@ function apptToQueue(id){
 }
 function setApptStatus(id, st){
   const a = db.appts.find(x=>x.id===id); if(!a) return;
+  const before = undoSnap(a);
   a.status = st; syncTouch(a);
+  logActivity('edit','appointment', a.name+' — '+st, undoOne('appts', before, a));
   persist(); renderAppts();
 }
 function deleteAppt(id){
+  if(!requireEdit()) return;
   const a = db.appts.find(x=>x.id===id); if(!a) return;
-  if(!confirm('Cancel the appointment for '+a.name+' on '+fmtDate(a.date)+'?')) return;
+  if(!confirm('Cancel the appointment for '+a.name+' on '+fmtDate(a.date)+'?\n\nYou can undo this from 🔔 Notifications.')) return;
+  const snapA = undoSnap(a);
   db.appts = db.appts.filter(x=>x.id!==id);
+  logActivity('delete','appointment', a.name+' — '+fmtDate(a.date), undoOne('appts', snapA, null));
   persist(); renderAppts(); renderReminders();
 }
 function renderAppts(){
@@ -5008,7 +5004,9 @@ let dsPatientId = null, editingDsId = null;
 setupSuggest('dsPtSearch','dsPtSuggest',
   q => db.patients.filter(p=>!p.regOnly).filter(p => p.name.toLowerCase().includes(q) || (p.phone||'').includes(q) || (p.mrn||'').toLowerCase().includes(q)).slice(0,8),
   p => '<b>'+esc(p.name)+'</b> <span class="g">'+esc(p.mrn)+' · '+esc(p.age||'')+' '+esc(p.sex||'')+'</span>',
-  p => { dsPatientId = p.id; $('dsName').value=p.name; $('dsAge').value=p.age||''; $('dsSex').value=p.sex||''; $('dsPtSearch').value=''; toast('Patient selected: '+p.name); }
+  p => { dsPatientId = p.id; $('dsName').value=p.name; $('dsAge').value=p.age||''; $('dsSex').value=p.sex||'';
+         if(!$('dsMrn').value.trim()) $('dsMrn').value = p.mrn||'';
+         $('dsPtSearch').value=''; toast('Patient selected: '+p.name); }
 );
 $('dsSearch').addEventListener('input', renderDsList);
 setupSuggest('dsMedSearch','dsMedSuggest',
@@ -5045,7 +5043,7 @@ function dischargeFromVisit(vid){
   const p = db.patients.find(x=>x.id===v.patientId)||{};
   clearDsForm();
   dsPatientId = p.id;
-  $('dsName').value = p.name||''; $('dsAge').value = p.age||''; $('dsSex').value = p.sex||'';
+  $('dsName').value = p.name||''; $('dsAge').value = p.age||''; $('dsSex').value = p.sex||''; $('dsMrn').value = p.mrn||'';
   $('dcAdmit').value = localISO(new Date(v.date));
   fillDsFromVisit(v);
   setDsImagesFromVisit(v);
@@ -5056,7 +5054,7 @@ function dischargeFromVisit(vid){
 function collectDsForm(){
   return {
     type:'discharge', date:$('dsDate').value||localISO(), patientId:dsPatientId,
-    name:$('dsName').value.trim(), age:$('dsAge').value.trim(), sex:$('dsSex').value,
+    name:$('dsName').value.trim(), mrn:$('dsMrn').value.trim(), age:$('dsAge').value.trim(), sex:$('dsSex').value,
     dc:{admit:$('dcAdmit').value, discharge:$('dcDischarge').value, diagnosis:$('dcDiagnosis').value.trim(),
         clinical:$('dcClinical').value.trim(), medHx:$('dcMedHx').value.trim(), surgHx:$('dcSurgHx').value.trim(),
         allergies:$('dcAllergies').value.trim(),
@@ -5073,8 +5071,8 @@ function saveDischarge(andPrint){
   if(!f.name){ toast('⚠ Patient name is required'); $('dsName').focus(); return; }
   let d;
   const wasNew = !editingDsId;
-  if(editingDsId){ d = db.documents.find(x=>x.id===editingDsId); Object.assign(d, f); logActivity('edit','discharge',f.name); }
-  else { d = {id:uid('d'), ...f, by: byTag()}; db.documents.push(d); editingDsId = d.id; $('dsFormTitle').textContent='Edit discharge summary'; logActivity('add','discharge',f.name); }
+  if(editingDsId){ d = db.documents.find(x=>x.id===editingDsId); const dsBefore=undoSnap(d); Object.assign(d, f); syncTouch(d); logActivity('edit','discharge',f.name, undoOne('documents', dsBefore, d)); }
+  else { d = syncTouch({id:uid('d'), ...f, by: byTag()}); db.documents.push(d); editingDsId = d.id; $('dsFormTitle').textContent='Edit discharge summary'; logActivity('add','discharge',f.name, undoOne('documents', null, d)); }
   if(wasNew && f.dc.proc && $('dcAddLog').checked){
     db.surgeries.push({id:uid('s'), date: f.dc.admit || f.date, patientId: f.patientId,
       name: f.name, age: f.age, sex: f.sex, diagnosis: f.dc.diagnosis,
@@ -5087,7 +5085,7 @@ function saveDischarge(andPrint){
 }
 function clearDsForm(){
   dsPatientId = null; editingDsId = null;
-  ['dsPtSearch','dsName','dsAge','dsMedSearch','dcDiagnosis','dcClinical','dcMedHx','dcSurgHx','dcAllergies','dcProc','dcCourse','dcImplant','dcImplantCo','dcInstr','dcFu'].forEach(id=>$(id).value='');
+  ['dsPtSearch','dsName','dsMrn','dsAge','dsMedSearch','dcDiagnosis','dcClinical','dcMedHx','dcSurgHx','dcAllergies','dcProc','dcCourse','dcImplant','dcImplantCo','dcInstr','dcFu'].forEach(id=>$(id).value='');
   $('dsRxBody').innerHTML='';
   $('dsSex').value='';
   $('dsDate').value = localISO(); $('dcAdmit').value=''; $('dcDischarge').value='';
@@ -5096,15 +5094,22 @@ function clearDsForm(){
   $('dsFormTitle').textContent = 'New discharge summary';
   refreshFieldStatus();
 }
+/* MR number for a discharge summary: the one typed on the summary, else the linked clinic record's */
+function dsMrnOf(d){
+  if(!d) return '';
+  if(String(d.mrn||'').trim()) return String(d.mrn).trim();
+  if(d.patientId){ const p=db.patients.find(x=>x.id===d.patientId); if(p && p.mrn) return String(p.mrn); }
+  return '';
+}
 function renderDsList(){
   const q = ($('dsSearch').value||'').trim().toLowerCase();
   const docs = db.documents.filter(d=>d.type==='discharge')
-    .filter(d=>!q || [d.name,(d.dc||{}).diagnosis,(d.dc||{}).proc].join(' ').toLowerCase().includes(q))
+    .filter(d=>!q || [d.name,d.mrn,(d.dc||{}).diagnosis,(d.dc||{}).proc].join(' ').toLowerCase().includes(q))
     .slice().reverse();
   $('dsEmpty').classList.toggle('hidden', db.documents.some(d=>d.type==='discharge'));
   $('dsCountLabel').textContent = docs.length+' discharge summaries';
   $('dsListBody').innerHTML = docs.map(d=>
-    '<tr><td>'+fmtDate(d.date)+(d.by?'<br><span class="small muted">by '+esc(d.by)+'</span>':'')+'</td><td><b>'+esc(d.name)+'</b>'+(d.age?'<br><span class="small muted">'+esc(d.age)+' '+esc(d.sex||'')+'</span>':'')+'</td>'+
+    '<tr><td>'+fmtDate(d.date)+(d.by?'<br><span class="small muted">by '+esc(d.by)+'</span>':'')+'</td><td><b>'+esc(d.name)+'</b>'+(dsMrnOf(d)?'<br><span class="small muted">MR '+esc(dsMrnOf(d))+'</span>':'')+(d.age?'<br><span class="small muted">'+esc(d.age)+' '+esc(d.sex||'')+'</span>':'')+'</td>'+
     '<td class="small">'+esc((d.dc||{}).diagnosis||'—')+'</td><td class="small">'+esc((d.dc||{}).proc||'—')+'</td>'+
     '<td><button class="btn btn-ghost btn-sm" onclick="printSavedDoc(\''+d.id+'\')">🖨 Print</button> '+
     '<button class="btn btn-ghost btn-sm" onclick="printSavedDocPlain(\''+d.id+'\')" title="Full letterhead / PDF">📄 PDF</button> '+
@@ -5116,6 +5121,7 @@ function loadDs(id){
   const d = db.documents.find(x=>x.id===id); if(!d) return;
   editingDsId = d.id; dsPatientId = d.patientId||null;
   $('dsDate').value=d.date; $('dsName').value=d.name; $('dsAge').value=d.age||''; $('dsSex').value=d.sex||'';
+  $('dsMrn').value = dsMrnOf(d);
   const dc=d.dc||{};
   $('dcAdmit').value=dc.admit||''; $('dcDischarge').value=dc.discharge||''; $('dcDiagnosis').value=dc.diagnosis||'';
   $('dcClinical').value=dc.clinical||''; $('dcMedHx').value=dc.medHx||''; $('dcSurgHx').value=dc.surgHx||''; $('dcAllergies').value=dc.allergies||'';
@@ -5151,10 +5157,15 @@ function loadDs(id){
   toast('Loaded — edit and Save');
 }
 function deleteDs(id){
-  if(!confirm('Delete this discharge summary?')) return;
+  if(!requireEdit()) return;
+  const d = db.documents.find(x=>x.id===id); if(!d) return;
+  if(!confirm('Delete this discharge summary?\n\nYou can undo this from 🔔 Notifications.')) return;
+  const snapD = undoSnap(d);
   db.documents = db.documents.filter(x=>x.id!==id);
   if(editingDsId===id) clearDsForm();
+  logActivity('delete','discharge', d.name||'', undoOne('documents', snapD, null));
   persist(); renderDsList();
+  toast('Discharge summary deleted');
 }
 function collectDocForm(){
   return {
@@ -5232,7 +5243,7 @@ async function printDoc(d, forcePlain){
     const cell = (l,v)=>'<td class="lbl">'+l+'</td><td>'+esc(v||'—')+'</td>';
     inner = '<div class="doc-title" style="margin-top:0">DISCHARGE SUMMARY</div>'+
       '<table class="dc-info"><tbody>'+
-        '<tr>'+cell('Patient name', d.name)+cell('MR #', d.mrn||(d.patientId?(db.patients.find(x=>x.id===d.patientId)||{}).mrn:''))+'</tr>'+
+        '<tr>'+cell('Patient name', d.name)+cell('MR #', dsMrnOf(d))+'</tr>'+
         '<tr>'+cell('Age / Sex', [d.age,d.sex].filter(Boolean).join(' / '))+cell('Consultant', db.settings.docName)+'</tr>'+
         '<tr>'+cell('Date of admission', dc.admit?fmtDate(dc.admit):'')+cell('Date of discharge', dc.discharge?fmtDate(dc.discharge):'')+'</tr>'+
       '</tbody></table>'+
@@ -5545,7 +5556,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.12-b18';
+const APP_BUILD = '2026.07.30-b19';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -5899,9 +5910,12 @@ function renderNotif(){
   }
   if(d.acts.length){
     h+='<div class="notif-sec" style="display:flex;justify-content:space-between;align-items:center">Recent activity <button class="btn btn-ghost btn-sm" style="padding:1px 9px;font-size:11px" onclick="clearActivity()">Clear</button></div>';
-    d.acts.slice(0,40).forEach(a=>{ h+='<div class="notif-item'+(a.read?'':' unread')+'"><span class="ni-ic">'+actIcon(a.action)+'</span>'+
+    d.acts.slice(0,40).forEach(a=>{ h+='<div class="notif-item'+(a.read?'':' unread')+(a.undone?' notif-undone':'')+'"><span class="ni-ic">'+(a.undone?'\u21a9':actIcon(a.action))+'</span>'+
       '<div class="ni-tx">'+esc(actVerb(a.action))+' '+esc(a.kind||'')+' <b>'+esc(a.label||'')+'</b>'+
-      '<div class="ni-sub">'+esc(a.who||'someone')+' · '+timeAgo(a.at)+'</div></div></div>'; });
+      '<div class="ni-sub">'+esc(a.who||'someone')+' · '+timeAgo(a.at)+'</div>'+
+      (undoCanUndo(a)? '<div class="btn-bar" style="margin-top:6px"><button class="btn btn-ghost btn-sm" onclick="undoActivity(\''+a.id+'\')" title="Put this record back the way it was">\u21a9 Undo</button></div>' : '')+
+      (a.undone? '<div class="ni-sub">\u21a9 undone'+(a.undoneBy?' by '+esc(a.undoneBy):'')+'</div>' : '')+
+      '</div></div>'; });
   }
   body.innerHTML = h || '<div class="notif-empty">You’re all caught up 🎉</div>';
 }
@@ -5947,7 +5961,7 @@ function renderAccessLog(){
 function renderActivityLog(){
   const host=$('activityLogBody'); if(!host) return;
   const acts=(db.activity||[]).slice(-30).reverse();
-  host.innerHTML = acts.length ? acts.map(a=>'<div class="notif-item" style="padding:7px 0;border-color:var(--row-bd)"><span class="ni-ic">'+actIcon(a.action)+'</span><div class="ni-tx">'+esc(actVerb(a.action))+' '+esc(a.kind||'')+' <b>'+esc(a.label||'')+'</b><div class="ni-sub">'+esc(a.who||'someone')+' · '+timeAgo(a.at)+'</div></div></div>').join('')
+  host.innerHTML = acts.length ? acts.map(a=>'<div class="notif-item" style="padding:7px 0;border-color:var(--row-bd)"><span class="ni-ic">'+(a.undone?'\u21a9':actIcon(a.action))+'</span><div class="ni-tx">'+esc(actVerb(a.action))+' '+esc(a.kind||'')+' <b>'+esc(a.label||'')+'</b><div class="ni-sub">'+esc(a.who||'someone')+' · '+timeAgo(a.at)+(a.undone?' · \u21a9 undone':'')+'</div>'+(undoCanUndo(a)?'<div class="btn-bar" style="margin-top:5px"><button class="btn btn-ghost btn-sm" onclick="undoActivity(\''+a.id+'\')">\u21a9 Undo</button></div>':'')+'</div></div>').join('')
     : '<p class="muted small">No changes logged yet.</p>';
 }
 document.addEventListener('click', e=>{
@@ -6984,7 +6998,8 @@ function regBuildForm(){
           else{ ctrl=document.createElement('input'); ctrl.type = f.t==='date'?'date':(f.t==='num'?'number':'text'); }
           ctrl.dataset.k=f.k; field.appendChild(ctrl);
         }
-        if(f.k==='regNo'){ const i=field.querySelector('input'); if(i) i.readOnly=true; }
+        if(f.k==='regNo'){ const i=field.querySelector('input'); if(i){ i.readOnly=true; i.title='Set automatically from the date of surgery: YYMMDD + the case number for that year (e.g. 2601010001).'; } }
+        if(f.k==='dateSurg'){ const i=field.querySelector('input'); if(i) i.addEventListener('change', regSyncNoPreview); }
         grid.appendChild(field);
       });
       card.appendChild(grid);
@@ -7007,20 +7022,69 @@ function regFillForm(rec){
   REG_SCHEMA.forEach(s=>s.subs.forEach(sub=>sub.fields.forEach(f=> regSet(f.k, rec[f.k]||'') )));
 }
 
-/* ---- registry number ---- */
-function regNextRegNo(){
-  const yr = (new Date()).getFullYear();
-  let max=0;
-  (db.registry||[]).forEach(r=>{ const m=String(r.regNo||'').match(/^(\d{4})(\d{4})$/); if(m && +m[1]===yr){ const n=+m[2]; if(n>max) max=n; } });
-  return String(yr)+String(max+1).padStart(4,'0');
+/* ---- registry number: YYMMDD + 4-digit running count for that calendar year ----
+   e.g. the 1st case of 2026, operated 1 Jan 2026  ->  2601010001
+   The date used is the DATE OF SURGERY. If that isn't filled in yet we fall back to
+   first visit / admission / the day the entry was made, and flag the entry so the
+   doctor can see the number is provisional.                                        */
+function regValidYmd(s){ return /^\d{4}-\d{2}-\d{2}$/.test(String(s||'')); }
+function regHasSurgDate(r){ return !!(r && regValidYmd(r.dateSurg)); }
+function regBasisDate(r){
+  const cand=[r&&r.dateSurg, r&&r.firstVisit, r&&r.dateAdm, r&&String(r.createdAt||'').slice(0,10)];
+  for(let i=0;i<cand.length;i++){ if(regValidYmd(cand[i])) return String(cand[i]); }
+  return localISO();
 }
+function regNoFromDate(ymd, n){
+  const s = regValidYmd(ymd) ? String(ymd) : localISO();
+  return s.slice(2,4)+s.slice(5,7)+s.slice(8,10)+String(n).padStart(4,'0');
+}
+/* Re-number the whole registry from scratch: order every case by its surgery date,
+   then number it 0001, 0002 … within its own year. Safe to run as often as we like. */
+function regRenumberAll(){
+  const arr = db.registry||[];
+  const items = arr.map(function(r,i){ return {r:r, d:regBasisDate(r), i:i}; });
+  items.sort(function(a,b){ return a.d===b.d ? a.i-b.i : (a.d<b.d?-1:1); });
+  const perYear={}; let changed=0;
+  items.forEach(function(it){
+    const yr=it.d.slice(0,4);
+    perYear[yr]=(perYear[yr]||0)+1;
+    const no=regNoFromDate(it.d, perYear[yr]);
+    if(String(it.r.regNo||'')!==no){
+      if(it.r.regNo && !it.r.regNoOld && !/^\d{10}$/.test(String(it.r.regNo))) it.r.regNoOld=String(it.r.regNo);   // kept in the data, not shown
+      it.r.regNo=no;
+      if(typeof syncTouch==='function') syncTouch(it.r);
+      changed++;
+    }
+  });
+  return changed;
+}
+/* what a brand-new entry dated `ymd` would be numbered (shown before saving) */
+function regPreviewNo(ymd){
+  const d = regValidYmd(ymd) ? String(ymd) : localISO();
+  const yr = d.slice(0,4);
+  let n = 1;
+  (db.registry||[]).forEach(function(r){ const b=regBasisDate(r); if(b.slice(0,4)===yr && b<=d) n++; });
+  return regNoFromDate(d, n);
+}
+function regNextRegNo(){ return regPreviewNo(localISO()); }
 
 /* ---- new / edit / delete ---- */
+/* while the form is open, keep the shown number in step with the surgery date */
+function regSyncNoPreview(){
+  const ds=regGet('dateSurg');
+  if(regEditingId){
+    const r=(db.registry||[]).find(x=>x.id===regEditingId);
+    if(!r) return;
+    const cur=regBasisDate(r);
+    if(regValidYmd(ds) && ds===cur) return;
+  }
+  regSet('regNo', regPreviewNo(regValidYmd(ds)?ds:localISO()));
+}
 function regNew(){
   if(!regFormBuilt) regBuildForm();
   regEditingId=null; regLinkedPatientId=null;
   regFillForm({});
-  regSet('regNo', regNextRegNo());
+  regSet('regNo', regPreviewNo(localISO()));
   regSet('firstVisit', localISO());
   $('regFormTitle').textContent='New registry entry';
   regUpdateLinkLine();
@@ -7042,9 +7106,11 @@ function regEdit(id){
 function regDelete(id){
   if(!requireEdit()) return;
   const r=(db.registry||[]).find(x=>x.id===id); if(!r) return;
-  if(!confirm('Delete registry entry '+(r.regNo||'')+' — '+(r.name||'')+'?\n(The linked patient record is kept.)')) return;
+  if(!confirm('Delete registry entry '+(r.regNo||'')+' — '+(r.name||'')+'?\n(The linked patient record is kept.)\n\nYou can undo this from 🔔 Notifications.')) return;
+  const snapR = undoSnap(r);
   db.registry = db.registry.filter(x=>x.id!==id);
-  logActivity('delete','registry',(r.regNo?r.regNo+' — ':'')+(r.name||''));
+  regRenumberAll();
+  logActivity('delete','registry',(r.regNo?r.regNo+' — ':'')+(r.name||''), undoOne('registry', snapR, null));
   persist(); regRenderList(); regRenderKpis(); regRenderAnalytics();
   toast('Registry entry deleted');
 }
@@ -7054,7 +7120,7 @@ function regSave(){
   if(!requireEdit()) return;
   const rec = regCollect();
   if(!rec.name && !rec.mrn){ toast('⚠ Enter at least a patient name or MR number'); return; }
-  if(!rec.regNo){ rec.regNo = regNextRegNo(); regSet('regNo', rec.regNo); }
+  if(!rec.regNo){ rec.regNo = regPreviewNo(rec.dateSurg||localISO()); regSet('regNo', rec.regNo); }
   // keep demographics in sync with the linked patient record
   let pid = regLinkedPatientId;
   if(pid){
@@ -7063,24 +7129,24 @@ function regSave(){
            if(rec.contact) p.phone=rec.contact; if(rec.mrn) p.mrn=rec.mrn; if(rec.city && !p.address) p.address=rec.city; }
   }
   rec.patientId = pid||null;
-  const label=(rec.regNo?rec.regNo+' — ':'')+(rec.name||'');
-  // Non-owners: registry adds & edits are held for the owner's approval before they change records.
-  if(currentUser && !isOwnerNow()){
-    submitPendingChange(regEditingId? 'edit':'add', regEditingId||null, rec, label);
-    regCloseForm(); regRenderList();
-    toast('📩 Sent to the clinic owner for approval');
-    return;
-  }
+  // Changes are applied straight away — an Undo button appears in 🔔 Notifications.
+  let saved;
   if(regEditingId){
     const ex=db.registry.find(x=>x.id===regEditingId);
+    const before=undoSnap(ex);
     Object.assign(ex, rec, {updatedAt:new Date().toISOString(), updatedBy:byTag()});
-    logActivity('edit','registry',label);
+    regRenumberAll();
+    saved=ex;
+    logActivity('edit','registry',(ex.regNo?ex.regNo+' — ':'')+(ex.name||''), undoOne('registry', before, ex));
   } else {
-    db.registry.push(Object.assign(rec, {id:uid('reg'), createdAt:new Date().toISOString(), by:byTag()}));
-    logActivity('add','registry',label);
+    delete rec.regNo;                     // the real number is derived from the surgery date on save
+    saved=Object.assign(rec, {id:uid('reg'), createdAt:new Date().toISOString(), by:byTag()});
+    db.registry.push(saved);
+    regRenumberAll();
+    logActivity('add','registry',(saved.regNo?saved.regNo+' — ':'')+(saved.name||''), undoOne('registry', null, saved));
   }
   persist(); regCloseForm(); regRenderList(); regRenderKpis(); regRenderAnalytics();
-  toast('Registry entry saved');
+  toast('Registry entry saved — No. '+(saved.regNo||'')+(regHasSurgDate(saved)?'':' (provisional — add the date of surgery)'));
 }
 /* ---- pending-change queue (owner approval for staff registry adds/edits) ---- */
 function submitPendingChange(op, targetId, payload, label){
@@ -7190,7 +7256,7 @@ function regRenderList(){
     const chk=regSel.has(r.id)?' checked':'';
     return '<tr'+(chk?' class="reg-rowsel"':'')+'>'+
     '<td><input type="checkbox" class="reg-rowcb" data-id="'+r.id+'"'+chk+' onclick="regToggleOne(\''+r.id+'\',this.checked)"></td>'+
-    '<td class="small"><b>'+esc(r.regNo||'—')+'</b>'+(r.mrn?'<br><span class="muted">MR '+esc(r.mrn)+'</span>':'')+'</td>'+
+    '<td class="small"><b>'+esc(r.regNo||'—')+'</b>'+(regHasSurgDate(r)?'':' <span class="reg-prov" title="No date of surgery yet — this number is provisional and will change once you enter the operation date">&#9888;</span>')+(r.mrn?'<br><span class="muted">MR '+esc(r.mrn)+'</span>':'')+'</td>'+
     '<td><b>'+esc(r.name||'—')+'</b>'+(r.age?'<br><span class="small muted">'+esc(r.age)+' '+esc(r.sex||'')+'</span>':'')+
        (r.patientId?' <span title="Linked to a patient record">🔗</span>':'')+'</td>'+
     '<td class="small">'+esc((r.diagnosis||'—').split('\n')[0])+(r.histSubtype?'<br><span class="muted">'+esc(r.histSubtype.split('\n')[0].slice(0,40))+'</span>':'')+'</td>'+
@@ -7225,7 +7291,7 @@ function regRenderKpis(){
   const r0=R.filter(r=>(r.margin||'')==='R0').length;
   const withM=R.filter(r=>r.margin).length;
   const yr=(new Date()).getFullYear();
-  const thisYr=R.filter(r=>String(r.regNo||'').startsWith(String(yr))).length;
+  const thisYr=R.filter(r=>regBasisDate(r).slice(0,4)===String(yr)).length;
   $('regKpis').innerHTML =
     '<div class="reg-kpi"><b>'+R.length+'</b><span>Total cases</span></div>'+
     '<div class="reg-kpi"><b>'+thisYr+'</b><span>This year</span></div>'+
@@ -7265,16 +7331,19 @@ function regRenderAnalytics(){
 function regImportSeed(){
   if(typeof REG_SEED==='undefined'){ toast('⚠ Seed data not found'); return; }
   if(!db.registry) db.registry=[];
-  const have=new Set(db.registry.map(r=>String(r.regNo||'')));
+  const have=new Set();
+  db.registry.forEach(r=>{ if(r.regNo) have.add(String(r.regNo)); if(r.regNoOld) have.add(String(r.regNoOld)); });
   let added=0;
   REG_SEED.forEach(src=>{
     if(src.regNo && have.has(String(src.regNo))) return;   // idempotent
     const rec=Object.assign({}, src);
     const p = rec.mrn ? db.patients.find(x=>!x.regOnly && String(x.mrn)===String(rec.mrn)) : null;
     rec.patientId = p?p.id:null;
+    if(rec.regNo) rec.regNoOld=String(rec.regNo);
     rec.id=uid('reg'); rec.createdAt=new Date().toISOString(); rec.by=byTag(); rec.imported=true;
     db.registry.push(rec); added++; if(rec.regNo) have.add(String(rec.regNo));
   });
+  regRenumberAll();
   persist();
   regRenderList(); regRenderKpis(); regRenderAnalytics();
   toast(added? ('Imported '+added+' registry cases') : 'Already imported — nothing new');
@@ -7319,7 +7388,7 @@ function regImportRows(rows){
   const lab2key={}; REG_ORDER.forEach(o=>{ lab2key[(REG_HEADERS[o[1]]||o[1]).toLowerCase()]=o[1]; lab2key[o[1].toLowerCase()]=o[1]; });
   const colKeys=header.map(h=>lab2key[h]||null);
   if(!db.registry) db.registry=[];
-  const byReg={}; db.registry.forEach(r=>{ if(r.regNo) byReg[String(r.regNo)]=r; });
+  const byReg={}; db.registry.forEach(r=>{ if(r.regNo) byReg[String(r.regNo)]=r; if(r.regNoOld && !byReg[String(r.regNoOld)]) byReg[String(r.regNoOld)]=r; });
   let added=0, upd=0;
   for(let i=1;i<rows.length;i++){
     const rec={}; (rows[i]||[]).forEach((v,ci)=>{ const k=colKeys[ci]; if(!k) return; let val=String(v==null?'':v).trim(); if(!val) return;
@@ -7329,8 +7398,10 @@ function regImportRows(rows){
     if(rec.regNo && byReg[String(rec.regNo)]){ Object.assign(byReg[String(rec.regNo)], rec, {updatedAt:new Date().toISOString(),updatedBy:byTag()}); upd++; }
     else { const p = rec.mrn ? db.patients.find(x=>!x.regOnly && String(x.mrn)===String(rec.mrn)) : null;
       rec.patientId=p?p.id:null; rec.id=uid('reg'); rec.createdAt=new Date().toISOString(); rec.by=byTag();
+      if(rec.regNo) rec.regNoOld=String(rec.regNo);
       db.registry.push(rec); if(rec.regNo) byReg[String(rec.regNo)]=rec; added++; }
   }
+  regRenumberAll();
   persist(); regRenderList(); regRenderKpis(); regRenderAnalytics();
   toast('Import: '+added+' added, '+upd+' updated');
 }
@@ -7787,45 +7858,6 @@ function computeCalc(){
 }
 
 /* ============ DOSE CALCULATOR ============ */
-const DOSE_PRESETS=[
-  {n:'Paracetamol (child)', mgkg:15, freq:'every 4–6 h', maxDay:'max 60 mg/kg/day (≤4 g)'},
-  {n:'Ibuprofen (child)', mgkg:10, freq:'every 6–8 h', maxDay:'max 40 mg/kg/day'},
-  {n:'Amoxicillin', mgkg:15, freq:'TDS', maxDay:'—'},
-  {n:'Co-amoxiclav', mgkg:15, freq:'BD–TDS', maxDay:'—'},
-  {n:'Cefuroxime', mgkg:15, freq:'BD', maxDay:'—'},
-  {n:'Ceftriaxone', mgkg:50, freq:'OD', maxDay:'max 2–4 g/day'},
-  {n:'Enoxaparin — treatment', mgkg:1, freq:'BD (or 1.5 mg/kg OD)', maxDay:'anti-Xa if renal impairment'},
-  {n:'Enoxaparin — prophylaxis', mgkg:0, freq:'40 mg OD (fixed)', maxDay:'30 mg BD in high VTE risk'},
-  {n:'Tranexamic acid (ortho)', mgkg:15, freq:'at induction ± repeat', maxDay:'—'},
-  {n:'Gentamicin', mgkg:5, freq:'OD', maxDay:'monitor levels & RFTs'},
-];
-function renderDoseCalc(){
-  const host=$('doseWrap'); if(!host) return;
-  host.querySelector('#dosePresets').innerHTML = DOSE_PRESETS.map((p,i)=>'<button class="calc-chip" onclick="pickDosePreset('+i+')"><b>'+esc(p.n)+'</b><span>'+p.mgkg+' mg/kg · '+esc(p.freq)+'</span></button>').join('');
-  const uf=$('crUnitField');
-  if(uf && !uf.dataset.built){ uf.dataset.built='1';
-    const unit=toolHsel({k:'crUnit',lab:'Creatinine unit',val:'mgdl',o:[['mgdl','mg/dL'],['umol','µmol/L']]}); unit.id='crUnit'; unit.addEventListener('hschange',computeDose); uf.appendChild(unit);
-    const sx=$('crSexField'); const sex=toolHsel({k:'crSex',lab:'Sex',o:[['m','Male'],['f','Female']],ph:'Select…'}); sex.id='crSex'; sex.addEventListener('hschange',computeDose); sx.appendChild(sex);
-  }
-  computeDose();
-}
-function pickDosePreset(i){ const p=DOSE_PRESETS[i]; $('doseMgkg').value=p.mgkg||''; $('doseNote').textContent=p.n+' — '+p.freq+(p.maxDay&&p.maxDay!=='—'?' · '+p.maxDay:''); computeDose(); }
-function computeDose(){
-  const wt=parseFloat($('doseWt').value)||0, mgkg=parseFloat($('doseMgkg').value)||0, doses=parseFloat($('doseFreq').value)||0;
-  const perDay=wt*mgkg; const perDose=doses>0?perDay/doses:0;
-  $('doseOut').innerHTML = (wt&&mgkg)? ('<div class="cr-score">'+ (perDose?round1(perDose)+' mg/dose':'—') +'</div><div class="cr-band">'+round1(perDay)+' mg/day'+(doses?(' · '+doses+' doses'):'')+'</div>') : '<div class="cr-band muted">Enter weight and mg/kg</div>';
-  // Cockcroft-Gault
-  const age=parseFloat($('crAge').value)||0, cwt=parseFloat($('crWt').value)||0, scr=parseFloat($('crScr').value)||0;
-  const crUnitEl=$('crUnit'), crSexEl=$('crSex'); const crUnitV=crUnitEl?crUnitEl.dataset.val:'mgdl'; const crSexV=crSexEl?crSexEl.dataset.val:'';
-  let crcl=0; if(age&&cwt&&scr){ let cr=scr; if(crUnitV==='umol') cr=scr/88.4; crcl=((140-age)*cwt)/(72*cr); if(crSexV==='f') crcl*=0.85; }
-  $('crOut').innerHTML = crcl? ('<div class="cr-score">'+Math.round(crcl)+' <small>mL/min</small></div><div class="cr-band">'+(crcl>=90?'Normal':crcl>=60?'Mild ↓':crcl>=30?'Moderate ↓ — adjust doses':crcl>=15?'Severe ↓':'Kidney failure')+'</div>') : '<div class="cr-band muted">Enter age, weight, creatinine, sex</div>';
-  // BSA (Mosteller)
-  const ht=parseFloat($('bsaHt').value)||0, bwt=parseFloat($('bsaWt').value)||0;
-  const bsa=(ht&&bwt)?Math.sqrt(ht*bwt/3600):0;
-  $('bsaOut').innerHTML = bsa? ('<div class="cr-score">'+bsa.toFixed(2)+' <small>m²</small></div><div class="cr-band">Mosteller formula</div>') : '<div class="cr-band muted">Enter height & weight</div>';
-}
-function round1(x){ return (Math.round(x*10)/10).toString(); }
-
 /* ============ IMPLANTS & INVENTORY ============ */
 let invEditingId=null;
 function invLow(it){ return (parseInt(it.qty)||0) <= (parseInt(it.minQty)||0); }
@@ -7945,17 +7977,16 @@ function renderDrugMonitors(){
 
 function renderToolsTab(name){
   if(name==='scores') renderScores();
-  else if(name==='dosecalc') renderDoseCalc();
   else if(name==='inventory') renderInventory();
 }
 
 
 /* ===== Sidebar model (generated) ===== */
-const TAB_ICONS={"home": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11l8-7 8 7\"/><path d=\"M6 9.5V20h12V9.5\"/><path d=\"M10 20v-6h4v6\"/></svg>", "visit": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 8v8M8 12h8\"/></svg>", "registry": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 4h9l3 3v13H6z\"/><path d=\"M9 4v4h6\"/><path d=\"M9.5 13.5l1.6 1.6 3-3.2\"/><circle cx=\"12\" cy=\"12\" r=\"9\" opacity=\"0\"/></svg>", "queue": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 8a2 2 0 0 0 2-2h12a2 2 0 0 0 2 2v2a2.2 2.2 0 0 0 0 4v2a2 2 0 0 0-2 2H6a2 2 0 0 0-2-2v-2a2.2 2.2 0 0 0 0-4z\"/><path d=\"M12 9v1.5M12 13.5V15\"/></svg>", "appts": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"5.5\" width=\"16\" height=\"15\" rx=\"2\"/><path d=\"M8 3.5V7M16 3.5V7M4 10.5h16\"/><path d=\"M9 14.5l2 2 4-4\"/></svg>", "patients": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"9\" cy=\"8\" r=\"3.2\"/><path d=\"M3.8 19c.7-3 2.7-4.6 5.2-4.6s4.5 1.6 5.2 4.6\"/><circle cx=\"16.8\" cy=\"9.2\" r=\"2.4\"/><path d=\"M15.6 14.7c2.2.4 3.7 1.7 4.3 3.9\"/></svg>", "discharge": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M14 3v4h4\"/><path d=\"M9.3 14.8l2 2 3.6-3.8\"/></svg>", "documents": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M14 3v4h4\"/><path d=\"M9 12h6M9 16h6\"/></svg>", "oplog": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"6\" y=\"5\" width=\"12\" height=\"16\" rx=\"2\"/><path d=\"M9.5 5V3.5h5V5\"/><path d=\"M9.5 10.5h5M9.5 14h5M9.5 17.5h3\"/></svg>", "medicines": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3.5\" y=\"9.5\" width=\"17\" height=\"8\" rx=\"4\" transform=\"rotate(-35 12 13.5)\"/><path d=\"M8.6 8.9l6.8 4.8\"/></svg>", "videos": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"3\"/><path d=\"M10 9.2l5 2.8-5 2.8z\"/></svg>", "scores": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M8 7h8M8 11h8M8 15h4\"/></svg>", "dosecalc": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"/><path d=\"M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2\"/></svg>", "inventory": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 8l9-5 9 5-9 5z\"/><path d=\"M3 8v8l9 5 9-5V8\"/><path d=\"M12 13v8\"/></svg>", "income": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"7\" width=\"18\" height=\"10\" rx=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"2.4\"/><path d=\"M6.4 12h.01M17.6 12h.01\"/></svg>", "analytics": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 20v-7M12 20V5M19 20v-4\"/></svg>", "settings": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 8h14M5 16h14\"/><circle cx=\"10\" cy=\"8\" r=\"2.2\"/><circle cx=\"14.5\" cy=\"16\" r=\"2.2\"/></svg>"};
-const TAB_LABELS_DEFAULT={"home": "Home", "visit": "New Prescription", "registry": "Tumour Registry", "queue": "Queue", "appts": "Appointments", "patients": "Patients", "discharge": "Discharge", "documents": "Documents", "oplog": "Op Log", "medicines": "Medicines", "videos": "Exercises", "scores": "Scores & Criteria", "dosecalc": "Dose Calculator", "inventory": "Implants & Inventory", "income": "Income", "analytics": "Analytics", "settings": "Settings"};
+const TAB_ICONS={"home": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11l8-7 8 7\"/><path d=\"M6 9.5V20h12V9.5\"/><path d=\"M10 20v-6h4v6\"/></svg>", "visit": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 8v8M8 12h8\"/></svg>", "registry": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 4h9l3 3v13H6z\"/><path d=\"M9 4v4h6\"/><path d=\"M9.5 13.5l1.6 1.6 3-3.2\"/><circle cx=\"12\" cy=\"12\" r=\"9\" opacity=\"0\"/></svg>", "queue": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 8a2 2 0 0 0 2-2h12a2 2 0 0 0 2 2v2a2.2 2.2 0 0 0 0 4v2a2 2 0 0 0-2 2H6a2 2 0 0 0-2-2v-2a2.2 2.2 0 0 0 0-4z\"/><path d=\"M12 9v1.5M12 13.5V15\"/></svg>", "appts": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"5.5\" width=\"16\" height=\"15\" rx=\"2\"/><path d=\"M8 3.5V7M16 3.5V7M4 10.5h16\"/><path d=\"M9 14.5l2 2 4-4\"/></svg>", "patients": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"9\" cy=\"8\" r=\"3.2\"/><path d=\"M3.8 19c.7-3 2.7-4.6 5.2-4.6s4.5 1.6 5.2 4.6\"/><circle cx=\"16.8\" cy=\"9.2\" r=\"2.4\"/><path d=\"M15.6 14.7c2.2.4 3.7 1.7 4.3 3.9\"/></svg>", "discharge": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M14 3v4h4\"/><path d=\"M9.3 14.8l2 2 3.6-3.8\"/></svg>", "documents": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M14 3v4h4\"/><path d=\"M9 12h6M9 16h6\"/></svg>", "oplog": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"6\" y=\"5\" width=\"12\" height=\"16\" rx=\"2\"/><path d=\"M9.5 5V3.5h5V5\"/><path d=\"M9.5 10.5h5M9.5 14h5M9.5 17.5h3\"/></svg>", "medicines": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3.5\" y=\"9.5\" width=\"17\" height=\"8\" rx=\"4\" transform=\"rotate(-35 12 13.5)\"/><path d=\"M8.6 8.9l6.8 4.8\"/></svg>", "videos": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"3\"/><path d=\"M10 9.2l5 2.8-5 2.8z\"/></svg>", "scores": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M8 7h8M8 11h8M8 15h4\"/></svg>", "inventory": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 8l9-5 9 5-9 5z\"/><path d=\"M3 8v8l9 5 9-5V8\"/><path d=\"M12 13v8\"/></svg>", "income": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"7\" width=\"18\" height=\"10\" rx=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"2.4\"/><path d=\"M6.4 12h.01M17.6 12h.01\"/></svg>", "analytics": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 20v-7M12 20V5M19 20v-4\"/></svg>", "settings": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 8h14M5 16h14\"/><circle cx=\"10\" cy=\"8\" r=\"2.2\"/><circle cx=\"14.5\" cy=\"16\" r=\"2.2\"/></svg>"};
+const TAB_LABELS_DEFAULT={"home": "Home", "visit": "New Prescription", "registry": "Tumour Registry", "queue": "Queue", "appts": "Appointments", "patients": "Patients", "discharge": "Discharge", "documents": "Documents", "oplog": "Op Log", "medicines": "Medicines", "videos": "Exercises", "scores": "Scores & Criteria", "inventory": "Implants & Inventory", "income": "Income", "analytics": "Analytics", "settings": "Settings"};
 const GROUP_ICONS={"ng-clinic": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 3v6a5 5 0 0 0 10 0V3\"/><path d=\"M12 14v3a4 4 0 0 0 8 0v-1\"/><circle cx=\"20\" cy=\"14\" r=\"2\"/></svg>", "ng-docs": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M14 3v4h4\"/><path d=\"M9 12h6M9 16h6\"/></svg>", "ng-library": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.5 7a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z\"/></svg>", "ng-tools": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 6a3.5 3.5 0 0 0-4.9 4.9l-5 5a1.5 1.5 0 0 0 2.1 2.1l5-5A3.5 3.5 0 0 0 18 10\"/><path d=\"M13.5 10.5l6 6\"/></svg>", "ng-practice": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 19V10M10 19V5M16 19v-7\"/><path d=\"M20 19H4\"/></svg>"};
 const GROUP_TITLES_DEFAULT={"ng-clinic": "Clinic Day", "ng-docs": "Paperwork", "ng-library": "Library & Logs", "ng-tools": "Clinical Tools", "ng-practice": "Practice"};
-const DEFAULT_NAV=[{"type": "leaf", "tab": "home"}, {"type": "leaf", "tab": "visit"}, {"type": "leaf", "tab": "registry"}, {"type": "group", "id": "ng-clinic", "open": true, "children": [{"type": "leaf", "tab": "queue"}, {"type": "leaf", "tab": "appts"}, {"type": "leaf", "tab": "patients"}]}, {"type": "group", "id": "ng-docs", "open": false, "children": [{"type": "leaf", "tab": "discharge"}, {"type": "leaf", "tab": "documents"}]}, {"type": "group", "id": "ng-library", "open": false, "children": [{"type": "leaf", "tab": "oplog"}, {"type": "leaf", "tab": "medicines"}, {"type": "leaf", "tab": "videos"}]}, {"type": "group", "id": "ng-tools", "open": false, "children": [{"type": "leaf", "tab": "scores"}, {"type": "leaf", "tab": "dosecalc"}, {"type": "leaf", "tab": "inventory"}]}, {"type": "group", "id": "ng-practice", "open": false, "children": [{"type": "leaf", "tab": "income"}, {"type": "leaf", "tab": "analytics"}, {"type": "leaf", "tab": "settings"}]}];
+const DEFAULT_NAV=[{"type": "leaf", "tab": "home"}, {"type": "leaf", "tab": "visit"}, {"type": "leaf", "tab": "registry"}, {"type": "group", "id": "ng-clinic", "open": true, "children": [{"type": "leaf", "tab": "queue"}, {"type": "leaf", "tab": "appts"}, {"type": "leaf", "tab": "patients"}]}, {"type": "group", "id": "ng-docs", "open": false, "children": [{"type": "leaf", "tab": "discharge"}, {"type": "leaf", "tab": "documents"}]}, {"type": "group", "id": "ng-library", "open": false, "children": [{"type": "leaf", "tab": "oplog"}, {"type": "leaf", "tab": "medicines"}, {"type": "leaf", "tab": "videos"}]}, {"type": "group", "id": "ng-tools", "open": false, "children": [{"type": "leaf", "tab": "scores"}, {"type": "leaf", "tab": "inventory"}]}, {"type": "group", "id": "ng-practice", "open": false, "children": [{"type": "leaf", "tab": "income"}, {"type": "leaf", "tab": "analytics"}, {"type": "leaf", "tab": "settings"}]}];
 
 /* ==================== CUSTOMISABLE SIDEBAR + LABEL EDITING ==================== */
 const FOLDER_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg>';
@@ -8658,11 +8689,101 @@ async function syncPullAccess(){
   }catch(e){}
 }
 /* ---- activity feed (add / change / delete alerts, shared across devices) ---- */
-function logActivity(action, kind, label){
+/* ================= UNDO =================
+   Every change is applied straight away. Alongside it we store a snapshot of what the
+   record looked like before, so the notifications panel can offer an "Undo" button.
+   undo = { items:[ {coll:'registry', id:'reg_1', before:{...}|null} ] }
+     before === null  -> the record was newly added, so undoing removes it
+     before === {...} -> the record was edited or deleted, so undoing puts that copy back  */
+const UNDO_MAX_SNAPSHOTS = 100;      // only the newest changes keep their snapshot
+const UNDO_MAX_BYTES = 20000;        // don't store a snapshot bigger than this
+function undoSnap(o){ try{ const s=JSON.stringify(o); if(!s || s.length>UNDO_MAX_BYTES) return undefined; return JSON.parse(s); }catch(e){ return undefined; } }
+function undoItem(coll, before, after){
+  const id = String((after&&after.id) || (before&&before.id) || '');
+  if(!coll || !id) return null;
+  const b = before ? undoSnap(before) : null;
+  if(before && b===undefined) return null;      // too big to snapshot -> no undo offered
+  return {coll:coll, id:id, before:b};
+}
+function undoPack(items){ items=(items||[]).filter(Boolean); return items.length? {items:items} : null; }
+function undoOne(coll, before, after){ return undoPack([undoItem(coll, before, after)]); }
+function undoPrune(){
+  const withSnap=(db.activity||[]).filter(a=>a.undo && !a.undone);
+  if(withSnap.length>UNDO_MAX_SNAPSHOTS){
+    withSnap.slice(0, withSnap.length-UNDO_MAX_SNAPSHOTS).forEach(a=>{ delete a.undo; a.undoExpired=true; });
+  }
+}
+function undoViewsFor(coll){
+  return ({patients:['renderPatientList','renderFollowups','updateQNavCount'],
+           visits:['renderPatientList','renderFollowups','updateRxCount'],
+           documents:['renderDsList','renderDocList'],
+           registry:['regRenderList','regRenderKpis','regRenderAnalytics'],
+           appts:['renderAppts','renderReminders'],
+           queue:['renderQueue','updateQNavCount'],
+           surgeries:['renderOpLog'],
+           inventory:['renderInventory']})[coll] || [];
+}
+function undoCanUndo(a){
+  if(!a || !a.undo || a.undone) return false;
+  if(!a.undo.items || !a.undo.items.length) return false;
+  return a.undo.items.every(it=>Array.isArray(db[it.coll]));
+}
+function undoActivity(id){
+  const a=(db.activity||[]).find(x=>String(x.id)===String(id));
+  if(!a){ toast('\u26a0 That change is no longer in the list'); return; }
+  if(a.undone){ toast('\u21a9 Already undone'); return; }
+  if(!undoCanUndo(a)){ toast('\u26a0 This change can no longer be undone'); return; }
+  // the owner can undo anything; everyone else can undo their own changes
+  const mine = currentUser && a.who && a.who===currentUser.name;
+  if(currentUser && !isOwnerNow() && !mine){ toast('\u26a0 Only the clinic owner can undo someone else\u2019s change'); return; }
+  if(!confirm('Undo this change?\n\n'+(actVerb(a.action)||'')+' '+(a.kind||'')+' '+(a.label||'')+'\n\nThe record goes back to how it was before.')) return;
+  const touched={};
+  a.undo.items.forEach(function(it){
+    const arr=db[it.coll]; if(!Array.isArray(arr)) return;
+    const idx=arr.findIndex(x=>String(x.id)===String(it.id));
+    if(it.before){
+      const back=JSON.parse(JSON.stringify(it.before));
+      syncTouch(back);
+      if(idx>=0) arr[idx]=back; else arr.push(back);
+      undoUnsuppress(it.coll, it.id);
+    } else if(idx>=0){
+      arr.splice(idx,1);
+    }
+    touched[it.coll]=true;
+  });
+  a.undone=true; a.undoneAt=new Date().toISOString(); a.undoneBy=(currentUser?currentUser.name:'');
+  if(touched.registry && typeof regRenumberAll==='function') regRenumberAll();
+  persist();
+  Object.keys(touched).forEach(function(coll){
+    undoViewsFor(coll).forEach(function(fn){ try{ if(typeof window[fn]==='function') window[fn](); }catch(e){} });
+  });
+  try{ if(typeof refreshAllViews==='function') refreshAllViews(); }catch(e){}
+  if(typeof syncPushActivity==='function' && navigator.onLine){ clearTimeout(window.__actPush); window.__actPush=setTimeout(()=>syncPushActivity().catch(()=>{}),800); }
+  try{ const sc=syncCfg(); if(sc.url && sc.anonKey && navigator.onLine && typeof syncNow==='function'){ setTimeout(()=>{ try{ syncNow(false,true); }catch(e){} }, 1200); } }catch(e){}
+  if(typeof renderNotif==='function') renderNotif();
+  toast('\u21a9 Undone \u2014 '+(a.label||'change reversed'));
+}
+/* a record that was deleted may have been tombstoned for the cloud; clear that so it can come back */
+function undoUnsuppress(coll, id){
+  try{
+    const c=syncCfg(); if(c.suppressed && Array.isArray(c.suppressed[coll])) c.suppressed[coll]=c.suppressed[coll].filter(x=>String(x)!==String(id));
+    if(c.url && c.anonKey && navigator.onLine) undoClearTombRow(coll, id);
+  }catch(e){}
+}
+async function undoClearTombRow(coll, id){
+  try{ const cl=await syncClient(); const s=await cl.auth.getSession(); if(!s.data.session) return;
+    await cl.from('records').delete().eq('id','tomb:'+coll+'|'+id);
+    await cl.from('records').delete().eq('id','req:'+coll+':'+id);
+  }catch(e){}
+}
+function logActivity(action, kind, label, undo){
   db.activity = db.activity||[];
-  db.activity.push({id:uid('ac'), action:action, kind:kind, label:String(label||'').slice(0,80),
-    who:(currentUser?currentUser.name:'') , at:new Date().toISOString(), read:false});
+  const rec={id:uid('ac'), action:action, kind:kind, label:String(label||'').slice(0,80),
+    who:(currentUser?currentUser.name:'') , at:new Date().toISOString(), read:false};
+  if(undo && undo.items && undo.items.length) rec.undo=undo;
+  db.activity.push(rec);
   if(db.activity.length>800) db.activity=db.activity.slice(-800);
+  undoPrune();
   persist();
   if(typeof syncPushActivity==='function' && navigator.onLine){ clearTimeout(window.__actPush); window.__actPush=setTimeout(()=>syncPushActivity().catch(()=>{}),1500); }
   if(typeof renderNotif==='function') renderNotif();
@@ -8813,6 +8934,7 @@ async function syncNow(loud, force){
     let plan=computeSyncPlan(local, cloud, state, isAdmin, {});
     if(isAdmin && plan.pendingForAdmin.length){ const decisions=await askDeleteApprovals(plan.pendingForAdmin); plan=computeSyncPlan(local, cloud, state, isAdmin, decisions); }
     SYNC_COLLS.forEach(k=>{ db[k]=plan.newLocal[k]; });
+    if(typeof regRenumberAll==='function') regRenumberAll();   // numbers follow surgery dates, so re-derive after a merge
     reconcileUsers(); refreshCurrentUser();   // apply any access changes immediately, before later steps
     const delIds=[...new Set(plan.deleteRowIds)];
     for(const id of delIds){ await c.from('records').delete().eq('id', id); }
