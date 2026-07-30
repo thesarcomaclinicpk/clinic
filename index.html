@@ -148,11 +148,23 @@ html[data-theme="dark"] .edit-banner.newv{background:#14321f;border-color:#2f6b4
 .side-ctrls #zoomPct{font-size:11px;color:#8fc9d9;min-width:36px;text-align:center}
 @media(max-width:920px){.side-ctrls{flex-direction:column}.side-ctrls #zoomPct{display:none}}
 .side-foot button:hover{background:rgba(255,255,255,.08);color:#fff}
+.sync-chip{display:flex;align-items:center;gap:8px;margin:0 6px 8px;padding:7px 10px;border-radius:10px;
+  background:rgba(255,255,255,.06);cursor:pointer;transition:.15s}
+.sync-chip:hover{background:rgba(255,255,255,.13)}
+.sync-chip .sc-dot{width:8px;height:8px;border-radius:50%;flex:none;background:#64748b}
+.sync-chip.on .sc-dot{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+.sync-chip.off .sc-dot{background:#94a3b8}
+.sync-chip.err .sc-dot{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.18)}
+.sync-chip.local .sc-dot{background:#38bdf8}
+.sync-chip .sc-tx{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.sync-chip .sc-tx b{font-size:11.5px;color:#dbeef5;font-weight:600}
+.sync-chip .sc-tx span{font-size:10.5px;color:#8fc9d9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:920px){ .sync-chip .sc-tx{display:none} .sync-chip{justify-content:center} }
 main{max-width:1180px;margin:0 auto;padding:26px 30px 90px}
 .page-head{font-size:21px;font-weight:700;letter-spacing:-.2px;color:#14313e;margin-bottom:16px}
 @media(max-width:920px){
   :root{--side-w:64px}
-  .brand .btxt, #side nav button span, .side-foot button span, .s-who{display:none}
+  .brand .btxt, #side nav button span, .side-foot button span, .s-who, .sync-chip .sc-tx{display:none}
   .signed-row{flex-direction:column;gap:6px;padding:7px 4px}
   .nav-gh .chev{display:none}
   .nav-sub{margin-left:0;padding-left:0;border-left:none}
@@ -278,6 +290,12 @@ table.list td input,table.list td select{font-size:13.5px;padding:6px 8px}
 .toast[data-type="warn"]{border-left-color:#f59e0b}
 .toast[data-type="danger"]{border-left-color:#ef4444}
 .toast[data-type="info"]{border-left-color:#38bdf8}
+.toast{display:flex;align-items:center;gap:12px}
+.t-undo{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:inherit;border-radius:7px;
+  padding:4px 11px;font-size:12.5px;font-weight:600;cursor:pointer;flex:none}
+.t-undo:hover{background:rgba(255,255,255,.25)}
+html[data-theme="dark"] .t-undo{border-color:rgba(0,0,0,.25);background:rgba(0,0,0,.08)}
+html[data-theme="dark"] .t-undo:hover{background:rgba(0,0,0,.16)}
 .search-row{display:flex;gap:10px;margin-bottom:14px;align-items:center}
 .search-row input{max-width:380px}
 .patient-hit{padding:9px 12px;cursor:pointer;border-bottom:1px solid #f1f5f9}
@@ -424,6 +442,9 @@ html[data-theme="dark"] .vid-card{background:#121e2a;border-color:#233545}
 #printPreview.hidden{display:none}
 .pp-tools{display:flex;align-items:center;gap:12px;padding:13px 22px;background:#0d1a24;border-bottom:1px solid #223648}
 .pp-title{color:#9fb8c8;font-size:13.5px;flex:1}
+.pp-fit{font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:20px;white-space:nowrap}
+.pp-fit.ok{background:rgba(34,197,94,.16);color:#86efac}
+.pp-fit.over{background:rgba(245,158,11,.18);color:#fcd34d}
 .pp-scroll{flex:1;overflow:auto;padding:26px 0 40px;display:flex;justify-content:center}
 .pp-sheet{width:210mm;min-height:297mm;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.55);
   transform:scale(.78);transform-origin:top center;border-radius:3px;flex:none;
@@ -630,6 +651,19 @@ input.rx-ur:focus{border-style:solid}
 .rx-advice h4{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#333;margin-bottom:2px}
 .rx-advice p{white-space:pre-wrap}
 .rx-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px;page-break-inside:avoid}
+.rx-foot.rx-foot-r{justify-content:flex-end}
+.rx-corner{display:flex;align-items:flex-end;gap:9px}
+.rx-fubox{border:1.1px solid #111;border-radius:3px;padding:4px 12px 5px;text-align:center;min-width:44mm}
+.rx-fubox .fb-h{font-family:'Noto Nastaliq Urdu','Urdu Typesetting','Jameel Noori Nastaleeq','Geeza Pro',Georgia,serif;
+  direction:rtl;font-size:11px;line-height:1.9;border-bottom:1px solid #111;padding-bottom:2px;margin-bottom:4px}
+.rx-fubox .fb-d{font-size:17px;font-weight:800;letter-spacing:.6px;line-height:1.15}
+.rx-fubox .fb-s{font-size:8.5px;letter-spacing:.8px;text-transform:uppercase;color:#444;margin-top:1px}
+.rx-bc{margin-left:auto;text-align:center;line-height:1}
+.rx-bc svg{display:block;height:9mm;width:auto}
+.rx-bc .bc-tx{font-size:8.5px;letter-spacing:1.1px;margin-top:2.5px;color:#222}
+.rx-sheet.compact .rx-bc svg{height:7mm}
+.rx-sheet.compact .rx-fubox{min-width:38mm;padding:3px 9px 4px}
+.rx-sheet.compact .rx-fubox .fb-d{font-size:15px}
 .rx-qr{text-align:center}
 .rx-qr svg{display:block;margin:0 auto}
 .qr-cap{font-size:8px;color:#333;margin-top:1mm;letter-spacing:.3px;font-family:-apple-system,Arial,sans-serif}
@@ -674,6 +708,29 @@ body.dark .ro-badge, body[data-theme=dark] .ro-badge{background:rgba(154,91,0,.1
 #mBell{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:2px 8px;line-height:1;position:relative;margin-left:auto}
 .notif-badge{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;padding:0 3px;border-radius:9px;background:#e11d48;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
 #mBell .notif-badge{top:0;right:2px}
+#mtopbar #mSearch, #mtopbar #mScan{background:none;border:none;font-size:18px;padding:0 5px;cursor:pointer;color:inherit}
+#scanBtn{width:42px;height:42px;flex:none;border-radius:21px;border:1px solid var(--line);
+  background:var(--card);font-size:17px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:.16s}
+#scanBtn:hover{background:var(--hover);border-color:var(--teal)}
+.scan-wrap{position:fixed;inset:0;z-index:300;background:rgba(6,14,20,.9);display:flex;align-items:center;justify-content:center;padding:16px}
+.scan-wrap.hidden{display:none}
+.scan-card{background:var(--card);border-radius:16px;overflow:hidden;width:min(460px,94vw);position:relative}
+.scan-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+#scanVid{width:100%;max-height:58vh;background:#000;display:block;object-fit:cover}
+.scan-line{position:absolute;left:8%;right:8%;top:52%;height:2px;background:rgba(239,68,68,.85);box-shadow:0 0 12px rgba(239,68,68,.7)}
+.scan-tip{padding:11px 14px;font-size:12.5px;color:var(--muted)}
+.ph-pop{position:absolute;z-index:240;background:var(--card);border:1px solid var(--line);border-radius:11px;
+  box-shadow:0 14px 34px rgba(10,25,35,.20);overflow:hidden;max-height:250px;overflow-y:auto;min-width:240px}
+html[data-theme="dark"] .ph-pop{box-shadow:0 14px 34px rgba(0,0,0,.55)}
+.ph-pop.hidden{display:none}
+.ph-hd{padding:7px 11px;font-size:10.5px;letter-spacing:.3px;color:var(--muted);border-bottom:1px solid var(--line);background:var(--hover,#f4f8fa)}
+html[data-theme="dark"] .ph-hd{background:#16242f}
+.ph-it{padding:8px 11px;font-size:13px;cursor:pointer;display:flex;gap:9px;align-items:center;border-bottom:1px solid var(--row-bd)}
+.ph-it:last-child{border-bottom:none}
+.ph-it:hover,.ph-it.hi{background:var(--teal-light);color:var(--teal-dark)}
+.ph-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ph-n{flex:none;font-size:10.5px;color:var(--muted);background:var(--hover,#eef3f6);border-radius:6px;padding:1px 6px}
+html[data-theme="dark"] .ph-n{background:#1b2b38}
 #notifPanel{position:fixed;top:62px;right:18px;z-index:120;width:min(380px,92vw);max-height:72vh;overflow:auto;background:var(--card);
   border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.3)}
 .notif-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card)}
@@ -807,6 +864,59 @@ html[data-theme="dark"] .calc-result.warn .cr-band{color:#fcd34d}
 html[data-theme="dark"] .calc-result.bad .cr-band{color:#fca5a5}
 .reg-prov{color:#b45309;font-size:11px;cursor:help}
 html[data-theme="dark"] .reg-prov{color:#fcd34d}
+/* ---------- polish: gentle motion & feedback ---------- */
+@media (prefers-reduced-motion: no-preference){
+  section.tab.active > *{animation:riseIn .26s ease both}
+  section.tab.active > *:nth-child(2){animation-delay:.03s}
+  section.tab.active > *:nth-child(3){animation-delay:.06s}
+  section.tab.active > *:nth-child(4){animation-delay:.09s}
+  @keyframes riseIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+}
+.btn{transition:background .15s, border-color .15s, box-shadow .15s, transform .08s}
+.btn:active{transform:translateY(1px) scale(.985)}
+.card{transition:box-shadow .2s, border-color .2s}
+.card:hover{box-shadow:0 4px 18px rgba(16,40,56,.09)}
+html[data-theme="dark"] .card:hover{box-shadow:0 4px 18px rgba(0,0,0,.45)}
+.tile{transition:transform .16s, box-shadow .16s}
+table.list tbody tr{transition:background .13s}
+input,select,textarea{transition:border-color .15s, box-shadow .15s}
+.empty{animation:none}
+.empty .ei{display:block;font-size:34px;margin-bottom:6px;opacity:.75}
+/* coloured initials */
+.avat{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;
+  font-size:10.5px;font-weight:700;letter-spacing:.3px;color:#fff;flex:none;margin-right:8px;vertical-align:middle;
+  text-shadow:0 1px 1px rgba(0,0,0,.18)}
+.avat.lg{width:40px;height:40px;font-size:15px;margin-right:11px}
+.nm-cell{display:flex;align-items:center;gap:0}
+/* home: today at a glance */
+.ht-head{font-size:11.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.ht-list{display:flex;flex-direction:column;gap:5px}
+.ht-row{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;background:var(--hover,#f2f6f8);font-size:13.5px}
+html[data-theme="dark"] .ht-row{background:#16242f}
+.ht-row.ht-dim{opacity:.55}
+.ht-tok{flex:none;min-width:42px;font-weight:700;color:var(--teal-dark);font-size:13px}
+html[data-theme="dark"] .ht-tok{color:#8fd4e6}
+.ht-nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht-more{font-size:12px;color:var(--muted);padding:2px 10px}
+.tile-go{cursor:pointer}
+.tile-go:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.09)}
+/* segmented switch */
+.seg{display:inline-flex;background:var(--hover,#eef2f5);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px;margin-bottom:12px}
+.seg-btn{border:none;background:none;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:.15s}
+.seg-btn.active{background:var(--card);color:var(--teal-dark);box-shadow:0 1px 3px rgba(0,0,0,.10)}
+html[data-theme="dark"] .seg{background:#16242f}
+html[data-theme="dark"] .seg-btn.active{background:#0f1c26;color:#8fd4e6}
+/* patient timeline */
+.tline{position:relative;padding-left:6px}
+.tl-date{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+.tl-row{display:flex;gap:11px;align-items:flex-start;padding:9px 0 9px 2px;border-left:2px solid var(--line);margin-left:11px;padding-left:16px;position:relative}
+.tl-row:before{content:'';position:absolute;left:-6px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--teal);border:2px solid var(--card)}
+.tl-ic{font-size:16px;flex:none;line-height:1.2}
+.tl-body{flex:1;min-width:0}
+.tl-kind{font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--teal)}
+.tl-tag{background:var(--teal-light);color:var(--teal-dark);border-radius:6px;padding:1px 5px;font-size:10px;letter-spacing:0}
+.tl-title{font-size:14px;font-weight:600;margin-top:1px}
+.tl-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
 .inv-low td{background:rgba(220,38,38,.06)}
 html[data-theme="dark"] .inv-low td{background:rgba(248,113,113,.09)}
 /* drug monitoring panel (screen only) */
@@ -873,9 +983,24 @@ html[data-theme="dark"] body.card-tint main .card[data-tint="5"]{background:#271
 .cmd-card input{width:100%;border:none;border-bottom:1px solid var(--line);border-radius:0;font-size:15px;padding:15px 16px}
 .cmd-card input:focus{outline:none}
 .cmd-list{max-height:320px;overflow:auto;padding:6px}
-.cmd-item{padding:9px 12px;border-radius:8px;font-size:13.5px;cursor:pointer}
+.cmd-item{padding:8px 11px;border-radius:9px;font-size:13.5px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
 .cmd-item:hover,.cmd-item.hi{background:var(--teal-light);color:var(--teal-dark)}
+.cmd-ic{flex:none;width:20px;text-align:center;font-size:14px;line-height:1.35;opacity:.85}
+.cmd-tx{flex:1;min-width:0}
+.cmd-tx b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmd-sub{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.cmd-item.hi .cmd-sub{color:var(--teal-dark);opacity:.75}
+.cmd-grp{padding:9px 12px 3px;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.cmd-foot{border-top:1px solid var(--line);padding:7px 12px;font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center}
 .cmd-empty{padding:12px;color:var(--muted);font-size:13px}
+/* find-anything buttons */
+#topActions{position:fixed;top:14px;right:70px;z-index:57;display:flex;align-items:center;gap:8px}
+#searchBtn{height:42px;padding:0 15px;border-radius:21px;border:1px solid var(--line);
+  background:var(--card);color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:.16s}
+#searchBtn:hover{background:var(--hover);color:var(--ink);border-color:var(--teal)}
+#searchBtn .kbd{font-size:10.5px;opacity:.8}
+@media(max-width:768px){ #topActions{display:none} }
+body.no-user #topActions{display:none!important}
 .kbd{display:inline-block;font-family:ui-monospace,monospace;font-size:11.5px;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:2px 6px}
 
 /* ===== mic button ===== */
@@ -1108,6 +1233,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button onclick="setZoom(10)" title="Bigger text">A+</button>
       <button onclick="openNavModal()" title="Customise menu &amp; labels">✎</button>
     </div>
+    <div class="sync-chip" id="syncChip" onclick="manualRefresh()" title="Tap to sync now"></div>
     <div class="signed-row" id="signedRow">
       <span class="s-dot"></span>
       <div class="s-who">
@@ -1119,10 +1245,14 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   </div>
 </aside>
 <div id="content">
-<div id="mtopbar"><button id="mHamb" aria-label="Open menu" onclick="toggleDrawer()">☰</button><span id="mTitle">Clinic</span><button class="sync-spin" onclick="spinnerSync()" title="Sync now" aria-label="Sync now"></button><button id="mBell" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="mBellBadge">0</span></button></div>
+<div id="mtopbar"><button id="mHamb" aria-label="Open menu" onclick="toggleDrawer()">☰</button><span id="mTitle">Clinic</span><button class="sync-spin" onclick="spinnerSync()" title="Sync now" aria-label="Sync now"></button><button id="mScan" aria-label="Scan" onclick="openScanner()">📷</button><button id="mSearch" aria-label="Search" onclick="openPalette()">🔍</button><button id="mBell" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="mBellBadge">0</span></button></div>
 <button class="sync-spin" id="dSyncSpin" onclick="spinnerSync()" title="Sync now" aria-label="Sync now"></button>
 <div id="navBackdrop" onclick="closeDrawer()"></div>
 <!-- notifications -->
+<div id="topActions">
+<button id="scanBtn" aria-label="Scan a patient barcode" onclick="openScanner()" title="Scan the barcode on a printed prescription">📷</button>
+<button id="searchBtn" aria-label="Search anything" onclick="openPalette()" title="Search patients, registry, discharges, medicines and pages">🔍 <span>Search</span> <span class="kbd">/</span></button>
+</div>
 <button id="notifBtn" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="notifBadge">0</span></button>
 <div id="notifPanel" class="hidden">
   <div class="notif-head"><b>Notifications</b><div><button class="btn btn-ghost btn-sm" onclick="markNotifRead()">Mark all read</button><button class="btn btn-ghost btn-sm" onclick="toggleNotif()">✕</button></div></div>
@@ -1162,6 +1292,13 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <table class="list"><tbody id="homeRecentBody"></tbody></table>
       <p class="muted small hidden" id="homeRecentEmpty">Prescriptions you save will appear here.</p>
     </div>
+  </div>
+  <div class="card">
+    <div class="btn-bar" style="justify-content:space-between;align-items:center">
+      <h2 style="margin:0">Today at a glance</h2>
+      <span class="muted small" id="homeTodaySub"></span>
+    </div>
+    <div id="homeToday"></div>
   </div>
 </section>
 
@@ -1479,11 +1616,17 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </div>
     <p class="small mt" id="pdInfo"></p>
     <p class="small" id="pdHx"></p>
-    <h2 class="mt">Visit history</h2>
-    <table class="list">
-      <thead><tr><th>Date</th><th>Diagnosis</th><th>Medicines</th><th style="width:170px"></th></tr></thead>
-      <tbody id="pdVisits"></tbody>
-    </table>
+    <div class="seg mt" id="pdSeg">
+      <button class="seg-btn active" id="pdSegVisits" onclick="pdView('visits')">Visit history</button>
+      <button class="seg-btn" id="pdSegTl" onclick="pdView('timeline')">Full timeline</button>
+    </div>
+    <div id="pdVisitsWrap">
+      <table class="list">
+        <thead><tr><th>Date</th><th>Diagnosis</th><th>Medicines</th><th style="width:170px"></th></tr></thead>
+        <tbody id="pdVisits"></tbody>
+      </table>
+    </div>
+    <div id="pdTimeline" class="hidden"></div>
   </div>
 </section>
 
@@ -1550,7 +1693,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <div class="field"><label>Date of admission</label><input type="date" id="dcAdmit"></div>
         <div class="field"><label>Date of discharge</label><input type="date" id="dcDischarge"></div>
         <div class="field" style="grid-column:span 2"><label>Procedure / operation performed (with date)
-          <label class="small" style="display:inline;font-weight:400;margin-left:10px;color:var(--muted)"><input type="checkbox" id="dcAddLog" checked style="width:auto;vertical-align:middle"> also add to surgery logbook</label></label>
+          <label class="small" style="display:inline;font-weight:400;margin-left:10px;color:var(--muted)"><input type="checkbox" id="dcAddLog" checked style="width:auto;vertical-align:middle"> also add to surgery logbook (and keep it in step)</label></label>
           <textarea class="ta-s" id="dcProc" placeholder="e.g. ORIF right femur with intramedullary nail — 10 Jul 2026"></textarea></div>
       </div>
       <div class="grid g2 mt">
@@ -2093,6 +2236,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="field"><label>Top space on pad (mm)</label><input type="number" id="sPadTop" min="20" max="150" step="1" placeholder="68"></div>
       <div class="field"><label>Paper size (plain paper mode)</label><select id="sPaper"><option value="A4">A4 (full page)</option><option value="A5">A5 (half page)</option></select></div>
       <div class="field"><label>Urdu line under each medicine</label><select id="sUrduRx"><option value="on">On — print Urdu translation</option><option value="off">Off — English only</option></select></div>
+      <div class="field"><label>Patient barcode on prescriptions</label><select id="sRxBarcode"><option value="on">On — print the MR number as a barcode</option><option value="off">Off</option></select></div>
+      <div class="field"><label>Suggest my usual wording</label><select id="sPhraseHelp"><option value="on">On — offer lines I've written before</option><option value="off">Off</option></select></div>
       <div class="field"><label>Urdu size on prints</label><select id="sUrduSize">
         <option value="normal">Normal</option><option value="large">Large</option><option value="xlarge">Extra large</option>
       </select></div>
@@ -2261,6 +2406,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <div id="printPreview" class="hidden" onclick="if(event.target===this) closePrintPreview()">
   <div class="pp-tools">
     <span class="pp-title">Print preview — exactly as it lands on the page</span>
+    <span class="pp-fit" id="ppFit"></span>
     <button class="btn btn-green" onclick="closePrintPreview();window.print()">🖨 Print now</button>
     <button class="btn btn-ghost" onclick="closePrintPreview()" style="background:#243444;color:#cfe3ee;border-color:#3a5065">✕ Close</button>
   </div>
@@ -2773,12 +2919,12 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 30;
+const SEED_VERSION = 32;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
       regNo:'',clinicName:'Faizi Hospital',address:'53-A Main Satellite Town Rd, Satellite Town, Sargodha',
-      phone:'+92 315 7459655 · +92 304 3212222',timings:'',paper:'A4',footer:'',printMode:'pad',padTop:'68',urduRx:'on',mrnPrefix:'FH',mrnStyle:'date',logo:'',qrRx:'on',feeShare:'30',theme:'light',uiZoom:'100',
+      phone:'+92 315 7459655 · +92 304 3212222',timings:'',paper:'A4',footer:'',printMode:'pad',padTop:'68',urduRx:'on',rxBarcode:'on',phraseHelp:'on',mrnPrefix:'FH',mrnStyle:'date',logo:'',qrRx:'on',feeShare:'30',theme:'light',uiZoom:'100',
       autoLock:'10',defFu:'',feePresets:'',urduSize:'normal',backupPw:'',
       accent:'teal', photoLock:'', photoHero:'',
       brandTag:'The Sarcoma Clinic PK', nav:null, navLabels:{}, labelOverrides:{}, cardTint:'on', shortcuts:'on', favMeds:[], favTpls:[], defQrId:'', sync:{url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false},
@@ -2981,6 +3127,17 @@ function migrateDB(){
   // 3. tumour registry: renumber every existing case as YYMMDD + running count for that year,
   //    driven by the date of surgery
   try{ if(typeof regRenumberAll==='function') regRenumberAll(); }catch(e){}
+  // ---- v31 ----
+  // link discharge summaries to the logbook entry they already created, so re-saving
+  // updates that entry instead of adding a second copy
+  (db.documents||[]).forEach(function(d){
+    if(!d || d.type!=='discharge' || d.opId) return;
+    if(!String((d.dc||{}).proc||'').trim()) return;
+    try{ const op=dsFindOp(d); if(op){ d.opId=op.id; op.fromDischarge=d.id; } }catch(e){}
+  });
+  // ---- v32 ---- new print/typing preferences, on by default
+  if(db.settings.rxBarcode===undefined) db.settings.rxBarcode='on';
+  if(db.settings.phraseHelp===undefined) db.settings.phraseHelp='on';
   db.seedVersion = SEED_VERSION;
   persist();
 }
@@ -2994,13 +3151,26 @@ function persist(){
 const $ = id => document.getElementById(id);
 const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toast(msg){
-  const t=$('toast'); t.textContent=msg;
+  const t=$('toast');
   const s=String(msg);
+  // a change that was just logged with an undo snapshot gets an Undo button right here
+  const off = window.__undoOffer;
+  const undoId = (off && (Date.now()-off.at)<2000 && !/⚠|⛔/.test(s)) ? off.id : '';
+  window.__undoOffer = null;
+  t.innerHTML='';
+  const span=document.createElement('span'); span.className='t-msg'; span.textContent=s; t.appendChild(span);
+  if(undoId){
+    const b=document.createElement('button'); b.className='t-undo'; b.type='button';
+    b.textContent='\u21a9 Undo';
+    b.onclick=function(){ hideToast(); undoActivity(undoId, true); };
+    t.appendChild(b);
+  }
   t.dataset.type = /⛔|wrong|could not|cannot|failed|invalid|do not match/i.test(s) ? 'danger'
     : /⚠/.test(s) ? 'warn'
     : /^[🔔💡📋↩←]/.test(s) ? 'info' : 'success';
-  t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2600);
+  t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), undoId?6500:2600);
 }
+function hideToast(){ const t=$('toast'); if(t){ clearTimeout(t._h); t.classList.remove('show'); } }
 function fmtDate(iso){ const d=new Date(iso); return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
 function fmtTime(iso){ const d=new Date(iso); return d.toLocaleTimeString('en-GB',{hour:'numeric',minute:'2-digit',hour12:true}); }
 /* MR numbers.
@@ -3135,7 +3305,7 @@ function applyTabAccess(name){
 }
 
 /* ================= SETTINGS ================= */
-const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent'};
+const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent'};
 function loadSettingsForm(){
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) $(el).value = db.settings[key]||''; }
   applyBrand();
@@ -3815,6 +3985,14 @@ function saveVisit(andPrint){
     if(f.patient.mrn) p.mrn = f.patient.mrn;
     syncTouch(p);
   } else {
+    const dups = findDuplicatePatients(f.patient);
+    if(dups.length){
+      const list = dups.map(x=>'\u2022 '+x.name+'  ('+x.mrn+')'+(x.phone?'  \u2014 '+x.phone:'')+
+        '  \u2014 '+db.visits.filter(v=>v.patientId===x.id).length+' visit(s)').join('\n');
+      const ok = confirm('This patient may already be on file:\n\n'+list+
+        '\n\nOK = create a NEW separate record anyway.\nCancel = open the existing record instead.');
+      if(!ok){ showTab('patients'); openPatient(dups[0].id); return; }
+    }
     p = {id: uid('p'), ...f.patient, createdAt: new Date().toISOString()};
     p.mrn = nextMrn();   // always assign a fresh number (the box only showed a preview)
     syncTouch(p);
@@ -3857,6 +4035,7 @@ function saveVisit(andPrint){
     updateQNavCount();
   }
   editingVisitId = null;
+  phraseBankInvalidate();
   persist();
   toast((editing?'Prescription updated for ':'Visit saved for ')+p.name+' ('+p.mrn+')');
   if(andPrint) printVisit(visit, p);
@@ -3907,7 +4086,7 @@ function clearVisitForm(ask){
   $('rxBody').innerHTML=''; updateRxCount();
   if($('rxAlerts')) $('rxAlerts').innerHTML='';
   visitImgs = []; renderVisitImgStrip();
-  $('cFuDate').value='';
+  $('cFuDate').value=''; $('cFuDate').dataset.auto='';
   $('cFee').value = db.settings.defFee || '';
   if(typeof renderRxQrSelect==='function') renderRxQrSelect();
   applyDefFu();
@@ -3983,7 +4162,14 @@ function showPrintPreview(){
   const sideMm = padMode ? 12 : 10;
   $('ppSheet').innerHTML =
     '<div class="pp-margin" style="height:'+topMm+'mm">'+(padMode?'<span>Your pre-printed letterhead sits here</span>':'')+'</div>'+
-    '<div style="padding:0 '+sideMm+'mm 10mm">'+$('printArea').innerHTML+'</div>';
+    '<div style="padding:0 '+sideMm+'mm 0">'+$('printArea').innerHTML+'</div>'+
+    '<div class="pp-margin" style="height:'+(padMode?34:10)+'mm">'+(padMode?'<span>Pre-printed footer area</span>':'')+'</div>';
+  const fit=$('ppFit');
+  if(fit){
+    const ok = window.__lastPrintFits !== false;
+    fit.className = 'pp-fit '+(ok?'ok':'over');
+    fit.textContent = ok ? '✓ Fits on one sheet' : '⚠ Spills onto a second sheet — shorten it or it will print on 2 pages';
+  }
   $('printPreview').classList.remove('hidden');
 }
 function closePrintPreview(){ $('printPreview').classList.add('hidden'); }
@@ -4009,7 +4195,7 @@ function renderPatientList(){
     return '<tr'+(chk?' class="reg-rowsel"':'')+'>'+
       '<td><input type="checkbox" class="pat-cb" data-id="'+p.id+'"'+chk+' onclick="patToggleOne(\''+p.id+'\',this.checked)"></td>'+
       '<td>'+esc(p.mrn)+'</td>'+
-      '<td><span class="linklike" onclick="openPatient(\''+p.id+'\')">'+esc(p.name)+'</span>'+
+      '<td><span class="nm-cell">'+patAvatar(p.name)+'<span class="linklike" onclick="openPatient(\''+p.id+'\')">'+esc(p.name)+'</span></span>'+
         (p.allergies?' <span class="'+(isNoAllergy(p.allergies)?'allergy-ok':'allergy-flag')+'" title="Allergies: '+esc(p.allergies)+'">'+(isNoAllergy(p.allergies)?'✓':'⚠')+'</span>':'')+'</td>'+
       '<td>'+esc(p.age||'')+' '+esc(p.sex? '/ '+p.sex:'')+'</td>'+
       '<td class="small" title="'+esc(dxRaw)+'">'+esc(dx.length>42?dx.slice(0,42)+'…':dx)+'</td>'+
@@ -4068,7 +4254,8 @@ function openPatient(pid){
   currentPatientId = pid;
   $('patientListCard').classList.add('hidden');
   $('patientDetailCard').classList.remove('hidden');
-  $('pdName').textContent = p.name+'  ·  '+p.mrn;
+  if($('pdSeg')) pdView('visits');
+  $('pdName').innerHTML = patAvatar(p.name, true)+esc(p.name)+'  <span class="muted" style="font-weight:500">·  '+esc(p.mrn)+'</span>';
   $('pdInfo').innerHTML = [p.age && ('Age: <b>'+esc(p.age)+'</b>'), p.sex && ('Sex: <b>'+esc(p.sex)+'</b>'),
     p.phone && ('Phone: <b>'+esc(p.phone)+'</b>'), p.address && ('Address: '+esc(p.address))].filter(Boolean).join(' &nbsp;·&nbsp; ') || '<span class="muted">No contact details recorded.</span>';
   $('pdHx').innerHTML = [p.allergies && ('<span class="'+(isNoAllergy(p.allergies)?'allergy-ok':'allergy-flag')+'">Allergies: '+esc(p.allergies)+'</span>'),
@@ -4079,6 +4266,7 @@ function openPatient(pid){
     '<td>'+esc(v.diagnosis||'—')+'</td>'+
     '<td class="small">'+esc((v.meds||[]).map(m=>m.name).join(', ')||'—')+'</td>'+
     '<td>'+
+      '<button class="btn btn-ghost btn-sm" onclick="previewSavedVisit(\''+v.id+'\')" title="See exactly how it will print">👁 Preview</button> '+
       '<button class="btn btn-ghost btn-sm" onclick="reprintVisit(\''+v.id+'\')">🖨 Print</button> '+
       '<button class="btn btn-primary btn-sm" onclick="copyVisitToForm(\''+v.id+'\')" title="Reopen the whole prescription to edit anything — saving creates a new version">✎ Edit / re-issue</button> '+
       '<button class="btn btn-ghost btn-sm" onclick="dischargeFromVisit(\''+v.id+'\')" title="Create a discharge summary pre-filled from this visit">🏥 Discharge</button> '+
@@ -4088,6 +4276,61 @@ function openPatient(pid){
       ' <button class="btn btn-danger btn-sm" onclick="deleteVisit(\''+v.id+'\')" title="Delete this prescription version">✕</button>'+
     '</td></tr>'
   ).join('') : '<tr><td colspan="4" class="muted">No visits recorded.</td></tr>';
+}
+/* ---- one scrollable story of everything on file for a patient ---- */
+function pdView(which){
+  const tl = which==='timeline';
+  $('pdVisitsWrap').classList.toggle('hidden', tl);
+  $('pdTimeline').classList.toggle('hidden', !tl);
+  $('pdSegVisits').classList.toggle('active', !tl);
+  $('pdSegTl').classList.toggle('active', tl);
+  if(tl) renderPatientTimeline(currentPatientId);
+}
+function tlDay(v){ return String(v||'').slice(0,10); }
+function patientTimeline(pid){
+  const p=(db.patients||[]).find(x=>x.id===pid)||{};
+  const nm=String(p.name||'').trim().toLowerCase();
+  const mine=(rec)=> rec.patientId===pid || (nm && String(rec.name||'').trim().toLowerCase()===nm);
+  const ev=[];
+  (db.visits||[]).filter(v=>v.patientId===pid).forEach(v=>ev.push({
+    d:tlDay(v.date), ic:'\ud83d\udcdd', kind:'Prescription',
+    title:(v.diagnosis||'Consultation').split('\n')[0],
+    sub:[ (v.meds||[]).length ? (v.meds||[]).map(m=>m.name).join(', ') : '', v.followUp?('Follow-up: '+v.followUp):'' ].filter(Boolean).join(' \u00b7 '),
+    tag:(v.images&&v.images.length)?('\ud83d\udcce '+v.images.length):'',
+    go:"reprintVisit('"+v.id+"')", goLbl:'\ud83d\udda8 Print'}));
+  (db.surgeries||[]).filter(mine).forEach(o=>ev.push({
+    d:tlDay(o.date), ic:'\ud83e\uddb4', kind:'Operation', title:o.procedure||'Operation',
+    sub:[o.diagnosis, o.implant, o.complications&&('\u26a0 '+o.complications)].filter(Boolean).join(' \u00b7 '),
+    go:"showTab('oplog');editOp('"+o.id+"')", goLbl:'Open'}));
+  (db.documents||[]).filter(mine).forEach(d=>ev.push({
+    d:tlDay(d.date), ic:d.type==='discharge'?'\ud83c\udfe5':'\ud83d\udcc4',
+    kind:(DOC_TITLES[d.type]||'Document').replace(/^./,c=>c)+'', title:(d.dc&&d.dc.diagnosis)||d.reason||d.name||'Document',
+    sub:[(d.dc&&d.dc.proc)||'', d.mrn?('MR '+d.mrn):''].filter(Boolean).join(' \u00b7 '),
+    go: d.type==='discharge' ? ("showTab('discharge');loadDs('"+d.id+"')") : ("showTab('documents')"), goLbl:'Open'}));
+  (db.registry||[]).filter(r=>r.patientId===pid || (p.mrn && String(r.mrn||'')===String(p.mrn))).forEach(r=>ev.push({
+    d: regBasisDate(r), ic:'\ud83e\uddec', kind:'Registry entry', title:(r.diagnosis||'Tumour registry').split('\n')[0],
+    sub:[r.regNo, r.site, r.grade, r.margin].filter(Boolean).join(' \u00b7 '),
+    go:"showTab('registry');regEdit('"+r.id+"')", goLbl:'Open'}));
+  (db.appts||[]).filter(mine).forEach(a=>ev.push({
+    d:tlDay(a.date), ic:'\ud83d\udcc5', kind:'Appointment', title:(a.time?a.time+' \u2014 ':'')+(a.note||'Clinic appointment'),
+    sub:a.status||'', go:'', goLbl:''}));
+  return ev.filter(e=>e.d).sort((a,b)=>b.d.localeCompare(a.d));
+}
+function renderPatientTimeline(pid){
+  const host=$('pdTimeline'); if(!host) return;
+  const ev=patientTimeline(pid);
+  if(!ev.length){ host.innerHTML='<div class="empty"><span class="ei">\ud83d\udd52</span><b>Nothing on file yet</b><br>Prescriptions, operations, discharges and registry entries will appear here in date order.</div>'; return; }
+  let last='';
+  host.innerHTML='<div class="tline">'+ev.map(e=>{
+    const head = e.d!==last ? '<div class="tl-date">'+esc(fmtDate(e.d))+'</div>' : '';
+    last=e.d;
+    return head+'<div class="tl-row"><span class="tl-ic">'+e.ic+'</span><div class="tl-body">'+
+      '<div class="tl-kind">'+esc(e.kind)+(e.tag?' <span class="tl-tag">'+esc(e.tag)+'</span>':'')+'</div>'+
+      '<div class="tl-title">'+esc(e.title||'')+'</div>'+
+      (e.sub?'<div class="tl-sub">'+esc(e.sub)+'</div>':'')+
+      (e.go?'<div class="btn-bar" style="margin-top:5px"><button class="btn btn-ghost btn-sm" onclick="'+e.go+'">'+e.goLbl+'</button></div>':'')+
+      '</div></div>';
+  }).join('')+'</div>';
 }
 function closePatientDetail(){
   $('patientDetailCard').classList.add('hidden');
@@ -4327,8 +4570,29 @@ function deleteMed(id){
 function localISO(d){ d=d||new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function setFu(days, label){
   $('cFuDate').value = localISO(new Date(Date.now()+days*86400000));
+  $('cFuDate').dataset.auto='1';
   if(label) $('cFollowUp').value = 'Review after '+label;
 }
+/* "2 weeks", "after 10 days", "1 month" -> how many days away */
+function fuDaysFromText(s){
+  const m=String(s||'').match(/(\d+)\s*(day|week|month|year)s?/i);
+  if(!m) return 0;
+  const n=parseInt(m[1],10); if(!n || n>400) return 0;
+  const u=m[2].toLowerCase();
+  return n * (u==='day'?1 : u==='week'?7 : u==='month'?30 : 365);
+}
+/* typing the follow-up in words sets the due date, so the patient lands in Follow-ups Due */
+(function(){
+  const fu=$('cFollowUp'), box=$('cFuDate');
+  if(!fu||!box) return;
+  fu.addEventListener('input', function(){
+    const d=fuDaysFromText(this.value); if(!d) return;
+    if(box.value && box.dataset.auto!=='1') return;      // a date picked by hand always wins
+    box.value = localISO(new Date(Date.now()+d*86400000));
+    box.dataset.auto='1';
+  });
+  box.addEventListener('change', function(){ this.dataset.auto=''; });
+})();
 function fuMoreSel(sel){
   if(!sel.value) return;
   const [d,l] = sel.value.split('|');
@@ -4402,6 +4666,7 @@ function accessLine(){
                    : 'Your access: none granted yet — ask the clinic owner to give you sections';
 }
 function renderHomeSync(){
+  try{ renderSyncChip(); }catch(e){}
   const host=$('homeSync'); if(!host) return;
   const c=syncCfg(); const configured=!!(c.url && c.anonKey);
   if(!configured){ host.innerHTML=''; return; }   // single-device use → hide
@@ -4418,6 +4683,24 @@ function renderHomeSync(){
     '<button class="btn btn-ghost btn-sm" onclick="manualRefresh()">🔄 Refresh</button>'+
     '<button class="btn btn-ghost btn-sm" onclick="showDiag()">Details</button></div>';
 }
+/* small always-visible badge: are we online, and when did we last sync? */
+function renderSyncChip(){
+  const el=$('syncChip'); if(!el) return;
+  const c=(db.settings&&db.settings.sync)||{};
+  const cloud=!!(c.url&&c.anonKey);
+  const online=navigator.onLine;
+  let cls, txt, sub='';
+  if(!online){ cls='off'; txt='Offline'; sub='changes save on this device'; }
+  else if(!cloud){ cls='local'; txt='On this device'; sub='cloud sync not set up'; }
+  else if(c.lastError){ cls='err'; txt='Sync problem'; sub='tap to retry'; }
+  else if(c.lastSync){ cls='on'; txt='Synced'; sub=timeAgo(c.lastSync); }
+  else { cls='on'; txt='Online'; sub='syncing…'; }
+  el.className='sync-chip '+cls;
+  el.innerHTML='<span class="sc-dot"></span><span class="sc-tx"><b>'+esc(txt)+'</b>'+(sub?'<span>'+esc(sub)+'</span>':'')+'</span>';
+}
+setInterval(()=>{ try{ renderSyncChip(); }catch(e){} }, 30000);
+window.addEventListener('online', ()=>{ try{ renderSyncChip(); }catch(e){} });
+window.addEventListener('offline', ()=>{ try{ renderSyncChip(); }catch(e){} });
 function manualRefresh(){
   const c=syncCfg(); if(!c.url||!c.anonKey){ toast('Cloud sync isn’t set up on this device'); return; }
   if(!navigator.onLine){ toast('You’re offline — reconnect to the internet first'); return; }
@@ -4443,6 +4726,38 @@ function showDiag(){
   ];
   alert('DIAGNOSTICS — screenshot this and send it:\n\n'+lines.join('\n'));
 }
+/* who is actually in front of you today: the queue, then today's appointments */
+function renderHomeToday(){
+  const host=$('homeToday'); if(!host) return;
+  const today=localISO();
+  const q=(db.queue||[]).filter(x=>x.date===today).sort((a,b)=>(a.token||0)-(b.token||0));
+  const ap=(db.appts||[]).filter(a=>a.date===today).sort((a,b)=>String(a.time||'99:99').localeCompare(String(b.time||'99:99')));
+  const sub=$('homeTodaySub');
+  if(sub) sub.textContent = q.filter(x=>x.status==='waiting').length+' waiting \u00b7 '+ap.filter(a=>a.status==='booked').length+' booked';
+  if(!q.length && !ap.length){
+    host.innerHTML='<div class="empty" style="padding:22px"><span class="ei">\u2615</span><b>Nothing booked yet today</b><br>Walk-ins you add to the queue and today\u2019s appointments will show up here.</div>';
+    return;
+  }
+  const chip=(s)=> s==='waiting'?'<span class="role-badge pending">waiting</span>'
+    : s==='done'?'<span class="role-badge active">seen</span>'
+    : s==='booked'?'<span class="role-badge pending">booked</span>'
+    : s==='arrived'?'<span class="role-badge active">arrived</span>'
+    : '<span class="role-badge staff">'+esc(s||'')+'</span>';
+  let html='';
+  if(q.length){
+    html+='<div class="ht-head">\ud83c\udfab Queue'+(canTab('queue')?' <button class="btn btn-ghost btn-sm" onclick="showTab(\'queue\')">Open</button>':'')+'</div>'+
+      '<div class="ht-list">'+q.slice(0,8).map(x=>'<div class="ht-row'+(x.status==='waiting'?'':' ht-dim')+'">'+
+        '<span class="ht-tok">'+(x.token||'')+'</span><span class="ht-nm">'+esc(x.name||'')+'</span>'+chip(x.status)+'</div>').join('')+
+      (q.length>8?'<div class="ht-more">+'+(q.length-8)+' more</div>':'')+'</div>';
+  }
+  if(ap.length){
+    html+='<div class="ht-head" style="margin-top:12px">\ud83d\udcc5 Appointments'+(canTab('appts')?' <button class="btn btn-ghost btn-sm" onclick="showTab(\'appts\')">Open</button>':'')+'</div>'+
+      '<div class="ht-list">'+ap.slice(0,8).map(a=>'<div class="ht-row'+(a.status==='booked'?'':' ht-dim')+'">'+
+        '<span class="ht-tok">'+esc(a.time||'\u2014')+'</span><span class="ht-nm">'+esc(a.name||'')+(a.note?' <span class="muted small">'+esc(a.note)+'</span>':'')+'</span>'+chip(a.status)+'</div>').join('')+
+      (ap.length>8?'<div class="ht-more">+'+(ap.length-8)+' more</div>':'')+'</div>';
+  }
+  host.innerHTML=html;
+}
 function renderHome(){
   const h = new Date().getHours();
   const greet = h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : 'Good evening';
@@ -4458,6 +4773,7 @@ function renderHome(){
     db.settings.waBiz && ['💬 WhatsApp '+db.settings.waBiz, 'https://wa.me/'+waPhone(db.settings.waBiz)]
   ].filter(Boolean);
   $('hhSoc').innerHTML = soc.map(s=>'<a href="'+esc(s[1])+'" target="_blank" rel="noopener">'+esc(s[0])+'</a>').join('');
+  if(typeof renderHomeToday==='function') renderHomeToday();
   const today = localISO(), ym = today.slice(0,7);
   const seen = db.visits.filter(v=>localISO(new Date(v.date))===today);
   const waiting = (db.queue||[]).filter(q=>q.date===today && q.status==='waiting').length;
@@ -4466,12 +4782,13 @@ function renderHome(){
   const gross = seen.reduce((a,v)=>a+(+v.fee||0),0);
   const net = gross - Math.round(gross*feeSharePct()/100) - expensesOn(today).reduce((a,e)=>a+(+e.amount||0),0);
   const tv = (n, pre) => '<div class="tv"><span class="cup" data-to="'+n+'"'+(pre?' data-pre="'+pre+'"':'')+'>'+(pre||'')+n.toLocaleString()+'</span></div>';
+  const go = (tab)=> canTab(tab) ? (' class="tile tile-go" onclick="showTab(\''+tab+'\')" title="Open '+esc(navLabel(tab))+'"') : ' class="tile"';
   $('homeTiles').innerHTML =
-    '<div class="tile">'+tv(seen.length)+'<div class="tl">Patients today</div></div>'+
-    '<div class="tile">'+tv(waiting)+'<div class="tl">Waiting in queue</div></div>'+
-    '<div class="tile">'+tv(fuDue.length)+'<div class="tl">Follow-ups due</div></div>'+
-    '<div class="tile">'+tv((db.appts||[]).filter(a=>a.date===today && a.status==='booked').length)+'<div class="tl">Appointments today</div></div>'+
-    '<div class="tile">'+tv(ops)+'<div class="tl">Operations this month</div></div>'+
+    '<div'+go('patients')+'>'+tv(seen.length)+'<div class="tl">Patients today</div></div>'+
+    '<div'+go('queue')+'>'+tv(waiting)+'<div class="tl">Waiting in queue</div></div>'+
+    '<div'+go('patients')+'>'+tv(fuDue.length)+'<div class="tl">Follow-ups due</div></div>'+
+    '<div'+go('appts')+'>'+tv((db.appts||[]).filter(a=>a.date===today && a.status==='booked').length)+'<div class="tl">Appointments today</div></div>'+
+    '<div'+go('oplog')+'>'+tv(ops)+'<div class="tl">Operations this month</div></div>'+
     '<div class="tile adm-only">'+tv(net,'Rs ')+'<div class="tl">Net income today</div></div>';
   animateCounts($('homeTiles'));
   $('haQueueSub').textContent = waiting ? (waiting+' waiting — next token '+((db.queue||[]).filter(q=>q.date===today&&q.status==='waiting').sort((a,b)=>a.token-b.token)[0]||{}).token) : 'Add arrivals, call by token';
@@ -5073,14 +5390,14 @@ function saveDischarge(andPrint){
   const wasNew = !editingDsId;
   if(editingDsId){ d = db.documents.find(x=>x.id===editingDsId); const dsBefore=undoSnap(d); Object.assign(d, f); syncTouch(d); logActivity('edit','discharge',f.name, undoOne('documents', dsBefore, d)); }
   else { d = syncTouch({id:uid('d'), ...f, by: byTag()}); db.documents.push(d); editingDsId = d.id; $('dsFormTitle').textContent='Edit discharge summary'; logActivity('add','discharge',f.name, undoOne('documents', null, d)); }
-  if(wasNew && f.dc.proc && $('dcAddLog').checked){
-    db.surgeries.push({id:uid('s'), date: f.dc.admit || f.date, patientId: f.patientId,
-      name: f.name, age: f.age, sex: f.sex, diagnosis: f.dc.diagnosis,
-      procedure: f.dc.proc, anesthesia:'', implant:[f.dc.implant,f.dc.implantCo].filter(Boolean).join(' — '), assistant:'',
-      complications:'', notes: f.dc.course||'', by: byTag() });
-    toast('Discharge saved + operation added to logbook');
-  } else toast('Discharge summary saved');
-  persist(); renderDsList();
+  d.addLog = $('dcAddLog').checked;
+  const opRes = dsSyncOpLog(d, d.addLog);
+  toast(opRes==='added' ? 'Discharge saved + operation added to logbook'
+      : opRes==='updated' ? 'Discharge saved + logbook entry updated'
+      : (d.addLog && !((d.dc||{}).proc||'').trim()) ? 'Discharge saved — no procedure typed, so nothing was added to the logbook'
+      : 'Discharge summary saved');
+  phraseBankInvalidate();
+  persist(); renderDsList(); if(typeof renderOpLog==='function'){ try{ renderOpLog(); }catch(e){} }
   if(andPrint) printDoc(d);
 }
 function clearDsForm(){
@@ -5093,6 +5410,40 @@ function clearDsForm(){
   $('dcAddLog').checked = true;
   $('dsFormTitle').textContent = 'New discharge summary';
   refreshFieldStatus();
+}
+/* ---- discharge summary <-> operation logbook ----
+   A discharge with a procedure keeps ONE matching entry in the logbook. It is created the
+   first time the procedure is filled in (not only when the summary is first created), and
+   it is kept in step afterwards — the fields you type only in the logbook (anaesthesia,
+   assistant, complications) are never overwritten.                                        */
+function dsOpFields(d){
+  const dc=d.dc||{};
+  return {date: dc.admit || d.date, patientId: d.patientId||null,
+          name: d.name, age: d.age||'', sex: d.sex||'', diagnosis: dc.diagnosis||'',
+          procedure: dc.proc||'', implant:[dc.implant, dc.implantCo].filter(Boolean).join(' — '),
+          notes: dc.course||''};
+}
+function dsFindOp(d){
+  if(!Array.isArray(db.surgeries)) db.surgeries=[];
+  if(d.opId){ const o=db.surgeries.find(x=>String(x.id)===String(d.opId)); if(o) return o; }
+  const o2=db.surgeries.find(x=>String(x.fromDischarge||'')===String(d.id)); if(o2) return o2;
+  // summaries saved by older builds were logged without a link — match on procedure + patient
+  const proc=String((d.dc||{}).proc||'').trim().toLowerCase(); if(!proc) return null;
+  const nm=String(d.name||'').trim().toLowerCase();
+  return db.surgeries.find(x=>String(x.procedure||'').trim().toLowerCase()===proc &&
+    ((d.patientId && x.patientId===d.patientId) || (nm && String(x.name||'').trim().toLowerCase()===nm))) || null;
+}
+function dsSyncOpLog(d, wantLog){
+  const dc=d.dc||{};
+  if(!String(dc.proc||'').trim()) return null;          // no procedure typed -> nothing to log
+  if(!Array.isArray(db.surgeries)) db.surgeries=[];
+  let op=dsFindOp(d);
+  if(op){ Object.assign(op, dsOpFields(d)); syncTouch(op); d.opId=op.id; op.fromDischarge=d.id; return 'updated'; }
+  if(!wantLog) return null;
+  op=syncTouch(Object.assign({id:uid('s')}, dsOpFields(d),
+      {anesthesia:'', assistant:'', complications:'', by:byTag(), fromDischarge:d.id}));
+  db.surgeries.push(op); d.opId=op.id;
+  return 'added';
 }
 /* MR number for a discharge summary: the one typed on the summary, else the linked clinic record's */
 function dsMrnOf(d){
@@ -5109,9 +5460,10 @@ function renderDsList(){
   $('dsEmpty').classList.toggle('hidden', db.documents.some(d=>d.type==='discharge'));
   $('dsCountLabel').textContent = docs.length+' discharge summaries';
   $('dsListBody').innerHTML = docs.map(d=>
-    '<tr><td>'+fmtDate(d.date)+(d.by?'<br><span class="small muted">by '+esc(d.by)+'</span>':'')+'</td><td><b>'+esc(d.name)+'</b>'+(dsMrnOf(d)?'<br><span class="small muted">MR '+esc(dsMrnOf(d))+'</span>':'')+(d.age?'<br><span class="small muted">'+esc(d.age)+' '+esc(d.sex||'')+'</span>':'')+'</td>'+
+    '<tr><td>'+fmtDate(d.date)+(d.by?'<br><span class="small muted">by '+esc(d.by)+'</span>':'')+'</td><td><b>'+esc(d.name)+'</b>'+(dsFindOp(d)?' <span title="Also in the operation logbook">🦴</span>':'')+(dsMrnOf(d)?'<br><span class="small muted">MR '+esc(dsMrnOf(d))+'</span>':'')+(d.age?'<br><span class="small muted">'+esc(d.age)+' '+esc(d.sex||'')+'</span>':'')+'</td>'+
     '<td class="small">'+esc((d.dc||{}).diagnosis||'—')+'</td><td class="small">'+esc((d.dc||{}).proc||'—')+'</td>'+
-    '<td><button class="btn btn-ghost btn-sm" onclick="printSavedDoc(\''+d.id+'\')">🖨 Print</button> '+
+    '<td><button class="btn btn-ghost btn-sm" onclick="previewSavedDoc(\''+d.id+'\')" title="See exactly how it will print">👁 Preview</button> '+
+    '<button class="btn btn-ghost btn-sm" onclick="printSavedDoc(\''+d.id+'\')">🖨 Print</button> '+
     '<button class="btn btn-ghost btn-sm" onclick="printSavedDocPlain(\''+d.id+'\')" title="Full letterhead / PDF">📄 PDF</button> '+
     '<button class="btn btn-ghost btn-sm" onclick="loadDs(\''+d.id+'\')">Edit</button> '+
     '<button class="btn btn-danger btn-sm" onclick="deleteDs(\''+d.id+'\')">✕</button></td></tr>'
@@ -5142,6 +5494,7 @@ function loadDs(id){
     }
   }
   $('dcInstr').value=dc.instr||''; $('dcFu').value=dc.fu||'';
+  $('dcAddLog').checked = d.addLog!==false;
   dsImgs = [];
   renderDsImgStrip();
   (async ()=>{
@@ -5272,7 +5625,9 @@ async function printDoc(d, forcePlain){
       (()=>{ const ins = splitByScript(dc.instr||'');
         return (ins.en? sec('Instructions & wound care', ins.en):'')+
                (ins.ur? '<div class="dc-sec dc-sec-ur"><h4>ہدایات برائے مریض</h4><p>'+esc(ins.ur)+'</p></div>':''); })() +
-      sec('Follow-up', dc.fu);
+      sec('Follow-up', dc.fu) +
+      (((db.settings.urduRx||'on')!=='off' && fuUrduFor(dc.fu))
+        ? '<div class="dc-sec dc-sec-ur" dir="rtl"><h4>\u062f\u0648\u0628\u0627\u0631\u06c1 \u0645\u0644\u0627\u0642\u0627\u062a</h4><p>'+esc(fuUrduFor(dc.fu))+'</p></div>' : '');
   } else {
     inner = strip + '<div class="doc-title">'+(DOC_TITLES[d.type]||'')+'</div>' +
       '<div class="doc-body">'+esc(d.body||'')+'</div>';
@@ -5367,10 +5722,22 @@ async function printDoc(d, forcePlain){
     // fit check: compact typeface if the document is long, else let it flow to page 2
     pa.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:'+contentW+'mm';
     if(sheet.offsetHeight > availH*96/25.4) sheet.classList.add('compact');
+    window.__lastPrintFits = !(sheet.offsetHeight > availH*96/25.4);
     pa.style.cssText = '';
   }
+  if(printPreviewMode){ printPreviewMode = false; showPrintPreview(); return; }
   showPrintTipOnce();
   setTimeout(()=>window.print(), 60);
+}
+/* preview any saved record before committing paper to it */
+function previewSavedVisit(vid){
+  const v=db.visits.find(x=>x.id===vid); if(!v) return;
+  const p=db.patients.find(x=>x.id===v.patientId)||{};
+  printPreviewMode=true; printVisit(v,p);
+}
+function previewSavedDoc(id){
+  const d=db.documents.find(x=>x.id===id); if(!d) return;
+  printPreviewMode=true; printDoc(d);
 }
 
 /* ================= INCOME ================= */
@@ -5520,19 +5887,32 @@ function printCalibration(){
 }
 
 /* ================= THEME & TEXT SIZE ================= */
+function prefersDark(){ try{ return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }catch(e){ return false; } }
 function applyTheme(){
-  const t = db.settings.theme || 'light';
+  const pref = db.settings.theme || 'light';
+  const t = pref==='auto' ? (prefersDark()?'dark':'light') : pref;
   document.documentElement.dataset.theme = t;
   document.documentElement.dataset.accent = db.settings.accent || 'teal';
   const b = $('btnTheme');
-  if(b) b.textContent = t==='dark' ? '☀️' : '🌙';
+  if(b){ b.textContent = pref==='auto' ? '🌗' : (t==='dark' ? '☀️' : '🌙');
+         b.title = pref==='auto' ? 'Following your phone/computer — tap for light mode'
+                 : t==='dark' ? 'Dark mode — tap to follow your phone' : 'Light mode — tap for dark'; }
   if(document.querySelector('#tab-analytics.active')) renderAnalytics();
 }
+/* light -> dark -> follow the device -> light */
 function toggleTheme(){
-  db.settings.theme = (db.settings.theme==='dark') ? 'light' : 'dark';
+  const cur = db.settings.theme || 'light';
+  db.settings.theme = cur==='light' ? 'dark' : cur==='dark' ? 'auto' : 'light';
   persist(); applyTheme();
-  toast(db.settings.theme==='dark' ? 'Dark mode on' : 'Light mode on');
+  toast(db.settings.theme==='dark' ? 'Dark mode on'
+      : db.settings.theme==='auto' ? '🌗 Following your device — dark in the evening, light by day'
+      : 'Light mode on');
 }
+try{
+  const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  if(mq){ const onChange=()=>{ if((db.settings.theme||'light')==='auto') applyTheme(); };
+    if(mq.addEventListener) mq.addEventListener('change', onChange); else if(mq.addListener) mq.addListener(onChange); }
+}catch(e){}
 function applyZoom(){
   const z = Math.min(160, Math.max(80, parseInt(db.settings.uiZoom)||100));
   $('app').style.zoom = z/100;
@@ -5556,7 +5936,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.30-b19';
+const APP_BUILD = '2026.07.30-b21';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -5854,6 +6234,34 @@ function applyPerms(){
   }
 }
 function byTag(){ return currentUser ? currentUser.name : ''; }
+/* a small coloured circle with the patient's initials — makes long lists scannable */
+function initialsOf(name){
+  const parts=String(name||'').trim().split(/\s+/).filter(Boolean);
+  if(!parts.length) return '?';
+  if(parts.length===1) return parts[0].slice(0,2).toUpperCase();
+  return (parts[0][0]+parts[parts.length-1][0]).toUpperCase();
+}
+function avatarHue(name){
+  const s=String(name||''); let x=0;
+  for(let i=0;i<s.length;i++){ x=(x*31 + s.charCodeAt(i))>>>0; }
+  return x % 360;
+}
+function patAvatar(name, big){
+  const hue=avatarHue(name);
+  return '<span class="avat'+(big?' lg':'')+'" style="background:linear-gradient(145deg,hsl('+hue+',52%,52%),hsl('+((hue+26)%360)+',54%,42%))" aria-hidden="true">'+esc(initialsOf(name))+'</span>';
+}
+/* ---- spot a patient who is probably already on file ---- */
+function patNameKey(s){ return String(s||'').toLowerCase().replace(/\b(mr|mrs|ms|dr|miss|muhammad|mohammad|md)\b/g,' ')
+  .replace(/[^a-z\u0600-\u06FF ]/g,'').replace(/\s+/g,' ').trim(); }
+function patPhoneKey(s){ const d=String(s||'').replace(/\D/g,''); return d.length>=7 ? d.slice(-10) : ''; }
+function findDuplicatePatients(cand, exceptId){
+  const n=patNameKey(cand&&cand.name), ph=patPhoneKey(cand&&cand.phone);
+  if(!n && !ph) return [];
+  return (db.patients||[]).filter(x=>!x.regOnly && x.id!==exceptId).filter(x=>{
+    if(ph && patPhoneKey(x.phone)===ph) return true;      // same phone number
+    return !!n && patNameKey(x.name)===n;                  // same name once titles/spacing are ignored
+  }).slice(0,5);
+}
 function initAuth(forceLock){
   if(!db.users.length){ showLock(); return; }   // first run → setup mode
   if(!forceLock){
@@ -6322,6 +6730,68 @@ function medUrduLine(m){
   if(i) bits.push(i);
   return bits.join(' ، ');
 }
+/* ---- follow-up in Urdu ----
+   Turns "Review after 2 weeks with MRI report" into
+   "2 ہفتے بعد ایم آر آئی رپورٹ کے ساتھ دوبارہ معائنے کے لیے تشریف لائیں".
+   Returns '' when nothing can be translated confidently, so we never print nonsense.   */
+const UR_FU_UNIT = {day:'دن', week:'ہفتے', month:'مہینے', year:'سال'};
+const UR_FU_TESTS = [
+  [/x[\s-]?ray/i, 'ایکسرے'],
+  [/\bmri\b/i, 'ایم آر آئی'],
+  [/\bct\b|ct[\s-]?scan/i, 'سی ٹی اسکین'],
+  [/ultrasound|\busg\b/i, 'الٹرا ساؤنڈ'],
+  [/blood test|\bcbc\b|\blft\b|\brft\b|\blabs?\b|blood report/i, 'خون کے ٹیسٹ'],
+  [/biopsy|histopath/i, 'بایوپسی'],
+  [/bone scan/i, 'بون اسکین'],
+  [/\bpet\b/i, 'پی ای ٹی اسکین']
+];
+const UR_FU_JOBS = [
+  [/(stitch|suture)e?s?\b/i, 'ٹانکے کھلوانے'],
+  [/(plaster|cast|slab)\b/i, 'پلستر چیک کروانے'],
+  [/dressing|wound care/i, 'ڈریسنگ کروانے'],
+  [/physio(therapy)?|rehab/i, 'فزیو تھراپی'],
+  [/chemo(therapy)?/i, 'کیمو تھراپی'],
+  [/radio(therapy)?|\brt\b/i, 'ریڈیو تھراپی'],
+  [/implant removal|remove (the )?implant/i, 'امپلانٹ نکلوانے'],
+  [/injection|inj\b/i, 'انجکشن لگوانے']
+];
+function urFuClause(txt){
+  const s=String(txt||'').trim(); if(!s) return '';
+  let when='';
+  const m=s.match(/(\d+\s*(?:[\u2013\u2014-]\s*\d+)?)\s*(day|week|month|year)s?/i);
+  if(m){ const num=m[1].replace(/\s+/g,''); when = (num==='1'?'ایک':num) + ' ' + UR_FU_UNIT[m[2].toLowerCase()] + ' بعد'; }
+  else if(/\btomorrow\b/i.test(s)) when='کل';
+  else if(/\bnext week\b/i.test(s)) when='اگلے ہفتے';
+  else if(/\bnext month\b/i.test(s)) when='اگلے مہینے';
+  else if(/\b(sos|prn|as needed|if needed|when needed|if required)\b/i.test(s)) when='ضرورت پڑنے پر';
+  else if(/\b(urgent|urgently|immediately|at once|asap|emergency)\b/i.test(s)) when='فوراً';
+  const tests=[]; UR_FU_TESTS.forEach(function(t){ if(t[0].test(s)) tests.push(t[1]); });
+  const jobs=[]; UR_FU_JOBS.forEach(function(j){ if(j[0].test(s)) jobs.push(j[1]); });
+  const wantsReview = /\b(review|follow[\s-]?up|opd|check[\s-]?up|clinic)\b/i.test(s);
+  const bring = /\breports?\b|\bwith\b/i.test(s) && tests.length;
+  const parts=[];
+  if(when) parts.push(when);
+  if(bring) parts.push(tests.join(' اور ') + ' رپورٹ کے ساتھ');
+  const todo=[];
+  if(!bring && tests.length) tests.forEach(function(t){ todo.push(t + ' کروانے'); });
+  jobs.forEach(function(j){ todo.push(j); });
+  if(wantsReview || (!todo.length && when)) todo.push('دوبارہ معائنے');
+  if(!todo.length && !when) return '';
+  if(todo.length) parts.push(todo.join(' اور ') + ' کے لیے تشریف لائیں');
+  else parts.push('تشریف لائیں');
+  return parts.join(' ');
+}
+function urFollowUp(text){
+  const t=String(text||'').trim(); if(!t) return '';
+  const out=t.split(/[;\n]+|(?:\s+(?:and then|then)\s+)/i).map(function(c){ return urFuClause(c); }).filter(Boolean);
+  return out.join(' ۔ ');
+}
+/* the Urdu that should print under the follow-up: what the doctor typed in Urdu, else the auto version */
+function fuUrduFor(text){
+  const sp=splitByScript(text||'');
+  if(sp.ur) return sp.ur;
+  return urFollowUp(sp.en);
+}
 // Split a free-text block into English and Urdu lines
 function splitByScript(text){
   const en=[], ur=[];
@@ -6399,8 +6869,11 @@ function saveOp(){
     age:$('opAge').value.trim(), sex:$('opSex').value, diagnosis:$('opDx').value.trim(),
     procedure:proc, anesthesia:$('opAnesth').value, implant:$('opImplant').value.trim(),
     assistant:$('opAssist').value.trim(), complications:$('opComp').value.trim(), notes:$('opNotes').value.trim() };
-  if(editingOpId) Object.assign(db.surgeries.find(x=>x.id===editingOpId), data);
-  else db.surgeries.push({id:uid('s'), ...data, by: byTag()});
+  if(editingOpId){ const ex=db.surgeries.find(x=>x.id===editingOpId); const before=undoSnap(ex);
+    Object.assign(ex, data); syncTouch(ex);
+    logActivity('edit','operation', data.name+' — '+data.procedure, undoOne('surgeries', before, ex)); }
+  else { const nw=syncTouch({id:uid('s'), ...data, by: byTag()}); db.surgeries.push(nw);
+    logActivity('add','operation', data.name+' — '+data.procedure, undoOne('surgeries', null, nw)); }
   persist(); clearOpForm(); renderOpLog();
   toast('Operation saved to logbook');
 }
@@ -6773,10 +7246,59 @@ function buildQrPayload(v,p){
   if(utf8Bytes(t) > MAX) t = utf8Trim(t, MAX);
   return t;
 }
+/* ---- Code-128 barcode, drawn as inline SVG (no library, works offline) ---- */
+const C128_PAT=('212222 222122 222221 121223 121322 131222 122213 122312 132212 221213 221312 231212 112232 122132 122231 113222 '+
+'123122 123221 223211 221132 221231 213212 223112 312131 311222 321122 321221 312212 322112 322211 212123 212321 '+
+'232121 111323 131123 131321 112313 132113 132311 211313 231113 231311 112133 112331 132131 113123 113321 133121 '+
+'313121 211331 231131 213113 213311 213131 311123 311321 331121 312113 312311 332111 314111 221411 431111 111224 '+
+'111422 121124 121421 141122 141221 112214 112412 122114 122411 142112 142211 241211 221114 413111 241112 134111 '+
+'111242 121142 121241 114212 124112 124211 411212 421112 421211 212141 214121 412121 111143 111341 131141 114113 '+
+'114311 411113 411311 113141 114131 311141 411131 211412 211214 211232 2331112').split(/\s+/);
+function code128svg(text, opts){
+  const o=opts||{}; const mod=o.mod||1.1, hgt=o.h||34;
+  const s=String(text||'').replace(/[^\x20-\x7e]/g,'');
+  if(!s) return '';
+  const vals=[104];                                   // start code B
+  for(let i=0;i<s.length;i++) vals.push(s.charCodeAt(i)-32);
+  let sum=104; for(let i=1;i<vals.length;i++) sum += vals[i]*i;
+  vals.push(sum%103); vals.push(106);                 // checksum + stop
+  let x=0, bars='';
+  vals.forEach(function(v){
+    const pat=C128_PAT[v]||''; let bar=true;
+    for(let i=0;i<pat.length;i++){
+      const w=parseInt(pat[i],10)*mod;
+      if(bar) bars+='<rect x="'+x.toFixed(2)+'" y="0" width="'+w.toFixed(2)+'" height="'+hgt+'"/>';
+      x+=w; bar=!bar;
+    }
+  });
+  return '<svg class="bcode" xmlns="http://www.w3.org/2000/svg" width="'+x.toFixed(1)+'" height="'+hgt+'" viewBox="0 0 '+x.toFixed(1)+' '+hgt+'" shape-rendering="crispEdges"><g fill="#000">'+bars+'</g></svg>';
+}
+/* the barcode block that prints beside the patient's name */
+function patBarcode(p){
+  if(!p || !p.mrn) return '';
+  if((db.settings.rxBarcode||'on')==='off') return '';
+  const svg=code128svg(String(p.mrn), {mod:0.95, h:26});
+  if(!svg) return '';
+  return '<div class="rx-bc">'+svg+'<div class="bc-tx">'+esc(String(p.mrn))+'</div></div>';
+}
+/* the dated box that prints in the bottom-right corner */
+function fmtDMY(iso){
+  const s=String(iso||''); const m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m) return m[3]+'/'+m[2]+'/'+m[1];
+  try{ const d=new Date(iso); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); }catch(e){ return ''; }
+}
+function fuDateBox(v){
+  const d = v && v.followUpDate;
+  if(!d) return '';
+  return '<div class="rx-fubox"><div class="fb-h">\u0622\u0626\u0646\u062f\u06c1 \u0645\u0639\u0627\u0626\u0646\u06c1 \u06a9\u06cc \u062a\u0627\u0631\u06cc\u062e</div>'+
+    '<div class="fb-d">'+esc(fmtDMY(d))+'</div>'+
+    '<div class="fb-s">Next visit</div></div>';
+}
 function buildRxQr(v,p){
   try{
     if((db.settings.qrRx||'on')==='off' || typeof QRenc === 'undefined') return '';
-    const qc=(db.qrcodes||[]).find(x=>x.id===v.qrId);
+    const want = (v && v.qrId) || db.settings.defQrId || '';
+    const qc=(db.qrcodes||[]).find(x=>x.id===want);
     if(!qc) return '';
     const svg = QRenc.svg(qc.text, 24);
     if(!svg) return '';
@@ -6842,6 +7364,7 @@ function printVisit(v, p, forcePlain){
       (p.sex?'<span><b>Sex:</b> '+esc(p.sex)+'</span>':'')+
       (p.mrn?'<span><b>MR #:</b> '+esc(p.mrn)+'</span>':'')+
       '<span class="rx-dt"><b>Date:</b> '+fmtDate(v.date)+' &nbsp;<b>Time:</b> '+fmtTime(v.date)+'</span>'+
+      patBarcode(p)+
     '</div>'+
     '<div class="rx-cols">'+
       (()=>{ const adv = splitByScript(v.plan||'');
@@ -6849,7 +7372,9 @@ function printVisit(v, p, forcePlain){
         (pad?'':'<div class="rx-symbol">&#8478;</div>')+ medsHtml +
         (adv.en?'<div class="rx-advice"><h4>Instructions</h4><p>'+esc(adv.en)+'</p></div>':'')+
         (adv.ur?'<div class="rx-advice rx-advice-ur"><h4>ہدایات</h4><p>'+esc(adv.ur)+'</p></div>':'')+
-        (v.followUp?'<div class="rx-advice"><h4>Follow-up</h4><p>'+esc(v.followUp)+'</p></div>':'')+
+        (()=>{ const fu=splitByScript(v.followUp||''); const fuUr = urOn ? fuUrduFor(v.followUp) : '';
+          return (fu.en?'<div class="rx-advice"><h4>Follow-up</h4><p>'+esc(fu.en)+'</p></div>':'')+
+                 (fuUr?'<div class="rx-advice rx-advice-ur"><h4>\u062f\u0648\u0628\u0627\u0631\u06c1 \u0645\u0644\u0627\u0642\u0627\u062a</h4><p>'+esc(fuUr)+'</p></div>':''); })()+
       '</div>'; })()+
       '<div class="rx-side">'+
         clinBlocks.map(b=>'<h4>'+esc(b[0])+'</h4><p>'+esc(b[1])+'</p>').join('')+
@@ -6857,9 +7382,8 @@ function printVisit(v, p, forcePlain){
         (v.proc?'<h4>Plan</h4><p class="dx">'+esc(v.proc)+'</p>':'')+
       '</div>'+
     '</div>'+
-    '<div class="rx-foot">'+
-      '<div class="fu">'+buildRxQr(v,p)+'</div>'+
-      '<div class="sig"><div class="line"></div>'+esc(pad&&s.docName?s.docName:'Signature')+'</div>'+
+    '<div class="rx-foot rx-foot-r">'+
+      '<div class="rx-corner">'+buildRxQr(v,p)+fuDateBox(v)+'</div>'+
     '</div>'+
     (!pad && s.footer?'<div class="rx-footer-note">'+esc(s.footer)+'</div>':'')+
     (!pad ? socialsPrintLine() : '')+
@@ -6883,14 +7407,24 @@ function printVisit(v, p, forcePlain){
   const pa = $('printArea'), sheet = pa.firstChild;
   pa.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:'+contentW+'mm';
   const availPx = availH*96/25.4;
+  let overflows = false;
   if(sheet.offsetHeight > availPx){
     sheet.classList.add('compact');
-    if(sheet.offsetHeight > availPx && !printPreviewMode){
+    overflows = sheet.offsetHeight > availPx;
+    if(overflows && !printPreviewMode){
       const ok = confirm('This prescription is long — it will continue onto a SECOND sheet.\n\nPress OK to print anyway (load 2 letterhead sheets in the printer),\nor Cancel to go back and shorten it.');
       if(!ok){ pa.style.cssText=''; return; }
     }
   }
+  // drop the QR + follow-up date block to the very bottom of the printable area
+  const foot = sheet.querySelector('.rx-foot');
+  if(foot && !overflows){
+    foot.style.marginTop='';
+    const leftover = availPx - sheet.offsetHeight;
+    if(leftover > 0) foot.style.marginTop = Math.floor(leftover + 26) + 'px';
+  }
   pa.style.cssText = '';
+  window.__lastPrintFits = !overflows;
   if(printPreviewMode){ printPreviewMode = false; showPrintPreview(); return; }
   showPrintTipOnce();
   setTimeout(()=>window.print(), 60);
@@ -8273,21 +8807,60 @@ function previewActive(){
 function paletteItems(){
   const items=[];
   const seen=new Set();
-  navModel().forEach(x=>{ if(x.type==='leaf'){ items.push({t:'Go to '+navLabel(x.tab), run:()=>showTab(x.tab)}); seen.add(x.tab);} else (x.children||[]).forEach(c=>{ items.push({t:'Go to '+navLabel(c.tab), run:()=>showTab(c.tab)}); seen.add(c.tab); }); });
-  Object.keys(TAB_LABELS_DEFAULT).forEach(tab=>{ if(!seen.has(tab)) items.push({t:'Go to '+navLabel(tab), run:()=>showTab(tab)}); });
-  items.push({t:'New prescription', run:()=>{ showTab('visit'); if(typeof clearVisitForm==='function') clearVisitForm(true); }});
-  items.push({t:'Save current form', run:saveActive});
-  items.push({t:'Print / preview', run:previewActive});
-  items.push({t:'Toggle light / dark', run:()=>toggleTheme()});
-  items.push({t:'Customise menu & labels', run:()=>openNavModal()});
-  items.push({t:'Keyboard shortcuts help', run:()=>showShortcutHelp()});
+  navModel().forEach(x=>{ if(x.type==='leaf'){ items.push({t:'Go to '+navLabel(x.tab), ic:'\u27a4', grp:'Pages', run:()=>showTab(x.tab)}); seen.add(x.tab);} else (x.children||[]).forEach(c=>{ items.push({t:'Go to '+navLabel(c.tab), ic:'\u27a4', grp:'Pages', run:()=>showTab(c.tab)}); seen.add(c.tab); }); });
+  Object.keys(TAB_LABELS_DEFAULT).forEach(tab=>{ if(!seen.has(tab)) items.push({t:'Go to '+navLabel(tab), ic:'\u27a4', grp:'Pages', run:()=>showTab(tab)}); });
+  items.push({t:'New prescription', ic:'\ud83d\udcdd', grp:'Actions', run:()=>{ showTab('visit'); if(typeof clearVisitForm==='function') clearVisitForm(true); }});
+  items.push({t:'Save current form', ic:'\ud83d\udcbe', grp:'Actions', run:saveActive});
+  items.push({t:'Print / preview', ic:'\ud83d\udda8', grp:'Actions', run:previewActive});
+  items.push({t:'Toggle light / dark', ic:'\ud83c\udf19', grp:'Actions', run:()=>toggleTheme()});
+  items.push({t:'Customise menu & labels', ic:'\u270e', grp:'Actions', run:()=>openNavModal()});
+  items.push({t:'Keyboard shortcuts help', ic:'\u2328', grp:'Actions', run:()=>showShortcutHelp()});
   return items;
+}
+/* --- search the actual records, not just the pages --- */
+function palHit(hay, terms){ const s=String(hay||'').toLowerCase(); return terms.every(t=>s.includes(t)); }
+function paletteRecords(q){
+  const terms=String(q||'').toLowerCase().split(/\s+/).filter(Boolean);
+  if(!terms.length) return [];
+  const out=[]; const cap=6;
+  const push=(arr)=>{ arr.slice(0,cap).forEach(x=>out.push(x)); };
+  if(canTab('patients')){
+    push((db.patients||[]).filter(p=>!p.regOnly && palHit([p.name,p.mrn,p.phone,p.address].join(' '), terms))
+      .map(p=>({t:p.name, sub:[p.mrn, p.age&&(p.age+(p.sex?' '+p.sex:'')), p.phone].filter(Boolean).join(' \u00b7 '),
+        ic:'\ud83d\udc64', grp:'Patients', run:()=>{ showTab('patients'); openPatient(p.id); }})));
+  }
+  if(canTab('registry')){
+    push((db.registry||[]).filter(r=>palHit([r.regNo,r.regNoOld,r.name,r.mrn,r.diagnosis,r.site,r.histSubtype].join(' '), terms))
+      .map(r=>({t:(r.name||'(no name)'), sub:[r.regNo, r.diagnosis&&String(r.diagnosis).split('\n')[0], r.site].filter(Boolean).join(' \u00b7 '),
+        ic:'\ud83e\uddec', grp:'Tumour registry', run:()=>{ showTab('registry'); regEdit(r.id); }})));
+  }
+  if(canTab('discharge')){
+    push((db.documents||[]).filter(d=>d.type==='discharge' && palHit([d.name,d.mrn,(d.dc||{}).diagnosis,(d.dc||{}).proc].join(' '), terms))
+      .map(d=>({t:d.name, sub:[fmtDate(d.date), (d.dc||{}).diagnosis].filter(Boolean).join(' \u00b7 '),
+        ic:'\ud83c\udfe5', grp:'Discharge summaries', run:()=>{ showTab('discharge'); loadDs(d.id); }})));
+  }
+  if(canTab('oplog')){
+    push((db.surgeries||[]).filter(o=>palHit([o.name,o.procedure,o.diagnosis,o.implant].join(' '), terms))
+      .map(o=>({t:o.name, sub:[fmtDate(o.date), o.procedure].filter(Boolean).join(' \u00b7 '),
+        ic:'\ud83e\uddb4', grp:'Operations', run:()=>{ showTab('oplog'); editOp(o.id); }})));
+  }
+  if(canTab('appts')){
+    push((db.appts||[]).filter(a=>palHit([a.name,a.phone,a.note].join(' '), terms))
+      .map(a=>({t:a.name, sub:[fmtDate(a.date), a.time, a.status].filter(Boolean).join(' \u00b7 '),
+        ic:'\ud83d\udcc5', grp:'Appointments', run:()=>{ showTab('appts'); if($('apViewDate')){ $('apViewDate').value=a.date; renderAppts(); } }})));
+  }
+  if(canTab('medicines')){
+    push((db.meds||[]).filter(m=>palHit([m.name,m.generic,m.cat,m.cls,m.co].join(' '), terms))
+      .map(m=>({t:m.name, sub:[m.generic, m.cat].filter(Boolean).join(' \u00b7 '),
+        ic:'\ud83d\udc8a', grp:'Medicines', run:()=>{ showTab('visit'); addRxRow({name:m.name,dose:m.dose,freq:m.freq,dur:m.dur,instr:m.instr}); toast('Added '+m.name+' to the prescription'); }})));
+  }
+  return out;
 }
 let palIdx=0, palFiltered=[];
 function openPalette(){
   let p=$('cmdPalette');
   if(!p){ p=document.createElement('div'); p.id='cmdPalette'; p.className='cmd-pal hidden';
-    p.innerHTML='<div class="cmd-card"><input type="text" id="cmdInput" placeholder="Type a page or action…" autocomplete="off"><div class="cmd-list" id="cmdList"></div></div>';
+    p.innerHTML='<div class="cmd-card"><input type="text" id="cmdInput" placeholder="Search anything — patient, MR number, registry no., diagnosis, medicine, page…" autocomplete="off"><div class="cmd-list" id="cmdList"></div><div class="cmd-foot"><span class="kbd">\u2191\u2193</span> move <span class="kbd">\u21b5</span> open <span class="kbd">Esc</span> close</div></div>';
     document.body.appendChild(p);
     p.addEventListener('click',e=>{ if(e.target===p) closePalette(); });
     $('cmdInput').addEventListener('input',renderPalette);
@@ -8301,14 +8874,27 @@ function openPalette(){
   p.classList.remove('hidden'); palIdx=0; $('cmdInput').value=''; renderPalette(); $('cmdInput').focus();
 }
 function closePalette(){ const p=$('cmdPalette'); if(p) p.classList.add('hidden'); }
+function palRun(ix){ const it=palFiltered[ix]; closePalette(); if(it && typeof it.run==='function'){ try{ it.run(); }catch(e){ toast('\u26a0 Could not open that'); } } }
 function renderPalette(keep){
-  const q=($('cmdInput').value||'').toLowerCase();
-  palFiltered=paletteItems().filter(i=>!q||i.t.toLowerCase().includes(q));
+  const q=($('cmdInput').value||'').trim();
+  const ql=q.toLowerCase();
+  const recs = paletteRecords(q);
+  const pages = paletteItems().filter(i=>!ql||i.t.toLowerCase().includes(ql));
+  palFiltered = recs.concat(pages);
   if(!keep) palIdx=0;
   if(palIdx>=palFiltered.length) palIdx=Math.max(0,palFiltered.length-1);
-  $('cmdList').innerHTML=palFiltered.map((i,ix)=>'<div class="cmd-item'+(ix===palIdx?' hi':'')+'" onmousedown="event.preventDefault();closePalette();(paletteItems().filter(x=>x.t==='+JSON.stringify(i.t).replace(/"/g,'&quot;')+')[0]||{run:()=>{}}).run()">'+esc(i.t)+'</div>').join('')||'<div class="cmd-empty">No match</div>';
+  let html='', lastGrp='';
+  palFiltered.forEach((i,ix)=>{
+    const g=i.grp||'';
+    if(g!==lastGrp){ html+='<div class="cmd-grp">'+esc(g)+'</div>'; lastGrp=g; }
+    html+='<div class="cmd-item'+(ix===palIdx?' hi':'')+'" onmousedown="event.preventDefault();palRun('+ix+')">'+
+      '<span class="cmd-ic">'+(i.ic||'\u2022')+'</span><span class="cmd-tx"><b>'+esc(i.t)+'</b>'+
+      (i.sub?'<span class="cmd-sub">'+esc(i.sub)+'</span>':'')+'</span></div>';
+  });
+  $('cmdList').innerHTML = html || '<div class="cmd-empty">Nothing matches \u201c'+esc(q)+'\u201d</div>';
+  const hi=$('cmdList').querySelector('.cmd-item.hi'); if(hi && hi.scrollIntoView) hi.scrollIntoView({block:'nearest'});
 }
-const SHORTCUTS=[['Ctrl / ⌘ + K','Command palette (jump to any page or action)'],['Ctrl / ⌘ + S','Save the current form'],
+const SHORTCUTS=[['/  or  Ctrl / ⌘ + K','Search anything — patients, registry, discharges, operations, medicines, pages'],['Ctrl / ⌘ + S','Save the current form'],
  ['Ctrl / ⌘ + P','Print / preview'],['Alt + N','New prescription'],['Ctrl / ⌘ + M','Start / stop voice dictation'],
  ['?','Show this shortcuts help'],['Esc','Close a dialog, palette or preview']];
 function showShortcutHelp(){
@@ -8330,9 +8916,165 @@ document.addEventListener('keydown', e=>{
   if(mod && (e.key==='m'||e.key==='M')){ e.preventDefault(); toggleDictation(); return; }
   if(e.altKey && (e.key==='n'||e.key==='N')){ e.preventDefault(); showTab('visit'); if(typeof clearVisitForm==='function') clearVisitForm(true); return; }
   if(e.key==='Escape'){ closePalette(); if($('scHelp')) $('scHelp').classList.add('hidden'); if(typeof closeLblPop==='function') closeLblPop(); return; }
+  if(e.key==='/' && !typing){ e.preventDefault(); openPalette(); return; }
   if(e.key==='?' && !typing){ e.preventDefault(); showShortcutHelp(); }
 });
 
+/* ================= YOUR OWN PHRASES =================
+   The notes boxes suggest lines you have written before, commonest first.
+   Nothing new is stored — the suggestions are read back out of your own visits,
+   discharge summaries and note templates.                                        */
+const PHRASE_FIELDS = {cComplaints:'complaints', cFindings:'findings', cDiagnosis:'diagnosis',
+  cTests:'tests', cPlan:'plan', cProc:'proc',
+  dcDiagnosis:'diagnosis', dcClinical:'findings', dcCourse:'course', dcInstr:'plan', dcProc:'proc',
+  ntComplaints:'complaints', ntFindings:'findings', ntDiagnosis:'diagnosis', ntTests:'tests', ntPlan:'plan', ntProc:'proc'};
+let phBank=null;
+function phraseBankInvalidate(){ phBank=null; }
+function buildPhraseBank(){
+  const raw={};
+  const add=(k,txt)=>{
+    if(!k||!txt) return;
+    String(txt).split('\n').forEach(line=>{
+      const t=line.trim().replace(/\s+/g,' ');
+      if(t.length<4 || t.length>160) return;
+      raw[k]=raw[k]||{}; raw[k][t]=(raw[k][t]||0)+1;
+    });
+  };
+  const K=['complaints','findings','diagnosis','tests','plan','proc'];
+  (db.visits||[]).forEach(v=>K.forEach(k=>add(k, v[k])));
+  (db.noteTemplates||[]).forEach(t=>K.forEach(k=>add(k, t[k])));
+  (db.documents||[]).forEach(d=>{ const dc=d.dc||{}; add('diagnosis',dc.diagnosis); add('findings',dc.clinical);
+    add('course',dc.course); add('plan',dc.instr); add('proc',dc.proc); });
+  (db.registry||[]).forEach(r=>{ add('diagnosis', r.diagnosis); });
+  phBank={};
+  Object.keys(raw).forEach(k=>{
+    phBank[k]=Object.keys(raw[k]).map(t=>({t:t, n:raw[k][t]}))
+      .sort((a,b)=> b.n-a.n || a.t.length-b.t.length || a.t.localeCompare(b.t));
+  });
+}
+function phraseMatches(key, q){
+  if(!phBank) buildPhraseBank();
+  const list=(phBank[key]||[]); const ql=q.toLowerCase();
+  const starts=[], has=[];
+  for(let i=0;i<list.length;i++){
+    const tl=list[i].t.toLowerCase();
+    if(tl===ql) continue;
+    if(tl.indexOf(ql)===0) starts.push(list[i]);
+    else if(tl.indexOf(ql)>0) has.push(list[i]);
+    if(starts.length>=8) break;
+  }
+  return starts.concat(has).slice(0,6);
+}
+let phPanel=null, phTarget=null, phItems=[], phIdx=-1;
+function phEnsurePanel(){
+  if(phPanel) return phPanel;
+  phPanel=document.createElement('div'); phPanel.className='ph-pop hidden'; phPanel.id='phrasePop';
+  document.body.appendChild(phPanel);
+  document.addEventListener('click', e=>{ if(phPanel && !phPanel.contains(e.target) && e.target!==phTarget) phHide(); });
+  window.addEventListener('scroll', ()=>phHide(), true);
+  return phPanel;
+}
+function phHide(){ if(phPanel) phPanel.classList.add('hidden'); phItems=[]; phIdx=-1; }
+function phCurrentLine(el){
+  const pos=el.selectionStart==null?el.value.length:el.selectionStart;
+  const before=el.value.slice(0,pos);
+  const start=before.lastIndexOf('\n')+1;
+  return {start:start, end:pos, text:before.slice(start)};
+}
+function phShow(el){
+  const key=PHRASE_FIELDS[el.id]; if(!key) return phHide();
+  const line=phCurrentLine(el);
+  const q=line.text.trim();
+  if(q.length<2) return phHide();
+  phItems=phraseMatches(key, q);
+  if(!phItems.length) return phHide();
+  phTarget=el; phIdx=-1;
+  const pop=phEnsurePanel();
+  pop.innerHTML='<div class="ph-hd">Your usual wording — <span class="kbd">\u2193</span> pick, <span class="kbd">Tab</span> take the first</div>'+
+    phItems.map((it,ix)=>'<div class="ph-it" data-ix="'+ix+'" onmousedown="event.preventDefault();phPick('+ix+')">'+
+      '<span class="ph-t">'+esc(it.t)+'</span>'+(it.n>1?'<span class="ph-n">'+it.n+'\u00d7</span>':'')+'</div>').join('');
+  const r=el.getBoundingClientRect();
+  pop.style.left=Math.round(r.left+window.scrollX)+'px';
+  pop.style.top=Math.round(r.bottom+window.scrollY+4)+'px';
+  pop.style.width=Math.round(r.width)+'px';
+  pop.classList.remove('hidden');
+}
+function phHi(){
+  if(!phPanel) return;
+  [...phPanel.querySelectorAll('.ph-it')].forEach((n,ix)=>n.classList.toggle('hi', ix===phIdx));
+}
+function phPick(ix){
+  const it=phItems[ix]; const el=phTarget;
+  if(!it||!el) return phHide();
+  const line=phCurrentLine(el);
+  el.value = el.value.slice(0,line.start) + it.t + el.value.slice(line.end);
+  const caret=line.start+it.t.length;
+  try{ el.focus(); el.setSelectionRange(caret,caret); }catch(e){}
+  phHide();
+  el.dispatchEvent(new Event('input',{bubbles:true}));
+  if(typeof refreshFieldStatus==='function') try{ refreshFieldStatus(); }catch(e){}
+}
+document.addEventListener('input', e=>{
+  const el=e.target;
+  if(!el || !el.id || !PHRASE_FIELDS[el.id]) return;
+  if((db.settings.phraseHelp||'on')==='off') return phHide();
+  phShow(el);
+});
+document.addEventListener('keydown', e=>{
+  if(!phPanel || phPanel.classList.contains('hidden')) return;
+  if(e.target!==phTarget) return;
+  if(e.key==='ArrowDown'){ e.preventDefault(); phIdx=Math.min(phItems.length-1, phIdx+1); phHi(); }
+  else if(e.key==='ArrowUp'){ e.preventDefault(); phIdx=Math.max(-1, phIdx-1); phHi(); }
+  else if(e.key==='Tab'){ e.preventDefault(); phPick(phIdx>=0?phIdx:0); }
+  else if(e.key==='Enter' && phIdx>=0){ e.preventDefault(); phPick(phIdx); }
+  else if(e.key==='Escape'){ phHide(); }
+}, true);
+/* ---------- scan a patient's barcode ---------- */
+function scanSupported(){ return typeof window.BarcodeDetector!=='undefined' && !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia); }
+let scanStream=null, scanTimer=null;
+async function openScanner(){
+  if(!scanSupported()){
+    toast('\ud83d\udcf7 This browser can\u2019t use the camera scanner \u2014 type the number in Search, or use a USB / Bluetooth barcode scanner');
+    setTimeout(openPalette, 400); return;
+  }
+  let m=$('scanModal');
+  if(!m){
+    m=document.createElement('div'); m.id='scanModal'; m.className='scan-wrap hidden';
+    m.innerHTML='<div class="scan-card"><div class="scan-head"><b>\ud83d\udcf7 Scan the patient\u2019s barcode</b>'+
+      '<button class="btn btn-ghost btn-sm" onclick="closeScanner()">\u2715 Close</button></div>'+
+      '<video id="scanVid" playsinline muted></video><div class="scan-line"></div>'+
+      '<div class="scan-tip" id="scanTip">Hold the printed prescription so the barcode fills the box.</div></div>';
+    document.body.appendChild(m);
+    m.addEventListener('click', e=>{ if(e.target===m) closeScanner(); });
+  }
+  m.classList.remove('hidden');
+  try{
+    scanStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}});
+    const vid=$('scanVid'); vid.srcObject=scanStream; await vid.play();
+    const det=new window.BarcodeDetector({formats:['code_128','qr_code','ean_13','code_39']});
+    scanTimer=setInterval(async ()=>{
+      try{
+        const codes=await det.detect(vid);
+        if(codes && codes.length){ const val=String(codes[0].rawValue||'').trim(); if(val){ closeScanner(); scanFound(val); } }
+      }catch(e){}
+    }, 350);
+  }catch(e){
+    $('scanTip').textContent = 'Could not open the camera — allow camera access, or type the number in Search instead.';
+  }
+}
+function closeScanner(){
+  const m=$('scanModal'); if(m) m.classList.add('hidden');
+  if(scanTimer){ clearInterval(scanTimer); scanTimer=null; }
+  if(scanStream){ try{ scanStream.getTracks().forEach(t=>t.stop()); }catch(e){} scanStream=null; }
+}
+function scanFound(val){
+  const norm=s=>String(s||'').replace(/\s+/g,'').toLowerCase();
+  const p=(db.patients||[]).find(x=>!x.regOnly && norm(x.mrn)===norm(val));
+  if(p){ showTab('patients'); openPatient(p.id); toast('\ud83d\udcf7 '+p.name+' \u2014 '+p.mrn); return; }
+  openPalette();
+  const inp=$('cmdInput'); if(inp){ inp.value=val; renderPalette(); }
+  toast('\ud83d\udcf7 Scanned '+val+' \u2014 showing matches');
+}
 /* ---------- voice-to-text dictation ---------- */
 let recog=null, recogOn=false, lastField=null;
 document.addEventListener('focusin', e=>{ const t=e.target; if(t&&/^(INPUT|TEXTAREA)$/.test(t.tagName)&&t.type!=='password'&&!t.readOnly) lastField=t; });
@@ -8728,7 +9470,7 @@ function undoCanUndo(a){
   if(!a.undo.items || !a.undo.items.length) return false;
   return a.undo.items.every(it=>Array.isArray(db[it.coll]));
 }
-function undoActivity(id){
+function undoActivity(id, quick){
   const a=(db.activity||[]).find(x=>String(x.id)===String(id));
   if(!a){ toast('\u26a0 That change is no longer in the list'); return; }
   if(a.undone){ toast('\u21a9 Already undone'); return; }
@@ -8736,7 +9478,7 @@ function undoActivity(id){
   // the owner can undo anything; everyone else can undo their own changes
   const mine = currentUser && a.who && a.who===currentUser.name;
   if(currentUser && !isOwnerNow() && !mine){ toast('\u26a0 Only the clinic owner can undo someone else\u2019s change'); return; }
-  if(!confirm('Undo this change?\n\n'+(actVerb(a.action)||'')+' '+(a.kind||'')+' '+(a.label||'')+'\n\nThe record goes back to how it was before.')) return;
+  if(!quick && !confirm('Undo this change?\n\n'+(actVerb(a.action)||'')+' '+(a.kind||'')+' '+(a.label||'')+'\n\nThe record goes back to how it was before.')) return;
   const touched={};
   a.undo.items.forEach(function(it){
     const arr=db[it.coll]; if(!Array.isArray(arr)) return;
@@ -8780,7 +9522,7 @@ function logActivity(action, kind, label, undo){
   db.activity = db.activity||[];
   const rec={id:uid('ac'), action:action, kind:kind, label:String(label||'').slice(0,80),
     who:(currentUser?currentUser.name:'') , at:new Date().toISOString(), read:false};
-  if(undo && undo.items && undo.items.length) rec.undo=undo;
+  if(undo && undo.items && undo.items.length){ rec.undo=undo; window.__undoOffer={id:rec.id, at:Date.now()}; }
   db.activity.push(rec);
   if(db.activity.length>800) db.activity=db.activity.slice(-800);
   undoPrune();
@@ -8945,7 +9687,7 @@ async function syncNow(loud, force){
     await syncPushPending(); await syncPullPending();
     await syncPullFavs(); await syncPushFavs();
     reconcileUsers(); refreshCurrentUser(); persist();
-    refreshAllViews(); renderSync();
+    refreshAllViews(); renderSync(); if(typeof renderSyncChip==='function') renderSyncChip();
     if(typeof renderNotif==='function') renderNotif();
     if(typeof renderUserList==='function') renderUserList();
     if(typeof renderHomeSync==='function') renderHomeSync();
@@ -9034,6 +9776,7 @@ _initStep(updateQNavCount);
 _initStep(refreshPresetSelects);
 _initStep(applyTheme);
 _initStep(applyZoom);
+_initStep(()=>{ if(typeof renderSyncChip==='function') renderSyncChip(); });
 try{ initAuth(); }
 catch(e){ try{ console.error('initAuth failed:', e); var ls=document.getElementById('lockScreen'); if(ls) ls.classList.remove('hidden'); }catch(_){ } }
 _initStep(initAutoBackup);
