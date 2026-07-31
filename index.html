@@ -1099,22 +1099,52 @@ html[data-theme="dark"] body.card-tint main .card[data-tint="4"]{background:#0f2
 html[data-theme="dark"] body.card-tint main .card[data-tint="5"]{background:#271620;border-left-color:#a24a63}
 
 /* ===== command palette ===== */
-.cmd-pal{position:fixed;inset:0;z-index:230;background:rgba(10,20,28,.45);display:flex;align-items:flex-start;justify-content:center;padding-top:12vh}
+/* ---------- Spotlight-style search ---------- */
+.cmd-pal{position:fixed;inset:0;z-index:230;display:flex;align-items:flex-start;justify-content:center;
+  padding-top:13vh;background:rgba(12,22,31,.30);backdrop-filter:blur(16px) saturate(150%);
+  -webkit-backdrop-filter:blur(16px) saturate(150%);animation:spotFade .13s ease-out}
 .cmd-pal.hidden{display:none}
-.cmd-card{background:var(--card);border-radius:14px;width:520px;max-width:92vw;box-shadow:0 24px 60px rgba(0,0,0,.4);overflow:hidden}
-.cmd-card input{width:100%;border:none;border-bottom:1px solid var(--line);border-radius:0;font-size:15px;padding:15px 16px}
-.cmd-card input:focus{outline:none}
-.cmd-list{max-height:320px;overflow:auto;padding:6px}
-.cmd-item{padding:8px 11px;border-radius:9px;font-size:13.5px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
-.cmd-item:hover,.cmd-item.hi{background:var(--teal-light);color:var(--teal-dark)}
-.cmd-ic{flex:none;width:20px;text-align:center;font-size:14px;line-height:1.35;opacity:.85}
+.cmd-card{width:620px;max-width:92vw;border-radius:18px;overflow:hidden;
+  background:rgba(255,255,255,.86);backdrop-filter:blur(30px) saturate(180%);
+  -webkit-backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid rgba(255,255,255,.65);
+  box-shadow:0 32px 90px rgba(0,0,0,.34),0 2px 8px rgba(0,0,0,.12);
+  animation:spotIn .16s cubic-bezier(.2,.9,.3,1.4)}
+html[data-theme="dark"] .cmd-pal{background:rgba(4,9,14,.46)}
+html[data-theme="dark"] .cmd-card{background:rgba(20,32,44,.88);border-color:rgba(255,255,255,.11);
+  box-shadow:0 32px 90px rgba(0,0,0,.6)}
+html[data-theme="dark"] .cmd-item.hi{background:#146d88}
+html[data-theme="dark"] .cmd-item:hover:not(.hi){background:rgba(255,255,255,.06)}
+@keyframes spotFade{from{opacity:0}to{opacity:1}}
+@keyframes spotIn{from{opacity:0;transform:translateY(-10px) scale(.965)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.cmd-pal,.cmd-card{animation:none}}
+.cmd-top{display:flex;align-items:center;gap:13px;padding:0 19px;border-bottom:1px solid var(--line)}
+.cmd-mag{flex:none;width:21px;height:21px;color:var(--muted);opacity:.75}
+.cmd-card input{flex:1;width:100%;border:none;background:transparent;border-radius:0;
+  font-size:21px;font-weight:400;padding:17px 0;color:var(--ink);letter-spacing:-.1px}
+.cmd-card input::placeholder{color:var(--muted);opacity:.7;font-size:17px}
+.cmd-card input:focus{outline:none;box-shadow:none}
+.cmd-esc{flex:none;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:6px;
+  padding:2px 7px;cursor:pointer;background:transparent}
+.cmd-list{max-height:46vh;overflow:auto;padding:7px;scroll-padding:34px 0}
+.cmd-item{padding:8px 11px;border-radius:11px;font-size:13.5px;cursor:pointer;display:flex;gap:11px;align-items:center}
+.cmd-item:hover{background:var(--hover)}
+.cmd-item.hi{background:var(--teal);color:#fff}
+.cmd-ic{flex:none;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;background:var(--bg);border:1px solid var(--line)}
+.cmd-item.hi .cmd-ic{background:rgba(255,255,255,.22);border-color:transparent}
 .cmd-tx{flex:1;min-width:0}
 .cmd-tx b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cmd-sub{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-.cmd-item.hi .cmd-sub{color:var(--teal-dark);opacity:.75}
-.cmd-grp{padding:9px 12px 3px;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
-.cmd-foot{border-top:1px solid var(--line);padding:7px 12px;font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center}
-.cmd-empty{padding:12px;color:var(--muted);font-size:13px}
+.cmd-item.hi .cmd-sub{color:#fff;opacity:.82}
+.cmd-tag{flex:none;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:2px 8px}
+.cmd-item.hi .cmd-tag{color:#fff;border-color:rgba(255,255,255,.45)}
+.cmd-grp{padding:10px 12px 4px;font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.cmd-foot{border-top:1px solid var(--line);padding:8px 14px;font-size:11px;color:var(--muted);
+  display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.cmd-empty{padding:22px 14px;color:var(--muted);font-size:13.5px;text-align:center}
+.cmd-empty b{display:block;color:var(--ink);font-size:14.5px;margin-bottom:3px}
 /* find-anything buttons */
 #topActions{position:fixed;top:14px;right:70px;z-index:57;display:flex;align-items:center;gap:8px}
 #searchBtn{height:42px;padding:0 15px;border-radius:21px;border:1px solid var(--line);
@@ -1123,6 +1153,66 @@ html[data-theme="dark"] body.card-tint main .card[data-tint="5"]{background:#271
 #searchBtn .kbd{font-size:10.5px;opacity:.8}
 @media(max-width:768px){ #topActions{display:none} }
 body.no-user #topActions{display:none!important}
+/* ---------- unfinished-work bar ---------- */
+.draft-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;
+  border:1px solid var(--amber);border-left:4px solid var(--amber);border-radius:10px;
+  background:color-mix(in srgb,var(--amber) 9%,var(--card));padding:9px 13px;font-size:13px}
+.draft-bar .db-tx{flex:1;min-width:180px;color:var(--ink)}
+.draft-bar .db-tx b{display:block;font-weight:700}
+.draft-bar .db-sub{color:var(--muted);font-size:11.5px}
+/* ---------- month view for follow-up dates ---------- */
+.fucal-card{max-width:560px}
+.fucal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.fucal-head b{font-size:15.5px}
+.fucal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.fucal-dow{text-align:center;font-size:10.5px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--muted);padding-bottom:2px}
+.fucal-day{border:1px solid var(--line);border-radius:9px;background:var(--card);
+  min-height:56px;padding:5px 6px;cursor:pointer;text-align:left;font:inherit;color:var(--ink);
+  display:flex;flex-direction:column;gap:3px}
+.fucal-day:hover:not(:disabled){border-color:var(--teal);background:var(--hover)}
+.fucal-day:disabled{opacity:.32;cursor:default}
+.fucal-day .fd-n{font-size:13px;font-weight:600;line-height:1}
+.fucal-day.today{box-shadow:inset 0 0 0 2px var(--teal)}
+.fucal-day.sel{background:var(--teal);border-color:var(--teal);color:#fff}
+.fucal-day.sel .fd-n{color:#fff}
+.fd-load{font-size:10px;font-weight:700;border-radius:20px;padding:1px 6px;align-self:flex-start;
+  line-height:1.5;border:1px solid transparent}
+.fd-load.l0{background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green)}
+.fd-load.l1{background:color-mix(in srgb,var(--amber) 17%,transparent);color:var(--amber)}
+.fd-load.l2{background:color-mix(in srgb,var(--danger) 15%,transparent);color:var(--danger)}
+.fucal-day.sel .fd-load{background:rgba(255,255,255,.25);color:#fff}
+.fucal-legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:11px;
+  font-size:11.5px;color:var(--muted)}
+.fucal-legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+.fucal-none{font-size:10px;color:var(--muted)}
+@media(max-width:560px){.fucal-day{min-height:46px}.fucal-day .fd-n{font-size:12px}}
+/* ---------- vitals strip ---------- */
+.vitals-wrap{border:1px solid var(--line);border-radius:11px;background:var(--bg);
+  padding:9px 12px 11px;margin-bottom:13px}
+.vitals-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;font-size:13px}
+.vitals-head b{font-size:12.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
+.vitals-row{display:flex;gap:9px;flex-wrap:wrap}
+.vit{display:flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--line);
+  border-radius:9px;padding:4px 9px;font-size:12.5px}
+.vit > span{color:var(--muted);font-weight:600;white-space:nowrap}
+.vit em{color:var(--muted);font-style:normal;font-size:11px;white-space:nowrap}
+.vit input{width:46px;text-align:center;padding:3px 4px;font-size:13px;font-weight:600;
+  border:none;border-bottom:1px solid var(--line);border-radius:0;background:transparent}
+.vit input:focus{outline:none;border-bottom-color:var(--teal)}
+.vit-bp{display:flex;align-items:center;gap:2px}
+.vit-bp i{color:var(--muted);font-style:normal}
+.vit.abn input{color:var(--danger)}
+.vit.abn{border-color:var(--danger)}
+@media(max-width:720px){.vit input{width:40px}}
+/* printed vitals line */
+.rx-vitals{font-size:12px;margin:0 0 7px;line-height:1.5}
+.rx-vitals b{font-weight:700}
+.rx-side .rx-vitals{font-size:11.5px}
+/* most-used medicine lines in the search list */
+.mine-chip{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.4px;
+  text-transform:uppercase;border-radius:20px;padding:1px 7px;margin-left:6px;
+  background:color-mix(in srgb,var(--teal) 14%,transparent);color:var(--teal-dark)}
 .kbd{display:inline-block;font-family:ui-monospace,monospace;font-size:11.5px;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:2px 6px}
 
 /* ===== mic button ===== */
@@ -1246,7 +1336,10 @@ html[data-theme="dark"] .ne-group{background:#0f2530}
   /* modals full-height friendly */
   .nav-modal{padding:10px}
   .nav-modal-card{max-height:92vh}
+  .cmd-pal{padding-top:8vh}
   .cmd-card{width:94vw}
+  .cmd-card input{font-size:19px;padding:15px 0}
+  .cmd-list{max-height:54vh}
   /* floating buttons don't cover content awkwardly */
   .mic-btn{right:14px;bottom:14px}
 }
@@ -1460,6 +1553,29 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 
   <div class="card">
     <h2><span class="step">2</span> Clinical notes</h2>
+    <div class="vitals-wrap" id="vitalsWrap">
+      <div class="vitals-head">
+        <b>Vitals</b>
+        <span class="muted small" id="vitBmi"></span>
+        <span style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="vitalsReset()"
+            title="Put the normal values back">↺ Normal</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="vitalsClear()"
+            title="Leave every box empty — nothing will be printed or recorded">Not taken</button>
+        </span>
+      </div>
+      <div class="vitals-row">
+        <label class="vit"><span>BP</span>
+          <span class="vit-bp"><input type="text" id="vBpS" inputmode="numeric" placeholder="120"><i>/</i><input type="text" id="vBpD" inputmode="numeric" placeholder="80"></span>
+          <em>mmHg</em></label>
+        <label class="vit"><span>Pulse</span><input type="text" id="vPulse" inputmode="numeric" placeholder="78"><em>/min</em></label>
+        <label class="vit"><span>Temp</span><input type="text" id="vTemp" inputmode="decimal" placeholder="98.6"><em>°F</em></label>
+        <label class="vit"><span>SpO₂</span><input type="text" id="vSpo2" inputmode="numeric" placeholder="98"><em>%</em></label>
+        <label class="vit"><span>Resp</span><input type="text" id="vRr" inputmode="numeric" placeholder="16"><em>/min</em></label>
+        <label class="vit"><span>Weight</span><input type="text" id="vWt" inputmode="decimal" placeholder="—"><em>kg</em></label>
+        <label class="vit"><span>Height</span><input type="text" id="vHt" inputmode="decimal" placeholder="—"><em>cm</em></label>
+      </div>
+    </div>
     <div class="btn-bar" style="margin-bottom:12px">
       <div class="med-search-wrap" style="flex:1;min-width:200px">
         <input type="text" id="ntSearch" placeholder="🔍 Search clinical-notes templates…" autocomplete="off">
@@ -1508,9 +1624,12 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button class="btn btn-ghost btn-sm" onclick="saveAsTemplate()" title="Saves the current medicines as a reusable prescription template (clinical notes are saved separately in Step 2)">💾 Save medicines as template</button>
     </div>
     <div class="fav-bar" id="favBar"></div>
-    <div class="med-search-wrap" style="margin-bottom:12px">
-      <input type="text" id="medSearch" placeholder="Search by brand, generic or category — e.g. “painkillers”, “antibiotics”, “gels”, “DMARDs”…" autocomplete="off">
-      <div class="med-suggest" id="medSuggest"></div>
+    <div class="btn-bar" style="margin-bottom:12px;align-items:stretch">
+      <div class="med-search-wrap" style="flex:1;min-width:220px">
+        <input type="text" id="medSearch" placeholder="Search by brand, generic or category — e.g. “painkillers”, “antibiotics”, “gels”, “DMARDs”…" autocomplete="off">
+        <div class="med-suggest" id="medSuggest"></div>
+      </div>
+      <button type="button" class="btn btn-ghost hidden" id="rxRepeatBtn" onclick="repeatLastRx()">↻ Repeat last prescription</button>
     </div>
     <div id="rxAlerts"></div>
     <div id="rxMonitor" class="rx-monitor"></div>
@@ -1574,7 +1693,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <input type="text" id="cFollowUp" placeholder="e.g. Review after 2 weeks with reports" style="flex:1;min-width:260px">
-        <input type="date" id="cFuDate" style="width:180px" title="Due-list date">
+        <input type="date" id="cFuDate" style="width:170px" title="Due-list date">
+        <button type="button" class="btn btn-ghost" id="cFuCal" onclick="openFuCal()"
+          title="Pick a date and see how many are already booked that day">📅 Month view</button>
       </div>
     </div>
   </div>
@@ -1713,6 +1834,24 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <!-- ============ TAB: PATIENTS ============ -->
 <section class="tab" id="tab-patients">
   <div class="page-head">Patients &amp; Follow-ups</div>
+  <div class="card" id="lostCard">
+    <h2>Never came back <span class="rx-count" id="lostCount">0</span></h2>
+    <p class="muted small" style="margin-bottom:10px">Patients you asked to return whose date has passed with no visit since. The due list above shows who is <i>coming</i>; this shows who quietly <i>disappeared</i>.</p>
+    <div class="btn-bar" style="margin-bottom:10px">
+      <select id="lostWindow" style="width:auto" onchange="renderLost()">
+        <option value="7">Overdue by more than a week</option>
+        <option value="14" selected>Overdue by more than 2 weeks</option>
+        <option value="30">Overdue by more than a month</option>
+        <option value="90">Overdue by more than 3 months</option>
+      </select>
+      <span class="muted small" id="lostSub"></span>
+    </div>
+    <table class="list">
+      <thead><tr><th style="width:130px">Was due</th><th>Patient</th><th>Phone</th><th>Diagnosis</th><th style="width:170px"></th></tr></thead>
+      <tbody id="lostBody"></tbody>
+    </table>
+    <p class="muted small mt" id="lostEmpty">Nobody has slipped through — everyone you asked back has been seen.</p>
+  </div>
   <div class="card" id="fuCard">
     <h2>Follow-ups due <span class="rx-count" id="fuCount">0</span></h2>
     <table class="list">
@@ -1845,6 +1984,23 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <div class="field"><label>Known allergies</label><textarea class="ta-s" id="dcAllergies" placeholder="e.g. Penicillin"></textarea></div>
       </div>
       <div class="field mt"><label>Hospital course / operative notes</label><textarea class="ta-s" id="dcCourse" placeholder="e.g. Uneventful recovery; mobilised with walker on day 2…"></textarea></div>
+      <div class="grid g2 mt">
+        <div class="field"><label>Condition at discharge</label>
+          <input type="text" id="dcCondition" list="dcCondList" placeholder="e.g. Stable, wound healthy, ambulating with walker">
+          <datalist id="dcCondList">
+            <option value="Stable — discharged home in satisfactory condition"></option>
+            <option value="Stable, wound healthy, ambulating with walker"></option>
+            <option value="Stable, wound healthy, full weight bearing allowed"></option>
+            <option value="Stable, partial weight bearing on the operated limb"></option>
+            <option value="Stable, non weight bearing — strictly no weight on the operated limb"></option>
+            <option value="Improved, pain controlled on oral medication"></option>
+            <option value="Discharged on request / against medical advice"></option>
+            <option value="Referred onward for further management"></option>
+          </datalist>
+          <span class="muted small">Printed on the summary just above the discharge medicines.</span></div>
+        <div class="field"><label>Condition — اردو <span class="muted small" style="font-weight:400">(optional)</span></label>
+          <input type="text" id="dcConditionUr" dir="rtl" placeholder="مثلاً: حالت بہتر، زخم ٹھیک، واکر کے ساتھ چل رہے ہیں"></div>
+      </div>
       <div class="field mt"><label>Discharge medications</label>
         <div class="med-search-wrap" style="margin-bottom:10px">
           <input type="text" id="dsMedSearch" placeholder="Search by brand, generic or category — same directory as prescriptions" autocomplete="off">
@@ -2424,6 +2580,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <option value="42|6 weeks">6 weeks</option><option value="56|8 weeks">8 weeks</option>
         <option value="84|12 weeks">12 weeks</option>
       </select></div>
+      <div class="field"><label>A follow-up day counts as full at</label>
+        <input type="number" id="sFuDayCap" min="1" max="200" step="1" placeholder="12">
+        <span class="muted small">Used by the month view when you pick a follow-up date — days at or over this show red.</span></div>
     </div>
     <p class="muted small mt">Letterhead-pad mode leaves your printed header, ℞ symbol and footer untouched — it prints only the prescription content in the blank space. If the content starts too high or too low on your pad, nudge “Top space” up or down a few mm and print a test.</p>
   </div>
@@ -3181,6 +3340,7 @@ function migrateDB(){
   }
   if(!db.documents) db.documents = [];
   if(db.settings.defFee===undefined) db.settings.defFee='';
+  if(db.settings.fuDayCap===undefined) db.settings.fuDayCap=12;
   // v5: bilingual printing
   if(db.settings.urduRx===undefined) db.settings.urduRx='on';
   // v6: surgery logbook
@@ -3491,7 +3651,7 @@ function showTab(name, isRefresh){
   if(name==='appts'){ renderAppts(); renderReminders(); }
   if(name==='videos') renderVideos();
   if(name==='queue') renderQueue();
-  if(name==='patients'){ renderPatientList(); renderFollowups(); }
+  if(name==='patients'){ renderPatientList(); renderFollowups(); if(typeof renderLost==='function') renderLost(); }
   if(name==='medicines') renderMedList();
   if(name==='documents') renderDocList();
   if(name==='discharge'){ if(!isRefresh) scrShow('ds','list'); renderDsList(); }
@@ -3512,6 +3672,9 @@ function showTab(name, isRefresh){
   if(typeof applyLabelOverrides==='function') applyLabelOverrides();
   if(typeof applyTabAccess==='function') applyTabAccess(name);
   if(typeof closeDrawer==='function'){ closeDrawer(); mSetTitle(name); }
+  if(typeof draftShowBar==='function'){
+    try{ const dk=Object.keys(DRAFT_FORMS).find(k=>DRAFT_FORMS[k].tab===name); if(dk) draftShowBar(dk); }catch(e){}
+  }
 }
 /* Show a "view only" banner and hide add/save/delete affordances for view-level sections. */
 function applyTabAccess(name){
@@ -3527,7 +3690,7 @@ function applyTabAccess(name){
 }
 
 /* ================= SETTINGS ================= */
-const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent'};
+const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent',sFuDayCap:'fuDayCap'};
 function loadSettingsForm(){
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) $(el).value = db.settings[key]||''; }
   applyBrand();
@@ -3842,6 +4005,7 @@ function linkPatient(pid){
   $('ptLinked').classList.remove('hidden');
   renderRxAlerts();
   startVisitTimer();
+  if(typeof repeatBtnRefresh==='function') repeatBtnRefresh();
   refreshFieldStatus();
 }
 function unlinkPatient(){
@@ -3851,6 +4015,7 @@ function unlinkPatient(){
   $('pSex').value='';
   showMrnPreview();
   tintAllergyBox();
+  if(typeof repeatBtnRefresh==='function') repeatBtnRefresh();
 }
 function showMrnPreview(){
   const el = $('pMrn'); if(el) el.value = mrnPreview();
@@ -3871,10 +4036,12 @@ function medMatches(m, q){
          (m.cls||'').toLowerCase().includes(q);
 }
 setupSuggest('medSearch','medSuggest',
-  q => db.meds.filter(m => medMatches(m,q))
-    .sort(medSort)
-    .slice(0,40),
-  m => '<b>'+esc(m.name)+'</b> <span class="g">'+esc(m.generic||'')+(m.co?' — '+esc(m.co):'')+'</span> <span class="cat-chip">'+esc(m.cat||'')+'</span>'+(m.cls?' <span class="cls-chip">'+esc(m.cls)+'</span>':'')+'<br><span class="defaults">'+esc(m.dose)+' · '+esc(m.freq)+' · '+esc(m.dur)+(m.instr?' · '+esc(m.instr):'')+'</span>',
+  q => comboMatches(q).concat(db.meds.filter(m => medMatches(m,q)).sort(medSort).slice(0,40)),
+  m => m.mine
+    ? '<b>'+esc(m.name)+'</b><span class="mine-chip">your line \u00b7 used '+m.n+'\u00d7</span>'+
+      '<br><span class="defaults">'+esc([m.dose,m.freq,m.dur].filter(Boolean).join(' \u00b7 '))+
+      (m.instr?' \u00b7 '+esc(m.instr):'')+'</span>'
+    : '<b>'+esc(m.name)+'</b> <span class="g">'+esc(m.generic||'')+(m.co?' — '+esc(m.co):'')+'</span> <span class="cat-chip">'+esc(m.cat||'')+'</span>'+(m.cls?' <span class="cls-chip">'+esc(m.cls)+'</span>':'')+'<br><span class="defaults">'+esc(m.dose)+' · '+esc(m.freq)+' · '+esc(m.dur)+(m.instr?' · '+esc(m.instr):'')+'</span>',
   m => { addRxRow(m); $('medSearch').value=''; $('medSearch').focus(); }
 );
 
@@ -4187,6 +4354,7 @@ function collectVisitForm(){
     plan:$('cPlan').value.trim(), proc:$('cProc').value.trim(),
     nextTests:$('cNextTests').value.trim(), followUp:$('cFollowUp').value.trim(),
     followUpDate:$('cFuDate').value, fee: parseFloat($('cFee').value)||0, qrId: ($('cQrSel')?$('cQrSel').value:''),
+    vitals: collectVitals(),
     meds: collectRx()
   };
 }
@@ -4231,7 +4399,7 @@ function saveVisit(andPrint){
       complaints: f.complaints, findings: f.findings,
       diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc,
       nextTests: f.nextTests, followUp: f.followUp,
-      followUpDate: f.followUpDate, fee: f.fee, qrId: f.qrId, meds: f.meds,
+      followUpDate: f.followUpDate, fee: f.fee, qrId: f.qrId, meds: f.meds, vitals: f.vitals,
       images: (editing.images||[]).concat(visitImgs.map(x=>x.id)),
       editedAt: new Date().toISOString(), editedBy: byTag()
     });
@@ -4244,7 +4412,7 @@ function saveVisit(andPrint){
       complaints: f.complaints, findings: f.findings,
       diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc,
       nextTests: f.nextTests, followUp: f.followUp,
-      followUpDate: f.followUpDate, fuDone: false, fee: f.fee, qrId: f.qrId, meds: f.meds,
+      followUpDate: f.followUpDate, fuDone: false, fee: f.fee, qrId: f.qrId, meds: f.meds, vitals: f.vitals,
       images: visitImgs.map(x=>x.id),
       by: byTag(),
       dur: Math.round(vtElapsedMs()/1000)
@@ -4314,6 +4482,8 @@ function clearVisitForm(ask){
   $('cFuDate').value=''; $('cFuDate').dataset.auto='';
   fuWhatSel=-1; fuWhenDays=0; fuWhenLabel=''; renderFuWhatChips(); renderNvChips();
   $('cFee').value = db.settings.defFee || '';
+  if(typeof vitalsReset==='function') vitalsReset();
+  if(typeof repeatBtnRefresh==='function') repeatBtnRefresh();
   if(typeof renderRxQrSelect==='function') renderRxQrSelect();
   applyDefFu();
   refreshFieldStatus();
@@ -4649,6 +4819,7 @@ function copyVisitToForm(vid){
   $('cPlan').value=v.plan||''; $('cProc').value=v.proc||'';
   $('cNextTests').value=v.nextTests||''; $('cFollowUp').value=v.followUp||'';
   if(v.followUpDate && $('cFuDate')) $('cFuDate').value=v.followUpDate;
+  if(typeof vitalsSet==='function') vitalsSet(v.vitals||{});
   if(typeof renderRxQrSelect==='function'){ renderRxQrSelect(); if($('cQrSel')) $('cQrSel').value=v.qrId||''; }
   (v.meds||[]).forEach(m=>addRxRow(m));
   editingVisitId = vid;
@@ -5722,6 +5893,7 @@ function renderFollowups(){
 function fuDone(vid){
   const v = db.visits.find(x=>x.id===vid); if(!v) return;
   v.fuDone = true; persist(); renderFollowups();
+  if(typeof renderLost==='function') renderLost();
 }
 
 /* ================= DOCUMENTS ================= */
@@ -5834,6 +6006,7 @@ function collectDsForm(){
         implant:$('dcImplant').value.trim(), implantCo:$('dcImplantCo').value.trim(),
         medsArr: collectRx('dsRxBody'),
         images: dsImgs.map(x=>({id:x.id, label:(x.label||'').trim()})),
+        condition:$('dcCondition').value.trim(), conditionUr:$('dcConditionUr').value.trim(),
         instr:$('dcInstr').value.trim(), fu:$('dcFu').value.trim()}
   };
 }
@@ -5858,7 +6031,7 @@ function saveDischarge(andPrint){
 }
 function clearDsForm(){
   dsPatientId = null; editingDsId = null;
-  ['dsPtSearch','dsName','dsMrn','dsAge','dsMedSearch','dcDiagnosis','dcClinical','dcFindings','dcMedHx','dcSurgHx','dcAllergies','dcProc','dcCourse','dcImplant','dcImplantCo','dcInstr','dcFu'].forEach(id=>$(id).value='');
+  ['dsPtSearch','dsName','dsMrn','dsAge','dsMedSearch','dcDiagnosis','dcClinical','dcFindings','dcMedHx','dcSurgHx','dcAllergies','dcProc','dcCourse','dcImplant','dcImplantCo','dcCondition','dcConditionUr','dcInstr','dcFu'].forEach(id=>$(id).value='');
   $('dsRxBody').innerHTML='';
   $('dsSex').value='';
   $('dsDate').value = localISO(); $('dcAdmit').value=''; $('dcDischarge').value='';
@@ -5965,6 +6138,7 @@ function loadDs(id){
       else addRxRow({name:lines[i].replace(/^\d+[\.\)]\s*/,''), dose:'', freq:'', dur:'', instr:'', ur:nxt}, 'dsRxBody');
     }
   }
+  $('dcCondition').value=dc.condition||''; $('dcConditionUr').value=dc.conditionUr||'';
   $('dcInstr').value=dc.instr||''; $('dcFu').value=dc.fu||'';
   $('dcAddLog').checked = d.addLog!==false;
   dsImgs = [];
@@ -6082,6 +6256,9 @@ async function printDoc(d, forcePlain){
       sec('Procedure / operation performed', dc.proc) +
       sec('Implant / prosthesis used', [dc.implant, dc.implantCo&&('('+dc.implantCo+')')].filter(Boolean).join(' ')) +
       sec('Hospital course', dc.course) +
+      sec('Condition at discharge', dc.condition) +
+      (((db.settings.urduRx||'on')!=='off' && dc.conditionUr)
+        ? '<div class="dc-sec dc-sec-ur" dir="rtl"><h4>\u0631\u062e\u0635\u062a \u06a9\u06d2 \u0648\u0642\u062a \u062d\u0627\u0644\u062a</h4><p>'+esc(dc.conditionUr)+'</p></div>' : '') +
       ((dc.medsArr && dc.medsArr.length) ?
         '<div class="dc-sec"><h4>Discharge medications</h4>'+dc.medsArr.map((m,i)=>{
           const urOn = (db.settings.urduRx||'on')!=='off';
@@ -6410,7 +6587,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.31-b31';
+const APP_BUILD = '2026.07.31-b34';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -7832,7 +8009,9 @@ function socialsPrintLine(){
 function printVisit(v, p, forcePlain){
   const s = db.settings;
   const pad = !forcePlain && (s.printMode||'pad')==='pad';   // printing on pre-printed letterhead
+  const vitLine = (typeof vitalsLine==='function') ? vitalsLine(v.vitals) : '';
   const clinBlocks = [
+    vitLine && ['Vitals', vitLine],
     (p.medHx||p.surgHx) && ['History', [p.medHx&&('Medical: '+p.medHx), p.surgHx&&('Surgical: '+p.surgHx)].filter(Boolean).join('\n')],
     p.allergies && ['Allergies', (isNoAllergy(p.allergies)?'':'\u26a0 ')+p.allergies],
     v.complaints && ['Presenting complaints', v.complaints],
@@ -9550,6 +9729,480 @@ function initSidebar(){ renderSidebar(); ensureNavModal(); }
 
 /* ===== Extras module ===== */
 
+/* ==================== VITALS ====================
+   The boxes start at normal adult values because that is what most people in an
+   orthopaedic clinic have — change any box that is different, or press "Not taken"
+   to leave the lot blank so nothing is recorded or printed.                    */
+const VITAL_NORMAL={bpS:'120', bpD:'80', pulse:'78', temp:'98.6', spo2:'98', rr:'16', wt:'', ht:''};
+const VITAL_IDS={bpS:'vBpS', bpD:'vBpD', pulse:'vPulse', temp:'vTemp', spo2:'vSpo2', rr:'vRr', wt:'vWt', ht:'vHt'};
+/* plainly outside the normal adult range — worth a red box, not an alarm */
+const VITAL_RANGE={bpS:[90,140], bpD:[60,90], pulse:[60,100], temp:[97,99.5], spo2:[94,100], rr:[12,20]};
+function vitalsSet(v){
+  Object.keys(VITAL_IDS).forEach(k=>{ const el=$(VITAL_IDS[k]); if(el) el.value=(v&&v[k]!=null)?v[k]:''; });
+  vitalsPaint();
+}
+function vitalsReset(){ vitalsSet(VITAL_NORMAL); }
+function vitalsClear(){ vitalsSet({}); }
+function collectVitals(){
+  const o={}; let any=false;
+  Object.keys(VITAL_IDS).forEach(k=>{
+    const el=$(VITAL_IDS[k]); const val=el?String(el.value||'').trim():'';
+    if(val){ o[k]=val; any=true; }
+  });
+  if(!any) return null;
+  const b=vitalsBmi(o); if(b) o.bmi=b;
+  return o;
+}
+function vitalsBmi(v){
+  const w=parseFloat(v.wt), hcm=parseFloat(v.ht);
+  if(!(w>0) || !(hcm>0)) return '';
+  const m=hcm/100, b=w/(m*m);
+  return (b>0 && isFinite(b)) ? b.toFixed(1) : '';
+}
+function vitalsPaint(){
+  const v={}; Object.keys(VITAL_IDS).forEach(k=>{ const el=$(VITAL_IDS[k]); if(el) v[k]=el.value; });
+  Object.keys(VITAL_IDS).forEach(k=>{
+    const el=$(VITAL_IDS[k]); if(!el) return;
+    const box=el.closest('.vit'); if(!box) return;
+    const r=VITAL_RANGE[k], n=parseFloat(el.value);
+    const bad = r && el.value!=='' && isFinite(n) && (n<r[0] || n>r[1]);
+    // the BP box holds two readings — flag it if either is out
+    if(k==='bpD'||k==='bpS'){
+      const s=parseFloat(v.bpS), d=parseFloat(v.bpD);
+      const sb=isFinite(s)&&(s<VITAL_RANGE.bpS[0]||s>VITAL_RANGE.bpS[1]);
+      const db_=isFinite(d)&&(d<VITAL_RANGE.bpD[0]||d>VITAL_RANGE.bpD[1]);
+      box.classList.toggle('abn', !!(sb||db_));
+    } else box.classList.toggle('abn', !!bad);
+  });
+  const el=$('vitBmi');
+  if(el){ const b=vitalsBmi(v); el.textContent = b ? ('BMI '+b) : ''; }
+}
+/* one readable line for the printed sheet */
+function vitalsLine(v){
+  if(!v) return '';
+  const bits=[];
+  if(v.bpS||v.bpD) bits.push('BP '+(v.bpS||'?')+'/'+(v.bpD||'?'));
+  if(v.pulse) bits.push('Pulse '+v.pulse);
+  if(v.temp)  bits.push('Temp '+v.temp+'°F');
+  if(v.spo2)  bits.push('SpO₂ '+v.spo2+'%');
+  if(v.rr)    bits.push('RR '+v.rr);
+  if(v.wt)    bits.push('Wt '+v.wt+' kg');
+  if(v.ht)    bits.push('Ht '+v.ht+' cm');
+  if(v.bmi)   bits.push('BMI '+v.bmi);
+  return bits.join(' · ');
+}
+
+/* ==================== REPEAT THE LAST PRESCRIPTION ==================== */
+function lastVisitFor(pid, exceptId){
+  return (db.visits||[]).filter(v=>v.patientId===pid && v.id!==exceptId && (v.meds||[]).length)
+    .sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0] || null;
+}
+function repeatLastRx(){
+  if(!linkedPatientId){ toast('Link an existing patient first — then their last medicines can be copied'); return; }
+  const v=lastVisitFor(linkedPatientId, editingVisitId);
+  if(!v){ toast('No earlier prescription on file for this patient'); return; }
+  const have=collectRx().length;
+  if(have && !confirm('Replace the '+have+' medicine line'+(have===1?'':'s')+
+     ' already typed with the '+v.meds.length+' from '+fmtDate(v.date)+'?')) return;
+  $('rxBody').innerHTML='';
+  v.meds.forEach(m=>addRxRow(m));
+  if(typeof updateRxCount==='function') updateRxCount();
+  if(typeof renderRxAlerts==='function') renderRxAlerts();
+  toast('Copied '+v.meds.length+' medicine'+(v.meds.length===1?'':'s')+' from '+fmtDate(v.date)+' — edit as needed');
+}
+function repeatBtnRefresh(){
+  const b=$('rxRepeatBtn'); if(!b) return;
+  const v=linkedPatientId ? lastVisitFor(linkedPatientId, editingVisitId) : null;
+  b.classList.toggle('hidden', !v);
+  if(v) b.title='Copy the '+v.meds.length+' medicine'+(v.meds.length===1?'':'s')+
+                ' from this patient’s visit on '+fmtDate(v.date);
+}
+
+/* ==================== YOUR OWN MOST-USED MEDICINE LINES ====================
+   The library gives a medicine its textbook defaults. This gives it back the way
+   YOU actually wrote it last time — same dose, frequency, duration, instruction. */
+let __comboCache=null;
+function comboInvalidate(){ __comboCache=null; }
+function myMedCombos(){
+  if(__comboCache) return __comboCache;
+  const map=new Map();
+  (db.visits||[]).forEach(v=>{
+    (v.meds||[]).forEach(m=>{
+      if(!m || !m.name) return;
+      const key=[m.name,m.dose||'',m.freq||'',m.dur||'',m.instr||''].join('|').toLowerCase();
+      const cur=map.get(key);
+      if(cur){ cur.n++; if(String(v.date)>String(cur.last)) cur.last=v.date; }
+      else map.set(key,{name:m.name, dose:m.dose||'', freq:m.freq||'', dur:m.dur||'',
+                        instr:m.instr||'', ur:m.ur||'', n:1, last:v.date||'', mine:true});
+    });
+  });
+  __comboCache=[...map.values()].sort((a,b)=> b.n-a.n || String(b.last).localeCompare(String(a.last)));
+  return __comboCache;
+}
+function comboMatches(q){
+  const s=String(q||'').toLowerCase();
+  if(!s) return [];
+  return myMedCombos().filter(c=>c.n>1 && c.name.toLowerCase().includes(s)).slice(0,6);
+}
+
+/* ==================== WHO NEVER CAME BACK ====================
+   The due list answers "who is coming". This answers "who did I lose". */
+function lostFollowups(minDays){
+  const today=localISO();
+  const cutoff=localISO(new Date(Date.now()-minDays*86400000));
+  const out=[];
+  const seen=new Set();
+  (db.visits||[]).filter(v=>v.followUpDate && !v.fuDone && v.followUpDate<=cutoff && v.patientId)
+    .sort((a,b)=>String(b.followUpDate).localeCompare(String(a.followUpDate)))
+    .forEach(v=>{
+      if(seen.has(v.patientId)) return;
+      // did they come back at any point on or after the date they were asked for?
+      const cameBack=(db.visits||[]).some(x=>x.patientId===v.patientId && x.id!==v.id &&
+        String(x.date)>=String(v.followUpDate));
+      if(cameBack) return;
+      // an appointment still on the books is not a lost patient
+      const booked=(db.appts||[]).some(a=>a.patientId===v.patientId &&
+        a.status!=='cancelled' && String(a.date)>=today);
+      if(booked) return;
+      seen.add(v.patientId);
+      out.push(v);
+    });
+  return out;
+}
+function renderLost(){
+  const sel=$('lostWindow'); if(!sel) return;
+  const days=parseInt(sel.value,10)||14;
+  const list=lostFollowups(days);
+  $('lostCount').textContent=list.length;
+  $('lostEmpty').style.display=list.length?'none':'block';
+  const today=new Date(localISO()+'T12:00:00');
+  $('lostSub').textContent = list.length
+    ? list.length+' patient'+(list.length===1?'':'s')+' asked back but never seen since'
+    : '';
+  $('lostBody').innerHTML=list.map(v=>{
+    const p=(db.patients||[]).find(x=>x.id===v.patientId)||{};
+    const late=Math.round((today-new Date(v.followUpDate+'T12:00:00'))/86400000);
+    return '<tr><td><b>'+esc(fmtDate(v.followUpDate))+'</b><br>'+
+      '<span class="muted small">'+late+' day'+(late===1?'':'s')+' ago</span></td>'+
+      '<td><span class="linklike" onclick="openPatient(\''+p.id+'\')">'+esc(p.name||'?')+'</span></td>'+
+      '<td>'+esc(p.phone||'—')+'</td>'+
+      '<td class="small">'+esc(v.diagnosis||'—')+'</td>'+
+      '<td><button class="btn btn-ghost btn-sm" onclick="waRemind(\''+v.id+'\')" title="WhatsApp them">📤</button> '+
+      '<button class="btn btn-ghost btn-sm" onclick="fuDone(\''+v.id+'\')" title="Stop chasing this one">✓ Close</button></td></tr>';
+  }).join('');
+}
+
+/* ==================== FOLLOW-UP MONTH VIEW ====================
+   Picking a follow-up date blind is how a Tuesday ends up with 40 people in it.
+   This shows the month with the load already on each day — the follow-ups you
+   have promised plus the appointments actually booked — so you can spread them. */
+let fuCalMonth=null;                       // first day of the month on screen
+function fuLoadMap(){
+  const m={};
+  const bump=(d,k)=>{ if(!d) return; (m[d]=m[d]||{fu:0,ap:0})[k]++; };
+  (db.visits||[]).forEach(v=>bump(v.followUpDate,'fu'));
+  (db.appts||[]).forEach(a=>{ if(a.status!=='cancelled') bump(a.date,'ap'); });
+  (db.recalls||[]).forEach(r=>{ if(r.active!==false) bump(r.nextDue,'fu'); });
+  return m;
+}
+/* how busy is busy? scaled off the doctor's own setting, default 12 a day */
+function fuDayCap(){ const n=parseInt(db.settings.fuDayCap,10); return (n>0?n:12); }
+function fuLoadClass(total){
+  const cap=fuDayCap();
+  return total>=cap ? 'l2' : total>=Math.ceil(cap*0.6) ? 'l1' : 'l0';
+}
+function openFuCal(){
+  const cur=$('cFuDate') && $('cFuDate').value;
+  const base=cur ? new Date(cur+'T12:00:00') : new Date();
+  fuCalMonth=new Date(base.getFullYear(), base.getMonth(), 1);
+  let m=$('fuCalModal');
+  if(!m){
+    m=document.createElement('div'); m.id='fuCalModal'; m.className='nav-modal hidden';
+    m.innerHTML='<div class="nav-modal-card fucal-card">'+
+      '<div class="nav-modal-head"><b>Choose a follow-up date</b>'+
+      '<button class="btn btn-ghost btn-sm" onclick="closeFuCal()">✕</button></div>'+
+      '<div class="nav-modal-body" id="fuCalBody"></div></div>';
+    document.body.appendChild(m);
+    m.addEventListener('click', e=>{ if(e.target===m) closeFuCal(); });
+  }
+  m.classList.remove('hidden');
+  renderFuCal();
+}
+function closeFuCal(){ const m=$('fuCalModal'); if(m) m.classList.add('hidden'); }
+function fuCalShift(n){
+  if(!fuCalMonth) return;
+  fuCalMonth=new Date(fuCalMonth.getFullYear(), fuCalMonth.getMonth()+n, 1);
+  renderFuCal();
+}
+function renderFuCal(){
+  const host=$('fuCalBody'); if(!host || !fuCalMonth) return;
+  const load=fuLoadMap();
+  const y=fuCalMonth.getFullYear(), mo=fuCalMonth.getMonth();
+  const first=new Date(y,mo,1), days=new Date(y,mo+1,0).getDate();
+  const lead=first.getDay();                       // 0 = Sunday
+  const today=localISO(), sel=($('cFuDate')||{}).value||'';
+  const MON=['January','February','March','April','May','June','July',
+             'August','September','October','November','December'];
+  let g='';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{ g+='<div class="fucal-dow">'+d+'</div>'; });
+  for(let i=0;i<lead;i++) g+='<div></div>';
+  for(let d=1; d<=days; d++){
+    const iso=y+'-'+String(mo+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const L=load[iso]||{fu:0,ap:0}, tot=L.fu+L.ap;
+    const past = iso<today;
+    const bits=[]; if(L.fu) bits.push(L.fu+' follow-up'+(L.fu===1?'':'s'));
+    if(L.ap) bits.push(L.ap+' booked');
+    g+='<button type="button" class="fucal-day'+(iso===today?' today':'')+(iso===sel?' sel':'')+'"'+
+       (past?' disabled':'')+' onclick="fuCalPick(\''+iso+'\')"'+
+       ' title="'+esc(fmtDate(iso)+(bits.length?' — '+bits.join(', '):' — nothing booked'))+'">'+
+       '<span class="fd-n">'+d+'</span>'+
+       (tot? '<span class="fd-load '+fuLoadClass(tot)+'">'+tot+'</span>' : '')+
+       '</button>';
+  }
+  const cap=fuDayCap();
+  host.innerHTML=
+    '<div class="fucal-head">'+
+      '<button class="btn btn-ghost btn-sm" onclick="fuCalShift(-1)">‹ Prev</button>'+
+      '<b>'+MON[mo]+' '+y+'</b>'+
+      '<button class="btn btn-ghost btn-sm" onclick="fuCalShift(1)">Next ›</button>'+
+    '</div>'+
+    '<div class="fucal-grid">'+g+'</div>'+
+    '<div class="fucal-legend">'+
+      '<span><i style="background:var(--green)"></i>quiet</span>'+
+      '<span><i style="background:var(--amber)"></i>filling up</span>'+
+      '<span><i style="background:var(--danger)"></i>'+cap+'+ — full</span>'+
+      '<span style="margin-left:auto">Counts follow-ups promised + appointments booked</span>'+
+    '</div>'+
+    '<div class="btn-bar mt">'+
+      '<button class="btn btn-ghost btn-sm" onclick="fuCalPick(\'\')">Clear the date</button>'+
+      '<span class="muted small">A day counts as full at '+cap+
+      ' — change that in Settings ▸ clinic.</span>'+
+    '</div>';
+}
+function fuCalPick(iso){
+  const el=$('cFuDate'); if(el){ el.value=iso; el.dataset.auto=''; 
+    el.dispatchEvent(new Event('change',{bubbles:true})); }
+  closeFuCal();
+  if(iso){
+    const L=fuLoadMap()[iso]||{fu:0,ap:0}, tot=L.fu+L.ap;
+    toast(fmtDate(iso)+(tot? ' — '+tot+' already on that day' : ' — nothing else booked'));
+  } else toast('Follow-up date cleared');
+}
+
+/* ==================== UNFINISHED WORK: autosave + restore ====================
+   Half-typed prescriptions, discharges, op-log entries and registry records are
+   kept on THIS DEVICE only (localStorage, never synced) — a draft is a private
+   half-thought, not a record, and syncing it would clash between devices.
+   Saved automatically a moment after you stop typing, and whenever the tab is
+   hidden or closed. Cleared the moment the real record is saved.            */
+const DRAFT_PREFIX='fh_draft_', DRAFT_DEBOUNCE=1100;
+let draftTimer=null, draftBusy=false;
+
+const DRAFT_FORMS={
+  visit:{
+    tab:'visit', label:'prescription', icon:'📝',
+    read(){ return {f:collectVisitForm(), link:linkedPatientId, editing:editingVisitId}; },
+    filled(d){ const f=d.f||{}; const p=f.patient||{};
+      return !!(p.name||p.phone||f.complaints||f.findings||f.diagnosis||f.tests||f.plan||
+                f.proc||f.nextTests||f.followUp||(f.meds&&f.meds.length)); },
+    describe(d){ const f=d.f||{}, p=f.patient||{};
+      return [p.name||'(no name yet)', f.diagnosis||'',
+              (f.meds&&f.meds.length)? f.meds.length+' medicine'+(f.meds.length===1?'':'s') : '']
+             .filter(Boolean).join(' · '); },
+    write(d){
+      const f=d.f||{}, p=f.patient||{};
+      if(d.link && db.patients.some(x=>x.id===d.link)) linkPatient(d.link); else unlinkPatient();
+      $('pName').value=p.name||''; $('pAge').value=p.age||''; $('pSex').value=p.sex||'';
+      $('pPhone').value=p.phone||''; if(p.mrn) $('pMrn').value=p.mrn;
+      $('pAddress').value=p.address||''; $('pAllergies').value=p.allergies||'NKDA';
+      $('pMedHx').value=p.medHx||''; $('pSurgHx').value=p.surgHx||'';
+      $('cComplaints').value=f.complaints||''; $('cFindings').value=f.findings||'';
+      $('cDiagnosis').value=f.diagnosis||''; $('cTests').value=f.tests||'';
+      $('cPlan').value=f.plan||''; $('cProc').value=f.proc||'';
+      $('cNextTests').value=f.nextTests||''; $('cFollowUp').value=f.followUp||'';
+      $('cFuDate').value=f.followUpDate||''; $('cFee').value=f.fee||'';
+      $('rxBody').innerHTML=''; (f.meds||[]).forEach(m=>addRxRow(m));
+      if(typeof updateRxCount==='function') updateRxCount();
+      editingVisitId = (d.editing && db.visits.some(v=>v.id===d.editing)) ? d.editing : null;
+      if(typeof updateEditBanner==='function') updateEditBanner();
+      if(typeof tintAllergyBox==='function') tintAllergyBox();
+      if(typeof renderRxAlerts==='function') renderRxAlerts();
+    }
+  },
+  discharge:{
+    tab:'discharge', label:'discharge summary', icon:'🏥',
+    read(){ return {f:collectDsForm(), editing:editingDsId}; },
+    filled(d){ const f=d.f||{}, c=f.dc||{};
+      return !!(f.name||c.diagnosis||c.clinical||c.findings||c.proc||c.course||c.condition||c.instr||c.fu||
+                (c.medsArr&&c.medsArr.length)); },
+    describe(d){ const f=d.f||{}, c=f.dc||{};
+      return [f.name||'(no name yet)', c.diagnosis||c.proc||''].filter(Boolean).join(' · '); },
+    write(d){
+      const f=d.f||{}, c=f.dc||{};
+      dsShowForm();
+      dsPatientId=f.patientId||null;
+      editingDsId=(d.editing && db.documents.some(x=>x.id===d.editing)) ? d.editing : null;
+      $('dsDate').value=f.date||localISO(); $('dsName').value=f.name||'';
+      $('dsAge').value=f.age||''; $('dsSex').value=f.sex||''; $('dsMrn').value=f.mrn||'';
+      $('dcAdmit').value=c.admit||''; $('dcDischarge').value=c.discharge||'';
+      $('dcDiagnosis').value=c.diagnosis||''; $('dcClinical').value=c.clinical||'';
+      $('dcFindings').value=c.findings||''; $('dcMedHx').value=c.medHx||'';
+      $('dcSurgHx').value=c.surgHx||''; $('dcAllergies').value=c.allergies||'';
+      $('dcProc').value=c.proc||''; $('dcCourse').value=c.course||'';
+      $('dcImplant').value=c.implant||''; $('dcImplantCo').value=c.implantCo||'';
+      $('dcCondition').value=c.condition||''; $('dcConditionUr').value=c.conditionUr||'';
+      $('dcInstr').value=c.instr||''; $('dcFu').value=c.fu||'';
+      $('dsRxBody').innerHTML=''; (c.medsArr||[]).forEach(m=>addRxRow(m,'dsRxBody'));
+      $('dsFormTitle').textContent = editingDsId ? 'Edit discharge summary' : 'New discharge summary';
+    }
+  },
+  oplog:{
+    tab:'oplog', label:'operation entry', icon:'🦴',
+    read(){ return {f:{date:$('opDate').value, name:$('opName').value, age:$('opAge').value,
+      sex:$('opSex').value, dx:$('opDx').value, proc:$('opProc').value, anesth:$('opAnesth').value,
+      implant:$('opImplant').value, assist:$('opAssist').value, comp:$('opComp').value,
+      notes:$('opNotes').value}, pid:opPatientId, editing:editingOpId}; },
+    filled(d){ const f=d.f||{};
+      return !!(f.name||f.dx||f.proc||f.implant||f.assist||f.comp||f.notes); },
+    describe(d){ const f=d.f||{};
+      return [f.name||'(no name yet)', f.proc||f.dx||''].filter(Boolean).join(' · '); },
+    write(d){
+      const f=d.f||{};
+      if(typeof opShowForm==='function') opShowForm();
+      opPatientId=d.pid||null;
+      editingOpId=(d.editing && db.surgeries.some(x=>x.id===d.editing)) ? d.editing : null;
+      $('opDate').value=f.date||localISO(); $('opName').value=f.name||''; $('opAge').value=f.age||'';
+      $('opSex').value=f.sex||''; $('opDx').value=f.dx||''; $('opProc').value=f.proc||'';
+      $('opAnesth').value=f.anesth||''; $('opImplant').value=f.implant||'';
+      $('opAssist').value=f.assist||''; $('opComp').value=f.comp||''; $('opNotes').value=f.notes||'';
+      $('opFormTitle').textContent = editingOpId ? 'Edit operation' : 'Add operation';
+    }
+  },
+  registry:{
+    tab:'registry', label:'registry entry', icon:'🧬',
+    read(){ if(typeof regFormBuilt==='undefined' || !regFormBuilt) return null;
+      return {f:regCollect(), link:regLinkedPatientId, editing:regEditingId}; },
+    filled(d){ const f=d&&d.f; if(!f) return false;
+      return !!(f.name||f.mrn||f.diagnosis||f.site||f.histSubtype||f.contact); },
+    describe(d){ const f=d.f||{};
+      return [f.name||'(no name yet)', f.regNo||'', f.diagnosis||''].filter(Boolean).join(' · '); },
+    write(d){
+      if((typeof regFormBuilt==='undefined' || !regFormBuilt) && typeof regBuildForm==='function') regBuildForm();
+      regFillForm(d.f||{});
+      regLinkedPatientId = (d.link && db.patients.some(x=>x.id===d.link)) ? d.link : null;
+      regEditingId = (d.editing && (db.registry||[]).some(x=>x.id===d.editing)) ? d.editing : null;
+      $('regFormTitle').textContent = regEditingId ? 'Edit registry entry' : 'New registry entry';
+      $('regFormWrap').classList.add('show');
+      if(typeof scrShow==='function') scrShow('reg','form');
+      if(typeof regApplyMode==='function') regApplyMode();
+      if(typeof regUpdateLinkLine==='function') regUpdateLinkLine();
+    }
+  }
+};
+
+function draftRead(key){
+  try{ const raw=localStorage.getItem(DRAFT_PREFIX+key); if(!raw) return null;
+    const o=JSON.parse(raw); return (o && o.d) ? o : null; }catch(e){ return null; }
+}
+function draftStore(key){
+  const spec=DRAFT_FORMS[key]; if(!spec) return;
+  let d=null;
+  try{ d=spec.read(); }catch(e){ return; }              // form not on the page yet
+  if(!d || !spec.filled(d)){ draftDrop(key); return; }
+  try{ localStorage.setItem(DRAFT_PREFIX+key, JSON.stringify({t:Date.now(), d:d})); }catch(e){}
+}
+function draftDrop(key){
+  try{ localStorage.removeItem(DRAFT_PREFIX+key); }catch(e){}
+  const bar=$('draftBar-'+key); if(bar) bar.remove();
+}
+function draftStoreAll(){ Object.keys(DRAFT_FORMS).forEach(k=>{ if(!draftBusy) draftStore(k); }); }
+function draftPoke(key){
+  if(draftBusy) return;
+  clearTimeout(draftTimer);
+  draftTimer=setTimeout(()=>{ draftStore(key); }, DRAFT_DEBOUNCE);
+}
+/* "3 minutes ago" reads better than a timestamp when you have just lost work */
+function draftWhen(ts){
+  const mins=Math.round((Date.now()-ts)/60000);
+  if(mins<1) return 'a moment ago';
+  if(mins<60) return mins+' minute'+(mins===1?'':'s')+' ago';
+  const hrs=Math.round(mins/60);
+  if(hrs<24) return hrs+' hour'+(hrs===1?'':'s')+' ago';
+  return 'on '+fmtDate(new Date(ts).toISOString().slice(0,10));
+}
+function draftBarHost(key){
+  const spec=DRAFT_FORMS[key];
+  return document.getElementById('tab-'+spec.tab);
+}
+function draftShowBar(key){
+  const spec=DRAFT_FORMS[key]; if(!spec) return;
+  const old=$('draftBar-'+key); if(old) old.remove();
+  const saved=draftRead(key); if(!saved) return;
+  let live=null;
+  try{ live=spec.read(); }catch(e){}
+  if(live && spec.filled(live)) return;              // you are already typing — don't nag
+  const host=draftBarHost(key); if(!host) return;
+  const bar=document.createElement('div');
+  bar.className='draft-bar'; bar.id='draftBar-'+key;
+  let what='';
+  try{ what=spec.describe(saved.d)||''; }catch(e){}
+  bar.innerHTML='<span style="font-size:17px;flex:none">'+spec.icon+'</span>'+
+    '<span class="db-tx"><b>Unfinished '+esc(spec.label)+' — '+esc(draftWhen(saved.t))+'</b>'+
+    '<span class="db-sub">'+esc(what||'nothing typed yet')+'</span></span>'+
+    '<button class="btn btn-green btn-sm" onclick="draftRestore(\''+key+'\')">Restore it</button>'+
+    '<button class="btn btn-ghost btn-sm" onclick="draftDiscard(\''+key+'\')">Discard</button>';
+  host.insertBefore(bar, host.firstChild);
+}
+function draftRestore(key){
+  const spec=DRAFT_FORMS[key], saved=draftRead(key);
+  if(!spec || !saved) return;
+  draftBusy=true;
+  try{ spec.write(saved.d); toast('Restored your unfinished '+spec.label); }
+  catch(e){ toast('⚠ Could not restore that draft'); }
+  draftBusy=false;
+  const bar=$('draftBar-'+key); if(bar) bar.remove();
+  if(typeof refreshFieldStatus==='function'){ try{ refreshFieldStatus(); }catch(e){} }
+}
+function draftDiscard(key){
+  const spec=DRAFT_FORMS[key];
+  if(!confirm('Throw away the unfinished '+(spec?spec.label:'work')+'?\n\nThis cannot be undone.')) return;
+  draftDrop(key);
+  toast('Draft discarded');
+}
+/* which form is the doctor actually in right now */
+function draftCurrentKey(){
+  const sec=document.querySelector('section.tab.active');
+  const t=sec ? String(sec.id).replace(/^tab-/,'') : '';
+  return Object.keys(DRAFT_FORMS).find(k=>DRAFT_FORMS[k].tab===t) || null;
+}
+function draftInit(){
+  document.addEventListener('input', e=>{
+    const k=draftCurrentKey(); if(!k) return;
+    const el=e.target; if(!el || !/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+    if(el.id==='cmdInput') return;
+    draftPoke(k);
+  }, true);
+  document.addEventListener('change', e=>{ const k=draftCurrentKey(); if(k) draftPoke(k); }, true);
+  document.addEventListener('visibilitychange', ()=>{ if(document.hidden) draftStoreAll(); });
+  window.addEventListener('pagehide', draftStoreAll);
+  window.addEventListener('beforeunload', e=>{
+    draftStoreAll();
+    const k=draftCurrentKey(); if(!k) return;
+    const spec=DRAFT_FORMS[k];
+    let live=null; try{ live=spec.read(); }catch(err){ return; }
+    if(live && spec.filled(live)){ e.preventDefault(); e.returnValue=''; return ''; }
+  });
+}
+/* clear the draft the moment the real thing is saved (or the form is emptied) */
+function draftAfter(fnName, key, when){
+  const orig=window[fnName]; if(typeof orig!=='function') return;
+  window[fnName]=function(){
+    const r=orig.apply(this, arguments);
+    try{ if(!when || when()) draftDrop(key); }catch(e){}
+    return r;
+  };
+}
+
 /* ==================== EXTRAS: colours · shortcuts · voice · favourites · QR · leaflets · recalls ==================== */
 
 /* ---------- generic letterhead print ---------- */
@@ -9610,22 +10263,22 @@ function paletteRecords(q){
   if(canTab('patients')){
     push((db.patients||[]).filter(p=>!p.regOnly && palHit([p.name,p.mrn,p.phone,p.address].join(' '), terms))
       .map(p=>({t:p.name, sub:[p.mrn, p.age&&(p.age+(p.sex?' '+p.sex:'')), p.phone].filter(Boolean).join(' \u00b7 '),
-        ic:'\ud83d\udc64', grp:'Patients', run:()=>{ showTab('patients'); openPatient(p.id); }})));
+        ic:'\ud83d\udc64', grp:'Patients', k:'pat:'+p.id, run:()=>{ showTab('patients'); openPatient(p.id); }})));
   }
   if(canTab('registry')){
     push((db.registry||[]).filter(r=>palHit([r.regNo,r.regNoOld,r.name,r.mrn,r.diagnosis,r.site,r.histSubtype].join(' '), terms))
       .map(r=>({t:(r.name||'(no name)'), sub:[r.regNo, r.diagnosis&&String(r.diagnosis).split('\n')[0], r.site].filter(Boolean).join(' \u00b7 '),
-        ic:'\ud83e\uddec', grp:'Tumour registry', run:()=>{ showTab('registry'); regEdit(r.id); }})));
+        ic:'\ud83e\uddec', grp:'Tumour registry', k:'reg:'+r.id, run:()=>{ showTab('registry'); regEdit(r.id); }})));
   }
   if(canTab('discharge')){
     push((db.documents||[]).filter(d=>d.type==='discharge' && palHit([d.name,d.mrn,(d.dc||{}).diagnosis,(d.dc||{}).proc].join(' '), terms))
       .map(d=>({t:d.name, sub:[fmtDate(d.date), (d.dc||{}).diagnosis].filter(Boolean).join(' \u00b7 '),
-        ic:'\ud83c\udfe5', grp:'Discharge summaries', run:()=>{ showTab('discharge'); loadDs(d.id); }})));
+        ic:'\ud83c\udfe5', grp:'Discharge summaries', k:'dis:'+d.id, run:()=>{ showTab('discharge'); loadDs(d.id); }})));
   }
   if(canTab('oplog')){
     push((db.surgeries||[]).filter(o=>palHit([o.name,o.procedure,o.diagnosis,o.implant].join(' '), terms))
       .map(o=>({t:o.name, sub:[fmtDate(o.date), o.procedure].filter(Boolean).join(' \u00b7 '),
-        ic:'\ud83e\uddb4', grp:'Operations', run:()=>{ showTab('oplog'); editOp(o.id); }})));
+        ic:'\ud83e\uddb4', grp:'Operations', k:'op:'+o.id, run:()=>{ showTab('oplog'); editOp(o.id); }})));
   }
   if(canTab('appts')){
     push((db.appts||[]).filter(a=>palHit([a.name,a.phone,a.note].join(' '), terms))
@@ -9635,35 +10288,111 @@ function paletteRecords(q){
   if(canTab('medicines')){
     push((db.meds||[]).filter(m=>palHit([m.name,m.generic,m.cat,m.cls,m.co].join(' '), terms))
       .map(m=>({t:m.name, sub:[m.generic, m.cat].filter(Boolean).join(' \u00b7 '),
-        ic:'\ud83d\udc8a', grp:'Medicines', run:()=>{ showTab('visit'); addRxRow({name:m.name,dose:m.dose,freq:m.freq,dur:m.dur,instr:m.instr}); toast('Added '+m.name+' to the prescription'); }})));
+        ic:'\ud83d\udc8a', grp:'Medicines', k:'med:'+(m.id||m.name), run:()=>{ showTab('visit'); addRxRow({name:m.name,dose:m.dose,freq:m.freq,dur:m.dur,instr:m.instr}); toast('Added '+m.name+' to the prescription'); }})));
   }
   return out;
+}
+/* ---- what Spotlight shows the moment it opens, before a single keystroke ---- */
+const PAL_RECENT_KEY='fh_palRecent', PAL_RECENT_MAX=6;
+function palRecentRead(){
+  try{ const a=JSON.parse(localStorage.getItem(PAL_RECENT_KEY)||'[]'); return Array.isArray(a)?a:[]; }
+  catch(e){ return []; }
+}
+function palRemember(it){
+  if(!it || !it.k) return;                       // only real records, never actions or pages
+  try{
+    const keep={k:it.k, t:it.t, sub:it.sub||'', ic:it.ic||'', grp:it.grp||''};
+    const list=palRecentRead().filter(x=>x && x.k!==it.k);
+    list.unshift(keep);
+    localStorage.setItem(PAL_RECENT_KEY, JSON.stringify(list.slice(0,PAL_RECENT_MAX)));
+  }catch(e){}
+}
+/* rebuild a runnable item from a remembered key, so a deleted record just drops out */
+function palFromKey(k){
+  const bits=String(k||'').split(':'), kind=bits[0], id=bits.slice(1).join(':');
+  const find=(arr)=>(arr||[]).find(x=>x.id===id);
+  if(kind==='pat' && canTab('patients')){ const p=find(db.patients); return p && {t:p.name,
+    sub:[p.mrn,p.phone].filter(Boolean).join(' \u00b7 '), ic:'\ud83d\udc64', k:k,
+    run:()=>{ showTab('patients'); openPatient(p.id); }}; }
+  if(kind==='reg' && canTab('registry')){ const r=find(db.registry); return r && {t:r.name||'(no name)',
+    sub:[r.regNo, r.site].filter(Boolean).join(' \u00b7 '), ic:'\ud83e\uddec', k:k,
+    run:()=>{ showTab('registry'); regEdit(r.id); }}; }
+  if(kind==='dis' && canTab('discharge')){ const d=find(db.documents); return d && {t:d.name,
+    sub:fmtDate(d.date), ic:'\ud83c\udfe5', k:k, run:()=>{ showTab('discharge'); loadDs(d.id); }}; }
+  if(kind==='op' && canTab('oplog')){ const o=find(db.surgeries); return o && {t:o.name,
+    sub:[fmtDate(o.date), o.procedure].filter(Boolean).join(' \u00b7 '), ic:'\ud83e\uddb4', k:k,
+    run:()=>{ showTab('oplog'); editOp(o.id); }}; }
+  return null;
+}
+function palToday(){
+  const out=[];
+  const today=localISO();
+  if(canTab('queue')){
+    (db.queue||[]).filter(q=>q.date===today)
+      .sort((a,b)=>(a.status==='waiting'?0:1)-(b.status==='waiting'?0:1) || (a.token||0)-(b.token||0))
+      .slice(0,5).forEach(q=>out.push({t:q.name,
+        sub:['Token '+(q.token||'?'), q.phone].filter(Boolean).join(' \u00b7 '),
+        tag:q.status==='waiting'?'waiting':(q.status==='done'?'seen':q.status),
+        ic:'\ud83e\ude7a', grp:'In the clinic today',
+        run:()=>{ showTab('queue'); }}));
+  }
+  if(canTab('appts')){
+    (db.appts||[]).filter(a=>a.date===today && a.status!=='cancelled')
+      .sort((a,b)=>String(a.time||'99:99').localeCompare(String(b.time||'99:99')))
+      .slice(0,4).forEach(a=>out.push({t:a.name, sub:[a.time, a.phone].filter(Boolean).join(' \u00b7 '),
+        tag:'booked', ic:'\ud83d\udcc5', grp:'In the clinic today',
+        run:()=>{ showTab('appts'); if($('apViewDate')){ $('apViewDate').value=a.date; renderAppts(); } }}));
+  }
+  return out;
+}
+function palSeed(){
+  const today=palToday();
+  const recent=palRecentRead().map(r=>palFromKey(r.k)).filter(Boolean)
+    .map(x=>Object.assign(x,{grp:'Recently opened'}));
+  const quick=[
+    {t:'New prescription', ic:'\ud83d\udcdd', grp:'Quick actions', run:()=>{ showTab('visit'); if(typeof clearVisitForm==='function') clearVisitForm(true); }},
+    {t:'Print / preview', ic:'\ud83d\udda8', grp:'Quick actions', run:previewActive},
+    {t:'Toggle light / dark', ic:'\ud83c\udf19', grp:'Quick actions', run:()=>toggleTheme()}
+  ];
+  return today.concat(recent, quick);
 }
 let palIdx=0, palFiltered=[];
 function openPalette(){
   let p=$('cmdPalette');
   if(!p){ p=document.createElement('div'); p.id='cmdPalette'; p.className='cmd-pal hidden';
-    p.innerHTML='<div class="cmd-card"><input type="text" id="cmdInput" placeholder="Search anything — patient, MR number, registry no., diagnosis, medicine, page…" autocomplete="off"><div class="cmd-list" id="cmdList"></div><div class="cmd-foot"><span class="kbd">\u2191\u2193</span> move <span class="kbd">\u21b5</span> open <span class="kbd">Esc</span> close</div></div>';
+    p.innerHTML='<div class="cmd-card">'+
+      '<div class="cmd-top">'+
+        '<svg class="cmd-mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>'+
+        '<input type="text" id="cmdInput" placeholder="Search patients, registry, medicines\u2026" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">'+
+        '<button class="cmd-esc" onmousedown="event.preventDefault();closePalette()">esc</button>'+
+      '</div>'+
+      '<div class="cmd-list" id="cmdList"></div>'+
+      '<div class="cmd-foot"><span class="kbd">\u2191\u2193</span> move <span class="kbd">\u21b5</span> open <span class="kbd">Esc</span> close</div></div>';
     document.body.appendChild(p);
     p.addEventListener('click',e=>{ if(e.target===p) closePalette(); });
     $('cmdInput').addEventListener('input',renderPalette);
     $('cmdInput').addEventListener('keydown',e=>{
       if(e.key==='ArrowDown'){ e.preventDefault(); palIdx=Math.min(palFiltered.length-1,palIdx+1); renderPalette(true); }
       else if(e.key==='ArrowUp'){ e.preventDefault(); palIdx=Math.max(0,palIdx-1); renderPalette(true); }
-      else if(e.key==='Enter'){ e.preventDefault(); if(palFiltered[palIdx]){ closePalette(); palFiltered[palIdx].run(); } }
+      else if(e.key==='Enter'){ e.preventDefault(); if(palFiltered[palIdx]) palRun(palIdx); }
       else if(e.key==='Escape'){ closePalette(); }
     });
   }
   p.classList.remove('hidden'); palIdx=0; $('cmdInput').value=''; renderPalette(); $('cmdInput').focus();
 }
 function closePalette(){ const p=$('cmdPalette'); if(p) p.classList.add('hidden'); }
-function palRun(ix){ const it=palFiltered[ix]; closePalette(); if(it && typeof it.run==='function'){ try{ it.run(); }catch(e){ toast('\u26a0 Could not open that'); } } }
+function palRun(ix){ const it=palFiltered[ix]; closePalette();
+  if(it && typeof it.run==='function'){ palRemember(it); try{ it.run(); }catch(e){ toast('\u26a0 Could not open that'); } } }
 function renderPalette(keep){
   const q=($('cmdInput').value||'').trim();
   const ql=q.toLowerCase();
-  const recs = paletteRecords(q);
-  const pages = paletteItems().filter(i=>!ql||i.t.toLowerCase().includes(ql));
-  palFiltered = recs.concat(pages);
+  if(!ql){
+    palFiltered = palSeed();
+  } else {
+    const recs = paletteRecords(q);
+    const pages = paletteItems().filter(i=>i.t.toLowerCase().includes(ql));
+    palFiltered = recs.concat(pages);
+  }
   if(!keep) palIdx=0;
   if(palIdx>=palFiltered.length) palIdx=Math.max(0,palFiltered.length-1);
   let html='', lastGrp='';
@@ -9672,9 +10401,12 @@ function renderPalette(keep){
     if(g!==lastGrp){ html+='<div class="cmd-grp">'+esc(g)+'</div>'; lastGrp=g; }
     html+='<div class="cmd-item'+(ix===palIdx?' hi':'')+'" onmousedown="event.preventDefault();palRun('+ix+')">'+
       '<span class="cmd-ic">'+(i.ic||'\u2022')+'</span><span class="cmd-tx"><b>'+esc(i.t)+'</b>'+
-      (i.sub?'<span class="cmd-sub">'+esc(i.sub)+'</span>':'')+'</span></div>';
+      (i.sub?'<span class="cmd-sub">'+esc(i.sub)+'</span>':'')+'</span>'+
+      (i.tag?'<span class="cmd-tag">'+esc(i.tag)+'</span>':'')+'</div>';
   });
-  $('cmdList').innerHTML = html || '<div class="cmd-empty">Nothing matches \u201c'+esc(q)+'\u201d</div>';
+  $('cmdList').innerHTML = html ||
+    (ql ? '<div class="cmd-empty"><b>Nothing matches \u201c'+esc(q)+'\u201d</b>Try a name, MR number, registry number or medicine.</div>'
+        : '<div class="cmd-empty"><b>Nobody in the clinic yet</b>Start typing to find a patient, a record or a page.</div>');
   const hi=$('cmdList').querySelector('.cmd-item.hi'); if(hi && hi.scrollIntoView) hi.scrollIntoView({block:'nearest'});
 }
 const SHORTCUTS=[['/  or  Ctrl / ⌘ + K','Search anything — patients, registry, discharges, operations, medicines, pages'],['Ctrl / ⌘ + S','Save the current form'],
@@ -10621,6 +11353,28 @@ if(typeof refreshImplantLists==='function') refreshImplantLists();
 initExtras();
 if(typeof reconcileNav==='function') reconcileNav();
 initSidebar();
+/* vitals: colour the out-of-range boxes as they are typed */
+try{
+  Object.keys(VITAL_IDS).forEach(k=>{
+    const el=$(VITAL_IDS[k]); if(el) el.addEventListener('input', vitalsPaint);
+  });
+  vitalsReset();
+  const _sv = window.saveVisit;
+  if(typeof _sv==='function') window.saveVisit=function(){ const r=_sv.apply(this,arguments); comboInvalidate(); return r; };
+}catch(e){}
+/* unfinished-work autosave: start listening, and drop each draft on a real save */
+try{
+  draftInit();
+  draftAfter('saveVisit','visit');
+  draftAfter('clearVisitForm','visit');
+  draftAfter('saveDischarge','discharge');
+  draftAfter('clearDsForm','discharge');
+  draftAfter('saveOp','oplog');
+  draftAfter('clearOpForm','oplog');
+  draftAfter('regSave','registry');
+  draftAfter('regNew','registry');
+  Object.keys(DRAFT_FORMS).forEach(k=>{ try{ draftShowBar(k); }catch(e){} });
+}catch(e){}
 if(typeof wrapTablesForMobile==='function') wrapTablesForMobile();
 if(typeof mSetTitle==='function') mSetTitle();
 if(typeof renderFavBar==='function') renderFavBar();
