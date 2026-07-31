@@ -446,10 +446,13 @@ html[data-theme="dark"] .vid-card{background:#121e2a;border-color:#233545}
 .pp-fit.ok{background:rgba(34,197,94,.16);color:#86efac}
 .pp-fit.over{background:rgba(245,158,11,.18);color:#fcd34d}
 .pp-scroll{flex:1;overflow:auto;padding:26px 0 40px;display:flex;justify-content:center}
-.pp-sheet{width:210mm;min-height:297mm;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.55);
+.pp-sheet{width:210mm;min-height:297mm;display:flex;flex-direction:column;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.55);
   transform:scale(.78);transform-origin:top center;border-radius:3px;flex:none;
   animation:ppIn .3s ease both}
 @keyframes ppIn{from{opacity:0;transform:scale(.74) translateY(12px)}to{opacity:1;transform:scale(.78) translateY(0)}}
+.pp-sheet .rx-page{padding:0!important}
+.pp-body{flex:1 0 auto;box-sizing:border-box}
+.pp-margin{flex:none}
 .pp-margin{background:repeating-linear-gradient(-45deg,#f2f7f9 0 10px,#e9f2f5 10px 20px);
   display:flex;align-items:center;justify-content:center;border-bottom:1px dashed #b9cdd6}
 .pp-margin span{font-size:12px;color:#7a97a5;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
@@ -652,18 +655,30 @@ input.rx-ur:focus{border-style:solid}
 .rx-advice p{white-space:pre-wrap}
 .rx-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px;page-break-inside:avoid}
 .rx-foot.rx-foot-r{justify-content:flex-end}
-.rx-corner{display:flex;align-items:flex-end;gap:9px}
-.rx-fubox{border:1.1px solid #111;border-radius:3px;padding:4px 12px 5px;text-align:center;min-width:44mm}
+.rx-cornerwrap{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.rx-nvbox{border:1.1px solid #111;border-radius:3px;padding:4px 10px 5px;width:112mm;box-sizing:border-box}
+.rx-nvbox .fb-h{font-family:'Noto Nastaliq Urdu','Urdu Typesetting','Jameel Noori Nastaleeq','Geeza Pro',Georgia,serif;
+  direction:rtl;text-align:right;font-size:10.5px;line-height:1.85;border-bottom:1px solid #111;padding-bottom:2px;margin-bottom:3px}
+.rx-nvbox .nv-en{font-size:8px;letter-spacing:.8px;text-transform:uppercase;color:#444;margin-bottom:2px}
+.rx-nvbox ul{margin:0;padding-left:14px}
+.rx-nvbox li{font-size:11.5px;line-height:1.45}
+.rx-sheet.compact .rx-nvbox{width:100mm;padding:3px 8px 4px}
+.rx-sheet.compact .rx-nvbox li{font-size:10.5px;line-height:1.35}
+.rx-corner{display:flex;align-items:stretch;gap:8px}
+.rx-qr{display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.rx-fubox{border:1.1px solid #111;border-radius:3px;padding:0 10px;text-align:center;
+  width:52mm;display:flex;flex-direction:column;justify-content:center;gap:1px}
 .rx-fubox .fb-h{font-family:'Noto Nastaliq Urdu','Urdu Typesetting','Jameel Noori Nastaleeq','Geeza Pro',Georgia,serif;
-  direction:rtl;font-size:11px;line-height:1.9;border-bottom:1px solid #111;padding-bottom:2px;margin-bottom:4px}
-.rx-fubox .fb-d{font-size:17px;font-weight:800;letter-spacing:.6px;line-height:1.15}
-.rx-fubox .fb-s{font-size:8.5px;letter-spacing:.8px;text-transform:uppercase;color:#444;margin-top:1px}
-.rx-bc{margin-left:auto;text-align:center;line-height:1}
-.rx-bc svg{display:block;height:9mm;width:auto}
+  direction:rtl;font-size:10.5px;line-height:1.85;border-bottom:1px solid #111;padding-bottom:2px;margin-bottom:3px}
+.rx-fubox .fb-d{font-size:16px;font-weight:800;letter-spacing:.6px;line-height:1.15}
+.rx-fubox .fb-s{font-size:8px;letter-spacing:.8px;text-transform:uppercase;color:#444;margin-top:1px}
+.rx-bc{margin-left:auto;text-align:center;line-height:1;width:52mm}
+.rx-bc svg{display:block;height:9mm;width:100%}
 .rx-bc .bc-tx{font-size:8.5px;letter-spacing:1.1px;margin-top:2.5px;color:#222}
 .rx-sheet.compact .rx-bc svg{height:7mm}
-.rx-sheet.compact .rx-fubox{min-width:38mm;padding:3px 9px 4px}
-.rx-sheet.compact .rx-fubox .fb-d{font-size:15px}
+.rx-sheet.compact .rx-fubox{width:46mm;padding:0 8px}
+.rx-sheet.compact .rx-fubox .fb-d{font-size:14px}
+.rx-sheet.compact .rx-bc{width:46mm}
 .rx-qr{text-align:center}
 .rx-qr svg{display:block;margin:0 auto}
 .qr-cap{font-size:8px;color:#333;margin-top:1mm;letter-spacing:.3px;font-family:-apple-system,Arial,sans-serif}
@@ -730,6 +745,68 @@ html[data-theme="dark"] .ph-hd{background:#16242f}
 .ph-it:hover,.ph-it.hi{background:var(--teal-light);color:var(--teal-dark)}
 .ph-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ph-n{flex:none;font-size:10.5px;color:var(--muted);background:var(--hover,#eef3f6);border-radius:6px;padding:1px 6px}
+/* ---- a form that owns the screen ---- */
+.scr-bar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.scr-bar span{font-size:14px;font-weight:600;color:var(--muted)}
+.scr-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+/* ---- registry form: its own sidebar ---- */
+.regf-wrap{display:grid;grid-template-columns:250px 1fr;gap:16px;align-items:start}
+.regf-wrap.regf-full{grid-template-columns:1fr}
+.regf-wrap.regf-full .regf-rail{display:none}
+.regf-rail{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px;max-height:80vh;overflow:auto}
+.regf-grp{padding:9px 10px 3px;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.regf-cat{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:none;background:none;cursor:pointer;
+  padding:8px 10px;border-radius:9px;font-size:13px;transition:.14s;color:var(--ink)}
+.regf-cat:hover{background:var(--hover,#f2f6f8)}
+.regf-cat.on{background:var(--teal-light);color:var(--teal-dark);font-weight:600}
+.rc-tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc-tick{flex:none;font-size:12px;color:var(--muted);opacity:.6}
+.rc-tick.done{color:var(--green,#16a34a);opacity:1;font-weight:700}
+.regf-sec{float:right;font-size:10.5px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
+html[data-theme="dark"] .regf-cat:hover{background:#16242f}
+@media(max-width:900px){
+  .regf-wrap{grid-template-columns:1fr}
+  .regf-rail{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:4px}
+  .regf-grp{width:100%}
+  .regf-cat{width:auto;flex:none}
+}
+/* ---- settings: rail + panel ---- */
+.set-wrap{display:grid;grid-template-columns:290px 1fr;gap:18px;align-items:start}
+.set-rail{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px;overflow:hidden}
+.set-prof{display:flex;align-items:center;gap:2px;width:100%;text-align:left;border:none;background:none;cursor:pointer;
+  padding:10px 10px 12px;border-radius:11px;transition:.14s}
+.set-prof:hover{background:var(--hover,#f2f6f8)}
+.set-prof .sp-tx{display:flex;flex-direction:column;min-width:0;line-height:1.3}
+.set-prof .sp-tx b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.set-prof .sp-tx span{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.set-search{padding:0 6px 8px}
+.set-search input{width:100%;border-radius:10px;font-size:13px;padding:8px 11px}
+.set-cats{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);padding-top:6px}
+.set-cat{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;border:none;background:none;cursor:pointer;
+  padding:10px 11px;border-radius:11px;transition:.14s}
+.set-cat:hover{background:var(--hover,#f2f6f8)}
+.set-cat.on{background:var(--teal-light);}
+.set-cat.on .sc-tx b{color:var(--teal-dark)}
+.sc-ic{font-size:16px;flex:none;line-height:1.25}
+.sc-tx{display:flex;flex-direction:column;min-width:0;line-height:1.3}
+.sc-tx b{font-size:13.5px;font-weight:600}
+.sc-tx span{font-size:11.5px;color:var(--muted)}
+.set-pane{min-width:0}
+html[data-theme="dark"] .set-cat:hover,html[data-theme="dark"] .set-prof:hover{background:#16242f}
+@media(max-width:900px){
+  .set-wrap{grid-template-columns:1fr}
+  .set-rail{position:static}
+  .set-cats{flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .set-cat{flex:none;width:auto}
+  .sc-tx span{display:none}
+}
+.chiprow{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:14px;padding:3px 10px;
+  font-size:11.5px;cursor:pointer;transition:.14s;white-space:nowrap}
+.chip:hover{border-color:var(--teal);background:var(--teal-light);color:var(--teal-dark)}
+.chip.on{border-color:var(--teal);background:var(--teal);color:#fff}
+.btn.btn-warnish{border-color:#f59e0b;color:#b45309;background:#fffbeb}
+html[data-theme="dark"] .btn.btn-warnish{background:#2a2010;color:#fcd34d;border-color:#6b5220}
 html[data-theme="dark"] .ph-n{background:#1b2b38}
 #notifPanel{position:fixed;top:62px;right:18px;z-index:120;width:min(380px,92vw);max-height:72vh;overflow:auto;background:var(--card);
   border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.3)}
@@ -1352,8 +1429,16 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="field"><label>Clinical findings</label><textarea id="cFindings" placeholder="e.g. Tenderness over medial joint line, crepitus, painful terminal flexion…"></textarea></div>
     </div>
     <div class="grid g2 mt">
-      <div class="field"><label>Diagnosis</label><textarea class="ta-s" id="cDiagnosis" placeholder="e.g. Osteoarthritis knee (right)"></textarea></div>
+      <div class="field"><label>Impression</label><textarea class="ta-s" id="cDiagnosis" placeholder="e.g. Osteoarthritis knee (right)"></textarea></div>
       <div class="field"><label>Investigations</label><textarea class="ta-s" id="cTests" placeholder="e.g. X-ray knee AP/Lat (standing)&#10;CBC, ESR/CRP&#10;S. Vit D, S. Calcium, Uric acid"></textarea></div>
+    </div>
+    <div class="field mt">
+      <label>Bring at next visit <span class="muted small" style="font-weight:400">(tests to get done before coming back — printed in a box on the prescription)</span></label>
+      <div class="btn-bar" style="margin-bottom:6px">
+        <div class="chiprow" id="nvChips"></div>
+        <button class="btn btn-ghost btn-sm" onclick="nvCopyFromTests()" title="Copy what you typed in Investigations">↑ Copy from Investigations</button>
+      </div>
+      <textarea class="ta-s" id="cNextTests" placeholder="e.g. MRI right femur with contrast&#10;CBC, ESR/CRP"></textarea>
     </div>
     <div class="field mt"><label>Radiology / images / reports</label>
       <div class="btn-bar">
@@ -1437,6 +1522,10 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
           <option value="180|6 months">+6 mo</option>
           <option value="365|1 year">+1 yr</option>
         </select>
+      </div>
+      <div class="btn-bar" style="margin-bottom:7px;align-items:flex-start">
+        <span class="muted small" style="padding-top:4px;flex:none">for…</span>
+        <div class="chiprow" id="fuWhatChips"></div>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <input type="text" id="cFollowUp" placeholder="e.g. Review after 2 weeks with reports" style="flex:1;min-width:260px">
@@ -1673,6 +1762,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <!-- ============ TAB: DISCHARGE ============ -->
 <section class="tab" id="tab-discharge">
   <div class="page-head">Discharge Summaries</div>
+  <div id="dsFormScreen" class="scr hidden">
+  <div class="scr-bar"><button class="btn btn-ghost" onclick="dsShowList()">← Back to list</button><span id="dsFormCrumb">New discharge summary</span></div>
   <div class="card">
     <h2 id="dsFormTitle">New discharge summary</h2>
     <div class="med-search-wrap" style="margin-bottom:12px">
@@ -1698,7 +1789,10 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       </div>
       <div class="grid g2 mt">
         <div class="field"><label>Diagnosis</label><textarea class="ta-s" id="dcDiagnosis"></textarea></div>
-        <div class="field"><label>Presenting complaints &amp; clinical findings</label><textarea class="ta-s" id="dcClinical" placeholder="e.g. Pain right thigh after RTA; deformity and tenderness mid-thigh, distal pulses intact"></textarea></div>
+        <div class="field"><label>Presenting complaints</label><textarea class="ta-s" id="dcClinical" placeholder="e.g. Pain and inability to bear weight on the right thigh after a road traffic accident"></textarea></div>
+      </div>
+      <div class="grid g2 mt">
+        <div class="field" style="grid-column:span 2"><label>Clinical findings <span class="muted small" style="font-weight:400">(examination)</span></label><textarea class="ta-s" id="dcFindings" placeholder="e.g. Deformity and tenderness mid-thigh, distal pulses intact, no neurological deficit"></textarea></div>
       </div>
       <div class="grid g3 mt">
         <div class="field"><label>Medical history</label><textarea class="ta-s" id="dcMedHx" placeholder="e.g. DM, HTN"></textarea></div>
@@ -1758,8 +1852,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button class="btn btn-danger" onclick="clearDsForm()">Clear</button>
     </div>
   </div>
+  </div>
+  <div id="dsListScreen" class="scr">
   <div class="card">
-    <h2>All discharge summaries</h2>
+    <div class="scr-head"><h2 style="margin:0">All discharge summaries</h2>
+      <button class="btn btn-green" onclick="dsNew()">+ New discharge summary</button></div>
     <div class="search-row">
       <input type="text" id="dsSearch" placeholder="Search by patient, diagnosis, procedure…" autocomplete="off">
       <span class="muted small" id="dsCountLabel"></span>
@@ -1769,6 +1866,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <tbody id="dsListBody"></tbody>
     </table>
     <div class="empty hidden" id="dsEmpty"><span class="ei">🏥</span><b>No discharge summaries yet</b><br>Create one above, or use the 🏥 button on any visit in a patient's record.</div>
+  </div>
   </div>
 </section>
 
@@ -1827,6 +1925,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <section class="tab" id="tab-oplog">
   <div class="page-head">Surgery Logbook</div>
   <div class="grid g4" id="opStats" style="margin-bottom:16px"></div>
+  <div id="opFormScreen" class="scr hidden">
+  <div class="scr-bar"><button class="btn btn-ghost" onclick="opShowList()">← Back to logbook</button><span id="opFormCrumb">Add operation</span></div>
   <div class="card">
     <h2 id="opFormTitle">Add operation</h2>
     <div class="med-search-wrap" style="margin-bottom:12px">
@@ -1853,8 +1953,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button class="btn btn-ghost" onclick="clearOpForm()">Clear</button>
     </div>
   </div>
+  </div>
+  <div id="opListScreen" class="scr">
   <div class="card">
-    <h2>Operative log</h2>
+    <div class="scr-head"><h2 style="margin:0">Operative log</h2>
+      <button class="btn btn-green" onclick="opNew()">+ Add operation</button></div>
     <div class="search-row">
       <input type="text" id="opSearch" placeholder="Search by patient, diagnosis, procedure, implant…" autocomplete="off">
       <button class="btn btn-primary btn-sm" onclick="exportOpCsv()">⬇ Export for audit (Excel/CSV)</button>
@@ -1866,17 +1969,29 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </table>
     <div class="empty hidden" id="opEmpty"><span class="ei">🦴</span><b>No operations logged yet</b><br>Add them above, or they're added automatically when you save a discharge with a procedure.</div>
   </div>
+  </div>
 </section>
 
 <!-- ============ TAB: TUMOUR REGISTRY ============ -->
 <section class="tab" id="tab-registry">
   <div class="page-head">Tumour Registry</div>
+  <div id="regListScreen" class="scr">
   <div class="reg-kpis" id="regKpis"></div>
 
   <div class="card">
     <div class="pending-banner hidden" id="regPendingBanner"></div>
     <div class="reg-toolbar">
       <button class="btn btn-green" onclick="regNew()">+ New registry entry</button>
+      <button class="btn btn-ghost" onclick="openRegDateFix()" id="regFixBtn" title="Find cases with a missing or odd date of surgery">🩹 Check dates</button>
+      <div class="reg-menu-wrap">
+        <button class="btn btn-ghost" onclick="regToggleMenu('regNoMenu',event)">🔢 Numbers ▾</button>
+        <div class="reg-menu hidden" id="regNoMenu">
+          <div class="reg-menu-head">Registry numbers</div>
+          <button onclick="regCloseMenus();openRegRestore()">↩ Restore original numbers</button>
+          <button onclick="regCloseMenus();regRenumberPrompt()">🔢 Renumber all by surgery date…</button>
+          <button onclick="regCloseMenus();openRegDateFix()">🩹 Check dates of surgery</button>
+        </div>
+      </div>
       <div class="reg-menu-wrap">
         <button class="btn btn-primary btn-sm" onclick="regToggleMenu('regImpMenu',event)">⬆ Import ▾</button>
         <div class="reg-menu hidden" id="regImpMenu">
@@ -1915,10 +2030,24 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <div class="empty hidden" id="regEmpty"><span class="ei">🧬</span><b>No registry entries yet</b><br>Add one above, link it to a patient, or import your GTTH Excel registry.</div>
   </div>
 
+
+
+  <!-- ANALYTICS -->
+  <div class="card" id="regAnalyticsCard">
+    <h2>Registry analytics</h2>
+    <div id="regAnalytics"></div>
+  </div>
+  </div>
+
   <!-- FORM -->
+  <div id="regFormScreen" class="scr hidden">
+  <div class="scr-bar"><button class="btn btn-ghost" onclick="regCloseForm()">← Back to list</button><span id="regFormCrumb">New registry entry</span>
+    <span style="flex:1"></span>
+    <div class="seg" style="margin:0"><button class="seg-btn" id="regModeRail" onclick="regSetMode('rail')">Sidebar</button><button class="seg-btn" id="regModeFull" onclick="regSetMode('full')">Full form</button></div>
+    <button class="btn btn-green" onclick="regSave()">💾 Save</button></div>
   <div class="reg-formwrap" id="regFormWrap">
     <div class="card">
-      <h2 id="regFormTitle">New registry entry</h2>
+      <h2 id="regFormTitle" class="hidden">New registry entry</h2>
       <div class="reg-linkline" id="regLinkLine">
         <span id="regLinkStatus">🔗 Not linked to a patient — search to auto-fill demographics, or just type them below.</span>
         <div class="med-search-wrap" style="min-width:240px;flex:1">
@@ -1934,11 +2063,6 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       </div>
     </div>
   </div>
-
-  <!-- ANALYTICS -->
-  <div class="card" id="regAnalyticsCard">
-    <h2>Registry analytics</h2>
-    <div id="regAnalytics"></div>
   </div>
 </section>
 
@@ -2165,8 +2289,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <!-- ============ TAB: SETTINGS ============ -->
 <section class="tab" id="tab-settings">
   <div class="page-head">Settings</div>
+  <div class="set-wrap">
+    <aside class="set-rail" id="setRail"></aside>
+    <div class="set-pane" id="setPane">
   <!-- Install as an app -->
-  <div class="card" id="pwaCard">
+  <div class="card" data-set="app" id="pwaCard">
     <h2>📱 Install as an app</h2>
     <p class="muted small" style="margin-top:-4px">Puts the clinic on your home screen. It opens full-screen (no browser bars) and keeps working with no internet — nothing else to set up.</p>
     <div class="btn-bar">
@@ -2175,7 +2302,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <p class="muted small" style="margin-top:8px"><b>iPhone / iPad:</b> tap <b>Share</b> ▸ <b>Add to Home Screen</b>. &nbsp;<b>Android / computer:</b> tap <b>Install app</b> above (or your browser’s menu ▸ Install).</p>
   </div>
   <!-- Doctor & clinic -->
-  <div class="card">
+  <div class="card" data-set="clinic">
     <h2>Doctor &amp; clinic</h2>
     <div class="grid g3">
       <div class="field"><label>Doctor name</label><input type="text" id="sDocName" placeholder="Dr. …"></div>
@@ -2190,7 +2317,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   </div>
 
   <!-- Branding, logo & social -->
-  <div class="card">
+  <div class="card" data-set="clinic">
     <h2>Branding, logo &amp; social</h2>
     <div class="grid g3">
       <div class="field"><label>Brand / tagline</label><input type="text" id="sBrandTag" placeholder="The Sarcoma Clinic PK"></div>
@@ -2226,7 +2353,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   </div>
 
   <!-- Prescriptions & printing -->
-  <div class="card">
+  <div class="card" data-set="printing">
     <h2>Prescriptions &amp; printing</h2>
     <div class="grid g3">
       <div class="field"><label>Print on</label><select id="sPrintMode">
@@ -2236,6 +2363,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="field"><label>Top space on pad (mm)</label><input type="number" id="sPadTop" min="20" max="150" step="1" placeholder="68"></div>
       <div class="field"><label>Paper size (plain paper mode)</label><select id="sPaper"><option value="A4">A4 (full page)</option><option value="A5">A5 (half page)</option></select></div>
       <div class="field"><label>Urdu line under each medicine</label><select id="sUrduRx"><option value="on">On — print Urdu translation</option><option value="off">Off — English only</option></select></div>
+      <div class="field" style="grid-column:span 2"><label>Printer setup</label><button class="btn btn-ghost" onclick="showPrintSetup()" style="width:100%">⚙ Stop the file path &amp; page title printing</button></div>
+      <div class="field"><label>Bottom reserve on the pad (mm)</label><input type="number" id="sPadBottom" placeholder="34" title="How much space at the foot of your pre-printed pad must stay clear. Increase this if text creeps onto the printed footer."></div>
       <div class="field"><label>Patient barcode on prescriptions</label><select id="sRxBarcode"><option value="on">On — print the MR number as a barcode</option><option value="off">Off</option></select></div>
       <div class="field"><label>Suggest my usual wording</label><select id="sPhraseHelp"><option value="on">On — offer lines I've written before</option><option value="off">Off</option></select></div>
       <div class="field"><label>Urdu size on prints</label><select id="sUrduSize">
@@ -2254,7 +2383,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   </div>
 
   <!-- MR numbers & fees -->
-  <div class="card">
+  <div class="card" data-set="printing">
     <h2>MR numbers &amp; fees</h2>
     <div class="grid g3">
       <div class="field"><label>MR number style</label><select id="sMrnStyle">
@@ -2269,7 +2398,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   </div>
 
   <!-- App preferences -->
-  <div class="card">
+  <div class="card" data-set="app">
     <h2>App preferences</h2>
     <div class="grid g4">
       <div class="field"><label>Auto sign-out when idle</label><select id="sAutoLock">
@@ -2289,7 +2418,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" data-set="templates">
     <h2>Prescription templates <span class="muted small" style="font-weight:400">(medicines)</span></h2>
     <p class="muted small" style="margin-bottom:10px">Reusable sets of medicines. Create them on the New Prescription tab (Step 3 → “Save current form as template”). These insert medicines only.</p>
     <table class="list">
@@ -2297,7 +2426,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <tbody id="tplListBody"></tbody>
     </table>
   </div>
-  <div class="card">
+  <div class="card" data-set="templates">
     <h2>Clinical-notes templates</h2>
     <p class="muted small" style="margin-bottom:10px">Reusable clinical notes (complaints, findings, diagnosis, investigations, advice, plan) — no medicines. Create them on the New Prescription tab (Step 2 → “Save notes as template”).</p>
     <table class="list">
@@ -2305,7 +2434,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <tbody id="noteTplListBody"></tbody>
     </table>
   </div>
-  <div class="card">
+  <div class="card" data-set="templates">
     <h2>Instruction library</h2>
     <p class="muted small" style="margin-bottom:10px">These are the presets behind the “Insert standard instructions” menus on prescriptions and discharge summaries. Edit the wording once here — remove lines you never use, add your own — and every future insert uses your version.</p>
     <div class="card hidden" id="ipFormCard" style="background:var(--teal-light);border-color:#a5f3fc">
@@ -2328,7 +2457,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <tbody id="ipListBody"></tbody>
     </table>
   </div>
-  <div class="card">
+  <div class="card" data-set="team">
     <h2>Users &amp; access</h2>
     <p class="muted small" style="margin-bottom:10px">Everyone signs in with their <b>email and password</b> — the same login works on all their devices. You are the <b>owner</b> 👑. Anyone who joins with your invite stays <b>pending</b> until you approve them, and you choose exactly what each person can see (per section: <b>no access</b>, <b>view only</b> or <b>can edit</b>). Income, Analytics, Settings &amp; Cloud Sync always stay with you.</p>
     <div class="card" style="background:var(--teal-light,rgba(20,140,140,.06));border:1px solid var(--teal);margin-bottom:14px">
@@ -2345,7 +2474,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </table>
     <p class="small muted" style="margin-top:8px">Passwords are stored only as one-way hashes — nobody can read them back. A green dot means the person was active in the last few minutes. There must always be at least one owner/admin.</p>
   </div>
-  <div class="card">
+  <div class="card" data-set="team">
     <h2>Who’s been in &amp; activity</h2>
     <p class="muted small" style="margin-bottom:10px">Recent sign-ins across all devices, and a running log of what was added, changed or deleted (synced from everyone).</p>
     <div class="grid g2">
@@ -2353,12 +2482,12 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div><div class="reg-subhead" style="display:flex;justify-content:space-between;align-items:center">Recent changes <button class="btn btn-ghost btn-sm" style="padding:1px 10px;font-size:11px" onclick="clearActivity()">Clear</button></div><div id="activityLogBody" class="small"></div></div>
     </div>
   </div>
-  <div class="card">
+  <div class="card" data-set="data">
     <h2>💾 Storage space</h2>
     <p class="muted small" style="margin-bottom:12px">How much of this device’s local storage your records are using. X-ray images don’t count here — they’re kept in a separate large store. When this gets high, export a backup and archive old years, or ask me to upgrade the storage.</p>
     <div id="storageGauge"></div>
   </div>
-  <div class="card">
+  <div class="card" data-set="data">
     <h2>Backup &amp; data</h2>
     <p class="muted small" style="margin-bottom:12px">Everything is saved automatically in this browser on this computer. The backup file restores all patients, visits, medicines, documents and settings. X-ray images are kept in a separate large store — use “Export images” below to back those up too.</p>
     <div class="btn-bar" style="margin-bottom:12px">
@@ -2387,6 +2516,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </div>
     <p class="muted small mt" id="dataStats"></p>
   </div>
+    </div>
+  </div>
 </section>
 </main>
 </div>
@@ -2407,6 +2538,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   <div class="pp-tools">
     <span class="pp-title">Print preview — exactly as it lands on the page</span>
     <span class="pp-fit" id="ppFit"></span>
+    <button class="btn btn-ghost btn-sm" onclick="showPrintSetup()" style="background:#243444;color:#cfe3ee;border-color:#3a5065" title="Seeing the file path or page title on the paper? Fix it here">⚙ Printer setup</button>
     <button class="btn btn-green" onclick="closePrintPreview();window.print()">🖨 Print now</button>
     <button class="btn btn-ghost" onclick="closePrintPreview()" style="background:#243444;color:#cfe3ee;border-color:#3a5065">✕ Close</button>
   </div>
@@ -2919,12 +3051,12 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 32;
+const SEED_VERSION = 34;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
       regNo:'',clinicName:'Faizi Hospital',address:'53-A Main Satellite Town Rd, Satellite Town, Sargodha',
-      phone:'+92 315 7459655 · +92 304 3212222',timings:'',paper:'A4',footer:'',printMode:'pad',padTop:'68',urduRx:'on',rxBarcode:'on',phraseHelp:'on',mrnPrefix:'FH',mrnStyle:'date',logo:'',qrRx:'on',feeShare:'30',theme:'light',uiZoom:'100',
+      phone:'+92 315 7459655 · +92 304 3212222',timings:'',paper:'A4',footer:'',printMode:'pad',padTop:'68',padBottom:'34',urduRx:'on',rxBarcode:'on',phraseHelp:'on',mrnPrefix:'FH',mrnStyle:'date',logo:'',qrRx:'on',feeShare:'30',theme:'light',uiZoom:'100',
       autoLock:'10',defFu:'',feePresets:'',urduSize:'normal',backupPw:'',
       accent:'teal', photoLock:'', photoHero:'',
       brandTag:'The Sarcoma Clinic PK', nav:null, navLabels:{}, labelOverrides:{}, cardTint:'on', shortcuts:'on', favMeds:[], favTpls:[], defQrId:'', sync:{url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false},
@@ -2932,7 +3064,7 @@ function freshDB(){
       igUrl:'https://www.instagram.com/thesarcomaclinicpk',
       liUrl:'https://www.linkedin.com/in/draliijaz',
       waBiz:'0315-7459655'},
-    meds: SEED_MEDS.map((m,i)=>({id:'m'+(i+1),name:m[0],generic:m[1],cat:m[2],dose:m[3],freq:m[4],dur:m[5],instr:m[6],co:m[7]||'',cls:m[8]||''})),
+    meds: SEED_MEDS.map(m=>({id:medStableId(m[0]),name:m[0],generic:m[1],cat:m[2],dose:m[3],freq:m[4],dur:m[5],instr:m[6],co:m[7]||'',cls:m[8]||''})),
     patients:[], visits:[], templates: seedTemplates(), noteTemplates:[], documents:[], surgeries:[], expenses:[],
     users:[], queue:[], appts:[], videos:[], registry:[], inventory:[], qrcodes:[], leaflets:[], recalls:[],
     instrPresets: seedInstrPresets(),
@@ -2984,7 +3116,7 @@ function migrateDB(){
   SEED_MEDS.forEach(m=>{
     const ex = byName[m[0].toLowerCase()];
     if(ex){ if(!ex.cat) ex.cat = m[2]; if(!ex.co) ex.co = m[7]||''; if(!ex.cls) ex.cls = m[8]||''; }
-    else db.meds.push({id:'m'+(db.seq.med++),name:m[0],generic:m[1],cat:m[2],dose:m[3],freq:m[4],dur:m[5],instr:m[6],co:m[7]||'',cls:m[8]||''});
+    else db.meds.push({id:medStableId(m[0]),name:m[0],generic:m[1],cat:m[2],dose:m[3],freq:m[4],dur:m[5],instr:m[6],co:m[7]||'',cls:m[8]||''});
   });
   db.meds.forEach(m=>{ if(!m.cat) m.cat='Other'; if(m.co===undefined) m.co=''; if(m.cls===undefined) m.cls=''; });
   db.meds.sort((a,b)=>a.name.localeCompare(b.name));
@@ -3124,9 +3256,6 @@ function migrateDB(){
       if(p && p.mrn){ d.mrn=String(p.mrn); if(typeof syncTouch==='function') syncTouch(d); }
     }
   });
-  // 3. tumour registry: renumber every existing case as YYMMDD + running count for that year,
-  //    driven by the date of surgery
-  try{ if(typeof regRenumberAll==='function') regRenumberAll(); }catch(e){}
   // ---- v31 ----
   // link discharge summaries to the logbook entry they already created, so re-saving
   // updates that entry instead of adding a second copy
@@ -3138,6 +3267,44 @@ function migrateDB(){
   // ---- v32 ---- new print/typing preferences, on by default
   if(db.settings.rxBarcode===undefined) db.settings.rxBarcode='on';
   if(db.settings.phraseHelp===undefined) db.settings.phraseHelp='on';
+  // ---- v33 ----
+  if(db.settings.padBottom===undefined) db.settings.padBottom='34';
+  // Medicine ids used to come from a counter that ran separately on each device, so the
+  // same id could mean two different drugs on two phones — which made the directory
+  // impossible to sync. Every medicine now takes an id derived from its name, so both
+  // devices arrive at the same id and merge instead of clashing.
+  (function(){
+    if(!Array.isArray(db.meds)) return;
+    const remap={};
+    db.meds.forEach(function(m){
+      if(!m || !m.name) return;
+      if(medIsStableId(m.id)) return;               // already converted
+      const nid=medStableId(m.name);
+      if(nid!==m.id){ if(m.id) remap[m.id]=nid; m.id=nid; if(typeof syncTouch==='function') syncTouch(m); }
+    });
+    // two rows that collapsed onto the same id: keep the first, drop the duplicate
+    const seen={}; db.meds = db.meds.filter(function(m){ if(!m||!m.id) return false; if(seen[m.id]) return false; seen[m.id]=1; return true; });
+    if(db.settings && Array.isArray(db.settings.favMeds)){
+      db.settings.favMeds = db.settings.favMeds.map(function(id){ return remap[id]||id; });
+    }
+  })();
+  try{ if(typeof reconcileMrnSeq==='function') reconcileMrnSeq(); }catch(e){}
+  // ---- v34 ----
+  // Numbers used to be re-derived from surgery dates on every save and every sync, so one
+  // missing date shuffled everybody. That is gone. Put each case back on the number it
+  // had before that started — the original was kept in regNoOld all along.
+  (function(){
+    if(!Array.isArray(db.registry)) return;
+    let back=0;
+    db.registry.forEach(function(r){
+      const orig=String(r.regNoOld||'').trim();
+      if(orig && orig!==String(r.regNo||'')){ r.regNoPrev=String(r.regNo||''); r.regNo=orig; back++;
+        if(typeof syncTouch==='function') syncTouch(r); }
+      if(r.regNoProv===undefined) r.regNoProv = !(typeof regHasSurgDate==='function' && regHasSurgDate(r));
+      if(!r.regNo && typeof regAssignNo==='function') regAssignNo(r);
+    });
+    if(back) try{ db.settings.regRestoredCount=back; }catch(e){}
+  })();
   db.seedVersion = SEED_VERSION;
   persist();
 }
@@ -3273,10 +3440,10 @@ function showTab(name, isRefresh){
   if(name==='patients'){ renderPatientList(); renderFollowups(); }
   if(name==='medicines') renderMedList();
   if(name==='documents') renderDocList();
-  if(name==='discharge') renderDsList();
+  if(name==='discharge'){ if(!isRefresh) scrShow('ds','list'); renderDsList(); }
   if(name==='income') renderIncome();
-  if(name==='oplog') renderOpLog();
-  if(name==='registry') renderRegistry();
+  if(name==='oplog'){ if(!isRefresh) scrShow('op','list'); renderOpLog(); }
+  if(name==='registry'){ if(!isRefresh) scrShow('reg','list'); renderRegistry(); }
   if(name==='scores'||name==='inventory') renderToolsTab(name);
   if(name==='qrcodes'||name==='leaflets'||name==='recalls') renderExtrasTab(name);
   if(name==='sync' && typeof renderSync==='function'){ renderSync(); if($('syncSql')) $('syncSql').value=SYNC_SQL; }
@@ -3284,7 +3451,8 @@ function showTab(name, isRefresh){
   if(name==='visit' && typeof renderRxQrSelect==='function') renderRxQrSelect();
   if(typeof applyCardTints==='function') applyCardTints();
   if(name==='analytics') renderAnalytics();
-  if(name==='settings'){ renderDataStats(); renderTplList(); renderNoteTplList(); renderIpList(); renderUserList(); renderAccessLog(); renderActivityLog();
+  if(name==='settings'){ if(typeof renderSettingsShell==='function') renderSettingsShell();
+    renderDataStats(); renderTplList(); renderNoteTplList(); renderIpList(); renderUserList(); renderAccessLog(); renderActivityLog();
     if($('inviteHint')) $('inviteHint').textContent = makeInvite()? '' : 'Set up Cloud Sync first to create an invite.'; }
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
   if(typeof applyLabelOverrides==='function') applyLabelOverrides();
@@ -3305,7 +3473,7 @@ function applyTabAccess(name){
 }
 
 /* ================= SETTINGS ================= */
-const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent'};
+const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent'};
 function loadSettingsForm(){
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) $(el).value = db.settings[key]||''; }
   applyBrand();
@@ -3962,7 +4130,8 @@ function collectVisitForm(){
     },
     complaints:$('cComplaints').value.trim(), findings:$('cFindings').value.trim(),
     diagnosis:$('cDiagnosis').value.trim(), tests:$('cTests').value.trim(),
-    plan:$('cPlan').value.trim(), proc:$('cProc').value.trim(), followUp:$('cFollowUp').value.trim(),
+    plan:$('cPlan').value.trim(), proc:$('cProc').value.trim(),
+    nextTests:$('cNextTests').value.trim(), followUp:$('cFollowUp').value.trim(),
     followUpDate:$('cFuDate').value, fee: parseFloat($('cFee').value)||0, qrId: ($('cQrSel')?$('cQrSel').value:''),
     meds: collectRx()
   };
@@ -4006,7 +4175,8 @@ function saveVisit(andPrint){
     // update THIS SAME prescription in place — no new visit is created (stays 1 visit)
     Object.assign(editing, {
       complaints: f.complaints, findings: f.findings,
-      diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc, followUp: f.followUp,
+      diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc,
+      nextTests: f.nextTests, followUp: f.followUp,
       followUpDate: f.followUpDate, fee: f.fee, qrId: f.qrId, meds: f.meds,
       images: (editing.images||[]).concat(visitImgs.map(x=>x.id)),
       editedAt: new Date().toISOString(), editedBy: byTag()
@@ -4018,7 +4188,8 @@ function saveVisit(andPrint){
     visit = syncTouch({
       id: uid('v'), patientId: p.id, date: new Date().toISOString(),
       complaints: f.complaints, findings: f.findings,
-      diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc, followUp: f.followUp,
+      diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc,
+      nextTests: f.nextTests, followUp: f.followUp,
       followUpDate: f.followUpDate, fuDone: false, fee: f.fee, qrId: f.qrId, meds: f.meds,
       images: visitImgs.map(x=>x.id),
       by: byTag(),
@@ -4082,11 +4253,12 @@ function clearVisitForm(ask){
   unlinkPatient();
   $('pAllergies').value = 'NKDA';   // default: no known drug allergies (edit if the patient has any)
   tintAllergyBox();
-  ['cComplaints','cFindings','cDiagnosis','cTests','cPlan','cProc','cFollowUp','ptSearch','medSearch'].forEach(id=>$(id).value='');
+  ['cComplaints','cFindings','cDiagnosis','cTests','cPlan','cProc','cNextTests','cFollowUp','ptSearch','medSearch'].forEach(id=>$(id).value='');
   $('rxBody').innerHTML=''; updateRxCount();
   if($('rxAlerts')) $('rxAlerts').innerHTML='';
   visitImgs = []; renderVisitImgStrip();
   $('cFuDate').value=''; $('cFuDate').dataset.auto='';
+  fuWhatSel=-1; fuWhenDays=0; fuWhenLabel=''; renderFuWhatChips(); renderNvChips();
   $('cFee').value = db.settings.defFee || '';
   if(typeof renderRxQrSelect==='function') renderRxQrSelect();
   applyDefFu();
@@ -4159,11 +4331,13 @@ function previewRx(){
 function showPrintPreview(){
   const padMode = (db.settings.printMode||'pad')==='pad';
   const topMm = padMode ? Math.max(20, parseFloat(db.settings.padTop)||68) : 10;
+  const botMm = padMode ? padBottomMm() : 10;
   const sideMm = padMode ? 12 : 10;
+  const midMm = Math.max(20, 297 - topMm - botMm);
   $('ppSheet').innerHTML =
     '<div class="pp-margin" style="height:'+topMm+'mm">'+(padMode?'<span>Your pre-printed letterhead sits here</span>':'')+'</div>'+
-    '<div style="padding:0 '+sideMm+'mm 0">'+$('printArea').innerHTML+'</div>'+
-    '<div class="pp-margin" style="height:'+(padMode?34:10)+'mm">'+(padMode?'<span>Pre-printed footer area</span>':'')+'</div>';
+    '<div class="pp-body" style="padding:0 '+sideMm+'mm 0;min-height:'+midMm+'mm">'+$('printArea').innerHTML+'</div>'+
+    '<div class="pp-margin" style="height:'+botMm+'mm">'+(padMode?'<span>Pre-printed footer area</span>':'')+'</div>';
   const fit=$('ppFit');
   if(fit){
     const ok = window.__lastPrintFits !== false;
@@ -4418,7 +4592,8 @@ function copyVisitToForm(vid){
   linkPatient(v.patientId);
   $('cComplaints').value=v.complaints||''; $('cFindings').value=v.findings||'';
   $('cDiagnosis').value=v.diagnosis||''; $('cTests').value=v.tests||'';
-  $('cPlan').value=v.plan||''; $('cProc').value=v.proc||''; $('cFollowUp').value=v.followUp||'';
+  $('cPlan').value=v.plan||''; $('cProc').value=v.proc||'';
+  $('cNextTests').value=v.nextTests||''; $('cFollowUp').value=v.followUp||'';
   if(v.followUpDate && $('cFuDate')) $('cFuDate').value=v.followUpDate;
   if(typeof renderRxQrSelect==='function'){ renderRxQrSelect(); if($('cQrSel')) $('cQrSel').value=v.qrId||''; }
   (v.meds||[]).forEach(m=>addRxRow(m));
@@ -4542,6 +4717,14 @@ function openMedForm(id){
   $('mfName').focus();
 }
 function closeMedForm(){ $('medFormCard').classList.add('hidden'); editingMedId=null; }
+/* Medicines used to get an id from a counter that runs separately on each device, so two
+   phones could invent the SAME id for two different drugs. Ids are now derived from the
+   name, which means the same medicine added on two devices merges into one instead. */
+function medStableId(name){
+  const slug=String(name||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);
+  return slug ? ('mx_'+slug) : ('mx_'+uid('m'));
+}
+function medIsStableId(id){ return String(id||'').indexOf('mx_')===0; }
 function saveMedForm(){
   const name = $('mfName').value.trim();
   if(!name){ toast('⚠ Medicine name is required'); return; }
@@ -4550,28 +4733,185 @@ function saveMedForm(){
   const data = {name, generic:$('mfGeneric').value.trim(), cat:(cat||'').trim()||'Other', cls:(cls||'').trim(), co:$('mfCo').value.trim(), dose:$('mfDose').value.trim(),
     freq:$('mfFreq').value.trim(), dur:$('mfDur').value.trim(), instr:$('mfInstr').value.trim()};
   if(editingMedId){
-    Object.assign(db.meds.find(x=>x.id===editingMedId), data);
+    const ex=db.meds.find(x=>x.id===editingMedId);
+    const before=undoSnap(ex);
+    Object.assign(ex, data); syncTouch(ex);
+    logActivity('edit','medicine', data.name, undoOne('meds', before, ex));
   } else {
-    db.meds.push({id:'m'+(db.seq.med++), ...data});
+    const id=medStableId(data.name);
+    const clash=db.meds.find(x=>x.id===id);
+    if(clash){ Object.assign(clash, data); syncTouch(clash);
+      logActivity('edit','medicine', data.name, null); }
+    else { const nw=syncTouch({id:id, ...data}); db.meds.push(nw);
+      logActivity('add','medicine', data.name, undoOne('meds', null, nw)); }
   }
   db.meds.sort((a,b)=>a.name.localeCompare(b.name));
+  phraseBankInvalidate();
   persist(); closeMedForm(); renderMedList();
-  toast('Medicine saved');
+  toast('Medicine saved — it will appear on your other devices too');
 }
 function deleteMed(id){
-  const m = db.meds.find(x=>x.id===id);
-  if(!confirm('Delete "'+m.name+'" from the directory? Past prescriptions are not affected.')) return;
+  const m = db.meds.find(x=>x.id===id); if(!m) return;
+  if(!confirm('Delete "'+m.name+'" from the directory? Past prescriptions are not affected.\n\nYou can undo this from 🔔 Notifications.')) return;
+  const snapM = undoSnap(m);
   db.meds = db.meds.filter(x=>x.id!==id);
+  logActivity('delete','medicine', m.name, undoOne('meds', snapM, null));
+  phraseBankInvalidate();
   persist(); renderMedList();
+  toast('Medicine removed');
 }
 
 
 /* ================= HELPERS (dates, print tip) ================= */
 function localISO(d){ d=d||new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+/* ================= SETTINGS: categories down the left, one panel on the right ================= */
+const SET_CATS = [
+  {k:'clinic',    ic:'🏥', t:'Doctor & clinic',   s:'Your name, qualifications, address, logo & socials'},
+  {k:'printing',  ic:'🖨',  t:'Prescriptions & printing', s:'Pad calibration, Urdu, barcode, MR numbers, fees'},
+  {k:'templates', ic:'📋', t:'Templates & library', s:'Prescription, notes and instruction libraries'},
+  {k:'team',      ic:'👥', t:'Users & access',     s:'Staff accounts, permissions, who signed in'},
+  {k:'data',      ic:'💾', t:'Storage & backup',   s:'Space used, export, import, reset'},
+  {k:'app',       ic:'⚙️', t:'App preferences',    s:'Theme, text size, shortcuts, install as an app'}
+];
+let setCatCur = 'clinic';
+function setRailProfile(){
+  const s=db.settings||{};
+  const name=s.docName||'Your clinic';
+  return '<button class="set-prof" onclick="setCat(\'clinic\')">'+
+    (typeof patAvatar==='function'? patAvatar(name, true) : '')+
+    '<span class="sp-tx"><b>'+esc(name)+'</b><span>'+esc([s.quals&&String(s.quals).split(',')[0], s.clinicName].filter(Boolean).join(' · ')||'Tap to edit your details')+'</span></span></button>';
+}
+function renderSetRail(){
+  const rail=$('setRail'); if(!rail) return;
+  rail.innerHTML = setRailProfile()+
+    '<div class="set-search"><input type="text" id="setSearch" placeholder="🔍 Search settings…" autocomplete="off" oninput="setSearchRun()"></div>'+
+    '<div class="set-cats" id="setCatList">'+
+      SET_CATS.map(c=>'<button class="set-cat'+(setCatCur===c.k?' on':'')+'" data-k="'+c.k+'" onclick="setCat(\''+c.k+'\')">'+
+        '<span class="sc-ic">'+c.ic+'</span><span class="sc-tx"><b>'+esc(c.t)+'</b><span>'+esc(c.s)+'</span></span></button>').join('')+
+      (canTab('settings')?'<button class="set-cat" onclick="showTab(\'sync\')"><span class="sc-ic">☁️</span><span class="sc-tx"><b>Cloud sync</b><span>Share data with your other devices</span></span></button>':'')+
+    '</div>';
+}
+function setCards(){ return [...document.querySelectorAll('#setPane > .card[data-set]')]; }
+function setCat(k){
+  setCatCur = k;
+  const box=$('setSearch'); if(box) box.value='';
+  setCards().forEach(c=>c.classList.toggle('hidden', c.dataset.set!==k));
+  document.querySelectorAll('#setCatList .set-cat').forEach(b=>b.classList.toggle('on', b.dataset.k===k));
+  const hit=$('setNoHit'); if(hit) hit.classList.add('hidden');
+  const pane=$('setPane'); if(pane && pane.scrollIntoView && window.innerWidth<=900) pane.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function setSearchRun(){
+  const q=(($('setSearch')||{}).value||'').trim().toLowerCase();
+  if(!q){ setCat(setCatCur); return; }
+  let n=0;
+  setCards().forEach(c=>{
+    const hit=(c.textContent||'').toLowerCase().indexOf(q)>=0;
+    c.classList.toggle('hidden', !hit);
+    if(hit) n++;
+  });
+  document.querySelectorAll('#setCatList .set-cat').forEach(b=>b.classList.remove('on'));
+  let none=$('setNoHit');
+  if(!none){ none=document.createElement('div'); none.id='setNoHit'; none.className='empty hidden';
+    none.innerHTML='<span class="ei">🔍</span><b>Nothing matches</b><br>Try a different word.';
+    $('setPane').appendChild(none); }
+  none.classList.toggle('hidden', n>0);
+}
+function renderSettingsShell(){
+  renderSetRail();
+  setCat(setCatCur);
+}
+/* ---- follow-up: pick WHEN with the week buttons, then WHAT for ----
+   The wording is kept in the exact shapes the Urdu translator understands, so the
+   patient's line comes out right without the doctor typing anything.              */
+const FU_WHAT = [
+  ['stitch removal','for stitch removal'],
+  ['dressing','for dressing'],
+  ['plaster check','for plaster check'],
+  ['X-ray','with X-ray report'],
+  ['MRI','with MRI report'],
+  ['CT','with CT scan report'],
+  ['blood tests','with blood tests report'],
+  ['physio','for physiotherapy'],
+  ['chemo','for chemotherapy'],
+  ['radiotherapy','for radiotherapy'],
+  ['wound check','for dressing'],
+  ['all reports','with reports']
+];
+let fuWhatSel = -1;
+function renderFuWhatChips(){
+  const host=$('fuWhatChips'); if(!host) return;
+  host.innerHTML = FU_WHAT.map(function(w,i){
+    return '<button type="button" class="chip'+(fuWhatSel===i?' on':'')+'" onclick="fuPickWhat('+i+')">'+esc(w[0])+'</button>';
+  }).join('') +
+  '<button type="button" class="chip'+(fuWhatSel===-2?' on':'')+'" onclick="fuPickWhen(-2)" title="Come back only if there is a problem">SOS</button>' +
+  '<button type="button" class="chip'+(fuWhatSel===-3?' on':'')+'" onclick="fuPickWhen(-3)">tomorrow</button>';
+}
+/* the "when" half — remembered so a later chip can rebuild the whole sentence */
+let fuWhenDays = 0, fuWhenLabel = '';
+function fuCompose(){
+  const what = (fuWhatSel>=0 && FU_WHAT[fuWhatSel]) ? FU_WHAT[fuWhatSel][1] : '';
+  if(fuWhatSel===-2){ $('cFollowUp').value = 'Review SOS' + (what?' '+what:''); return; }
+  if(fuWhatSel===-3){ $('cFollowUp').value = 'Review tomorrow' + (what?' '+what:''); return; }
+  const when = fuWhenLabel ? ('Review after '+fuWhenLabel) : 'Review';
+  $('cFollowUp').value = (when + (what?' '+what:'')).trim();
+}
+function fuPickWhat(i){
+  fuWhatSel = (fuWhatSel===i) ? -1 : i;
+  renderFuWhatChips();
+  fuCompose();
+  const box=$('cFollowUp'); box.dispatchEvent(new Event('input',{bubbles:true}));
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+function fuPickWhen(kind){
+  fuWhatSel = (fuWhatSel===kind) ? -1 : kind;
+  renderFuWhatChips();
+  if(fuWhatSel===-3){ $('cFuDate').value = localISO(new Date(Date.now()+86400000)); $('cFuDate').dataset.auto='1'; }
+  else if(fuWhatSel===-2){ $('cFuDate').value=''; $('cFuDate').dataset.auto='1'; }
+  fuCompose();
+  $('cFollowUp').dispatchEvent(new Event('input',{bubbles:true}));
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+/* ---- "bring at next visit" quick chips ---- */
+const NEXT_TEST_CHIPS = ['X-ray','MRI','CT scan','Ultrasound','CBC, ESR/CRP','S. Vit D','S. Calcium','Uric acid',
+  'LFTs','RFTs','Bone scan','Biopsy report','Old films / reports'];
+function renderNvChips(){
+  const host=$('nvChips'); if(!host) return;
+  host.innerHTML = NEXT_TEST_CHIPS.map(function(t,i){
+    return '<button type="button" class="chip" onclick="nvAdd('+i+')">+ '+esc(t)+'</button>';
+  }).join('');
+}
+function nvAdd(i){
+  const t=NEXT_TEST_CHIPS[i]; if(!t) return;
+  const box=$('cNextTests'); if(!box) return;
+  const lines=box.value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(lines.some(l=>l.toLowerCase()===t.toLowerCase())){ toast('Already on the list'); return; }
+  lines.push(t);
+  box.value = lines.join('\n');
+  box.dispatchEvent(new Event('input',{bubbles:true}));
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+function nvCopyFromTests(){
+  const src=($('cTests').value||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!src.length){ toast('\u26a0 Nothing typed in Investigations yet'); return; }
+  const box=$('cNextTests');
+  const have=box.value.split('\n').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const add=src.filter(s=>have.indexOf(s.toLowerCase())<0);
+  if(!add.length){ toast('Already copied'); return; }
+  box.value = (box.value.trim() ? box.value.trim()+'\n' : '') + add.join('\n');
+  box.dispatchEvent(new Event('input',{bubbles:true}));
+  toast('Copied '+add.length+' line'+(add.length>1?'s':''));
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
 function setFu(days, label){
   $('cFuDate').value = localISO(new Date(Date.now()+days*86400000));
   $('cFuDate').dataset.auto='1';
-  if(label) $('cFollowUp').value = 'Review after '+label;
+  if(label){
+    fuWhenDays = days; fuWhenLabel = label;
+    if(fuWhatSel===-2||fuWhatSel===-3) fuWhatSel=-1;
+    renderFuWhatChips();
+    fuCompose();
+    $('cFollowUp').dispatchEvent(new Event('input',{bubbles:true}));
+  }
 }
 /* "2 weeks", "after 10 days", "1 month" -> how many days away */
 function fuDaysFromText(s){
@@ -4599,11 +4939,35 @@ function fuMoreSel(sel){
   setFu(+d, l);
   sel.value = '';
 }
+/* The browser can stamp its own title and file path in the page margins. The app prints
+   the first page with a zero page margin and blanks the document title while printing,
+   which removes it on most setups; the certain fix is the printer's own tick box, so the
+   instructions stay one click away.                                                      */
+const PRINT_TIP_TEXT =
+  'Printer setup — takes 10 seconds, needed once per device:\n\n'+
+  '1. In the print window, open \u201cMore settings\u201d.\n'+
+  '2. UNTICK \u201cHeaders and footers\u201d.\n'+
+  '   (this is what prints the file path along the bottom and the page title along the top)\n'+
+  '3. Leave Margins on \u201cDefault\u201d and Scale at 100%.\n\n'+
+  'Chrome and Safari remember this, so you only do it once.';
+function showPrintSetup(){ alert(PRINT_TIP_TEXT); db.hfTipShown = true; persist(); }
 function showPrintTipOnce(){
   if(db.hfTipShown) return;
-  alert('One-time printer setup:\n\nIn the print window that opens next, click \u201cMore settings\u201d and UNTICK \u201cHeaders and footers\u201d \u2014 otherwise the browser prints the page title and file path on your letterhead.\n\nAlso keep Margins on \u201cDefault\u201d and Scale at 100%.\n\nChrome remembers these settings, so this is needed only once.');
+  alert(PRINT_TIP_TEXT);
   db.hfTipShown = true; persist();
 }
+/* blank the page title while printing so the browser has no title to stamp on the paper */
+(function(){
+  let savedTitle = null;
+  const blank = ()=>{ if(savedTitle===null){ savedTitle = document.title; document.title = ' '; } };
+  const restore = ()=>{ if(savedTitle!==null){ document.title = savedTitle; savedTitle = null; } };
+  window.addEventListener('beforeprint', blank);
+  window.addEventListener('afterprint', restore);
+  try{
+    const mq = window.matchMedia && window.matchMedia('print');
+    if(mq && mq.addListener) mq.addListener(m=>{ m.matches ? blank() : restore(); });
+  }catch(e){}
+})();
 function buildPlainHeader(){
   const s = db.settings;
   return '<div class="rx-head">'+
@@ -4619,16 +4983,36 @@ function buildPlainHeader(){
     '</div>'+
   '</div>';
 }
-function applyPageGeom(pad, extraTop){
-  // extraTop (mm): full-width documents start below the pad's pre-printed ℞ symbol on EVERY page
+function padBottomMm(){ return Math.max(8, parseFloat(db.settings.padBottom)||34); }
+function pageStyleEl(){
   let style = $('pageStyle');
   if(!style){ style = document.createElement('style'); style.id='pageStyle'; document.head.appendChild(style); }
+  return style;
+}
+/* size (mm) of the printable box, and the padding that reproduces the margins on page 1 */
+function pageBox(pad, extraTop, paper){
+  const a5 = paper==='A5';
+  const pw = a5?148:210, ph = a5?210:297;
   if(pad){
     const top = Math.max(20, parseFloat(db.settings.padTop)||68) + (extraTop||0);
-    style.textContent = '@page{size:A4;margin:'+top+'mm 12mm 34mm 12mm}';
-  } else {
-    style.textContent = '@page{size:A4;margin:15mm}';
+    const bot = padBottomMm();
+    return {pw, ph, top, bot, side:12, availH: ph-top-bot, contentW: pw-24};
   }
+  return {pw, ph, top:10, bot:10, side:10, availH: ph-20, contentW: pw-20};
+}
+/* @page margin 0 on the FIRST page removes the browser's own header/footer
+   (the file path and page title). Later pages keep real margins.            */
+function setPageStyle(box, paper){
+  pageStyleEl().textContent =
+    '@page{size:'+(paper==='A5'?'A5':'A4')+';margin:'+box.top+'mm '+box.side+'mm '+box.bot+'mm '+box.side+'mm}'+
+    '@page :first{margin:0}'+
+    '#printArea > *{box-sizing:border-box;padding:'+box.top+'mm '+box.side+'mm '+box.bot+'mm '+box.side+'mm}'+
+    '#printArea .rx-page > .rx-sheet{padding:0}';
+}
+function applyPageGeom(pad, extraTop){
+  const box = pageBox(pad, extraTop, 'A4');
+  setPageStyle(box, 'A4');
+  return box;
 }
 
 /* ================= HOME / LANDING PAGE ================= */
@@ -4722,7 +5106,11 @@ function showDiag(){
     'Account status: '+(u.status||'-')+(u.isOwner?' (owner)':''),
     'My access: '+(isOwnerNow()?'owner / all':JSON.stringify(u.perms||{})),
     'Accounts on this device: '+((db.users||[]).length),
-    'Records here: patients '+((db.patients||[]).length)+', registry '+((db.registry||[]).length)
+    'Records here: patients '+((db.patients||[]).length)+', registry '+((db.registry||[]).length),
+    '',
+    'Syncing collections:',
+    SYNC_COLLS.map(k=>'  '+k+': '+((db[k]||[]).length)).join('\n'),
+    'Also synced: pinned favourites, activity feed, sign-in log'
   ];
   alert('DIAGNOSTICS — screenshot this and send it:\n\n'+lines.join('\n'));
 }
@@ -5336,7 +5724,8 @@ setupSuggest('dsMedSearch','dsMedSuggest',
 function fillDsFromVisit(v){
   const pt = db.patients.find(x=>x.id===v.patientId)||{};
   $('dcDiagnosis').value = v.diagnosis||'';
-  $('dcClinical').value = [v.complaints, v.findings].filter(Boolean).join('\nO/E: ');
+  $('dcClinical').value = v.complaints||'';
+  $('dcFindings').value = v.findings||'';
   $('dcMedHx').value = pt.medHx||'';
   $('dcSurgHx').value = pt.surgHx||'';
   $('dcAllergies').value = pt.allergies||'';
@@ -5365,7 +5754,7 @@ function dischargeFromVisit(vid){
   fillDsFromVisit(v);
   setDsImagesFromVisit(v);
   showTab('discharge');
-  window.scrollTo({top:0,behavior:'smooth'});
+  dsShowForm();
   toast('Discharge summary pre-filled from visit on '+fmtDate(v.date));
 }
 function collectDsForm(){
@@ -5373,7 +5762,8 @@ function collectDsForm(){
     type:'discharge', date:$('dsDate').value||localISO(), patientId:dsPatientId,
     name:$('dsName').value.trim(), mrn:$('dsMrn').value.trim(), age:$('dsAge').value.trim(), sex:$('dsSex').value,
     dc:{admit:$('dcAdmit').value, discharge:$('dcDischarge').value, diagnosis:$('dcDiagnosis').value.trim(),
-        clinical:$('dcClinical').value.trim(), medHx:$('dcMedHx').value.trim(), surgHx:$('dcSurgHx').value.trim(),
+        clinical:$('dcClinical').value.trim(), findings:$('dcFindings').value.trim(),
+        medHx:$('dcMedHx').value.trim(), surgHx:$('dcSurgHx').value.trim(),
         allergies:$('dcAllergies').value.trim(),
         proc:$('dcProc').value.trim(), course:$('dcCourse').value.trim(),
         implant:$('dcImplant').value.trim(), implantCo:$('dcImplantCo').value.trim(),
@@ -5397,12 +5787,13 @@ function saveDischarge(andPrint){
       : (d.addLog && !((d.dc||{}).proc||'').trim()) ? 'Discharge saved — no procedure typed, so nothing was added to the logbook'
       : 'Discharge summary saved');
   phraseBankInvalidate();
+  phraseBankInvalidate();
   persist(); renderDsList(); if(typeof renderOpLog==='function'){ try{ renderOpLog(); }catch(e){} }
-  if(andPrint) printDoc(d);
+  if(andPrint) printDoc(d); else dsShowList();
 }
 function clearDsForm(){
   dsPatientId = null; editingDsId = null;
-  ['dsPtSearch','dsName','dsMrn','dsAge','dsMedSearch','dcDiagnosis','dcClinical','dcMedHx','dcSurgHx','dcAllergies','dcProc','dcCourse','dcImplant','dcImplantCo','dcInstr','dcFu'].forEach(id=>$(id).value='');
+  ['dsPtSearch','dsName','dsMrn','dsAge','dsMedSearch','dcDiagnosis','dcClinical','dcFindings','dcMedHx','dcSurgHx','dcAllergies','dcProc','dcCourse','dcImplant','dcImplantCo','dcInstr','dcFu'].forEach(id=>$(id).value='');
   $('dsRxBody').innerHTML='';
   $('dsSex').value='';
   $('dsDate').value = localISO(); $('dcAdmit').value=''; $('dcDischarge').value='';
@@ -5411,6 +5802,21 @@ function clearDsForm(){
   $('dsFormTitle').textContent = 'New discharge summary';
   refreshFieldStatus();
 }
+/* ================= FORMS OPEN AS THEIR OWN SCREEN =================
+   Every area lands on its list; the form takes the whole screen with a Back button,
+   so a form and a list are never on top of each other.                              */
+function scrShow(prefix, which){
+  const f=$(prefix+'FormScreen'), l=$(prefix+'ListScreen');
+  if(f) f.classList.toggle('hidden', which!=='form');
+  if(l) l.classList.toggle('hidden', which==='form');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function dsShowList(){ scrShow('ds','list'); if(typeof renderDsList==='function') renderDsList(); }
+function dsShowForm(){ scrShow('ds','form'); const c=$('dsFormCrumb'); if(c) c.textContent=$('dsFormTitle').textContent; }
+function dsNew(){ if(!requireEdit()) return; clearDsForm(); dsShowForm(); }
+function opShowList(){ scrShow('op','list'); if(typeof renderOpLog==='function') renderOpLog(); }
+function opShowForm(){ scrShow('op','form'); const c=$('opFormCrumb'); if(c) c.textContent=$('opFormTitle').textContent; }
+function opNew(){ if(!requireEdit()) return; clearOpForm(); opShowForm(); }
 /* ---- discharge summary <-> operation logbook ----
    A discharge with a procedure keeps ONE matching entry in the logbook. It is created the
    first time the procedure is filled in (not only when the summary is first created), and
@@ -5472,11 +5878,12 @@ function renderDsList(){
 function loadDs(id){
   const d = db.documents.find(x=>x.id===id); if(!d) return;
   editingDsId = d.id; dsPatientId = d.patientId||null;
+  dsShowForm();
   $('dsDate').value=d.date; $('dsName').value=d.name; $('dsAge').value=d.age||''; $('dsSex').value=d.sex||'';
   $('dsMrn').value = dsMrnOf(d);
   const dc=d.dc||{};
   $('dcAdmit').value=dc.admit||''; $('dcDischarge').value=dc.discharge||''; $('dcDiagnosis').value=dc.diagnosis||'';
-  $('dcClinical').value=dc.clinical||''; $('dcMedHx').value=dc.medHx||''; $('dcSurgHx').value=dc.surgHx||''; $('dcAllergies').value=dc.allergies||'';
+  $('dcClinical').value=dc.clinical||''; $('dcFindings').value=dc.findings||''; $('dcMedHx').value=dc.medHx||''; $('dcSurgHx').value=dc.surgHx||''; $('dcAllergies').value=dc.allergies||'';
   $('dcProc').value=dc.proc||''; $('dcCourse').value=dc.course||'';
   $('dcImplant').value=dc.implant||''; $('dcImplantCo').value=dc.implantCo||'';
   $('dsRxBody').innerHTML='';
@@ -5505,9 +5912,9 @@ function loadDs(id){
     renderDsImgStrip();
   })();
   $('dsFormTitle').textContent = 'Edit discharge summary';
+  const cr=$('dsFormCrumb'); if(cr) cr.textContent='Edit discharge summary';
   refreshFieldStatus();
   window.scrollTo({top:0,behavior:'smooth'});
-  toast('Loaded — edit and Save');
 }
 function deleteDs(id){
   if(!requireEdit()) return;
@@ -5601,7 +6008,8 @@ async function printDoc(d, forcePlain){
         '<tr>'+cell('Date of admission', dc.admit?fmtDate(dc.admit):'')+cell('Date of discharge', dc.discharge?fmtDate(dc.discharge):'')+'</tr>'+
       '</tbody></table>'+
       sec('Diagnosis', dc.diagnosis, 'dc-dx') +
-      sec('Presenting complaints & clinical findings', dc.clinical) +
+      sec('Presenting complaints', dc.clinical) +
+      sec('Clinical findings', dc.findings) +
       ((dc.medHx||dc.surgHx)? sec('Past history', [dc.medHx&&('Medical: '+dc.medHx), dc.surgHx&&('Surgical: '+dc.surgHx)].filter(Boolean).join('\n')) : '') +
       (dc.allergies? (isNoAllergy(dc.allergies)
         ? '<div class="dc-sec"><h4>Known allergies</h4><p>'+esc(dc.allergies)+'</p></div>'
@@ -5627,21 +6035,20 @@ async function printDoc(d, forcePlain){
                (ins.ur? '<div class="dc-sec dc-sec-ur"><h4>ہدایات برائے مریض</h4><p>'+esc(ins.ur)+'</p></div>':''); })() +
       sec('Follow-up', dc.fu) +
       (((db.settings.urduRx||'on')!=='off' && fuUrduFor(dc.fu))
-        ? '<div class="dc-sec dc-sec-ur" dir="rtl"><h4>\u062f\u0648\u0628\u0627\u0631\u06c1 \u0645\u0644\u0627\u0642\u0627\u062a</h4><p>'+esc(fuUrduFor(dc.fu))+'</p></div>' : '');
+        ? '<div class="dc-sec dc-sec-ur" dir="rtl"><h4>\u0622\u0626\u0646\u062f\u06c1 \u0645\u0639\u0627\u0626\u0646\u06c1</h4><p>'+esc(fuUrduFor(dc.fu))+'</p></div>' : '');
   } else {
     inner = strip + '<div class="doc-title">'+(DOC_TITLES[d.type]||'')+'</div>' +
       '<div class="doc-body">'+esc(d.body||'')+'</div>';
   }
-  $('printArea').innerHTML = '<div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+'">'+
+  $('printArea').innerHTML = '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+'">'+
     (pad?'':buildPlainHeader()) + inner +
     '<div class="rx-foot" style="margin-top:9mm"><div class="fu"></div>'+
     '<div class="sig"><div class="line"></div>'+esc(s.docName||'Signature')+'</div></div>'+
-  '</div>';
-  applyPageGeom(pad, 18);
-  const pa = $('printArea'), sheet = pa.firstChild;
-  const top = (pad ? Math.max(20, parseFloat(db.settings.padTop)||68) + 18 : 15);
-  const availH = 297 - top - (pad?34:15);
-  const contentW = 210 - (pad?24:30);
+  '</div></div>';
+  const box = applyPageGeom(pad, 18);
+  const pa = $('printArea'), sheet = pa.querySelector('.rx-sheet');
+  const availH = box.availH - (pad ? 2 : 0);
+  const contentW = box.contentW;
   const dcImgs = (d.type==='discharge' && d.dc && d.dc.images) ? d.dc.images.slice(0,2) : [];
   if(dcImgs.length){
     // fetch images and anchor them as a band at the bottom of page 1;
@@ -5936,7 +6343,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.30-b21';
+const APP_BUILD = '2026.07.31-b25';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -6768,10 +7175,12 @@ function urFuClause(txt){
   const tests=[]; UR_FU_TESTS.forEach(function(t){ if(t[0].test(s)) tests.push(t[1]); });
   const jobs=[]; UR_FU_JOBS.forEach(function(j){ if(j[0].test(s)) jobs.push(j[1]); });
   const wantsReview = /\b(review|follow[\s-]?up|opd|check[\s-]?up|clinic)\b/i.test(s);
-  const bring = /\breports?\b|\bwith\b/i.test(s) && tests.length;
+  const wantsReports = /\breports?\b/i.test(s);
+  const bring = (wantsReports || /\bwith\b/i.test(s)) && tests.length;
   const parts=[];
   if(when) parts.push(when);
   if(bring) parts.push(tests.join(' اور ') + ' رپورٹ کے ساتھ');
+  else if(wantsReports) parts.push('رپورٹس کے ساتھ');
   const todo=[];
   if(!bring && tests.length) tests.forEach(function(t){ todo.push(t + ' کروانے'); });
   jobs.forEach(function(j){ todo.push(j); });
@@ -6874,7 +7283,7 @@ function saveOp(){
     logActivity('edit','operation', data.name+' — '+data.procedure, undoOne('surgeries', before, ex)); }
   else { const nw=syncTouch({id:uid('s'), ...data, by: byTag()}); db.surgeries.push(nw);
     logActivity('add','operation', data.name+' — '+data.procedure, undoOne('surgeries', null, nw)); }
-  persist(); clearOpForm(); renderOpLog();
+  persist(); clearOpForm(); renderOpLog(); opShowList();
   toast('Operation saved to logbook');
 }
 function clearOpForm(){
@@ -6893,8 +7302,9 @@ function editOp(id){
   $('opAnesth').value=o.anesthesia||''; $('opImplant').value=o.implant||'';
   $('opAssist').value=o.assistant||''; $('opComp').value=o.complications||''; $('opNotes').value=o.notes||'';
   $('opFormTitle').textContent = 'Edit operation';
+  const cr=$('opFormCrumb'); if(cr) cr.textContent='Edit operation';
+  opShowForm();
   refreshFieldStatus();
-  window.scrollTo({top:0,behavior:'smooth'});
 }
 function deleteOp(id){
   if(!confirm('Delete this logbook entry?')) return;
@@ -7287,6 +7697,14 @@ function fmtDMY(iso){
   if(m) return m[3]+'/'+m[2]+'/'+m[1];
   try{ const d=new Date(iso); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); }catch(e){ return ''; }
 }
+/* the bordered "bring these next time" box that prints above the date box */
+function nextTestsBox(v){
+  const lines=String((v&&v.nextTests)||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!lines.length) return '';
+  return '<div class="rx-nvbox"><div class="fb-h">\u0622\u0626\u0646\u062f\u06c1 \u0645\u0639\u0627\u0626\u0646\u06c1 \u067e\u0631 \u06cc\u06c1 \u0679\u06cc\u0633\u0679 \u06a9\u0631\u0648\u0627 \u06a9\u0631 \u0644\u0627\u0626\u06cc\u06ba</div>'+
+    '<div class="nv-en">Bring at next visit</div>'+
+    '<ul>'+lines.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul></div>';
+}
 function fuDateBox(v){
   const d = v && v.followUpDate;
   if(!d) return '';
@@ -7329,6 +7747,7 @@ function printVisit(v, p, forcePlain){
     p.allergies && ['Allergies', (isNoAllergy(p.allergies)?'':'\u26a0 ')+p.allergies],
     v.complaints && ['Presenting complaints', v.complaints],
     v.findings && ['Clinical findings', v.findings],
+    v.diagnosis && ['Impression', v.diagnosis, 'dx'],
     v.tests && ['Investigations', v.tests]
   ].filter(Boolean);
 
@@ -7357,7 +7776,7 @@ function printVisit(v, p, forcePlain){
     '</div>';
 
   $('printArea').innerHTML =
-  '<div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+'">'+ headHtml +
+  '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+'">'+ headHtml +
     '<div class="rx-pt">'+
       '<span><b>Name:</b> '+esc(p.name)+'</span>'+
       (p.age?'<span><b>Age:</b> '+esc(p.age)+'</span>':'')+
@@ -7374,37 +7793,32 @@ function printVisit(v, p, forcePlain){
         (adv.ur?'<div class="rx-advice rx-advice-ur"><h4>ہدایات</h4><p>'+esc(adv.ur)+'</p></div>':'')+
         (()=>{ const fu=splitByScript(v.followUp||''); const fuUr = urOn ? fuUrduFor(v.followUp) : '';
           return (fu.en?'<div class="rx-advice"><h4>Follow-up</h4><p>'+esc(fu.en)+'</p></div>':'')+
-                 (fuUr?'<div class="rx-advice rx-advice-ur"><h4>\u062f\u0648\u0628\u0627\u0631\u06c1 \u0645\u0644\u0627\u0642\u0627\u062a</h4><p>'+esc(fuUr)+'</p></div>':''); })()+
+                 (fuUr?'<div class="rx-advice rx-advice-ur"><h4>\u0622\u0626\u0646\u062f\u06c1 \u0645\u0639\u0627\u0626\u0646\u06c1</h4><p>'+esc(fuUr)+'</p></div>':''); })()+
       '</div>'; })()+
       '<div class="rx-side">'+
-        clinBlocks.map(b=>'<h4>'+esc(b[0])+'</h4><p>'+esc(b[1])+'</p>').join('')+
-        (v.diagnosis?'<h4>Diagnosis</h4><p class="dx">'+esc(v.diagnosis)+'</p>':'')+
+        clinBlocks.map(b=>'<h4>'+esc(b[0])+'</h4><p'+(b[2]?' class="'+b[2]+'"':'')+'>'+esc(b[1])+'</p>').join('')+
         (v.proc?'<h4>Plan</h4><p class="dx">'+esc(v.proc)+'</p>':'')+
       '</div>'+
     '</div>'+
     '<div class="rx-foot rx-foot-r">'+
-      '<div class="rx-corner">'+buildRxQr(v,p)+fuDateBox(v)+'</div>'+
+      '<div class="rx-cornerwrap">'+ nextTestsBox(v) +
+        '<div class="rx-corner">'+buildRxQr(v,p)+fuDateBox(v)+'</div>'+
+      '</div>'+
     '</div>'+
     (!pad && s.footer?'<div class="rx-footer-note">'+esc(s.footer)+'</div>':'')+
     (!pad ? socialsPrintLine() : '')+
-  '</div>';
+  '</div></div>';
 
   // page geometry
-  let style = $('pageStyle');
-  if(!style){ style = document.createElement('style'); style.id='pageStyle'; document.head.appendChild(style); }
-  let contentW, availH;
-  if(pad){
-    const top = Math.max(20, parseFloat(s.padTop)||68);
-    style.textContent = '@page{size:A4;margin:'+top+'mm 12mm 34mm 12mm}';
-    contentW = 210-24; availH = 297-top-34;
-  } else {
-    const isA5 = s.paper==='A5';
-    style.textContent = '@page{size:'+(isA5?'A5':'A4')+';margin:10mm}';
-    contentW = (isA5?148:210)-20; availH = (isA5?210:297)-20;
-  }
+  const paper = pad ? 'A4' : (s.paper==='A5'?'A5':'A4');
+  const box = pageBox(pad, 0, paper);
+  setPageStyle(box, paper);
+  const contentW = box.contentW;
+  // keep 2 mm clear of the pre-printed footer so nothing ever grazes it
+  const availH = box.availH - (pad ? 2 : 0);
   // Fit check: if content is too tall for one sheet, first switch to a compact
   // typeface; if it still overflows, ask before printing across two sheets.
-  const pa = $('printArea'), sheet = pa.firstChild;
+  const pa = $('printArea'), sheet = pa.querySelector('.rx-sheet');
   pa.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:'+contentW+'mm';
   const availPx = availH*96/25.4;
   let overflows = false;
@@ -7512,14 +7926,21 @@ function regMakeHsel(f){
 
 function regBuildForm(){
   const host = $('regForm'); host.innerHTML='';
-  REG_SCHEMA.forEach(sec=>{
-    const card = document.createElement('div');
-    card.className='card';
-    card.style.cssText='margin-bottom:16px;padding-top:14px';
-    const h = document.createElement('h2'); h.innerHTML = '<span style="margin-right:8px">'+sec.icon+'</span>'+sec.name;
-    card.appendChild(h);
-    sec.subs.forEach(sub=>{
-      const sh=document.createElement('div'); sh.className='reg-subhead'; sh.textContent=sub.name; card.appendChild(sh);
+  const wrap=document.createElement('div'); wrap.className='regf-wrap'; wrap.id='regFWrap';
+  const rail=document.createElement('aside'); rail.className='regf-rail'; rail.id='regFRail';
+  const panes=document.createElement('div'); panes.className='regf-panes'; panes.id='regFPanes';
+  wrap.appendChild(rail); wrap.appendChild(panes);
+  host.appendChild(wrap);
+  REG_SCHEMA.forEach((sec,si)=>{
+    sec.subs.forEach((sub,bi)=>{
+      const card = document.createElement('div');
+      card.className='card regf-pane';
+      card.dataset.rk = si+'-'+bi;
+      card.style.cssText='margin-bottom:16px;padding-top:14px';
+      const h = document.createElement('h2');
+      h.innerHTML = '<span style="margin-right:8px">'+sec.icon+'</span>'+esc(sub.name)+
+        '<span class="regf-sec">'+esc(sec.name)+'</span>';
+      card.appendChild(h);
       const grid=document.createElement('div'); grid.className='grid g3';
       sub.fields.forEach(f=>{
         let field;
@@ -7532,16 +7953,80 @@ function regBuildForm(){
           else{ ctrl=document.createElement('input'); ctrl.type = f.t==='date'?'date':(f.t==='num'?'number':'text'); }
           ctrl.dataset.k=f.k; field.appendChild(ctrl);
         }
-        if(f.k==='regNo'){ const i=field.querySelector('input'); if(i){ i.readOnly=true; i.title='Set automatically from the date of surgery: YYMMDD + the case number for that year (e.g. 2601010001).'; } }
-        if(f.k==='dateSurg'){ const i=field.querySelector('input'); if(i) i.addEventListener('change', regSyncNoPreview); }
+        if(f.k==='regNo'){ const i=field.querySelector('input'); if(i){
+          i.title='Filled in automatically from the date of surgery (YYMMDD + the case number for that year, e.g. 2601010001). You can type over it if you need a particular number.';
+          i.addEventListener('change', regCheckNoDup); } }
+        if(f.k==='dateSurg'){ const i=field.querySelector('input'); if(i){ i.addEventListener('change', regSyncNoPreview); i.addEventListener('input', regSyncNoPreview); } }
         grid.appendChild(field);
       });
       card.appendChild(grid);
+      panes.appendChild(card);
     });
-    host.appendChild(card);
   });
   regFormBuilt=true;
+  regBuildRail();
+  regApplyMode();
+  host.addEventListener('input', regRailTicksSoon);
+  host.addEventListener('change', regRailTicksSoon);
   if(typeof initFieldStatus==='function') initFieldStatus();  // register new fields for the golden-cursor lights
+}
+/* ---- the form's own sidebar: every sub-section, grouped under its heading ---- */
+let regRailCur='0-0';
+function regPaneFilled(rk){
+  const pane=document.querySelector('#regFPanes .regf-pane[data-rk="'+rk+'"]');
+  if(!pane) return 0;
+  let n=0;
+  pane.querySelectorAll('input,textarea,select').forEach(function(c){
+    if(c.type==='button'||c.type==='checkbox') return;
+    if(String(c.value||'').trim()) n++;
+  });
+  return n;
+}
+function regBuildRail(){
+  const rail=$('regFRail'); if(!rail) return;
+  let html='';
+  REG_SCHEMA.forEach(function(sec,si){
+    html+='<div class="regf-grp">'+esc(sec.name)+'</div>';
+    sec.subs.forEach(function(sub,bi){
+      const rk=si+'-'+bi;
+      html+='<button type="button" class="regf-cat'+(regRailCur===rk?' on':'')+'" data-rk="'+rk+'" onclick="regRailPick(\''+rk+'\')">'+
+        '<span class="rc-tx">'+esc(sub.name)+'</span><span class="rc-tick" data-tick="'+rk+'">·</span></button>';
+    });
+  });
+  rail.innerHTML=html;
+  regRailTicks();
+}
+function regRailTicks(){
+  document.querySelectorAll('#regFRail .rc-tick').forEach(function(el){
+    const n=regPaneFilled(el.dataset.tick);
+    el.textContent = n? '✓' : '·';
+    el.classList.toggle('done', n>0);
+  });
+}
+function regRailTicksSoon(){ clearTimeout(window.__regTick); window.__regTick=setTimeout(regRailTicks, 250); }
+function regRailPick(rk){
+  regRailCur=rk;
+  if(regFormMode()!=='rail'){ regSetMode('rail'); return; }
+  document.querySelectorAll('#regFPanes .regf-pane').forEach(function(p){ p.classList.toggle('hidden', p.dataset.rk!==rk); });
+  document.querySelectorAll('#regFRail .regf-cat').forEach(function(b){ b.classList.toggle('on', b.dataset.rk===rk); });
+  const w=$('regFWrap'); if(w && window.innerWidth<=900) w.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function regFormMode(){ return (db.settings.regFormMode==='full') ? 'full' : 'rail'; }
+function regSetMode(m){
+  db.settings.regFormMode = (m==='full')?'full':'rail';
+  persist(); regApplyMode();
+}
+function regApplyMode(){
+  const full = regFormMode()==='full';
+  const w=$('regFWrap'); if(w) w.classList.toggle('regf-full', full);
+  document.querySelectorAll('#regFPanes .regf-pane').forEach(function(p){
+    p.classList.toggle('hidden', !full && p.dataset.rk!==regRailCur);
+  });
+  document.querySelectorAll('#regFRail .regf-cat').forEach(function(b){ b.classList.toggle('on', !full && b.dataset.rk===regRailCur); });
+  const a=$('regModeRail'), b=$('regModeFull');
+  if(a) a.classList.toggle('active', !full);
+  if(b) b.classList.toggle('active', full);
+  regRailTicks();
 }
 
 function regFieldEl(k){ return $('regForm').querySelector('[data-k="'+k+'"]'); }
@@ -7572,8 +8057,45 @@ function regNoFromDate(ymd, n){
   const s = regValidYmd(ymd) ? String(ymd) : localISO();
   return s.slice(2,4)+s.slice(5,7)+s.slice(8,10)+String(n).padStart(4,'0');
 }
+/* ---- reading a registry number, old style (20260042) or new (2601010001) ---- */
+function regNoParts(no){
+  const s=String(no||'').trim();
+  let m=s.match(/^(\d{2})(\d{2})(\d{2})(\d{4})$/);
+  if(m) return {year:'20'+m[1], count:+m[4], style:'date'};
+  m=s.match(/^(\d{4})(\d{4})$/);
+  if(m) return {year:m[1], count:+m[2], style:'year'};
+  return null;
+}
+/* the next free slot in a year, whichever style the existing numbers are in */
+function regNextCountFor(year){
+  let max=0;
+  (db.registry||[]).forEach(function(r){
+    const p=regNoParts(r.regNo);
+    if(p && p.year===String(year) && p.count>max) max=p.count;
+  });
+  return max+1;
+}
+/* give ONE case its number. Never touches any other case. */
+function regAssignNo(r){
+  const basis = regValidYmd(r.dateSurg) ? r.dateSurg : localISO();
+  const n = regNextCountFor(basis.slice(0,4));
+  r.regNo = regNoFromDate(basis, n);
+  r.regNoProv = !regValidYmd(r.dateSurg);
+  return r.regNo;
+}
+/* a provisional number is corrected ONCE, the first time a surgery date is entered */
+function regSettleNo(r){
+  if(!r || !r.regNoProv) return false;
+  if(!regValidYmd(r.dateSurg)) return false;
+  const before=r.regNo;
+  const n = regNextCountFor(r.dateSurg.slice(0,4));
+  r.regNo = regNoFromDate(r.dateSurg, n);
+  r.regNoProv = false;
+  return r.regNo!==before;
+}
 /* Re-number the whole registry from scratch: order every case by its surgery date,
-   then number it 0001, 0002 … within its own year. Safe to run as often as we like. */
+   then number it 0001, 0002 … within its own year. Only ever run from the
+   "Renumber by surgery date" button — never automatically. */
 function regRenumberAll(){
   const arr = db.registry||[];
   const items = arr.map(function(r,i){ return {r:r, d:regBasisDate(r), i:i}; });
@@ -7584,21 +8106,98 @@ function regRenumberAll(){
     perYear[yr]=(perYear[yr]||0)+1;
     const no=regNoFromDate(it.d, perYear[yr]);
     if(String(it.r.regNo||'')!==no){
-      if(it.r.regNo && !it.r.regNoOld && !/^\d{10}$/.test(String(it.r.regNo))) it.r.regNoOld=String(it.r.regNo);   // kept in the data, not shown
+      if(it.r.regNo && !it.r.regNoOld && !/^\d{10}$/.test(String(it.r.regNo))) it.r.regNoOld=String(it.r.regNo);   // the very first original, kept for the restore tool
+      it.r.regNoPrev=String(it.r.regNo||'');
       it.r.regNo=no;
+      it.r.regNoProv=!regHasSurgDate(it.r);
       if(typeof syncTouch==='function') syncTouch(it.r);
       changed++;
     }
   });
   return changed;
 }
+function regCheckNoDup(){
+  const v=String(regGet('regNo')||'').trim();
+  if(v && regNoInUse(v, regEditingId)) toast('⚠ '+v+' is already used by another case — it will still save, but check it');
+}
+/* is this number already taken by another case? */
+function regNoInUse(no, exceptId){
+  const s=String(no||'').trim(); if(!s) return false;
+  return (db.registry||[]).some(function(r){ return r.id!==exceptId && String(r.regNo||'')===s; });
+}
+/* ---- put every case back to the number it had before the app started re-deriving ---- */
+function regRestorePlan(){
+  const rows=[];
+  (db.registry||[]).forEach(function(r){
+    const orig=String(r.regNoOld||'').trim();
+    if(orig && orig!==String(r.regNo||'')) rows.push({r:r, from:String(r.regNo||''), to:orig});
+  });
+  const noOrig=(db.registry||[]).filter(function(r){ return !String(r.regNoOld||'').trim(); }).length;
+  return {rows:rows, noOrig:noOrig, total:(db.registry||[]).length};
+}
+function openRegRestore(){
+  const plan=regRestorePlan();
+  let m=$('regRestoreModal');
+  if(!m){ m=document.createElement('div'); m.id='regRestoreModal'; m.className='nav-modal'; document.body.appendChild(m);
+    m.addEventListener('click', function(e){ if(e.target===m) closeRegRestore(); }); }
+  m.classList.remove('hidden');
+  const rows=plan.rows.slice(0,400).map(function(x){
+    return '<tr><td class="small"><b>'+esc(x.r.name||'—')+'</b><br><span class="muted">'+esc((x.r.diagnosis||'').split('\n')[0])+'</span></td>'+
+      '<td class="small"><span class="muted">'+esc(x.from||'—')+'</span></td>'+
+      '<td class="small">→</td><td class="small"><b>'+esc(x.to)+'</b></td>'+
+      '<td class="small">'+(regHasSurgDate(x.r)?esc(fmtDate(x.r.dateSurg)):'<span class="reg-tag r2">no surgery date</span>')+'</td></tr>';
+  }).join('');
+  m.innerHTML='<div class="nav-modal-card" style="max-width:820px"><div class="nav-modal-head">'+
+    '<b>Restore the original registry numbers</b><button class="btn btn-ghost btn-sm" onclick="closeRegRestore()">✕ Close</button></div>'+
+    '<div class="nav-modal-body">'+
+    (plan.rows.length
+      ? '<p class="muted small">These cases still have the number they carried before the app began working numbers out from the surgery date. Nothing was lost — this puts them all back.'+
+        (plan.noOrig? ' <b>'+plan.noOrig+'</b> case'+(plan.noOrig>1?'s were':' was')+' created after that change and never had an older number, so '+(plan.noOrig>1?'they keep':'it keeps')+' what '+(plan.noOrig>1?'they have':'it has')+'.':'')+'</p>'+
+        '<table class="list"><thead><tr><th>Case</th><th style="width:110px">Now</th><th style="width:26px"></th><th style="width:110px">Restores to</th><th style="width:150px">Surgery date</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+        (plan.rows.length>400?'<p class="muted small">Showing the first 400 of '+plan.rows.length+'.</p>':'')+
+        '<div class="btn-bar mt"><button class="btn btn-green" onclick="regRestoreApply()">↩ Restore '+plan.rows.length+' number'+(plan.rows.length>1?'s':'')+'</button>'+
+        '<span class="muted small">You can undo this straight afterwards from 🔔 Notifications.</span></div>'
+      : '<div class="empty"><span class="ei">✅</span><b>Nothing to restore</b><br>Every case is already on its original number.</div>')+
+    '</div></div>';
+}
+function closeRegRestore(){ const m=$('regRestoreModal'); if(m) m.classList.add('hidden'); }
+function regRestoreApply(){
+  if(!requireEdit()) return;
+  const plan=regRestorePlan();
+  if(!plan.rows.length){ closeRegRestore(); return; }
+  const items=[];
+  plan.rows.forEach(function(x){
+    items.push(undoItem('registry', x.r, x.r));
+    x.r.regNoPrev=String(x.r.regNo||'');
+    x.r.regNo=x.to;
+    x.r.regNoProv=!regHasSurgDate(x.r);
+    syncTouch(x.r);
+  });
+  logActivity('edit','registry','restored '+plan.rows.length+' original numbers', undoPack(items));
+  persist(); closeRegRestore();
+  regRenderList(); regRenderKpis(); regRenderAnalytics(); regUpdateFixBadge();
+  toast('↩ '+plan.rows.length+' original number'+(plan.rows.length>1?'s':'')+' restored');
+}
+/* ---- the deliberate, all-at-once renumber ---- */
+function regRenumberPrompt(){
+  if(!requireEdit()) return;
+  const undated=(db.registry||[]).filter(function(r){ return !regHasSurgDate(r); }).length;
+  const msg='Renumber EVERY case from its date of surgery?\n\n'+
+    'Cases are sorted by operation date and numbered 0001, 0002 … within each year (2601010001 style).\n'+
+    (undated? ('\n⚠ '+undated+' case'+(undated>1?'s have':' has')+' no surgery date — '+(undated>1?'they':'it')+' will be numbered from the first-visit date and marked ⚠.\n') : '')+
+    '\nDo this only once you are happy the dates are right. You can undo it straight afterwards.';
+  if(!confirm(msg)) return;
+  const items=(db.registry||[]).map(function(r){ return undoItem('registry', r, r); });
+  const moved=regRenumberAll();
+  logActivity('edit','registry','renumbered '+moved+' case'+(moved===1?'':'s')+' by surgery date', undoPack(items));
+  persist(); regRenderList(); regRenderKpis(); regRenderAnalytics(); regUpdateFixBadge();
+  toast(moved? ('🔢 '+moved+' number'+(moved===1?'':'s')+' updated — undo from 🔔 if that is not what you wanted')
+             : 'Every number was already in step');
+}
 /* what a brand-new entry dated `ymd` would be numbered (shown before saving) */
 function regPreviewNo(ymd){
   const d = regValidYmd(ymd) ? String(ymd) : localISO();
-  const yr = d.slice(0,4);
-  let n = 1;
-  (db.registry||[]).forEach(function(r){ const b=regBasisDate(r); if(b.slice(0,4)===yr && b<=d) n++; });
-  return regNoFromDate(d, n);
+  return regNoFromDate(d, regNextCountFor(d.slice(0,4)));
 }
 function regNextRegNo(){ return regPreviewNo(localISO()); }
 
@@ -7606,25 +8205,31 @@ function regNextRegNo(){ return regPreviewNo(localISO()); }
 /* while the form is open, keep the shown number in step with the surgery date */
 function regSyncNoPreview(){
   const ds=regGet('dateSurg');
+  const cur=String(regGet('regNo')||'').trim();
   if(regEditingId){
     const r=(db.registry||[]).find(x=>x.id===regEditingId);
     if(!r) return;
-    const cur=regBasisDate(r);
-    if(regValidYmd(ds) && ds===cur) return;
-  }
-  regSet('regNo', regPreviewNo(regValidYmd(ds)?ds:localISO()));
+    // only a still-provisional number follows the date; a settled one stays put
+    if(!r.regNoProv) return;
+    if(cur && cur!==String(r.regNo||'')) return;      // typed by hand — leave it alone
+  } else if(cur && cur!==(window.__regSuggested||'')) return;
+  const next = regPreviewNo(regValidYmd(ds)?ds:localISO());
+  window.__regSuggested = next;
+  regSet('regNo', next);
 }
 function regNew(){
   if(!regFormBuilt) regBuildForm();
   regEditingId=null; regLinkedPatientId=null;
   regFillForm({});
-  regSet('regNo', regPreviewNo(localISO()));
+  window.__regSuggested = regPreviewNo(localISO());
+  regSet('regNo', window.__regSuggested);
   regSet('firstVisit', localISO());
   $('regFormTitle').textContent='New registry entry';
   regUpdateLinkLine();
   $('regFormWrap').classList.add('show');
+  scrShow('reg','form'); regApplyMode();
+  if($('regFormCrumb')) $('regFormCrumb').textContent='New registry entry';
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
-  $('regFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function regEdit(id){
   if(!regFormBuilt) regBuildForm();
@@ -7634,8 +8239,9 @@ function regEdit(id){
   $('regFormTitle').textContent='Edit registry entry — '+(r.name||r.regNo||'');
   regUpdateLinkLine();
   $('regFormWrap').classList.add('show');
+  scrShow('reg','form'); regApplyMode();
+  if($('regFormCrumb')) $('regFormCrumb').textContent='Edit — '+(r.regNo? r.regNo+' · ':'')+(r.name||'');
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
-  $('regFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function regDelete(id){
   if(!requireEdit()) return;
@@ -7643,18 +8249,17 @@ function regDelete(id){
   if(!confirm('Delete registry entry '+(r.regNo||'')+' — '+(r.name||'')+'?\n(The linked patient record is kept.)\n\nYou can undo this from 🔔 Notifications.')) return;
   const snapR = undoSnap(r);
   db.registry = db.registry.filter(x=>x.id!==id);
-  regRenumberAll();
   logActivity('delete','registry',(r.regNo?r.regNo+' — ':'')+(r.name||''), undoOne('registry', snapR, null));
   persist(); regRenderList(); regRenderKpis(); regRenderAnalytics();
   toast('Registry entry deleted');
 }
-function regCloseForm(){ $('regFormWrap').classList.remove('show'); regEditingId=null; regLinkedPatientId=null; }
+function regCloseForm(){ $('regFormWrap').classList.remove('show'); regEditingId=null; regLinkedPatientId=null; scrShow('reg','list'); }
 
 function regSave(){
   if(!requireEdit()) return;
   const rec = regCollect();
   if(!rec.name && !rec.mrn){ toast('⚠ Enter at least a patient name or MR number'); return; }
-  if(!rec.regNo){ rec.regNo = regPreviewNo(rec.dateSurg||localISO()); regSet('regNo', rec.regNo); }
+
   // keep demographics in sync with the linked patient record
   let pid = regLinkedPatientId;
   if(pid){
@@ -7668,19 +8273,31 @@ function regSave(){
   if(regEditingId){
     const ex=db.registry.find(x=>x.id===regEditingId);
     const before=undoSnap(ex);
+    const wasProv = !!ex.regNoProv;
+    const typedNo = String(rec.regNo||'').trim();
     Object.assign(ex, rec, {updatedAt:new Date().toISOString(), updatedBy:byTag()});
-    regRenumberAll();
+    // a number typed by hand wins; otherwise a provisional number settles once the
+    // surgery date arrives. Either way NO other case is touched.
+    let settled=false;
+    if(typedNo && typedNo!==String(ex.regNo||'')){ ex.regNo=typedNo; ex.regNoProv=!regHasSurgDate(ex); }
+    else settled = regSettleNo(ex);
     saved=ex;
     logActivity('edit','registry',(ex.regNo?ex.regNo+' — ':'')+(ex.name||''), undoOne('registry', before, ex));
+    if(settled && wasProv) window.__regSettledMsg = 'No. updated to '+ex.regNo+' now that the surgery date is in';
   } else {
-    delete rec.regNo;                     // the real number is derived from the surgery date on save
+    const suggested = String(window.__regSuggested||'');
+    const typedNo = String(rec.regNo||'').trim();
+    delete rec.regNo;
     saved=Object.assign(rec, {id:uid('reg'), createdAt:new Date().toISOString(), by:byTag()});
+    if(typedNo && typedNo!==suggested && !regNoInUse(typedNo, saved.id)){ saved.regNo=typedNo; saved.regNoProv=!regHasSurgDate(saved); }
+    else regAssignNo(saved);            // derived from THIS case's surgery date, nobody else's
     db.registry.push(saved);
-    regRenumberAll();
     logActivity('add','registry',(saved.regNo?saved.regNo+' — ':'')+(saved.name||''), undoOne('registry', null, saved));
   }
   persist(); regCloseForm(); regRenderList(); regRenderKpis(); regRenderAnalytics();
-  toast('Registry entry saved — No. '+(saved.regNo||'')+(regHasSurgDate(saved)?'':' (provisional — add the date of surgery)'));
+  const extra = window.__regSettledMsg; window.__regSettledMsg='';
+  toast(extra ? ('Registry entry saved — '+extra)
+    : ('Registry entry saved — No. '+(saved.regNo||'')+(regHasSurgDate(saved)?'':' (provisional — add the date of surgery)')));
 }
 /* ---- pending-change queue (owner approval for staff registry adds/edits) ---- */
 function submitPendingChange(op, targetId, payload, label){
@@ -7790,7 +8407,7 @@ function regRenderList(){
     const chk=regSel.has(r.id)?' checked':'';
     return '<tr'+(chk?' class="reg-rowsel"':'')+'>'+
     '<td><input type="checkbox" class="reg-rowcb" data-id="'+r.id+'"'+chk+' onclick="regToggleOne(\''+r.id+'\',this.checked)"></td>'+
-    '<td class="small"><b>'+esc(r.regNo||'—')+'</b>'+(regHasSurgDate(r)?'':' <span class="reg-prov" title="No date of surgery yet — this number is provisional and will change once you enter the operation date">&#9888;</span>')+(r.mrn?'<br><span class="muted">MR '+esc(r.mrn)+'</span>':'')+'</td>'+
+    '<td class="small"><b>'+esc(r.regNo||'—')+'</b>'+(regHasSurgDate(r)?'':' <span class="reg-prov" title="No date of surgery recorded. Numbers no longer move on their own — enter the date and this one case is corrected once.">&#9888;</span>')+(r.mrn?'<br><span class="muted">MR '+esc(r.mrn)+'</span>':'')+'</td>'+
     '<td><b>'+esc(r.name||'—')+'</b>'+(r.age?'<br><span class="small muted">'+esc(r.age)+' '+esc(r.sex||'')+'</span>':'')+
        (r.patientId?' <span title="Linked to a patient record">🔗</span>':'')+'</td>'+
     '<td class="small">'+esc((r.diagnosis||'—').split('\n')[0])+(r.histSubtype?'<br><span class="muted">'+esc(r.histSubtype.split('\n')[0].slice(0,40))+'</span>':'')+'</td>'+
@@ -7803,6 +8420,7 @@ function regRenderList(){
        '<button class="btn btn-danger btn-sm" onclick="regDelete(\''+r.id+'\')">✕</button></td></tr>';
   }).join('');
   regUpdateSelUI(rows);
+  if(typeof regUpdateFixBadge==='function') regUpdateFixBadge();
 }
 function regUpdateSelUI(rows){
   rows=rows||regFiltered();
@@ -7818,6 +8436,80 @@ function regToggleOne(id,on){ if(on) regSel.add(id); else regSel.delete(id);
   regUpdateSelUI(); }
 function regToggleSelAll(on){ regFiltered().forEach(r=>{ if(on) regSel.add(r.id); else regSel.delete(r.id); }); regRenderList(); }
 function regClearSel(){ regSel.clear(); regRenderList(); }
+/* ---- find the entries whose dates are upsetting the numbering ---- */
+function regDateIssues(){
+  const today=localISO();
+  const out=[];
+  (db.registry||[]).forEach(function(r){
+    const d=r.dateSurg;
+    let why='';
+    if(!regValidYmd(d)) why='No date of surgery';
+    else if(d>today) why='Date of surgery is in the future';
+    else if(d<'1980-01-01') why='Date of surgery looks wrong (too old)';
+    else if(regValidYmd(r.firstVisit) && d<r.firstVisit) why='Operated before the first visit';
+    if(why) out.push({r:r, why:why});
+  });
+  return out.sort(function(a,b){ return String(a.r.regNo||'').localeCompare(String(b.r.regNo||'')); });
+}
+function regUpdateFixBadge(){
+  const b=$('regFixBtn'); if(!b) return;
+  const n=regDateIssues().length;
+  b.innerHTML = n ? ('🩹 Check dates <span class="reg-tag r2">'+n+'</span>') : '🩹 Check dates';
+  b.classList.toggle('btn-warnish', n>0);
+}
+function openRegDateFix(){
+  const list=regDateIssues();
+  let m=$('regFixModal');
+  if(!m){ m=document.createElement('div'); m.id='regFixModal'; m.className='nav-modal'; document.body.appendChild(m);
+    m.addEventListener('click', function(e){ if(e.target===m) closeRegDateFix(); }); }
+  m.classList.remove('hidden');
+  const rows = list.map(function(it,i){
+    const r=it.r;
+    return '<tr><td class="small"><b>'+esc(r.regNo||'—')+'</b><br><span class="muted">'+esc(r.name||'')+'</span></td>'+
+      '<td class="small">'+esc((r.diagnosis||'').split('\n')[0]||'—')+'</td>'+
+      '<td class="small"><span class="reg-tag r2">'+esc(it.why)+'</span>'+
+        (regValidYmd(r.firstVisit)?'<br><span class="muted">first visit '+esc(fmtDate(r.firstVisit))+'</span>':'')+'</td>'+
+      '<td><input type="date" class="rfx-d" data-id="'+esc(r.id)+'" value="'+esc(regValidYmd(r.dateSurg)?r.dateSurg:'')+'" style="width:160px"></td>'+
+      '<td><button class="btn btn-ghost btn-sm" onclick="closeRegDateFix();showTab(\'registry\');regEdit(\''+r.id+'\')">Open</button></td></tr>';
+  }).join('');
+  m.innerHTML='<div class="nav-modal-card" style="max-width:900px"><div class="nav-modal-head">'+
+    '<b>Check the dates of surgery</b><button class="btn btn-ghost btn-sm" onclick="closeRegDateFix()">✕ Close</button></div>'+
+    '<div class="nav-modal-body">'+
+    (list.length
+      ? '<p class="muted small">Registry numbers are built from the date of surgery, so a missing or wrong date is what pushes the numbering out. Fill in the right dates below, then press Save &amp; renumber — every case is re-numbered once, in date order.</p>'+
+        '<table class="list"><thead><tr><th style="width:170px">Case</th><th>Diagnosis</th><th style="width:200px">Problem</th><th style="width:175px">Date of surgery</th><th style="width:80px"></th></tr></thead><tbody>'+rows+'</tbody></table>'+
+        '<div class="btn-bar mt"><button class="btn btn-green" onclick="regDateFixSave()">💾 Save &amp; renumber</button>'+
+        '<span class="muted small">'+list.length+' case'+(list.length>1?'s':'')+' need a date. Leave one blank if you genuinely don’t know it — it keeps a provisional number marked ⚠.</span></div>'
+      : '<div class="empty"><span class="ei">✅</span><b>Every case has a sensible date of surgery</b><br>Nothing to fix — your numbering is in order.</div>')+
+    '</div></div>';
+}
+function closeRegDateFix(){ const m=$('regFixModal'); if(m) m.classList.add('hidden'); }
+function regDateFixSave(){
+  if(!requireEdit()) return;
+  let changed=0;
+  const touched=[];
+  document.querySelectorAll('#regFixModal .rfx-d').forEach(function(inp){
+    const r=(db.registry||[]).find(x=>String(x.id)===String(inp.dataset.id)); if(!r) return;
+    const v=inp.value;
+    if(regValidYmd(v) && v!==r.dateSurg){ r.dateSurg=v; syncTouch(r); changed++; touched.push(r); }
+  });
+  // Only the cases whose date you just corrected are re-numbered — in date order,
+  // taking the next free slots. Every other case keeps the number it already has.
+  let moved=0;
+  touched.sort(function(a,b){ return String(a.dateSurg).localeCompare(String(b.dateSurg)); })
+    .forEach(function(r){
+      const before=String(r.regNo||'');
+      const n=regNextCountFor(r.dateSurg.slice(0,4));
+      r.regNo=regNoFromDate(r.dateSurg, n);
+      r.regNoProv=false;
+      if(r.regNo!==before){ r.regNoPrev=before; syncTouch(r); moved++; }
+    });
+  persist();
+  closeRegDateFix();
+  regRenderList(); regRenderKpis(); regRenderAnalytics(); regUpdateFixBadge();
+  toast(changed ? ('Fixed '+changed+' date'+(changed>1?'s':'')+(moved?(' — '+moved+' number'+(moved>1?'s':'')+' corrected; nothing else moved'):' — no numbers needed changing'))
+                : 'No dates were changed');
+}
 function regRenderKpis(){
   const R=db.registry||[];
   const mal=R.filter(r=>(r.nature||'').toLowerCase().includes('malignant')).length;
@@ -7875,9 +8567,9 @@ function regImportSeed(){
     rec.patientId = p?p.id:null;
     if(rec.regNo) rec.regNoOld=String(rec.regNo);
     rec.id=uid('reg'); rec.createdAt=new Date().toISOString(); rec.by=byTag(); rec.imported=true;
+    if(!rec.regNo) regAssignNo(rec); else rec.regNoProv=!regHasSurgDate(rec);
     db.registry.push(rec); added++; if(rec.regNo) have.add(String(rec.regNo));
   });
-  regRenumberAll();
   persist();
   regRenderList(); regRenderKpis(); regRenderAnalytics();
   toast(added? ('Imported '+added+' registry cases') : 'Already imported — nothing new');
@@ -7933,9 +8625,9 @@ function regImportRows(rows){
     else { const p = rec.mrn ? db.patients.find(x=>!x.regOnly && String(x.mrn)===String(rec.mrn)) : null;
       rec.patientId=p?p.id:null; rec.id=uid('reg'); rec.createdAt=new Date().toISOString(); rec.by=byTag();
       if(rec.regNo) rec.regNoOld=String(rec.regNo);
+      if(!rec.regNo) regAssignNo(rec); else rec.regNoProv=!regHasSurgDate(rec);
       db.registry.push(rec); if(rec.regNo) byReg[String(rec.regNo)]=rec; added++; }
   }
-  regRenumberAll();
   persist(); regRenderList(); regRenderKpis(); regRenderAnalytics();
   toast('Import: '+added+' added, '+upd+' updated');
 }
@@ -8926,7 +9618,7 @@ document.addEventListener('keydown', e=>{
    discharge summaries and note templates.                                        */
 const PHRASE_FIELDS = {cComplaints:'complaints', cFindings:'findings', cDiagnosis:'diagnosis',
   cTests:'tests', cPlan:'plan', cProc:'proc',
-  dcDiagnosis:'diagnosis', dcClinical:'findings', dcCourse:'course', dcInstr:'plan', dcProc:'proc',
+  dcDiagnosis:'diagnosis', dcClinical:'complaints', dcFindings:'findings', dcCourse:'course', dcInstr:'plan', dcProc:'proc',
   ntComplaints:'complaints', ntFindings:'findings', ntDiagnosis:'diagnosis', ntTests:'tests', ntPlan:'plan', ntProc:'proc'};
 let phBank=null;
 function phraseBankInvalidate(){ phBank=null; }
@@ -8943,8 +9635,8 @@ function buildPhraseBank(){
   const K=['complaints','findings','diagnosis','tests','plan','proc'];
   (db.visits||[]).forEach(v=>K.forEach(k=>add(k, v[k])));
   (db.noteTemplates||[]).forEach(t=>K.forEach(k=>add(k, t[k])));
-  (db.documents||[]).forEach(d=>{ const dc=d.dc||{}; add('diagnosis',dc.diagnosis); add('findings',dc.clinical);
-    add('course',dc.course); add('plan',dc.instr); add('proc',dc.proc); });
+  (db.documents||[]).forEach(d=>{ const dc=d.dc||{}; add('diagnosis',dc.diagnosis); add('complaints',dc.clinical);
+    add('findings',dc.findings); add('course',dc.course); add('plan',dc.instr); add('proc',dc.proc); });
   (db.registry||[]).forEach(r=>{ add('diagnosis', r.diagnosis); });
   phBank={};
   Object.keys(raw).forEach(k=>{
@@ -9326,7 +10018,10 @@ function setShortcuts(on){ db.settings.shortcuts = on?'on':'off'; persist(); }
 /* ===== Cloud sync module ===== */
 
 /* ==================== CLOUD SYNC (Supabase) — dormant until configured ==================== */
-const SYNC_COLLS=['users','patients','visits','registry','documents','surgeries','inventory','appts','recalls','qrcodes','leaflets','expenses','queue','templates','noteTemplates','instrPresets'];
+/* Every collection that travels between devices. Anything left out of this list only
+   ever exists on the device it was typed on — that was the bug with `meds` and `videos`. */
+const SYNC_COLLS=['users','patients','visits','registry','documents','surgeries','inventory','appts','recalls',
+  'qrcodes','leaflets','expenses','queue','templates','noteTemplates','instrPresets','meds','videos'];
 let sb=null, syncRealtimeChan=null, syncTimer=null;
 function syncCfg(){ const c=db.settings.sync = db.settings.sync || {url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false}; if(!c.knownIds) c.knownIds={}; if(!c.suppressed) c.suppressed={}; return c; }
 function loadSupabaseLib(){
@@ -9494,7 +10189,6 @@ function undoActivity(id, quick){
     touched[it.coll]=true;
   });
   a.undone=true; a.undoneAt=new Date().toISOString(); a.undoneBy=(currentUser?currentUser.name:'');
-  if(touched.registry && typeof regRenumberAll==='function') regRenumberAll();
   persist();
   Object.keys(touched).forEach(function(coll){
     undoViewsFor(coll).forEach(function(fn){ try{ if(typeof window[fn]==='function') window[fn](); }catch(e){} });
@@ -9644,6 +10338,25 @@ function computeSyncPlan(local, cloud, state, isAdmin, decisions){
   newTombKeys.forEach(key=>{ const p=key.split('|'); pushRows.push({id:'tomb:'+key, kind:'__tomb', payload:{k:p[0], tid:p[1]}, updated_at:state.now}); });
   return {newLocal, pushRows, deleteRowIds, newState:{knownIds:newKnown, suppressed:newSupp}, pendingForAdmin};
 }
+/* Two devices both start today's MR counter at 011, so after a merge the next number
+   must jump past anything already used. Same for the sequential style. */
+function reconcileMrnSeq(){
+  try{
+    db.seq = db.seq || {};
+    const today = localISO();
+    const pre = today.slice(2,4)+today.slice(5,7)+today.slice(8,10);
+    let maxDay = 10;
+    (db.patients||[]).forEach(p=>{
+      const s=String(p.mrn||'');
+      if(s.length===9 && s.slice(0,6)===pre){ const n=parseInt(s.slice(6),10); if(!isNaN(n) && n>maxDay) maxDay=n; }
+    });
+    const cur = (db.seq.mrnDay && db.seq.mrnDay.d===today) ? (db.seq.mrnDay.n||10) : 10;
+    db.seq.mrnDay = {d:today, n:Math.max(cur, maxDay)};
+    let maxSeq = 0;
+    (db.patients||[]).forEach(p=>{ const m=String(p.mrn||'').match(/-(\d{4})$/); if(m){ const n=+m[1]; if(n>maxSeq) maxSeq=n; } });
+    if((db.seq.mrn||1) <= maxSeq) db.seq.mrn = maxSeq+1;
+  }catch(e){}
+}
 function syncSnapshotKnown(){ const k={}; SYNC_COLLS.forEach(c=>{ k[c]=(db[c]||[]).map(x=>String(x.id)); }); syncCfg().knownIds=k; persist(); }
 function askDeleteApprovals(list){
   return new Promise(resolve=>{
@@ -9676,7 +10389,9 @@ async function syncNow(loud, force){
     let plan=computeSyncPlan(local, cloud, state, isAdmin, {});
     if(isAdmin && plan.pendingForAdmin.length){ const decisions=await askDeleteApprovals(plan.pendingForAdmin); plan=computeSyncPlan(local, cloud, state, isAdmin, decisions); }
     SYNC_COLLS.forEach(k=>{ db[k]=plan.newLocal[k]; });
-    if(typeof regRenumberAll==='function') regRenumberAll();   // numbers follow surgery dates, so re-derive after a merge
+    if(typeof reconcileMrnSeq==='function') reconcileMrnSeq(); // never hand out an MR number another device already used
+    if(typeof phraseBankInvalidate==='function') phraseBankInvalidate();
+    try{ if(db.meds && db.meds.length) db.meds.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''))); }catch(e){}
     reconcileUsers(); refreshCurrentUser();   // apply any access changes immediately, before later steps
     const delIds=[...new Set(plan.deleteRowIds)];
     for(const id of delIds){ await c.from('records').delete().eq('id', id); }
@@ -9777,6 +10492,7 @@ _initStep(refreshPresetSelects);
 _initStep(applyTheme);
 _initStep(applyZoom);
 _initStep(()=>{ if(typeof renderSyncChip==='function') renderSyncChip(); });
+_initStep(()=>{ if(typeof renderNvChips==='function') renderNvChips(); if(typeof renderFuWhatChips==='function') renderFuWhatChips(); });
 try{ initAuth(); }
 catch(e){ try{ console.error('initAuth failed:', e); var ls=document.getElementById('lockScreen'); if(ls) ls.classList.remove('hidden'); }catch(_){ } }
 _initStep(initAutoBackup);
