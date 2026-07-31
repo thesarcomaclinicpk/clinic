@@ -545,7 +545,7 @@ html[data-theme="dark"] .role-badge.active{background:#12291a;color:#6ad78f;bord
 .rx-pt b{font-weight:700}
 .rx-cols{display:flex;gap:18px}
 .rx-main{flex:1;padding-top:2px}
-.rx-side{width:37%;border-left:1px solid #999;padding-left:14px;font-size:12.5px}
+.rx-side{width:28%;border-left:1px solid #999;padding-left:12px;font-size:12.5px}
 .rx-side h4{font-size:11px;text-transform:uppercase;letter-spacing:.6px;margin:9px 0 2px;color:#333}
 .rx-side h4:first-child{margin-top:0}
 .rx-side p{white-space:pre-wrap}
@@ -625,7 +625,9 @@ tr.rx-ur-row td{padding:0 10px 9px;border-bottom:1px solid var(--line)}
 input.rx-ur{direction:rtl;text-align:right;font-size:13.5px;border:1px dashed #cbd5e1;background:#fafffe;padding:5px 9px}
 input.rx-ur:focus{border-style:solid}
 /* compact mode: automatic when a prescription is long, to keep it on one sheet */
-.rx-sheet.compact .rx-med{margin-bottom:6px;font-size:12px}
+.rx-sheet.compact .rx-med{margin-bottom:5px;font-size:12px;gap:6px}
+.rx-sheet.compact .rx-med .mnum{width:14px;height:14px;line-height:11.5px;font-size:9.5px;margin-top:1px}
+.rx-sheet.compact .rx-med + .rx-med{padding-top:4px}
 .rx-sheet.compact .rx-med .mline{font-size:11.5px}
 .rx-sheet.compact .rx-med .minstr{font-size:10.5px}
 .rx-sheet.compact .rx-side{font-size:11px}
@@ -646,7 +648,14 @@ input.rx-ur:focus{border-style:solid}
 .rx-sheet.pad .rx-cols{margin-top:12mm} /* clears the pre-printed ℞ symbol (ends ~84mm from top) */
 .rx-sheet.pad .rx-main{padding-left:2mm}
 .rx-symbol{font-size:26px;font-weight:700;margin:2px 0 6px}
-.rx-med{margin-bottom:11px;font-size:14px}
+.rx-med{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:14px}
+.rx-med .mnum{flex:none;width:16px;height:16px;border:1.2px solid #111;border-radius:50%;
+  font-size:10.5px;line-height:13.5px;text-align:center;font-weight:700;
+  font-family:Arial,Helvetica,sans-serif;margin-top:2px;box-sizing:border-box}
+.rx-med .mbody{flex:1 1 auto;min-width:0}
+/* hairline between medicines — drawn on top of each one after the first, so a
+   trailing advice block never leaves a stray rule under the last medicine */
+.rx-med + .rx-med{border-top:1px solid #d8d8d8;padding-top:7px}
 .rx-med .mname{font-weight:700}
 .rx-med .mline{font-size:13px;margin-top:1px}
 .rx-med .minstr{font-size:12px;font-style:italic;color:#333}
@@ -655,19 +664,20 @@ input.rx-ur:focus{border-style:solid}
 .rx-advice p{white-space:pre-wrap}
 .rx-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px;page-break-inside:avoid}
 .rx-foot.rx-foot-r{justify-content:flex-end}
-.rx-cornerwrap{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-.rx-nvbox{border:1.1px solid #111;border-radius:3px;padding:4px 10px 5px;width:112mm;box-sizing:border-box}
+.rx-boxcol{display:flex;flex-direction:column;align-items:stretch;gap:5px;width:52mm}
+.rx-nvbox{border:1.1px solid #111;border-radius:3px;padding:4px 10px 5px;width:100%;box-sizing:border-box}
 .rx-nvbox .fb-h{font-family:'Noto Nastaliq Urdu','Urdu Typesetting','Jameel Noori Nastaleeq','Geeza Pro',Georgia,serif;
   direction:rtl;text-align:right;font-size:10.5px;line-height:1.85;border-bottom:1px solid #111;padding-bottom:2px;margin-bottom:3px}
 .rx-nvbox .nv-en{font-size:8px;letter-spacing:.8px;text-transform:uppercase;color:#444;margin-bottom:2px}
 .rx-nvbox ul{margin:0;padding-left:14px}
 .rx-nvbox li{font-size:11.5px;line-height:1.45}
-.rx-sheet.compact .rx-nvbox{width:100mm;padding:3px 8px 4px}
+.rx-sheet.compact .rx-boxcol{width:46mm}
+.rx-sheet.compact .rx-nvbox{padding:3px 8px 4px}
 .rx-sheet.compact .rx-nvbox li{font-size:10.5px;line-height:1.35}
-.rx-corner{display:flex;align-items:stretch;gap:8px}
+.rx-corner{display:flex;align-items:flex-end;gap:8px}
 .rx-qr{display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
-.rx-fubox{border:1.1px solid #111;border-radius:3px;padding:0 10px;text-align:center;
-  width:52mm;display:flex;flex-direction:column;justify-content:center;gap:1px}
+.rx-fubox{border:1.1px solid #111;border-radius:3px;padding:4px 10px 5px;text-align:center;
+  width:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:1px}
 .rx-fubox .fb-h{font-family:'Noto Nastaliq Urdu','Urdu Typesetting','Jameel Noori Nastaleeq','Geeza Pro',Georgia,serif;
   direction:rtl;font-size:10.5px;line-height:1.85;border-bottom:1px solid #111;padding-bottom:2px;margin-bottom:3px}
 .rx-fubox .fb-d{font-size:16px;font-weight:800;letter-spacing:.6px;line-height:1.15}
@@ -676,7 +686,7 @@ input.rx-ur:focus{border-style:solid}
 .rx-bc svg{display:block;height:9mm;width:100%}
 .rx-bc .bc-tx{font-size:8.5px;letter-spacing:1.1px;margin-top:2.5px;color:#222}
 .rx-sheet.compact .rx-bc svg{height:7mm}
-.rx-sheet.compact .rx-fubox{width:46mm;padding:0 8px}
+.rx-sheet.compact .rx-fubox{padding:3px 8px 4px}
 .rx-sheet.compact .rx-fubox .fb-d{font-size:14px}
 .rx-sheet.compact .rx-bc{width:46mm}
 .rx-qr{text-align:center}
@@ -687,6 +697,31 @@ input.rx-ur:focus{border-style:solid}
 .rx-foot .sig .line{border-top:1px solid #111;width:180px;margin-bottom:3px}
 .rx-footer-note{margin-top:10px;border-top:1px solid #999;padding-top:4px;
   font-size:10.5px;text-align:center;color:#333}
+/* "Page 1 of 2" — only added when a print really runs onto a second sheet */
+.rx-pgno{position:absolute;right:0;height:12px;line-height:12px;font-size:9px;color:#777;
+  letter-spacing:.4px;font-family:-apple-system,Arial,Helvetica,sans-serif}
+/* ===== Printed look (Settings > Printing > Printed look) ===== */
+/* soft grey headings, black body text */
+.rx-sheet.fin-grey .rx-side h4,.rx-sheet.fin-grey .rx-advice h4{color:#555}
+.rx-sheet.fin-grey .rx-side{border-left-color:#bbb}
+.rx-sheet.fin-grey .rx-advice{border-top-color:#bbb}
+.rx-sheet.fin-grey .rx-nvbox,.rx-sheet.fin-grey .rx-fubox{border-color:#555}
+.rx-sheet.fin-grey .rx-nvbox .fb-h,.rx-sheet.fin-grey .rx-fubox .fb-h{color:#555}
+.rx-sheet.fin-grey .rx-pt{border-bottom-color:#bbb}
+.rx-sheet.fin-grey .rx-med + .rx-med{border-top-color:#ccc}
+.rx-sheet.fin-grey .rx-med .mnum{border-color:#555;color:#333}
+.rx-sheet.fin-teal .rx-side h4{color:#0e7490}
+.rx-sheet.fin-teal .rx-side{border-left-color:#0e7490}
+.rx-sheet.fin-teal .rx-advice{border-top-color:#0e7490}
+.rx-sheet.fin-teal .rx-nvbox,.rx-sheet.fin-teal .rx-fubox{border-color:#0e7490}
+.rx-sheet.fin-teal .rx-nvbox .fb-h,.rx-sheet.fin-teal .rx-fubox .fb-h{color:#0e7490}
+.rx-sheet.fin-teal .rx-pt{border-bottom-color:#0e7490}
+.rx-sheet.fin-wm .rx-main{position:relative;overflow:hidden}
+.rx-sheet.fin-wm .rx-main:before{content:'\211E';position:absolute;left:50%;top:36%;
+  transform:translate(-50%,-50%);font-family:Georgia,'Times New Roman',serif;font-size:112mm;
+  line-height:1;color:#000;opacity:.04;pointer-events:none;z-index:0}
+.rx-sheet.fin-wm .rx-med,.rx-sheet.fin-wm .rx-advice,.rx-sheet.fin-wm .rx-symbol,
+.rx-sheet.fin-wm .rx-foot{position:relative;z-index:1}
 @media print{
   body{background:#fff}
   #app{display:none!important}
@@ -805,6 +840,10 @@ html[data-theme="dark"] .set-cat:hover,html[data-theme="dark"] .set-prof:hover{b
   font-size:11.5px;cursor:pointer;transition:.14s;white-space:nowrap}
 .chip:hover{border-color:var(--teal);background:var(--teal-light);color:var(--teal-dark)}
 .chip.on{border-color:var(--teal);background:var(--teal);color:#fff}
+.chip-sel{width:auto;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:14px;
+  padding:3px 26px 3px 10px;font-size:11.5px;height:auto;min-height:0;line-height:1.35;cursor:pointer}
+.chip-sel.on{border-color:var(--teal);background:var(--teal);color:#fff}
+.chiprow{align-items:center}
 .btn.btn-warnish{border-color:#f59e0b;color:#b45309;background:#fffbeb}
 html[data-theme="dark"] .btn.btn-warnish{background:#2a2010;color:#fcd34d;border-color:#6b5220}
 html[data-theme="dark"] .ph-n{background:#1b2b38}
@@ -836,7 +875,7 @@ body.no-user #notifBtn, body.no-user #mBell, body.no-user #notifPanel{display:no
 .sync-spin{display:none;width:17px;height:17px;padding:0;border-radius:50%;border:2px solid var(--line);border-top-color:var(--teal);background:transparent;opacity:.5;cursor:pointer;transition:opacity .2s;flex:none}
 .sync-spin:hover{opacity:1}
 body.cloud-on:not(.no-user) .sync-spin{display:inline-block}
-#dSyncSpin{position:fixed;top:22px;right:68px;z-index:57;border-top-color:#0e7490}
+#dSyncSpin{border-top-color:#0e7490;margin-right:2px}
 #mtopbar .sync-spin{margin-left:auto;border-color:rgba(255,255,255,.4);border-top-color:#fff;opacity:.75}
 #mtopbar #mBell{margin-left:8px}
 body.syncing .sync-spin{opacity:1;animation:spin .7s linear infinite}
@@ -1323,10 +1362,10 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 </aside>
 <div id="content">
 <div id="mtopbar"><button id="mHamb" aria-label="Open menu" onclick="toggleDrawer()">☰</button><span id="mTitle">Clinic</span><button class="sync-spin" onclick="spinnerSync()" title="Sync now" aria-label="Sync now"></button><button id="mScan" aria-label="Scan" onclick="openScanner()">📷</button><button id="mSearch" aria-label="Search" onclick="openPalette()">🔍</button><button id="mBell" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="mBellBadge">0</span></button></div>
-<button class="sync-spin" id="dSyncSpin" onclick="spinnerSync()" title="Sync now" aria-label="Sync now"></button>
 <div id="navBackdrop" onclick="closeDrawer()"></div>
 <!-- notifications -->
 <div id="topActions">
+<button class="sync-spin" id="dSyncSpin" onclick="spinnerSync()" title="Sync now" aria-label="Sync now"></button>
 <button id="scanBtn" aria-label="Scan a patient barcode" onclick="openScanner()" title="Scan the barcode on a printed prescription">📷</button>
 <button id="searchBtn" aria-label="Search anything" onclick="openPalette()" title="Search patients, registry, discharges, medicines and pages">🔍 <span>Search</span> <span class="kbd">/</span></button>
 </div>
@@ -2370,6 +2409,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="field"><label>Urdu size on prints</label><select id="sUrduSize">
         <option value="normal">Normal</option><option value="large">Large</option><option value="xlarge">Extra large</option>
       </select></div>
+      <div class="field"><label>Printed look</label><select id="sRxFinish"><option value="grey">Soft grey headings, black text</option><option value="plain">Plain — flat black &amp; white</option><option value="teal">Teal accents — headings &amp; rules in your clinic colour</option><option value="wm">Faint ℞ watermark behind the medicines</option></select></div>
       <div class="field"><label>QR code on prescriptions</label><select id="sQrRx"><option value="on">On — any phone can scan the full prescription</option><option value="off">Off</option></select></div>
       <div class="field"><label>Default follow-up on new prescriptions</label><select id="sDefFu">
         <option value="">None — choose per patient</option>
@@ -3051,12 +3091,12 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 34;
+const SEED_VERSION = 36;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
       regNo:'',clinicName:'Faizi Hospital',address:'53-A Main Satellite Town Rd, Satellite Town, Sargodha',
-      phone:'+92 315 7459655 · +92 304 3212222',timings:'',paper:'A4',footer:'',printMode:'pad',padTop:'68',padBottom:'34',urduRx:'on',rxBarcode:'on',phraseHelp:'on',mrnPrefix:'FH',mrnStyle:'date',logo:'',qrRx:'on',feeShare:'30',theme:'light',uiZoom:'100',
+      phone:'+92 315 7459655 · +92 304 3212222',timings:'',paper:'A4',footer:'',printMode:'pad',padTop:'68',padBottom:'34',urduRx:'on',rxBarcode:'on',phraseHelp:'on',mrnPrefix:'FH',mrnStyle:'date',logo:'',qrRx:'on',rxFinish:'grey',feeShare:'30',theme:'light',uiZoom:'100',
       autoLock:'10',defFu:'',feePresets:'',urduSize:'normal',backupPw:'',
       accent:'teal', photoLock:'', photoHero:'',
       brandTag:'The Sarcoma Clinic PK', nav:null, navLabels:{}, labelOverrides:{}, cardTint:'on', shortcuts:'on', favMeds:[], favTpls:[], defQrId:'', sync:{url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false},
@@ -3269,6 +3309,14 @@ function migrateDB(){
   if(db.settings.phraseHelp===undefined) db.settings.phraseHelp='on';
   // ---- v33 ----
   if(db.settings.padBottom===undefined) db.settings.padBottom='34';
+  // ---- v35 ---- printed look (plain / soft grey / teal accents / faint Rx watermark)
+  if(db.settings.rxFinish===undefined) db.settings.rxFinish='plain';
+  // ---- v36 ---- soft grey headings became the house style; nudge anyone still on the
+  // old flat black across, once only, so a deliberate later choice of Plain is respected
+  if(!db.settings.rxFinishV36){
+    db.settings.rxFinishV36 = 1;
+    if((db.settings.rxFinish||'plain')==='plain') db.settings.rxFinish='grey';
+  }
   // Medicine ids used to come from a counter that ran separately on each device, so the
   // same id could mean two different drugs on two phones — which made the directory
   // impossible to sync. Every medicine now takes an id derived from its name, so both
@@ -3473,7 +3521,7 @@ function applyTabAccess(name){
 }
 
 /* ================= SETTINGS ================= */
-const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent'};
+const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent'};
 function loadSettingsForm(){
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) $(el).value = db.settings[key]||''; }
   applyBrand();
@@ -4823,14 +4871,16 @@ function renderSettingsShell(){
 /* ---- follow-up: pick WHEN with the week buttons, then WHAT for ----
    The wording is kept in the exact shapes the Urdu translator understands, so the
    patient's line comes out right without the doctor typing anything.              */
+/* the six on the line, then the rest tucked into "More…" */
 const FU_WHAT = [
-  ['stitch removal','for stitch removal'],
-  ['dressing','for dressing'],
-  ['plaster check','for plaster check'],
-  ['X-ray','with X-ray report'],
-  ['MRI','with MRI report'],
+  ['stitch removal','for stitch removal', 1],
+  ['dressing','for dressing', 1],
+  ['plaster check','for plaster check', 1],
+  ['X-ray','with X-ray report', 1],
+  ['MRI','with MRI report', 1],
+  ['blood tests','with blood tests report', 1],
   ['CT','with CT scan report'],
-  ['blood tests','with blood tests report'],
+  ['ultrasound','with ultrasound report'],
   ['physio','for physiotherapy'],
   ['chemo','for chemotherapy'],
   ['radiotherapy','for radiotherapy'],
@@ -4840,11 +4890,19 @@ const FU_WHAT = [
 let fuWhatSel = -1;
 function renderFuWhatChips(){
   const host=$('fuWhatChips'); if(!host) return;
-  host.innerHTML = FU_WHAT.map(function(w,i){
-    return '<button type="button" class="chip'+(fuWhatSel===i?' on':'')+'" onclick="fuPickWhat('+i+')">'+esc(w[0])+'</button>';
-  }).join('') +
-  '<button type="button" class="chip'+(fuWhatSel===-2?' on':'')+'" onclick="fuPickWhen(-2)" title="Come back only if there is a problem">SOS</button>' +
-  '<button type="button" class="chip'+(fuWhatSel===-3?' on':'')+'" onclick="fuPickWhen(-3)">tomorrow</button>';
+  const inline = FU_WHAT.map(function(w,i){ return {w:w,i:i}; }).filter(function(x){ return x.w[2]; });
+  const more   = FU_WHAT.map(function(w,i){ return {w:w,i:i}; }).filter(function(x){ return !x.w[2]; });
+  const moreOn = more.some(function(x){ return x.i===fuWhatSel; });
+  host.innerHTML =
+    inline.map(function(x){
+      return '<button type="button" class="chip'+(fuWhatSel===x.i?' on':'')+'" onclick="fuPickWhat('+x.i+')">'+esc(x.w[0])+'</button>';
+    }).join('') +
+    '<button type="button" class="chip'+(fuWhatSel===-2?' on':'')+'" onclick="fuPickWhen(-2)" title="Come back only if there is a problem">SOS</button>' +
+    '<button type="button" class="chip'+(fuWhatSel===-3?' on':'')+'" onclick="fuPickWhen(-3)">tomorrow</button>' +
+    '<select id="fuWhatMore" class="chip-sel'+(moreOn?' on':'')+'" onchange="fuPickWhat(parseInt(this.value,10))">'+
+      '<option value="-1">More…</option>'+
+      more.map(function(x){ return '<option value="'+x.i+'"'+(fuWhatSel===x.i?' selected':'')+'>'+esc(x.w[0])+'</option>'; }).join('')+
+    '</select>';
 }
 /* the "when" half — remembered so a later chip can rebuild the whole sentence */
 let fuWhenDays = 0, fuWhenLabel = '';
@@ -4856,7 +4914,8 @@ function fuCompose(){
   $('cFollowUp').value = (when + (what?' '+what:'')).trim();
 }
 function fuPickWhat(i){
-  fuWhatSel = (fuWhatSel===i) ? -1 : i;
+  if(isNaN(i)) i=-1;
+  fuWhatSel = (fuWhatSel===i && i>=0) ? -1 : i;
   renderFuWhatChips();
   fuCompose();
   const box=$('cFollowUp'); box.dispatchEvent(new Event('input',{bubbles:true}));
@@ -6040,7 +6099,7 @@ async function printDoc(d, forcePlain){
     inner = strip + '<div class="doc-title">'+(DOC_TITLES[d.type]||'')+'</div>' +
       '<div class="doc-body">'+esc(d.body||'')+'</div>';
   }
-  $('printArea').innerHTML = '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+'">'+
+  $('printArea').innerHTML = '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+rxFinishCls()+'">'+
     (pad?'':buildPlainHeader()) + inner +
     '<div class="rx-foot" style="margin-top:9mm"><div class="fu"></div>'+
     '<div class="sig"><div class="line"></div>'+esc(s.docName||'Signature')+'</div></div>'+
@@ -6129,7 +6188,9 @@ async function printDoc(d, forcePlain){
     // fit check: compact typeface if the document is long, else let it flow to page 2
     pa.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:'+contentW+'mm';
     if(sheet.offsetHeight > availH*96/25.4) sheet.classList.add('compact');
-    window.__lastPrintFits = !(sheet.offsetHeight > availH*96/25.4);
+    const fits = !(sheet.offsetHeight > availH*96/25.4);
+    window.__lastPrintFits = fits;
+    rxPageNums(sheet, fits ? 1 : Math.ceil(sheet.offsetHeight/(availH*96/25.4)), box);
     pa.style.cssText = '';
   }
   if(printPreviewMode){ printPreviewMode = false; showPrintPreview(); return; }
@@ -6343,7 +6404,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.31-b25';
+const APP_BUILD = '2026.07.31-b29';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -7730,6 +7791,29 @@ function renderRxQrSelect(){
 }
 
 /* ================= PRINT ================= */
+/* Stamp "Page k of n" at the foot of every sheet, but only when the content
+   genuinely spills past one page. Positioned absolutely inside the sheet, which
+   is the only way to get a per-page number without a print-margin box (neither
+   Chrome nor Safari supports @page margin content). */
+function rxPageNums(sheet, pages, box){
+  try{
+    if(!sheet) return;
+    Array.prototype.forEach.call(sheet.querySelectorAll('.rx-pgno'), function(e){ e.remove(); });
+    if(!(pages>1)) return;
+    if(getComputedStyle(sheet).position==='static') sheet.style.position='relative';
+    const pageH = box.availH*96/25.4;
+    for(var k=1;k<=pages;k++){
+      var d=document.createElement('div');
+      d.className='rx-pgno';
+      d.textContent='Page '+k+' of '+pages;
+      d.style.top=(k*pageH-13)+'px';
+      sheet.appendChild(d);
+    }
+  }catch(e){}
+}
+function rxFinishCls(){
+  return ({grey:' fin-grey', teal:' fin-teal', wm:' fin-wm'})[(db.settings||{}).rxFinish] || '';
+}
 function urSizeCls(){
   return ({large:' ur-lg', xlarge:' ur-xl'})[db.settings.urduSize] || '';
 }
@@ -7754,10 +7838,11 @@ function printVisit(v, p, forcePlain){
   const urOn = (db.settings.urduRx||'on')!=='off';
   const medsHtml = (v.meds&&v.meds.length) ? v.meds.map((m,i)=>{
     const ur = urOn ? ((m.ur&&m.ur.trim()) || medUrduLine(m)) : '';
-    return '<div class="rx-med"><div class="mname">'+(i+1)+'. '+esc(m.name)+'</div>'+
+    return '<div class="rx-med"><span class="mnum">'+(i+1)+'</span><div class="mbody">'+
+    '<div class="mname">'+esc(m.name)+'</div>'+
     '<div class="mline">'+esc([m.dose,m.freq,m.dur].filter(Boolean).join(' \u2014 '))+
     (m.instr?' <span class="minstr-inline">\u2014 '+esc(m.instr)+'</span>':'')+'</div>'+
-    (ur?'<div class="mur">'+esc(ur)+'</div>':'')+'</div>';
+    (ur?'<div class="mur">'+esc(ur)+'</div>':'')+'</div></div>';
   }).join('') : '';
 
   const headHtml = pad ? '' :
@@ -7776,7 +7861,7 @@ function printVisit(v, p, forcePlain){
     '</div>';
 
   $('printArea').innerHTML =
-  '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+'">'+ headHtml +
+  '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+rxFinishCls()+'">'+ headHtml +
     '<div class="rx-pt">'+
       '<span><b>Name:</b> '+esc(p.name)+'</span>'+
       (p.age?'<span><b>Age:</b> '+esc(p.age)+'</span>':'')+
@@ -7801,8 +7886,8 @@ function printVisit(v, p, forcePlain){
       '</div>'+
     '</div>'+
     '<div class="rx-foot rx-foot-r">'+
-      '<div class="rx-cornerwrap">'+ nextTestsBox(v) +
-        '<div class="rx-corner">'+buildRxQr(v,p)+fuDateBox(v)+'</div>'+
+      '<div class="rx-corner">'+ buildRxQr(v,p) +
+        '<div class="rx-boxcol">'+ nextTestsBox(v) + fuDateBox(v) +'</div>'+
       '</div>'+
     '</div>'+
     (!pad && s.footer?'<div class="rx-footer-note">'+esc(s.footer)+'</div>':'')+
@@ -7830,6 +7915,7 @@ function printVisit(v, p, forcePlain){
       if(!ok){ pa.style.cssText=''; return; }
     }
   }
+  rxPageNums(sheet, overflows ? Math.ceil(sheet.offsetHeight/availPx) : 1, box);
   // drop the QR + follow-up date block to the very bottom of the printable area
   const foot = sheet.querySelector('.rx-foot');
   if(foot && !overflows){
