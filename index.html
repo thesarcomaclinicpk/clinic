@@ -540,12 +540,26 @@ html[data-theme="dark"] .role-badge.active{background:#12291a;color:#6ad78f;bord
 .rx-head .clinic{text-align:right}
 .rx-head .clinic .cname{font-size:17px;font-weight:700}
 .rx-head .clinic div{font-size:11.5px;margin-top:2px}
-.rx-pt{display:flex;flex-wrap:wrap;gap:4px 22px;border-bottom:1px solid #111;
-  padding:6px 0;font-size:13px;margin-bottom:8px}
+/* the patient block: one boxed row, barcode tucked in at the right end */
+.rx-pt{display:flex;flex-wrap:wrap;align-items:center;gap:3px 12px;
+  border:1.1px solid #666;border-radius:4px;background:#fafafa;
+  padding:6px 11px;font-size:12.5px;margin-bottom:9px}
 .rx-pt b{font-weight:700}
+.rx-pt > span{white-space:nowrap;flex:0 0 auto}
+.rx-pt .rx-bc{margin-left:auto;width:auto;flex:0 0 auto;padding-left:8px}
+.rx-pt .rx-bc svg{height:6.5mm;width:auto;max-width:100%}
+.rx-sheet.compact .rx-pt{padding:5px 10px;gap:3px 15px}
+.rx-sheet.compact .rx-pt .rx-bc svg{height:7mm}
+/* on a pre-printed pad the row starts 26mm in, so it has much less room: tighten it
+   and drop the clock time (still kept on the record, in the QR and on plain paper)
+   so the name, MR number and barcode all stay on one line */
+.rx-sheet.pad .rx-pt{gap:3px 9px;font-size:11.5px;padding:5px 8px}
+.rx-sheet.pad .rx-pt .rx-tm{display:none}
+.rx-sheet.pad .rx-pt .rx-bc{padding-left:7px}
+.rx-sheet.pad .rx-pt .rx-bc svg{height:6mm}
 .rx-cols{display:flex;gap:18px}
 .rx-main{flex:1;padding-top:2px}
-.rx-side{width:28%;border-left:1px solid #999;padding-left:12px;font-size:12.5px}
+.rx-side{width:30%;border-left:1px solid #999;padding-left:13px;font-size:12.5px}
 .rx-side h4{font-size:11px;text-transform:uppercase;letter-spacing:.6px;margin:9px 0 2px;color:#333}
 .rx-side h4:first-child{margin-top:0}
 .rx-side p{white-space:pre-wrap}
@@ -625,9 +639,7 @@ tr.rx-ur-row td{padding:0 10px 9px;border-bottom:1px solid var(--line)}
 input.rx-ur{direction:rtl;text-align:right;font-size:13.5px;border:1px dashed #cbd5e1;background:#fafffe;padding:5px 9px}
 input.rx-ur:focus{border-style:solid}
 /* compact mode: automatic when a prescription is long, to keep it on one sheet */
-.rx-sheet.compact .rx-med{margin-bottom:5px;font-size:12px;gap:6px}
-.rx-sheet.compact .rx-med .mnum{width:14px;height:14px;line-height:11.5px;font-size:9.5px;margin-top:1px}
-.rx-sheet.compact .rx-med + .rx-med{padding-top:4px}
+.rx-sheet.compact .rx-med{margin-bottom:5px;font-size:12px}
 .rx-sheet.compact .rx-med .mline{font-size:11.5px}
 .rx-sheet.compact .rx-med .minstr{font-size:10.5px}
 .rx-sheet.compact .rx-side{font-size:11px}
@@ -644,18 +656,11 @@ input.rx-ur:focus{border-style:solid}
 .rx-sheet.compact .doc-body{font-size:12px;line-height:1.7}
 /* letterhead-pad mode: content only, patient line indented to clear the printed ℞ */
 .rx-sheet.pad{background:transparent}
-.rx-sheet.pad .rx-pt{margin-left:26mm;border-bottom:none;padding-bottom:2px;border-top:none}
+.rx-sheet.pad .rx-pt{margin-left:26mm}
 .rx-sheet.pad .rx-cols{margin-top:12mm} /* clears the pre-printed ℞ symbol (ends ~84mm from top) */
 .rx-sheet.pad .rx-main{padding-left:2mm}
 .rx-symbol{font-size:26px;font-weight:700;margin:2px 0 6px}
-.rx-med{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:14px}
-.rx-med .mnum{flex:none;width:16px;height:16px;border:1.2px solid #111;border-radius:50%;
-  font-size:10.5px;line-height:13.5px;text-align:center;font-weight:700;
-  font-family:Arial,Helvetica,sans-serif;margin-top:2px;box-sizing:border-box}
-.rx-med .mbody{flex:1 1 auto;min-width:0}
-/* hairline between medicines — drawn on top of each one after the first, so a
-   trailing advice block never leaves a stray rule under the last medicine */
-.rx-med + .rx-med{border-top:1px solid #d8d8d8;padding-top:7px}
+.rx-med{margin-bottom:9px;font-size:14px}
 .rx-med .mname{font-weight:700}
 .rx-med .mline{font-size:13px;margin-top:1px}
 .rx-med .minstr{font-size:12px;font-style:italic;color:#333}
@@ -664,17 +669,20 @@ input.rx-ur:focus{border-style:solid}
 .rx-advice p{white-space:pre-wrap}
 .rx-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px;page-break-inside:avoid}
 .rx-foot.rx-foot-r{justify-content:flex-end}
-.rx-boxcol{display:flex;flex-direction:column;align-items:stretch;gap:5px;width:52mm}
+/* the two corner boxes line up with the clinical column: both are 30% of the sheet */
+.rx-boxcol{display:flex;flex-direction:column;align-items:stretch;gap:5px;width:30%}
 .rx-nvbox{border:1.1px solid #111;border-radius:3px;padding:4px 10px 5px;width:100%;box-sizing:border-box}
 .rx-nvbox .fb-h{font-family:'Noto Nastaliq Urdu','Urdu Typesetting','Jameel Noori Nastaleeq','Geeza Pro',Georgia,serif;
   direction:rtl;text-align:right;font-size:10.5px;line-height:1.85;border-bottom:1px solid #111;padding-bottom:2px;margin-bottom:3px}
 .rx-nvbox .nv-en{font-size:8px;letter-spacing:.8px;text-transform:uppercase;color:#444;margin-bottom:2px}
 .rx-nvbox ul{margin:0;padding-left:14px}
 .rx-nvbox li{font-size:11.5px;line-height:1.45}
-.rx-sheet.compact .rx-boxcol{width:46mm}
+.rx-sheet.compact .rx-boxcol{width:30%}
 .rx-sheet.compact .rx-nvbox{padding:3px 8px 4px}
 .rx-sheet.compact .rx-nvbox li{font-size:10.5px;line-height:1.35}
-.rx-corner{display:flex;align-items:flex-end;gap:8px}
+/* full-width row so the box column can be a true 30% of the sheet,
+   with the QR pushed up against its left edge */
+.rx-corner{display:flex;align-items:flex-end;justify-content:flex-end;gap:8px;width:100%}
 .rx-qr{display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
 .rx-fubox{border:1.1px solid #111;border-radius:3px;padding:4px 10px 5px;text-align:center;
   width:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:1px}
@@ -707,15 +715,13 @@ input.rx-ur:focus{border-style:solid}
 .rx-sheet.fin-grey .rx-advice{border-top-color:#bbb}
 .rx-sheet.fin-grey .rx-nvbox,.rx-sheet.fin-grey .rx-fubox{border-color:#555}
 .rx-sheet.fin-grey .rx-nvbox .fb-h,.rx-sheet.fin-grey .rx-fubox .fb-h{color:#555}
-.rx-sheet.fin-grey .rx-pt{border-bottom-color:#bbb}
-.rx-sheet.fin-grey .rx-med + .rx-med{border-top-color:#ccc}
-.rx-sheet.fin-grey .rx-med .mnum{border-color:#555;color:#333}
+.rx-sheet.fin-grey .rx-pt{border-color:#999}
 .rx-sheet.fin-teal .rx-side h4{color:#0e7490}
 .rx-sheet.fin-teal .rx-side{border-left-color:#0e7490}
 .rx-sheet.fin-teal .rx-advice{border-top-color:#0e7490}
 .rx-sheet.fin-teal .rx-nvbox,.rx-sheet.fin-teal .rx-fubox{border-color:#0e7490}
 .rx-sheet.fin-teal .rx-nvbox .fb-h,.rx-sheet.fin-teal .rx-fubox .fb-h{color:#0e7490}
-.rx-sheet.fin-teal .rx-pt{border-bottom-color:#0e7490}
+.rx-sheet.fin-teal .rx-pt{border-color:#0e7490}
 .rx-sheet.fin-wm .rx-main{position:relative;overflow:hidden}
 .rx-sheet.fin-wm .rx-main:before{content:'\211E';position:absolute;left:50%;top:36%;
   transform:translate(-50%,-50%);font-family:Georgia,'Times New Roman',serif;font-size:112mm;
@@ -6404,7 +6410,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.31-b29';
+const APP_BUILD = '2026.07.31-b31';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -7838,11 +7844,10 @@ function printVisit(v, p, forcePlain){
   const urOn = (db.settings.urduRx||'on')!=='off';
   const medsHtml = (v.meds&&v.meds.length) ? v.meds.map((m,i)=>{
     const ur = urOn ? ((m.ur&&m.ur.trim()) || medUrduLine(m)) : '';
-    return '<div class="rx-med"><span class="mnum">'+(i+1)+'</span><div class="mbody">'+
-    '<div class="mname">'+esc(m.name)+'</div>'+
+    return '<div class="rx-med"><div class="mname">'+(i+1)+'. '+esc(m.name)+'</div>'+
     '<div class="mline">'+esc([m.dose,m.freq,m.dur].filter(Boolean).join(' \u2014 '))+
     (m.instr?' <span class="minstr-inline">\u2014 '+esc(m.instr)+'</span>':'')+'</div>'+
-    (ur?'<div class="mur">'+esc(ur)+'</div>':'')+'</div></div>';
+    (ur?'<div class="mur">'+esc(ur)+'</div>':'')+'</div>';
   }).join('') : '';
 
   const headHtml = pad ? '' :
@@ -7867,7 +7872,7 @@ function printVisit(v, p, forcePlain){
       (p.age?'<span><b>Age:</b> '+esc(p.age)+'</span>':'')+
       (p.sex?'<span><b>Sex:</b> '+esc(p.sex)+'</span>':'')+
       (p.mrn?'<span><b>MR #:</b> '+esc(p.mrn)+'</span>':'')+
-      '<span class="rx-dt"><b>Date:</b> '+fmtDate(v.date)+' &nbsp;<b>Time:</b> '+fmtTime(v.date)+'</span>'+
+      '<span class="rx-dt"><b>Date:</b> '+fmtDate(v.date)+'<span class="rx-tm"> &nbsp;<b>Time:</b> '+fmtTime(v.date)+'</span></span>'+
       patBarcode(p)+
     '</div>'+
     '<div class="rx-cols">'+
