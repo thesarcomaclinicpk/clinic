@@ -449,6 +449,16 @@ html[data-theme="dark"] .vid-card{background:#121e2a;border-color:#233545}
 .pp-sheet{width:210mm;min-height:297mm;display:flex;flex-direction:column;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.55);
   transform:scale(.78);transform-origin:top center;border-radius:3px;flex:none;
   animation:ppIn .3s ease both}
+/* the self-paginated preview: real sheets, with the pre-printed zones hatched behind them */
+.pp-sheet:has(.pp-page){background:transparent;box-shadow:none;min-height:0;gap:20px}
+.pp-page{position:relative;flex:none;border-radius:3px;overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,.55);background:#fff}
+.pp-page .rx-sheetpage{position:relative;z-index:1;background:transparent}
+.pp-hatch{position:absolute;left:0;right:0;z-index:0;display:flex;align-items:center;justify-content:center;
+  background:repeating-linear-gradient(-45deg,#f2f7f9 0 10px,#e9f2f5 10px 20px)}
+.pp-hatch-top{top:0}
+.pp-hatch-bot{bottom:0}
+.pp-hatch span{font-size:12px;color:#7a97a5;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
 @keyframes ppIn{from{opacity:0;transform:scale(.74) translateY(12px)}to{opacity:1;transform:scale(.78) translateY(0)}}
 .pp-sheet .rx-page{padding:0!important}
 .pp-body{flex:1 0 auto;box-sizing:border-box}
@@ -706,7 +716,16 @@ input.rx-ur:focus{border-style:solid}
 .rx-footer-note{margin-top:10px;border-top:1px solid #999;padding-top:4px;
   font-size:10.5px;text-align:center;color:#333}
 /* "Page 1 of 2" — only added when a print really runs onto a second sheet */
-.rx-pgno{position:absolute;right:0;height:12px;line-height:12px;font-size:9px;color:#777;
+/* the column divider, redrawn as rules that stop above the bottom band */
+.rx-sheet.rx-split .rx-side{border-left:none}
+.rx-colrule{border-left:1px solid #999;width:0}
+.rx-sheet.fin-grey .rx-colrule{border-left-color:#bbb}
+.rx-sheet.fin-teal .rx-colrule{border-left-color:#0e7490}
+/* one real sheet of paper: the margins are its own padding, so nothing depends on how
+   the browser chooses to fragment a tall block */
+.rx-sheetpage{box-sizing:border-box;background:#fff;position:relative;overflow:hidden}
+.rx-sheetpage + .rx-sheetpage{margin-top:14px}
+.rx-pgno{position:absolute;left:0;height:12px;line-height:12px;font-size:9px;color:#777;
   letter-spacing:.4px;font-family:-apple-system,Arial,Helvetica,sans-serif}
 /* ===== Printed look (Settings > Printing > Printed look) ===== */
 /* soft grey headings, black body text */
@@ -1210,6 +1229,16 @@ body.no-user #topActions{display:none!important}
 .rx-vitals b{font-weight:700}
 .rx-side .rx-vitals{font-size:11.5px}
 /* most-used medicine lines in the search list */
+.drag-cell{width:34px;text-align:center;padding-left:4px!important;padding-right:0!important}
+.drag-h{display:inline-block;cursor:grab;color:var(--muted);font-size:15px;line-height:1;
+  letter-spacing:-3px;padding:4px 6px;border-radius:6px;user-select:none;touch-action:none}
+.drag-h:hover{background:var(--hover);color:var(--ink)}
+tr.dragging{background:var(--teal-light);box-shadow:0 6px 18px rgba(0,0,0,.16);opacity:.96}
+tr.dragging .drag-h{cursor:grabbing}
+body.reordering{user-select:none;cursor:grabbing}
+.ord-btn{padding:1px 6px;font-size:11px;line-height:1.5}
+.ord-btn[disabled]{opacity:.3;pointer-events:none}
+.nowrap{white-space:nowrap}
 .mine-chip{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.4px;
   text-transform:uppercase;border-radius:20px;padding:1px 7px;margin-left:6px;
   background:color-mix(in srgb,var(--teal) 14%,transparent);color:var(--teal-dark)}
@@ -1470,7 +1499,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 </div>
 <button id="notifBtn" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="notifBadge">0</span></button>
 <div id="notifPanel" class="hidden">
-  <div class="notif-head"><b>Notifications</b><div><button class="btn btn-ghost btn-sm" onclick="markNotifRead()">Mark all read</button><button class="btn btn-ghost btn-sm" onclick="toggleNotif()">✕</button></div></div>
+  <div class="notif-head"><b>Notifications</b><div><button class="btn btn-ghost btn-sm" onclick="markNotifRead()">Mark all read</button><button class="btn btn-ghost btn-sm" id="notifClearAll" onclick="clearAllNotifications()" title="Empty the whole panel">🗑 Clear all</button><button class="btn btn-ghost btn-sm" onclick="toggleNotif()">✕</button></div></div>
   <div id="notifBody"></div>
 </div>
 <main>
@@ -2043,6 +2072,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <textarea id="dcInstr" style="min-height:110px"></textarea>
       </div>
       <div class="field mt"><label>Follow-up</label><input type="text" id="dcFu" placeholder="e.g. OPD after 2 weeks for stitch removal; X-ray at 6 weeks"></div>
+      <div class="field mt"><label>QR code to print on this summary <span class="muted small" style="font-weight:400">(from your QR Code Library)</span></label>
+        <select id="dsQrSel" style="max-width:100%"><option value="">— No QR code —</option></select></div>
     </div>
     <div class="grid g3 mt">
       <div class="field"><label>Document date</label><input type="date" id="dsDate"></div>
@@ -2580,6 +2611,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <option value="42|6 weeks">6 weeks</option><option value="56|8 weeks">8 weeks</option>
         <option value="84|12 weeks">12 weeks</option>
       </select></div>
+      <div class="field"><label>Vitals on a new prescription</label>
+        <select id="sVitalsDefault">
+          <option value="blank">Start empty — fill them in only when I take them</option>
+          <option value="normal">Start at normal adult values — I edit what differs</option>
+        </select></div>
       <div class="field"><label>A follow-up day counts as full at</label>
         <input type="number" id="sFuDayCap" min="1" max="200" step="1" placeholder="12">
         <span class="muted small">Used by the month view when you pick a follow-up date — days at or over this show red.</span></div>
@@ -2625,9 +2661,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 
   <div class="card" data-set="templates">
     <h2>Prescription templates <span class="muted small" style="font-weight:400">(medicines)</span></h2>
-    <p class="muted small" style="margin-bottom:10px">Reusable sets of medicines. Create them on the New Prescription tab (Step 3 → “Save current form as template”). These insert medicines only.</p>
+    <p class="muted small" style="margin-bottom:10px">Reusable sets of medicines. Create them on the New Prescription tab (Step 3 → “Save current form as template”). These insert medicines only. <b>Drag the ⋮⋮ handle</b> (or press and hold on a phone) to put them in the order you want — the dropdown and your pinned favourites follow it.</p>
     <table class="list">
-      <thead><tr><th>Template</th><th>Diagnosis</th><th>Medicines</th><th style="width:80px"></th></tr></thead>
+      <thead><tr><th style="width:34px"></th><th>Template</th><th>Diagnosis</th><th>Medicines</th><th style="width:150px"></th></tr></thead>
       <tbody id="tplListBody"></tbody>
     </table>
   </div>
@@ -2635,7 +2671,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <h2>Clinical-notes templates</h2>
     <p class="muted small" style="margin-bottom:10px">Reusable clinical notes (complaints, findings, diagnosis, investigations, advice, plan) — no medicines. Create them on the New Prescription tab (Step 2 → “Save notes as template”).</p>
     <table class="list">
-      <thead><tr><th>Template</th><th>Diagnosis</th><th>Notes</th><th style="width:80px"></th></tr></thead>
+      <thead><tr><th style="width:34px"></th><th>Template</th><th>Diagnosis</th><th>Notes</th><th style="width:120px"></th></tr></thead>
       <tbody id="noteTplListBody"></tbody>
     </table>
   </div>
@@ -3256,7 +3292,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 36;
+const SEED_VERSION = 37;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -3477,6 +3513,19 @@ function migrateDB(){
   if(db.settings.padBottom===undefined) db.settings.padBottom='34';
   // ---- v35 ---- printed look (plain / soft grey / teal accents / faint Rx watermark)
   if(db.settings.rxFinish===undefined) db.settings.rxFinish='plain';
+  // ---- v37 ---- QR codes used to get a random id on each device, so every phone and PC
+  // seeded its own copies and sync multiplied rather than merged them. Collapse them onto
+  // fixed ids, drop the untouched placeholder rows, and clear duplicate labels. Both
+  // devices run the same migration and therefore land on the same list.
+  (function(){
+    if(!Array.isArray(db.qrcodes)) return;
+    const removed = (typeof qrTidy==='function') ? qrTidy(true) : 0;
+    (db.qrcodes||[]).forEach(function(q){ if(typeof syncTouch==='function') syncTouch(q); });
+    if(removed) try{ db.settings.qrTidiedCount=removed; }catch(e){}
+  })();
+  // ---- v37 ---- vitals: the doctor asked for the boxes to start empty and be filled in
+  // only for the few patients where they matter
+  if(db.settings.vitalsDefault===undefined) db.settings.vitalsDefault='blank';
   // ---- v36 ---- soft grey headings became the house style; nudge anyone still on the
   // old flat black across, once only, so a deliberate later choice of Plain is respected
   if(!db.settings.rxFinishV36){
@@ -3522,8 +3571,46 @@ function migrateDB(){
   db.seedVersion = SEED_VERSION;
   persist();
 }
+/* ---- keep every edited record stamped, so it can win a sync ----
+   The merge keeps whichever copy carries the newer updatedAt. Any save path that
+   forgot to call syncTouch() produced a record that could NEVER win, so the edit
+   silently reverted to the other device's copy on the next sync (this is exactly
+   how edited medicine doses were being lost). Rather than trust every one of the
+   dozens of save paths, persist() fingerprints each record and stamps the ones
+   that actually changed. A record nobody has touched is left unstamped on purpose,
+   so a first sync doesn't churn the whole database. */
+let __recFp = null;                       // coll -> id -> fingerprint of the last save
+function __fpHash(s){ let h=5381; for(let i=0;i<s.length;i++) h=((h*33)^s.charCodeAt(i))>>>0; return h.toString(36); }
+function recFingerprint(rec){
+  try{
+    const keys=Object.keys(rec).filter(k=>k!=='updatedAt').sort();
+    const o={}; keys.forEach(k=>{ o[k]=rec[k]; });
+    return __fpHash(JSON.stringify(o));
+  }catch(e){ return ''; }
+}
+/* quiet=true just re-reads the fingerprints (used straight after a sync pulls new
+   copies in, so pulled records are not mistaken for local edits) */
+function stampDirtyRecords(quiet){
+  if(typeof SYNC_COLLS==='undefined') return;
+  const first = (__recFp===null);
+  if(first) __recFp={};
+  const now=new Date().toISOString();
+  SYNC_COLLS.forEach(k=>{
+    const prevMap=__recFp[k]||{}, nextMap={};
+    (db[k]||[]).forEach(rec=>{
+      if(!rec || typeof rec!=='object' || rec.id==null) return;
+      const id=String(rec.id), fp=recFingerprint(rec);
+      const prev=prevMap[id];
+      if(!quiet && !first && prev!==undefined && prev!==fp) rec.updatedAt=now;
+      nextMap[id]=fp;
+    });
+    __recFp[k]=nextMap;
+  });
+}
+function syncRehash(){ __recFp=null; stampDirtyRecords(true); }
 function persist(){
   if(!storageOK) return;
+  try{ stampDirtyRecords(false); }catch(e){}
   try{ localStorage.setItem(DB_KEY, JSON.stringify(db)); }catch(e){ toast('⚠ Could not save — storage full or blocked'); }
   if(typeof scheduleAutoBackup === 'function') scheduleAutoBackup();
 }
@@ -3690,7 +3777,7 @@ function applyTabAccess(name){
 }
 
 /* ================= SETTINGS ================= */
-const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent',sFuDayCap:'fuDayCap'};
+const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent',sFuDayCap:'fuDayCap',sVitalsDefault:'vitalsDefault'};
 function loadSettingsForm(){
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) $(el).value = db.settings[key]||''; }
   applyBrand();
@@ -4482,7 +4569,7 @@ function clearVisitForm(ask){
   $('cFuDate').value=''; $('cFuDate').dataset.auto='';
   fuWhatSel=-1; fuWhenDays=0; fuWhenLabel=''; renderFuWhatChips(); renderNvChips();
   $('cFee').value = db.settings.defFee || '';
-  if(typeof vitalsReset==='function') vitalsReset();
+  if(typeof vitalsDefault==='function') vitalsDefault();
   if(typeof repeatBtnRefresh==='function') repeatBtnRefresh();
   if(typeof renderRxQrSelect==='function') renderRxQrSelect();
   applyDefFu();
@@ -4558,15 +4645,32 @@ function showPrintPreview(){
   const botMm = padMode ? padBottomMm() : 10;
   const sideMm = padMode ? 12 : 10;
   const midMm = Math.max(20, 297 - topMm - botMm);
-  $('ppSheet').innerHTML =
-    '<div class="pp-margin" style="height:'+topMm+'mm">'+(padMode?'<span>Your pre-printed letterhead sits here</span>':'')+'</div>'+
-    '<div class="pp-body" style="padding:0 '+sideMm+'mm 0;min-height:'+midMm+'mm">'+$('printArea').innerHTML+'</div>'+
-    '<div class="pp-margin" style="height:'+botMm+'mm">'+(padMode?'<span>Pre-printed footer area</span>':'')+'</div>';
+  const boxes = document.querySelectorAll('#printArea .rx-sheetpage');
+  if(boxes.length){
+    /* Prescriptions paginate themselves, so the preview is simply the real sheets — each
+       page box already carries the margins. The hatched strips only mark where the
+       pre-printed letterhead and footer sit; they are not part of the layout. */
+    $('ppSheet').innerHTML = Array.prototype.map.call(boxes, function(b){
+      return '<div class="pp-page">'+
+        '<div class="pp-hatch pp-hatch-top" style="height:'+topMm+'mm">'+
+          (padMode?'<span>Your pre-printed letterhead sits here</span>':'')+'</div>'+
+        '<div class="pp-hatch pp-hatch-bot" style="height:'+botMm+'mm">'+
+          (padMode?'<span>Pre-printed footer area</span>':'')+'</div>'+
+        b.outerHTML+'</div>';
+    }).join('');
+  } else {
+    $('ppSheet').innerHTML =
+      '<div class="pp-margin" style="height:'+topMm+'mm">'+(padMode?'<span>Your pre-printed letterhead sits here</span>':'')+'</div>'+
+      '<div class="pp-body" style="padding:0 '+sideMm+'mm 0;min-height:'+midMm+'mm">'+$('printArea').innerHTML+'</div>'+
+      '<div class="pp-margin" style="height:'+botMm+'mm">'+(padMode?'<span>Pre-printed footer area</span>':'')+'</div>';
+  }
   const fit=$('ppFit');
   if(fit){
+    const n = boxes.length || 1;
     const ok = window.__lastPrintFits !== false;
     fit.className = 'pp-fit '+(ok?'ok':'over');
-    fit.textContent = ok ? '✓ Fits on one sheet' : '⚠ Spills onto a second sheet — shorten it or it will print on 2 pages';
+    fit.textContent = ok ? '✓ Fits on one sheet'
+      : '⚠ Needs '+n+' sheets — shorten it, or load '+n+' letterhead sheets';
   }
   $('printPreview').classList.remove('hidden');
 }
@@ -5238,16 +5342,28 @@ function pageBox(pad, extraTop, paper){
 }
 /* @page margin 0 on the FIRST page removes the browser's own header/footer
    (the file path and page title). Later pages keep real margins.            */
-function setPageStyle(box, paper){
-  pageStyleEl().textContent =
-    '@page{size:'+(paper==='A5'?'A5':'A4')+';margin:'+box.top+'mm '+box.side+'mm '+box.bot+'mm '+box.side+'mm}'+
-    '@page :first{margin:0}'+
-    '#printArea > *{box-sizing:border-box;padding:'+box.top+'mm '+box.side+'mm '+box.bot+'mm '+box.side+'mm}'+
-    '#printArea .rx-page > .rx-sheet{padding:0}';
+/* Two printing paths, two page models.
+   - Prescriptions paginate themselves (rxPaginate): each sheet is a real box carrying the
+     margins as its own padding, so the printed page needs no margin at all. Zero margins
+     also stop the browser stamping its own header and footer on the patient's sheet.
+   - Discharge summaries and other documents still flow, and rely on real page margins. */
+function setPageStyle(box, paper, flow){
+  const size = (paper==='A5'?'A5':'A4');
+  pageStyleEl().textContent = flow
+    ? '@page{size:'+size+';margin:'+box.top+'mm '+box.side+'mm '+box.bot+'mm '+box.side+'mm}'+
+      /* Page 1 gets its top offset from padding (so the browser has no room to stamp a
+         header on it) but a REAL bottom margin. A padding-bottom would only apply to the
+         last fragment, which left page 1 of a two-page discharge summary printing right
+         through the pre-printed footer. */
+      '@page :first{margin:0 '+box.side+'mm '+box.bot+'mm '+box.side+'mm}'+
+      '#printArea > *{box-sizing:border-box;padding:'+box.top+'mm 0 0 0}'+
+      '#printArea .rx-page > .rx-sheet{padding:0}'
+    : '@page{size:'+size+';margin:0}'+
+      '@media print{#printArea .rx-sheetpage{box-shadow:none;margin:0}}';
 }
 function applyPageGeom(pad, extraTop){
   const box = pageBox(pad, extraTop, 'A4');
-  setPageStyle(box, 'A4');
+  setPageStyle(box, 'A4', true);      // the flowing document path
   return box;
 }
 
@@ -5772,7 +5888,7 @@ function renderQueue(){
 function refreshTplSelect(){
   const sel = $('tplSelect');
   sel.innerHTML = '<option value="">💊 Insert prescription (medicines)…</option>' +
-    db.templates.map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');
+    ordSort(db.templates).map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');
 }
 function applyTemplate(t){
   if(!t) return;
@@ -5843,12 +5959,18 @@ function saveAsNoteTemplate(){
 }
 function renderNoteTplList(){
   const host=$('noteTplListBody'); if(!host) return;
-  host.innerHTML = (db.noteTemplates||[]).map(t=>
-    '<tr><td><b>'+esc(t.name)+'</b></td><td class="small">'+esc(t.diagnosis||'—')+'</td>'+
+  db.noteTemplates = ordSort(db.noteTemplates||[]);
+  host.innerHTML = db.noteTemplates.map((t,i)=>
+    '<tr data-id="'+esc(t.id)+'"><td class="drag-cell"><span class="drag-h" title="Drag to reorder">⋮⋮</span></td>'+
+    '<td><b>'+esc(t.name)+'</b></td><td class="small">'+esc(t.diagnosis||'—')+'</td>'+
     '<td class="small">'+esc((t.complaints||t.plan||t.findings||'—').slice(0,60))+'</td>'+
-    '<td><button class="btn btn-danger btn-sm" onclick="deleteNoteTpl(\''+t.id+'\')">✕</button></td></tr>'
-  ).join('') || '<tr><td colspan="4" class="muted">No clinical-notes templates yet — save one from the New Prescription form.</td></tr>';
+    '<td class="nowrap"><button class="btn btn-ghost btn-sm ord-btn" onclick="ordNudge(\'noteTemplates\',\''+t.id+'\',-1,noteTplOrderChanged)" title="Move up"'+(i===0?' disabled':'')+'>▲</button>'+
+    '<button class="btn btn-ghost btn-sm ord-btn" onclick="ordNudge(\'noteTemplates\',\''+t.id+'\',1,noteTplOrderChanged)" title="Move down"'+(i===db.noteTemplates.length-1?' disabled':'')+'>▼</button> '+
+    '<button class="btn btn-danger btn-sm" onclick="deleteNoteTpl(\''+t.id+'\')">✕</button></td></tr>'
+  ).join('') || '<tr><td colspan="5" class="muted">No clinical-notes templates yet — save one from the New Prescription form.</td></tr>';
+  makeReorderable('noteTplListBody','noteTemplates',noteTplOrderChanged);
 }
+function noteTplOrderChanged(){ renderNoteTplList(); refreshNoteTplSelect(); }
 function deleteNoteTpl(id){
   const t=(db.noteTemplates||[]).find(x=>x.id===id); if(!t) return;
   if(!confirm('Delete clinical-notes template “'+t.name+'”?')) return;
@@ -5856,13 +5978,19 @@ function deleteNoteTpl(id){
   persist(); refreshNoteTplSelect(); renderNoteTplList();
 }
 function renderTplList(){
-  $('tplListBody').innerHTML = db.templates.map(t=>
-    '<tr><td><b>'+esc(t.name)+'</b></td><td class="small">'+esc(t.diagnosis||'—')+'</td>'+
+  db.templates = ordSort(db.templates||[]);
+  $('tplListBody').innerHTML = db.templates.map((t,i)=>
+    '<tr data-id="'+esc(t.id)+'"><td class="drag-cell"><span class="drag-h" title="Drag to reorder">⋮⋮</span></td>'+
+    '<td><b>'+esc(t.name)+'</b></td><td class="small">'+esc(t.diagnosis||'—')+'</td>'+
     '<td class="small">'+esc((t.meds||[]).map(m=>m.name).join(', ')||'—')+'</td>'+
-    '<td><button class="btn btn-ghost btn-sm fav-star'+(isFavTpl(t.id)?' on':'')+'" onclick="toggleFavTpl(\''+t.id+'\')" title="Pin to favourites">'+(isFavTpl(t.id)?'\u2605':'\u2606')+'</button> '+
+    '<td class="nowrap"><button class="btn btn-ghost btn-sm ord-btn" onclick="ordNudge(\'templates\',\''+t.id+'\',-1,tplOrderChanged)" title="Move up"'+(i===0?' disabled':'')+'>▲</button>'+
+    '<button class="btn btn-ghost btn-sm ord-btn" onclick="ordNudge(\'templates\',\''+t.id+'\',1,tplOrderChanged)" title="Move down"'+(i===db.templates.length-1?' disabled':'')+'>▼</button> '+
+    '<button class="btn btn-ghost btn-sm fav-star'+(isFavTpl(t.id)?' on':'')+'" onclick="toggleFavTpl(\''+t.id+'\')" title="Pin to favourites">'+(isFavTpl(t.id)?'\u2605':'\u2606')+'</button> '+
     '<button class="btn btn-danger btn-sm" onclick="deleteTpl(\''+t.id+'\')">✕</button></td></tr>'
-  ).join('') || '<tr><td colspan="4" class="muted">No templates yet.</td></tr>';
+  ).join('') || '<tr><td colspan="5" class="muted">No templates yet.</td></tr>';
+  makeReorderable('tplListBody','templates',tplOrderChanged);
 }
+function tplOrderChanged(){ renderTplList(); refreshTplSelect(); if(typeof renderFavBar==='function') renderFavBar(); }
 function deleteTpl(id){
   const t = db.templates.find(x=>x.id===id);
   if(!confirm('Delete template “'+t.name+'”?')) return;
@@ -6007,7 +6135,8 @@ function collectDsForm(){
         medsArr: collectRx('dsRxBody'),
         images: dsImgs.map(x=>({id:x.id, label:(x.label||'').trim()})),
         condition:$('dcCondition').value.trim(), conditionUr:$('dcConditionUr').value.trim(),
-        instr:$('dcInstr').value.trim(), fu:$('dcFu').value.trim()}
+        instr:$('dcInstr').value.trim(), fu:$('dcFu').value.trim()},
+    qrId: ($('dsQrSel') ? $('dsQrSel').value : '')
   };
 }
 function saveDischarge(andPrint){
@@ -6032,6 +6161,8 @@ function saveDischarge(andPrint){
 function clearDsForm(){
   dsPatientId = null; editingDsId = null;
   ['dsPtSearch','dsName','dsMrn','dsAge','dsMedSearch','dcDiagnosis','dcClinical','dcFindings','dcMedHx','dcSurgHx','dcAllergies','dcProc','dcCourse','dcImplant','dcImplantCo','dcCondition','dcConditionUr','dcInstr','dcFu'].forEach(id=>$(id).value='');
+  if(typeof renderRxQrSelect==='function') renderRxQrSelect();
+  if($('dsQrSel')) $('dsQrSel').value = db.settings.defQrId||'';
   $('dsRxBody').innerHTML='';
   $('dsSex').value='';
   $('dsDate').value = localISO(); $('dcAdmit').value=''; $('dcDischarge').value='';
@@ -6140,6 +6271,8 @@ function loadDs(id){
   }
   $('dcCondition').value=dc.condition||''; $('dcConditionUr').value=dc.conditionUr||'';
   $('dcInstr').value=dc.instr||''; $('dcFu').value=dc.fu||'';
+  if(typeof renderRxQrSelect==='function') renderRxQrSelect();
+  if($('dsQrSel')) $('dsQrSel').value = d.qrId||'';
   $('dcAddLog').checked = d.addLog!==false;
   dsImgs = [];
   renderDsImgStrip();
@@ -6284,7 +6417,7 @@ async function printDoc(d, forcePlain){
   }
   $('printArea').innerHTML = '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+rxFinishCls()+'">'+
     (pad?'':buildPlainHeader()) + inner +
-    '<div class="rx-foot" style="margin-top:9mm"><div class="fu"></div>'+
+    '<div class="rx-foot" style="margin-top:9mm"><div class="fu">'+ buildDocQr(d) +'</div>'+
     '<div class="sig"><div class="line"></div>'+esc(s.docName||'Signature')+'</div></div>'+
   '</div></div>';
   const box = applyPageGeom(pad, 18);
@@ -6373,7 +6506,7 @@ async function printDoc(d, forcePlain){
     if(sheet.offsetHeight > availH*96/25.4) sheet.classList.add('compact');
     const fits = !(sheet.offsetHeight > availH*96/25.4);
     window.__lastPrintFits = fits;
-    rxPageNums(sheet, fits ? 1 : Math.ceil(sheet.offsetHeight/(availH*96/25.4)), box);
+    rxFlowPageNums(sheet, fits ? 1 : Math.ceil(sheet.offsetHeight/(availH*96/25.4)), availH*96/25.4);
     pa.style.cssText = '';
   }
   if(printPreviewMode){ printPreviewMode = false; showPrintPreview(); return; }
@@ -6587,7 +6720,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.31-b34';
+const APP_BUILD = '2026.07.31-b38';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -6939,9 +7072,13 @@ function actIcon(a){ return {add:'➕',edit:'✏️','delete':'🗑️',approve:
 function actVerb(a){ return {add:'Added',edit:'Updated','delete':'Deleted',approve:'Approved'}[a]||a; }
 function notifData(){
   const owner=isOwnerNow();
-  const pending = owner ? (db.users||[]).filter(u=>u.status==='pending') : [];
-  const changes = owner ? pendingList() : pendingList().filter(p=>p.byId===(currentUser&&currentUser.id));
-  const acts = (db.activity||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  const cut = db.settings.notifDismissedAt||'';
+  // "Clear all" hides what was on screen at the time; anything that arrives afterwards shows again
+  const fresh = (t)=> !cut || String(t||'') > cut;
+  const pending = owner ? (db.users||[]).filter(u=>u.status==='pending' && fresh(u.requestedAt||u.updatedAt)) : [];
+  const changes = (owner ? pendingList() : pendingList().filter(p=>p.byId===(currentUser&&currentUser.id)))
+    .filter(p=>!p.dismissedAt && fresh(p.at));
+  const acts = (db.activity||[]).filter(a=>fresh(a.at)).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
   const unread = acts.filter(a=>!a.read).length;
   return {owner, pending, changes, acts, unread};
 }
@@ -6987,6 +7124,28 @@ function toggleNotif(e, forceClose){
   if(show){ renderNotif(); setTimeout(()=>{ (db.activity||[]).forEach(a=>a.read=true); persist(); renderNotif(); }, 1500); }
 }
 function markNotifRead(){ (db.activity||[]).forEach(a=>a.read=true); persist(); renderNotif(); }
+/* Empty the whole panel on demand. Anything that still needs a decision from you —
+   somebody waiting for access, a registry change waiting for approval — is counted
+   and named in the confirmation, so nothing actionable disappears without you
+   knowing it did. Records themselves are never touched. */
+async function clearAllNotifications(){
+  const d=notifData();
+  const live = d.pending.length + (d.owner ? d.changes.filter(p=>p.status==='pending'||!p.status).length : 0);
+  let msg='Clear the notifications panel?\n\nThe activity feed will be emptied on this device and across your other devices. Your records are not affected.';
+  if(live) msg += '\n\n\u26a0 '+live+' item'+(live===1?'':'s')+' still need'+(live===1?'s':'')+
+    ' a decision from you (access requests / registry approvals). Press OK to dismiss those too — the requests themselves stay in Settings ▸ Users and in the Registry, so you can still act on them there.';
+  if(!confirm(msg)) return;
+  const now=new Date().toISOString();
+  db.activity=[]; db.settings.activityClearedAt=now;
+  db.settings.notifDismissedAt=now;                 // hides settled + actionable items from the panel
+  (db.pendingChanges||[]).forEach(p=>{ if(!pendingResolved(p)) p.dismissedAt=now; });
+  persist();
+  renderNotif(); if(typeof renderActivityLog==='function') renderActivityLog();
+  if(typeof syncPushActivity==='function') syncPushActivity().catch(()=>{});
+  if(typeof syncPushPending==='function') syncPushPending().catch(()=>{});
+  toast(live? 'Notifications cleared — pending requests are still in Users / Registry'
+            : 'Notifications cleared');
+}
 async function clearActivity(){
   if(!confirm('Clear the recent-activity list? (Records aren’t affected — this only clears the activity feed.)')) return;
   db.activity=[]; db.settings.activityClearedAt=new Date().toISOString(); persist();
@@ -7967,10 +8126,27 @@ function buildRxQr(v,p){
     return '<div class="rx-qr">'+svg+'<div class="qr-cap">'+esc(qc.label||'')+'</div></div>';
   }catch(e){ return ''; }
 }
+function qrOptionsHtml(){
+  return '<option value="">— No QR code —</option>'+
+    (db.qrcodes||[]).map(q=>'<option value="'+q.id+'">'+esc(q.label)+'</option>').join('');
+}
 function renderRxQrSelect(){
-  const sel=$('cQrSel'); if(!sel) return; const cur=sel.value;
-  sel.innerHTML='<option value="">— No QR code —</option>'+(db.qrcodes||[]).map(q=>'<option value="'+q.id+'">'+esc(q.label)+'</option>').join('');
-  sel.value=cur||db.settings.defQrId||'';
+  const sel=$('cQrSel');
+  if(sel){ const cur=sel.value; sel.innerHTML=qrOptionsHtml(); sel.value=cur||db.settings.defQrId||''; }
+  const ds=$('dsQrSel');
+  if(ds){ const cur=ds.value; ds.innerHTML=qrOptionsHtml(); ds.value=cur||db.settings.defQrId||''; }
+}
+/* the QR block printed on a discharge summary */
+function buildDocQr(d){
+  try{
+    if((db.settings.qrRx||'on')==='off' || typeof QRenc === 'undefined') return '';
+    const want = (d && d.qrId) || db.settings.defQrId || '';
+    const qc=(db.qrcodes||[]).find(x=>x.id===want);
+    if(!qc || !String(qc.text||'').trim()) return '';
+    const svg = QRenc.svg(qc.text, 22);
+    if(!svg) return '';
+    return '<div class="rx-qr dc-qr">'+svg+'<div class="qr-cap">'+esc(qc.label||'')+'</div></div>';
+  }catch(e){ return ''; }
 }
 
 /* ================= PRINT ================= */
@@ -7978,18 +8154,59 @@ function renderRxQrSelect(){
    genuinely spills past one page. Positioned absolutely inside the sheet, which
    is the only way to get a per-page number without a print-margin box (neither
    Chrome nor Safari supports @page margin content). */
-function rxPageNums(sheet, pages, box){
+function fitPatientRow(sheet){
+  try{
+    const row = sheet.querySelector('.rx-pt'); if(!row) return;
+    const bc  = row.querySelector('.rx-bc');
+    const svg = bc ? bc.querySelector('svg') : null;
+    const tm  = row.querySelector('.rx-tm');
+    row.style.fontSize=''; row.style.marginLeft='';
+    if(tm) tm.style.display=''; if(svg) svg.style.height='';
+    if(!bc) return;
+    /* "Wrapped" means the barcode has dropped BELOW the name, not merely that it sits a
+       few pixels lower — the row centres its items, so a short barcode always starts a
+       little below a taller text span even on one line. Compare against the bottom of the
+       first item instead of the top of the row. */
+    const first = row.firstElementChild;
+    const wrapped = ()=> !!first &&
+      (bc.getBoundingClientRect().top >= first.getBoundingClientRect().bottom - 2);
+    if(!wrapped()) return;
+    /* Give up room in the order it hurts least: type size first, then the clock time
+       (the date stays, and the time is still on the record and in the QR), then the
+       barcode is scaled down a little. The name is never shortened. */
+    let size = parseFloat(getComputedStyle(row).fontSize) || 12.5;
+    while(size > 11 && wrapped()){ size -= 0.5; row.style.fontSize = size+'px'; }
+    if(wrapped() && tm) tm.style.display='none';
+    while(size > 9 && wrapped()){ size -= 0.5; row.style.fontSize = size+'px'; }
+    if(wrapped() && svg){
+      let mm = 6.5;
+      while(mm > 4 && wrapped()){ mm -= 0.25; svg.style.height = mm+'mm'; }
+    }
+    /* Last resort on a pre-printed pad: the row is indented 26mm to clear the letterhead,
+       which on a very long name is the only thing still forcing the barcode down. Give
+       some of that indent back rather than break the line. */
+    if(wrapped() && sheet.classList.contains('pad')){
+      let ind = 26;
+      while(ind > 8 && wrapped()){ ind -= 2; row.style.marginLeft = ind+'mm'; }
+    }
+    // still impossible — let it wrap rather than clip anything
+    if(wrapped()){ row.style.fontSize=''; row.style.marginLeft='';
+      if(tm) tm.style.display=''; if(svg) svg.style.height=''; }
+  }catch(e){}
+}
+/* Page numbers for the FLOWING document path (discharge summaries and the like). There is
+   no bottom furniture on those, so a plain absolute marker per page slot is safe. */
+function rxFlowPageNums(sheet, pages, pageH){
   try{
     if(!sheet) return;
     Array.prototype.forEach.call(sheet.querySelectorAll('.rx-pgno'), function(e){ e.remove(); });
     if(!(pages>1)) return;
     if(getComputedStyle(sheet).position==='static') sheet.style.position='relative';
-    const pageH = box.availH*96/25.4;
     for(var k=1;k<=pages;k++){
       var d=document.createElement('div');
       d.className='rx-pgno';
       d.textContent='Page '+k+' of '+pages;
-      d.style.top=(k*pageH-13)+'px';
+      d.style.top=(k*pageH - 18)+'px';
       sheet.appendChild(d);
     }
   }catch(e){}
@@ -8044,7 +8261,7 @@ function printVisit(v, p, forcePlain){
       '</div>'+
     '</div>';
 
-  $('printArea').innerHTML =
+  const sheetHtml =
   '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+rxFinishCls()+'">'+ headHtml +
     '<div class="rx-pt">'+
       '<span><b>Name:</b> '+esc(p.name)+'</span>'+
@@ -8069,49 +8286,210 @@ function printVisit(v, p, forcePlain){
         (v.proc?'<h4>Plan</h4><p class="dx">'+esc(v.proc)+'</p>':'')+
       '</div>'+
     '</div>'+
-    '<div class="rx-foot rx-foot-r">'+
-      '<div class="rx-corner">'+ buildRxQr(v,p) +
-        '<div class="rx-boxcol">'+ nextTestsBox(v) + fuDateBox(v) +'</div>'+
+    '<div class="rx-bottom">'+
+      '<div class="rx-foot rx-foot-r">'+
+        '<div class="rx-corner">'+ buildRxQr(v,p) +
+          '<div class="rx-boxcol">'+ nextTestsBox(v) + fuDateBox(v) +'</div>'+
+        '</div>'+
       '</div>'+
+      (!pad && s.footer?'<div class="rx-footer-note">'+esc(s.footer)+'</div>':'')+
+      (!pad ? socialsPrintLine() : '')+
     '</div>'+
-    (!pad && s.footer?'<div class="rx-footer-note">'+esc(s.footer)+'</div>':'')+
-    (!pad ? socialsPrintLine() : '')+
   '</div></div>';
 
   // page geometry
   const paper = pad ? 'A4' : (s.paper==='A5'?'A5':'A4');
   const box = pageBox(pad, 0, paper);
-  setPageStyle(box, paper);
-  const contentW = box.contentW;
-  // keep 2 mm clear of the pre-printed footer so nothing ever grazes it
-  const availH = box.availH - (pad ? 2 : 0);
-  // Fit check: if content is too tall for one sheet, first switch to a compact
-  // typeface; if it still overflows, ask before printing across two sheets.
-  const pa = $('printArea'), sheet = pa.querySelector('.rx-sheet');
-  pa.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:'+contentW+'mm';
-  const availPx = availH*96/25.4;
-  let overflows = false;
-  if(sheet.offsetHeight > availPx){
-    sheet.classList.add('compact');
-    overflows = sheet.offsetHeight > availPx;
-    if(overflows && !printPreviewMode){
-      const ok = confirm('This prescription is long — it will continue onto a SECOND sheet.\n\nPress OK to print anyway (load 2 letterhead sheets in the printer),\nor Cancel to go back and shorten it.');
-      if(!ok){ pa.style.cssText=''; return; }
+  setPageStyle(box, paper, false);    // prescriptions paginate themselves
+  const pa = $('printArea');
+  let asked = false, cancelled = false;
+
+  /* Everything below is measurement, and measurement is only right once the webfonts are
+     loaded — the Nastaliq Urdu face changes every line height. So the pass is a function:
+     it runs once immediately (so a preview or a test sees a laid-out sheet) and again the
+     moment the fonts report ready, just before printing. */
+  const layout = ()=>{
+    // rxPaginate consumes the single-flow sheet, so rebuild it before every pass —
+    // that also makes the pass idempotent when it runs again after the fonts load
+    pa.innerHTML = sheetHtml;
+    let res = rxPaginate(pa, box, paper, false);
+    if(res.pages > 1){
+      // just over? try the compact typeface before spending a second sheet
+      pa.innerHTML = sheetHtml;
+      const tight = rxPaginate(pa, box, paper, true);
+      if(tight.pages < res.pages){ res = tight; }
+      else { pa.innerHTML = sheetHtml; res = rxPaginate(pa, box, paper, false); }
     }
+    window.__lastPrintFits = (res.pages <= 1);
+    if(res.pages > 1 && !printPreviewMode && !asked){
+      asked = true;
+      const ok = confirm('This prescription needs '+res.pages+' sheets.\n\nPress OK to print anyway (load '+res.pages+' letterhead sheets in the printer),\nor Cancel to go back and shorten it.');
+      if(!ok) cancelled = true;
+    }
+  };
+
+  layout();
+  if(cancelled){ pa.innerHTML=''; return; }
+  // Wait for the fonts either way: the preview has to show exactly what will print,
+  // and both are laid out from the same measurements.
+  const whenReady = (fn)=>{
+    if(document.fonts && document.fonts.ready && document.fonts.ready.then)
+      document.fonts.ready.then(()=>setTimeout(fn, 40));
+    else setTimeout(fn, 60);
+  };
+  if(printPreviewMode){
+    printPreviewMode = false;
+    whenReady(()=>{ if(!cancelled){ layout(); if(!cancelled) showPrintPreview(); } });
+    return;
   }
-  rxPageNums(sheet, overflows ? Math.ceil(sheet.offsetHeight/availPx) : 1, box);
-  // drop the QR + follow-up date block to the very bottom of the printable area
-  const foot = sheet.querySelector('.rx-foot');
-  if(foot && !overflows){
-    foot.style.marginTop='';
-    const leftover = availPx - sheet.offsetHeight;
-    if(leftover > 0) foot.style.marginTop = Math.floor(leftover + 26) + 'px';
-  }
-  pa.style.cssText = '';
-  window.__lastPrintFits = !overflows;
-  if(printPreviewMode){ printPreviewMode = false; showPrintPreview(); return; }
   showPrintTipOnce();
-  setTimeout(()=>window.print(), 60);
+  whenReady(()=>{ if(!cancelled){ layout(); if(!cancelled) window.print(); } });
+}
+
+/* ==================== REAL PAGINATION ====================
+   Earlier builds laid the whole prescription out as one tall block and asked the browser
+   to break it into pages, then tried to place the corner boxes and page numbers by
+   absolute pixel offsets inside that block. Every engine fragments a little differently —
+   a forced break shifts flowed content but not absolutely positioned boxes, a continuing
+   block paints its border to the edge of the paper, Safari and Chrome disagree about
+   @page — so the furniture drifted onto the pre-printed footer and content jumped sheets.
+
+   This does the pagination itself. Each sheet is a real box of exactly one page, with the
+   margins as its own padding, and content is measured into it item by item. The browser is
+   only asked to do one thing: start a new sheet after each box. Nothing is positioned
+   relative to a fragment, so there is nothing left to drift.                            */
+const RX_SAFE_MM = 5;          // clear air between the printed block and the pre-printed area
+function rxPaginate(pa, box, paper, compact){
+  const MM = 96/25.4;
+  const src = pa.querySelector('.rx-sheet');
+  if(!src) return {pages:0};
+  const srcCls = src.className + (compact ? ' compact' : '');
+  const head = src.querySelector('.rx-head');
+  const pt   = src.querySelector('.rx-pt');
+  const cols = src.querySelector('.rx-cols');
+  const band = src.querySelector('.rx-bottom');
+  const main = cols ? cols.querySelector('.rx-main') : null;
+  const side = cols ? cols.querySelector('.rx-side') : null;
+  const mainKids = main ? Array.prototype.slice.call(main.children) : [];
+  const sideKids = side ? Array.prototype.slice.call(side.children) : [];
+
+  // work off-screen at the real paper size — no container can squeeze it
+  pa.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:'+box.pw+'mm';
+  const pages = [];
+  const mkPage = ()=>{
+    const pg = document.createElement('div');
+    pg.className = 'rx-sheetpage';
+    pg.style.cssText = 'width:'+box.pw+'mm;height:'+box.ph+'mm;'+
+      'padding:'+box.top+'mm '+box.side+'mm '+box.bot+'mm '+box.side+'mm';
+    const sh = document.createElement('div');
+    sh.className = srcCls;
+    pg.appendChild(sh);
+    pa.appendChild(pg);
+    pages.push(pg);
+    return {pg, sh};
+  };
+
+  const first = mkPage();
+  if(head) first.sh.appendChild(head);
+  if(pt)   first.sh.appendChild(pt);
+  fitPatientRow(first.sh);          // keep the barcode on the name line, whatever the name
+
+  /* How much of the page foot each column has to keep clear. The next-visit boxes sit in
+     the right-hand 30%, directly under the clinical column — but the medicines column is
+     the left 70%, and only the QR code reaches into it. So the medicines may run much
+     further down the page than the clinical notes may. Treating both the same is what
+     pushed a four-medicine prescription onto a second sheet. */
+  let bandH = 0, mainBlockH = 0;
+  if(band){
+    first.pg.appendChild(band);
+    bandH = band.offsetHeight;
+    const bc = band.querySelector('.rx-boxcol');
+    const qr = band.querySelector('.rx-corner .rx-qr, .rx-corner .rx-bc');
+    const bcH = bc ? bc.offsetHeight : 0;
+    const qrH = qr ? qr.offsetHeight : 0;
+    mainBlockH = Math.max(qrH, bandH - Math.max(0, bcH - qrH));
+  }
+
+  const usablePx = (box.ph - box.top - box.bot) * MM;      // the printable height of a page
+  const safePx   = RX_SAFE_MM * MM;                        // clear air above the pre-printed area
+  const pgnoPx   = 16;
+
+  const fill = (pageNo, sh, pg)=>{
+    const c = document.createElement('div'); c.className = 'rx-cols';
+    const m = document.createElement('div'); m.className = 'rx-main';
+    const d = document.createElement('div'); d.className = 'rx-side';
+    c.appendChild(m); c.appendChild(d); sh.appendChild(c);
+    // what is left on this page once the header (page 1) and the furniture are accounted for
+    const usedTop = sh.offsetHeight;                       // header + patient band, 0 on later pages
+    /* Every page keeps RX_SAFE_MM of clear air above the pre-printed footer, not just
+       page 1. Line heights can still shift a hair between measuring and printing (the
+       Urdu face renders glyph by glyph), and on a pre-printed pad a hair is the difference
+       between a clean sheet and ink across the clinic's footer. */
+    const base = usablePx - usedTop - pgnoPx - safePx;
+    const mRoom = base - (pageNo === 1 ? (mainBlockH ? mainBlockH + safePx : 0) : 0);
+    const dRoom = base - (pageNo === 1 ? (bandH      ? bandH      + safePx : 0) : 0);
+    return {c, m, d, mRoom:Math.max(40, mRoom), dRoom:Math.max(40, dRoom)};
+  };
+  /* The two columns are flex items, so each one STRETCHES to the height of the taller of
+     the pair — offsetHeight would report the row height, not the column's own content, and
+     the clinical column would look full the moment the medicines were poured. Measure from
+     the column's top to its last child's bottom instead. */
+  const colH = (col)=>{
+    const last = col.lastElementChild;
+    if(!last) return 0;
+    // a bounding box stops at the border, so add the last item's own bottom margin —
+    // without it a column reads ~9px shorter than it prints and creeps past the limit
+    const mb = parseFloat(getComputedStyle(last).marginBottom) || 0;
+    return (last.getBoundingClientRect().bottom - col.getBoundingClientRect().top) + mb;
+  };
+  const pour = (col, kids, from, room)=>{
+    let i = from;
+    while(i < kids.length){
+      col.appendChild(kids[i]);
+      if(colH(col) > room && col.children.length > 1){ col.removeChild(kids[i]); break; }
+      i++;
+    }
+    // belt and braces: never leave a column standing past its limit
+    while(col.children.length > 1 && colH(col) > room){ col.removeChild(col.lastElementChild); i--; }
+    return i;
+  };
+
+  let mi = 0, si = 0, pageNo = 1;
+  let cur = first, slot = fill(1, first.sh, first.pg);
+  mi = pour(slot.m, mainKids, mi, slot.mRoom);
+  si = pour(slot.d, sideKids, si, slot.dRoom);
+
+  while((mi < mainKids.length || si < sideKids.length) && pageNo < 20){
+    pageNo++;
+    cur = mkPage();
+    slot = fill(pageNo, cur.sh, cur.pg);
+    const beforeM = mi, beforeS = si;
+    mi = pour(slot.m, mainKids, mi, slot.mRoom);
+    si = pour(slot.d, sideKids, si, slot.dRoom);
+    if(mi === beforeM && si === beforeS) break;            // nothing fits anywhere — stop rather than loop
+  }
+
+  // the bottom band belongs to page 1, always, pinned above the pre-printed area
+  if(band){
+    band.style.cssText = 'position:absolute;left:'+box.side+'mm;right:'+box.side+'mm;'+
+      'bottom:'+(box.bot + RX_SAFE_MM)+'mm;margin:0';
+  }
+  // one page number per sheet, bottom left, inside the safe area
+  pages.forEach((pg, i)=>{
+    pg.style.position = 'relative';
+    if(i < pages.length-1) pg.style.breakAfter = 'page';
+    if(pages.length < 2) return;
+    const n = document.createElement('div');
+    n.className = 'rx-pgno';
+    n.textContent = 'Page '+(i+1)+' of '+pages.length;
+    n.style.cssText = 'position:absolute;left:'+box.side+'mm;bottom:'+(box.bot+2)+'mm';
+    pg.appendChild(n);
+  });
+  // the old single-flow sheet has been emptied into the pages — drop it
+  const page0 = src.closest('.rx-page') || src;
+  if(page0 && page0.parentElement === pa) pa.removeChild(page0);
+  pa.style.cssText = '';
+  return {pages:pages.length};
 }
 
 function testPrint(){
@@ -9743,6 +10121,12 @@ function vitalsSet(v){
 }
 function vitalsReset(){ vitalsSet(VITAL_NORMAL); }
 function vitalsClear(){ vitalsSet({}); }
+/* A new prescription starts with the boxes EMPTY — vitals are recorded for the few
+   patients where they matter, and a printed set of readings nobody measured would be
+   a false record. "Normal" fills the usual adult values in one press. */
+function vitalsDefault(){
+  if((db.settings.vitalsDefault||'blank')==='normal') vitalsReset(); else vitalsClear();
+}
 function collectVitals(){
   const o={}; let any=false;
   Object.keys(VITAL_IDS).forEach(k=>{
@@ -9890,6 +10274,93 @@ function renderLost(){
       '<td><button class="btn btn-ghost btn-sm" onclick="waRemind(\''+v.id+'\')" title="WhatsApp them">📤</button> '+
       '<button class="btn btn-ghost btn-sm" onclick="fuDone(\''+v.id+'\')" title="Stop chasing this one">✓ Close</button></td></tr>';
   }).join('');
+}
+
+/* ==================== DRAG TO REORDER ====================
+   Press and hold a row, then slide it up or down — the way app icons move on a phone.
+   Works with a mouse and with a finger; a long-press starts the drag on touch so
+   ordinary scrolling still works. The order is stored on each record as .ord and is
+   synced like any other field. */
+function ordSort(arr){
+  return (arr||[]).slice().sort(function(a,b){
+    const ao=(a&&typeof a.ord==='number')?a.ord:1e9, bo=(b&&typeof b.ord==='number')?b.ord:1e9;
+    return ao-bo || String((a&&a.name)||'').localeCompare(String((b&&b.name)||''));
+  });
+}
+function ordRenumber(arr){ (arr||[]).forEach(function(x,i){ if(x) x.ord=i; }); }
+/* wire a <tbody> whose rows carry data-id, backed by the given collection */
+function makeReorderable(bodyId, collName, afterMove){
+  const body=document.getElementById(bodyId); if(!body || body.dataset.dragWired) return;
+  body.dataset.dragWired='1';
+  let dragRow=null, startY=0, holdTimer=null, moved=false;
+
+  const rowsOf = ()=> Array.prototype.slice.call(body.querySelectorAll('tr[data-id]'));
+  const begin=(row, y)=>{
+    dragRow=row; startY=y; moved=false;
+    row.classList.add('dragging');
+    document.body.classList.add('reordering');
+  };
+  const end=()=>{
+    if(holdTimer){ clearTimeout(holdTimer); holdTimer=null; }
+    if(!dragRow) return;
+    dragRow.classList.remove('dragging');
+    document.body.classList.remove('reordering');
+    dragRow=null;
+    if(!moved) return;
+    const order=rowsOf().map(r=>r.dataset.id);
+    const arr=db[collName]||[];
+    const byId={}; arr.forEach(x=>{ if(x&&x.id!=null) byId[String(x.id)]=x; });
+    const next=order.map(id=>byId[id]).filter(Boolean);
+    arr.forEach(x=>{ if(x && next.indexOf(x)<0) next.push(x); });   // anything not on screen
+    ordRenumber(next);
+    db[collName]=next;
+    persist();
+    if(typeof afterMove==='function') afterMove();
+    toast('Order saved');
+  };
+  const moveTo=(y)=>{
+    if(!dragRow) return;
+    const rows=rowsOf().filter(r=>r!==dragRow);
+    for(let i=0;i<rows.length;i++){
+      const r=rows[i].getBoundingClientRect();
+      const mid=r.top+r.height/2;
+      if(y < mid){ if(rows[i].previousElementSibling!==dragRow){ body.insertBefore(dragRow, rows[i]); moved=true; } return; }
+    }
+    if(body.lastElementChild!==dragRow){ body.appendChild(dragRow); moved=true; }
+  };
+
+  body.addEventListener('mousedown', e=>{
+    const handle=e.target.closest('.drag-h'); if(!handle) return;
+    const row=handle.closest('tr[data-id]'); if(!row) return;
+    e.preventDefault(); begin(row, e.clientY);
+  });
+  document.addEventListener('mousemove', e=>{ if(dragRow) moveTo(e.clientY); });
+  document.addEventListener('mouseup', ()=>{ if(dragRow) end(); });
+
+  body.addEventListener('touchstart', e=>{
+    const handle=e.target.closest('.drag-h'); if(!handle) return;
+    const row=handle.closest('tr[data-id]'); if(!row) return;
+    const y=e.touches[0].clientY;
+    holdTimer=setTimeout(()=>{ begin(row, y); if(navigator.vibrate) try{navigator.vibrate(12);}catch(_){ } }, 220);
+  }, {passive:true});
+  body.addEventListener('touchmove', e=>{
+    if(!dragRow){ if(holdTimer){ clearTimeout(holdTimer); holdTimer=null; } return; }
+    e.preventDefault(); moveTo(e.touches[0].clientY);
+  }, {passive:false});
+  body.addEventListener('touchend', end);
+  body.addEventListener('touchcancel', end);
+}
+/* nudge buttons, for anyone who would rather not drag (and for keyboards) */
+function ordNudge(collName, id, dir, afterMove){
+  const arr=ordSort(db[collName]||[]);
+  const i=arr.findIndex(x=>String(x.id)===String(id));
+  const j=i+dir;
+  if(i<0 || j<0 || j>=arr.length) return;
+  const t=arr[i]; arr[i]=arr[j]; arr[j]=t;
+  ordRenumber(arr);
+  db[collName]=arr;
+  persist();
+  if(typeof afterMove==='function') afterMove();
 }
 
 /* ==================== FOLLOW-UP MONTH VIEW ====================
@@ -10052,6 +10523,8 @@ const DRAFT_FORMS={
       $('dcImplant').value=c.implant||''; $('dcImplantCo').value=c.implantCo||'';
       $('dcCondition').value=c.condition||''; $('dcConditionUr').value=c.conditionUr||'';
       $('dcInstr').value=c.instr||''; $('dcFu').value=c.fu||'';
+      if(typeof renderRxQrSelect==='function') renderRxQrSelect();
+      if($('dsQrSel')) $('dsQrSel').value = f.qrId||'';
       $('dsRxBody').innerHTML=''; (c.medsArr||[]).forEach(m=>addRxRow(m,'dsRxBody'));
       $('dsFormTitle').textContent = editingDsId ? 'Edit discharge summary' : 'New discharge summary';
     }
@@ -10642,39 +11115,84 @@ function renderFavBar(){
 }
 
 /* ---------- QR code library ---------- */
+/* QR ids must be the SAME on every device. They used to come from uid(), so each phone
+   and PC seeded its own nine codes with different ids — sync then merged them into
+   eighteen, edits landed on whichever copy that device held, and tidying on one device
+   left the other's copies untouched. Ids are now fixed strings, so both devices arrive
+   at the same record and merge instead of multiplying.
+   Only the handful worth shipping is seeded; add your own from the QR Codes page. */
+function qrStableId(key){ return 'qrx_'+key; }
+function qrIsStableId(id){ return String(id||'').indexOf('qrx_')===0; }
 function qrSeed(){
   const s=db.settings;
   return [
-    {id:uid('qr'),label:'Google review',text:'https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID',note:'Replace with your clinic\'s Google review link'},
-    {id:uid('qr'),label:'Facebook page',text:s.fbUrl||'https://facebook.com',note:'Your clinic Facebook page link'},
-    {id:uid('qr'),label:'Instagram',text:s.igUrl||'https://instagram.com',note:'Your clinic Instagram link'},
-    {id:uid('qr'),label:'WhatsApp',text:'https://wa.me/'+String(s.waBiz||'').replace(/[^0-9]/g,''),note:'Your clinic WhatsApp'},
-    {id:uid('qr'),label:'Knee physiotherapy (video)',text:'https://www.youtube.com/results?search_query=knee+strengthening+exercises',note:'Paste your own knee-exercise video link'},
-    {id:uid('qr'),label:'Lower-back pain exercises (video)',text:'https://www.youtube.com/results?search_query=lower+back+pain+exercises',note:'Paste your own back-exercise video link'},
-    {id:uid('qr'),label:'Shoulder exercises (video)',text:'https://www.youtube.com/results?search_query=shoulder+rehab+exercises',note:'Paste your own shoulder-exercise video link'},
-    {id:uid('qr'),label:'Spare QR 1',text:'',note:'Free slot — add a link later (e.g. another exercise video or a leaflet)'},
-    {id:uid('qr'),label:'Spare QR 2',text:'',note:'Free slot — add a link later'}
+    {id:qrStableId('whatsapp'), label:'Clinic WhatsApp',
+     text:'https://wa.me/'+String(s.waBiz||'').replace(/[^0-9]/g,''), note:'Your clinic WhatsApp number'},
+    {id:qrStableId('review'), label:'Google review',
+     text:'', note:'Paste your clinic\'s Google review link'},
+    {id:qrStableId('facebook'), label:'Facebook page', text:s.fbUrl||'', note:'Your clinic Facebook page'},
+    {id:qrStableId('instagram'), label:'Instagram', text:s.igUrl||'', note:'Your clinic Instagram'}
   ];
 }
-/* replace the whole QR library with the recommended curated set, keeping your saved links where the label matches */
-function qrResetToRecommended(){
-  if(!confirm('Tidy the QR Code Library?\n\nThis replaces the current list with the recommended set (your socials, Google review, knee / lower-back / shoulder exercise videos, and 2 spare slots).\n\nYour saved links for matching items (Google review, Facebook, Instagram, WhatsApp, and the three exercise videos) are kept.')) return;
-  const old=db.qrcodes||[];
-  const byLabel={}; old.forEach(q=>{ if(!byLabel[q.label]) byLabel[q.label]=q; });
-  // also match old exercise-video labels to the new ones so custom links survive the rename
-  const alias={'Knee physiotherapy (video)':'Knee exercises (YouTube)','Lower-back pain exercises (video)':'Low-back exercises (YouTube)','Shoulder exercises (video)':'Shoulder exercises (YouTube)'};
-  db.qrcodes = qrSeed().map(seed=>{
-    const prev = byLabel[seed.label] || byLabel[alias[seed.label]];
-    if(prev && prev.text && !/YOUR_PLACE_ID|results\?search_query|^https:\/\/(facebook|instagram)\.com$|wa\.me\/$/.test(prev.text)){
-      return {id:uid('qr'), label:seed.label, text:prev.text, note:prev.note||seed.note};
-    }
-    return seed;
-  });
-  // if the old default QR is gone, clear it so prescriptions don't reference a deleted code
-  if(db.settings.defQrId && !db.qrcodes.some(q=>q.id===db.settings.defQrId)) db.settings.defQrId='';
-  persist(); renderQrLib(); if(typeof renderRxQrSelect==='function') renderRxQrSelect();
-  toast('QR library tidied to the recommended set');
+/* the placeholder rows the old seed shipped — worth clearing out, but only while they
+   are still untouched. Anything with a real link the doctor pasted is left alone. */
+/* old labels that mean the same thing as a shipped one, so a real link the doctor
+   pasted years ago is carried over instead of being left behind as a duplicate */
+const QR_ALIASES = {'whatsapp':'Clinic WhatsApp', 'clinic whatsapp':'Clinic WhatsApp',
+  'facebook':'Facebook page', 'facebook page':'Facebook page',
+  'instagram':'Instagram', 'instagram page':'Instagram',
+  'google review':'Google review', 'google reviews':'Google review'};
+function qrAliasOf(label){ return QR_ALIASES[String(label||'').trim().toLowerCase()] || null; }
+const QR_JUNK_LABELS = ['Knee physiotherapy (video)','Lower-back pain exercises (video)',
+  'Shoulder exercises (video)','Knee exercises (YouTube)','Low-back exercises (YouTube)',
+  'Shoulder exercises (YouTube)','Spare QR 1','Spare QR 2'];
+function qrIsUntouched(q){
+  const t=String((q&&q.text)||'').trim();
+  if(!t) return true;
+  return /YOUR_PLACE_ID/.test(t)
+      || /youtube\.com\/results\?search_query=/.test(t)
+      || /^https:\/\/(www\.)?(facebook|instagram)\.com\/?$/.test(t)
+      || /^https:\/\/wa\.me\/?$/.test(t);
 }
+/* Tidy: drop untouched placeholders and duplicate labels, keep everything you have
+   actually filled in or added yourself, and make sure the four shipped ones exist. */
+function qrTidy(quiet){
+  if(!quiet && !confirm('Tidy the QR Code Library?\n\nUntouched placeholder codes and duplicates are removed.\nAnything you have pasted a real link into, or added yourself, is kept.')) return 0;
+  const before=(db.qrcodes||[]).length;
+  const seeds=qrSeed(), seedById={}; seeds.forEach(s=>seedById[s.id]=s);
+  const out=[], byLabel={}, byId={};
+  // 1. carry over the shipped codes, matching by label so old random ids collapse onto one
+  seeds.forEach(s=>{
+    const prev=(db.qrcodes||[]).filter(q=>q && (q.id===s.id ||
+        String(q.label||'').trim().toLowerCase()===s.label.toLowerCase() ||
+        qrAliasOf(q.label)===s.label))
+      .sort((a,b)=>(qrIsUntouched(a)?1:0)-(qrIsUntouched(b)?1:0))[0];
+    const rec={id:s.id, label:s.label,
+               text:(prev && !qrIsUntouched(prev)) ? prev.text : s.text,
+               note:(prev && prev.note) || s.note};
+    out.push(rec); byLabel[rec.label.toLowerCase()]=rec; byId[rec.id]=rec;
+  });
+  // 2. keep anything else the doctor made, minus the old placeholder rows and duplicates
+  (db.qrcodes||[]).forEach(q=>{
+    if(!q || !q.id || byId[q.id]) return;
+    const lab=String(q.label||'').trim();
+    if(byLabel[lab.toLowerCase()]) return;                       // a duplicate label
+    if(qrAliasOf(lab)) return;                                   // an old name for a shipped one
+    if(QR_JUNK_LABELS.indexOf(lab)>=0 && qrIsUntouched(q)) return; // untouched placeholder
+    if(!lab && qrIsUntouched(q)) return;                          // blank row
+    out.push(q); byLabel[lab.toLowerCase()]=q; byId[q.id]=q;
+  });
+  db.qrcodes = out;
+  if(db.settings.defQrId && !db.qrcodes.some(q=>q.id===db.settings.defQrId)) db.settings.defQrId='';
+  const removed = before - out.length;
+  if(!quiet){
+    persist(); renderQrLib(); if(typeof renderRxQrSelect==='function') renderRxQrSelect();
+    toast(removed>0 ? ('Tidied — '+removed+' unused code'+(removed===1?'':'s')+' removed')
+                    : 'Nothing to tidy — the list is already clean');
+  }
+  return removed;
+}
+function qrResetToRecommended(){ return qrTidy(false); }
 let qrEditId=null;
 function qrSvgFor(text, mm){ try{ if(typeof QRenc==='undefined') return ''; return QRenc.svg(text, mm||44); }catch(e){ return ''; } }
 function renderQrLib(){
@@ -11085,19 +11603,42 @@ async function syncPullFavs(){
   }catch(e){}
 }
 /* ---- pending changes: registry adds/edits by non-owners wait for the owner's approval ---- */
+/* A resolved request must never be dragged back to "pending". The device that made
+   the request still holds its own copy saying "pending"; if that copy is pushed after
+   the owner has approved it, the approval is overwritten and the notification pops up
+   again — forever, once per sync. So: resolved always wins, we pull before we push,
+   and a request that has been settled for two days is deleted from the cloud outright. */
+const PENDING_KEEP_MS = 2*86400000;
+function pendingResolved(p){ return !!(p && p.status && p.status!=='pending'); }
 async function syncPushPending(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    const rows=(db.pendingChanges||[]).map(p=>({id:String(p.id), kind:'pending', payload:p, updated_at:p.at||new Date().toISOString()}));
+    const now=Date.now(), stale=[];
+    const rows=[];
+    (db.pendingChanges||[]).forEach(p=>{
+      if(pendingResolved(p)){
+        const age = p.resolvedAt ? (now - new Date(p.resolvedAt).getTime()) : 0;
+        if(age > PENDING_KEEP_MS){ stale.push(String(p.id)); return; }   // settled long ago → drop it
+      }
+      rows.push({id:String(p.id), kind:'pending', payload:p, updated_at:(p.resolvedAt||p.at||new Date().toISOString())});
+    });
     if(rows.length) await c.from('records').upsert(rows);
+    for(const id of stale){ try{ await c.from('records').delete().eq('id', id); }catch(e){} }
+    if(stale.length){ const drop=new Set(stale); db.pendingChanges=(db.pendingChanges||[]).filter(p=>!drop.has(String(p.id))); }
   }catch(e){}
 }
 async function syncPullPending(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     const {data,error}=await c.from('records').select('id,payload').eq('kind','pending'); if(error) return;
     db.pendingChanges=db.pendingChanges||[]; const byId={}; db.pendingChanges.forEach(p=>byId[String(p.id)]=p);
-    (data||[]).forEach(r=>{ const ex=byId[String(r.id)]; if(ex){ Object.assign(ex, r.payload); } else { db.pendingChanges.push(r.payload); byId[String(r.id)]=r.payload; } });
-    // drop resolved ones older than a day to keep it tidy
-    db.pendingChanges=db.pendingChanges.filter(p=>p.status==='pending' || (p.resolvedAt && (Date.now()-new Date(p.resolvedAt).getTime())<86400000));
+    (data||[]).forEach(r=>{
+      const remote=r.payload; if(!remote) return;
+      const ex=byId[String(r.id)];
+      if(!ex){ db.pendingChanges.push(remote); byId[String(r.id)]=remote; return; }
+      if(pendingResolved(ex) && !pendingResolved(remote)) return;      // ours is settled — keep it
+      Object.assign(ex, remote);
+    });
+    db.pendingChanges=db.pendingChanges.filter(p=>!pendingResolved(p) ||
+      (p.resolvedAt && (Date.now()-new Date(p.resolvedAt).getTime()) < PENDING_KEEP_MS));
   }catch(e){}
 }
 async function syncDeletePendingRow(id){ try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(sess.data.session) await c.from('records').delete().eq('id', String(id)); }catch(e){} }
@@ -11212,6 +11753,7 @@ async function syncNow(loud, force){
     let plan=computeSyncPlan(local, cloud, state, isAdmin, {});
     if(isAdmin && plan.pendingForAdmin.length){ const decisions=await askDeleteApprovals(plan.pendingForAdmin); plan=computeSyncPlan(local, cloud, state, isAdmin, decisions); }
     SYNC_COLLS.forEach(k=>{ db[k]=plan.newLocal[k]; });
+    if(typeof syncRehash==='function') syncRehash();   // pulled copies are not local edits
     if(typeof reconcileMrnSeq==='function') reconcileMrnSeq(); // never hand out an MR number another device already used
     if(typeof phraseBankInvalidate==='function') phraseBankInvalidate();
     try{ if(db.meds && db.meds.length) db.meds.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''))); }catch(e){}
@@ -11222,7 +11764,7 @@ async function syncNow(loud, force){
     syncCfg().knownIds=plan.newState.knownIds; syncCfg().suppressed=plan.newState.suppressed; syncCfg().lastSync=state.now; syncCfg().lastError=''; persist();
     await syncPushAccess(); await syncPullAccess();
     await syncPushActivity(); await syncPullActivity();
-    await syncPushPending(); await syncPullPending();
+    await syncPullPending(); await syncPushPending();
     await syncPullFavs(); await syncPushFavs();
     reconcileUsers(); refreshCurrentUser(); persist();
     refreshAllViews(); renderSync(); if(typeof renderSyncChip==='function') renderSyncChip();
@@ -11358,7 +11900,7 @@ try{
   Object.keys(VITAL_IDS).forEach(k=>{
     const el=$(VITAL_IDS[k]); if(el) el.addEventListener('input', vitalsPaint);
   });
-  vitalsReset();
+  vitalsDefault();
   const _sv = window.saveVisit;
   if(typeof _sv==='function') window.saveVisit=function(){ const r=_sv.apply(this,arguments); comboInvalidate(); return r; };
 }catch(e){}
