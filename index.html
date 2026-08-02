@@ -596,6 +596,7 @@ tr.cls-row td{background:transparent;color:var(--muted,#64748b);font-weight:600;
 .dc-sec p{font-size:13px;line-height:1.65;white-space:pre-wrap;unicode-bidi:plaintext}
 .dc-dx p{font-weight:700;font-size:13.5px}
 .dc-allergy p{font-weight:700}
+.dc-foot{margin-top:9mm}
 .dc-bandwrap{page-break-inside:auto}
 .dc-band-abs{border-top:1px solid #999}
 .dc-imgband{display:flex;gap:6mm;justify-content:center;page-break-inside:avoid;
@@ -813,26 +814,69 @@ html[data-theme="dark"] .ph-hd{background:#16242f}
 .regf-wrap{display:grid;grid-template-columns:250px 1fr;gap:16px;align-items:start}
 .regf-wrap.regf-full{grid-template-columns:1fr}
 .regf-wrap.regf-full .regf-rail{display:none}
-.regf-rail{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px;max-height:80vh;overflow:auto}
-.regf-grp{padding:9px 10px 3px;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
-.regf-cat{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:none;background:none;cursor:pointer;
-  padding:8px 10px;border-radius:9px;font-size:13px;transition:.14s;color:var(--ink)}
-.regf-cat:hover{background:var(--hover,#f2f6f8)}
-.regf-cat.on{background:var(--teal-light);color:var(--teal-dark);font-weight:600}
+.regf-rail{position:sticky;top:14px;display:flex;flex-direction:column;gap:7px;max-height:84vh;overflow:auto;padding:3px}
+.regf-grp{padding:10px 4px 2px;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+
 .rc-tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rc-tick{flex:none;font-size:12px;color:var(--muted);opacity:.6}
 .rc-tick.done{color:var(--green,#16a34a);opacity:1;font-weight:700}
 .regf-sec{float:right;font-size:10.5px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
-html[data-theme="dark"] .regf-cat:hover{background:#16242f}
 @media(max-width:900px){
   .regf-wrap{grid-template-columns:1fr}
   .regf-rail{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:4px}
-  .regf-grp{width:100%}
-  .regf-cat{width:auto;flex:none}
+  .regf-rail{flex-direction:row;overflow-x:auto}
+  .regf-grp{display:none}
+  .regf-cat{width:auto;flex:none;min-width:150px}
+}
+/* ---- colour-tinted form rails (prescription, discharge, patients, registry, settings) ---- */
+.fr-wrap{display:grid;grid-template-columns:252px 1fr;gap:16px;align-items:start}
+.fr-wrap.fr-full{grid-template-columns:1fr}
+.fr-wrap.fr-full .fr-rail{display:none}
+.fr-rail{position:sticky;top:14px;display:flex;flex-direction:column;gap:8px;max-height:86vh;overflow:auto;padding:3px}
+.fr-panes{min-width:0}
+.fr-tile{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;cursor:pointer;
+  border:1px solid var(--line);border-radius:15px;padding:11px 12px 11px 15px;transition:transform .16s,box-shadow .16s,border-color .16s;
+  background:var(--tile-bg,var(--card));color:var(--ink);position:relative;overflow:hidden;font:inherit}
+.fr-tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tile-ac,var(--teal));opacity:.45;transition:.16s}
+.fr-tile:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(0,0,0,.08)}
+.fr-tile.on{border-color:var(--tile-ac,var(--teal));box-shadow:0 9px 22px var(--tile-sh,rgba(0,0,0,.12));transform:translateY(-1px)}
+.fr-tile.on::before{opacity:1;width:6px}
+.frt-ic{flex:none;width:28px;height:28px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:var(--tile-ic,var(--hover,#eef3f6));font-size:15px;line-height:1}
+.frt-tx{display:flex;flex-direction:column;min-width:0;line-height:1.32;flex:1}
+.frt-tx b{font-size:13.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.frt-tx span{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.frt-tick{flex:none;width:17px;height:17px;border-radius:50%;border:1.5px solid var(--line);margin-top:5px;
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:.16s}
+.frt-tick.done{background:var(--tile-ac,var(--teal));border-color:var(--tile-ac,var(--teal));color:#fff}
+.frt-tick.done::after{content:"\2713"}
+.frt-tick.frt-num{width:auto;min-width:19px;padding:0 5px;border-radius:9px;font-size:10.5px;font-weight:700}
+.frt-tick.frt-num::after{content:none}
+.fr-tile[data-tint="0"]{--tile-ac:#0d9488;--tile-bg:#f0fdfa;--tile-ic:#ccfbf1;--tile-sh:rgba(13,148,136,.22)}
+.fr-tile[data-tint="1"]{--tile-ac:#d97706;--tile-bg:#fffbeb;--tile-ic:#fef3c7;--tile-sh:rgba(217,119,6,.22)}
+.fr-tile[data-tint="2"]{--tile-ac:#4f46e5;--tile-bg:#eef2ff;--tile-ic:#e0e7ff;--tile-sh:rgba(79,70,229,.22)}
+.fr-tile[data-tint="3"]{--tile-ac:#e11d48;--tile-bg:#fff1f2;--tile-ic:#ffe4e6;--tile-sh:rgba(225,29,72,.20)}
+.fr-tile[data-tint="4"]{--tile-ac:#16a34a;--tile-bg:#f0fdf4;--tile-ic:#dcfce7;--tile-sh:rgba(22,163,74,.20)}
+.fr-tile[data-tint="5"]{--tile-ac:#7c3aed;--tile-bg:#f5f3ff;--tile-ic:#ede9fe;--tile-sh:rgba(124,58,237,.20)}
+.fr-tile[data-tint="6"]{--tile-ac:#0284c7;--tile-bg:#f0f9ff;--tile-ic:#e0f2fe;--tile-sh:rgba(2,132,199,.20)}
+.fr-tile[data-tint="7"]{--tile-ac:#ea580c;--tile-bg:#fff7ed;--tile-ic:#ffedd5;--tile-sh:rgba(234,88,12,.20)}
+html[data-theme="dark"] .fr-tile[data-tint="0"]{--tile-bg:#0c2320;--tile-ic:#123f39}
+html[data-theme="dark"] .fr-tile[data-tint="1"]{--tile-bg:#291f0d;--tile-ic:#43330f}
+html[data-theme="dark"] .fr-tile[data-tint="2"]{--tile-bg:#171a33;--tile-ic:#252a55}
+html[data-theme="dark"] .fr-tile[data-tint="3"]{--tile-bg:#2b1119;--tile-ic:#471a27}
+html[data-theme="dark"] .fr-tile[data-tint="4"]{--tile-bg:#0e2417;--tile-ic:#163a24}
+html[data-theme="dark"] .fr-tile[data-tint="5"]{--tile-bg:#1d1533;--tile-ic:#2e2153}
+html[data-theme="dark"] .fr-tile[data-tint="6"]{--tile-bg:#0a1f2e;--tile-ic:#0f3249}
+html[data-theme="dark"] .fr-tile[data-tint="7"]{--tile-bg:#2a1508;--tile-ic:#442310}
+@media(max-width:900px){
+  .fr-wrap{grid-template-columns:1fr}
+  .fr-rail{position:static;max-height:none;flex-direction:row;overflow-x:auto;padding-bottom:6px}
+  .fr-tile{flex:none;width:auto;min-width:150px}
+  .frt-tx span{display:none}
 }
 /* ---- settings: rail + panel ---- */
 .set-wrap{display:grid;grid-template-columns:290px 1fr;gap:18px;align-items:start}
-.set-rail{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px;overflow:hidden}
+.set-rail{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:9px;overflow:hidden}
 .set-prof{display:flex;align-items:center;gap:2px;width:100%;text-align:left;border:none;background:none;cursor:pointer;
   padding:10px 10px 12px;border-radius:11px;transition:.14s}
 .set-prof:hover{background:var(--hover,#f2f6f8)}
@@ -841,25 +885,32 @@ html[data-theme="dark"] .regf-cat:hover{background:#16242f}
 .set-prof .sp-tx span{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .set-search{padding:0 6px 8px}
 .set-search input{width:100%;border-radius:10px;font-size:13px;padding:8px 11px}
-.set-cats{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);padding-top:6px}
-.set-cat{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;border:none;background:none;cursor:pointer;
-  padding:10px 11px;border-radius:11px;transition:.14s}
-.set-cat:hover{background:var(--hover,#f2f6f8)}
-.set-cat.on{background:var(--teal-light);}
-.set-cat.on .sc-tx b{color:var(--teal-dark)}
+.set-cats{display:flex;flex-direction:column;gap:7px;border-top:1px solid var(--line);padding-top:9px}
 .sc-ic{font-size:16px;flex:none;line-height:1.25}
 .sc-tx{display:flex;flex-direction:column;min-width:0;line-height:1.3}
 .sc-tx b{font-size:13.5px;font-weight:600}
 .sc-tx span{font-size:11.5px;color:var(--muted)}
 .set-pane{min-width:0}
-html[data-theme="dark"] .set-cat:hover,html[data-theme="dark"] .set-prof:hover{background:#16242f}
+html[data-theme="dark"] .set-prof:hover{background:#16242f}
 @media(max-width:900px){
   .set-wrap{grid-template-columns:1fr}
   .set-rail{position:static}
-  .set-cats{flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .set-cat{flex:none;width:auto}
-  .sc-tx span{display:none}
+  .set-cats{flex-direction:row;overflow-x:auto;gap:7px;padding-bottom:4px}
+  .set-cat{flex:none;width:auto;min-width:170px}
 }
+/* ---- little inline on/off switch that lives next to a field label ---- */
+.swx{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--card);
+  border-radius:999px;padding:2px 11px 2px 3px;cursor:pointer;font-size:11.5px;font-weight:600;
+  color:var(--muted);transition:.15s;margin-left:10px;vertical-align:middle;width:auto}
+.swx .swx-k{width:28px;height:16px;border-radius:999px;background:var(--line);position:relative;transition:.15s;flex:none}
+.swx .swx-k::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:.15s}
+.swx.on{border-color:var(--teal);color:var(--teal-dark);background:var(--teal-light)}
+.swx.on .swx-k{background:var(--teal)}
+.swx.on .swx-k::after{left:14px}
+.swx:hover{border-color:var(--teal)}
+.fu-off{font-size:12px;color:var(--muted);background:var(--hover,#f2f6f8);border:1px dashed var(--line);
+  border-radius:10px;padding:9px 12px}
 .chiprow{display:flex;flex-wrap:wrap;gap:5px;flex:1}
 .chip{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:14px;padding:3px 10px;
   font-size:11.5px;cursor:pointer;transition:.14s;white-space:nowrap}
@@ -1555,10 +1606,18 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <button type="button" class="btn btn-ghost btn-sm" onclick="makeFollowupVisit()">＋ Make this a new follow-up visit instead</button>
   </div>
 
-  <div class="card">
+  <div class="scr-bar" style="margin-bottom:10px">
+    <span style="flex:1"></span>
+    <div class="seg" style="margin:0"><button class="seg-btn" id="vModeRail" onclick="railSetMode('visit','rail')">Sidebar</button><button class="seg-btn" id="vModeFull" onclick="railSetMode('visit','full')">Full form</button></div>
+  </div>
+  <div class="fr-wrap" id="visitWrap">
+    <aside class="fr-rail" id="visitRail"></aside>
+    <div class="fr-panes" id="visitPanes">
+
+  <div class="card fr-pane" data-rk="pt">
     <h2><span class="step">1</span> Patient</h2>
     <div class="med-search-wrap" style="margin-bottom:12px">
-      <input type="text" id="ptSearch" placeholder="Search existing patient by name, phone or MR # … (or fill the form below for a new patient)" autocomplete="off">
+      <input type="text" id="ptSearch" data-norail="1" placeholder="Search existing patient by name, phone or MR # … (or fill the form below for a new patient)" autocomplete="off">
       <div class="med-suggest" id="ptSuggest"></div>
     </div>
     <div id="ptLinked" class="hidden" style="margin-bottom:10px">
@@ -1570,17 +1629,24 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="field"><label>Age</label><input type="text" id="pAge" placeholder="e.g. 34 y"></div>
       <div class="field"><label>Sex</label><select id="pSex"><option value=""></option><option>Male</option><option>Female</option></select></div>
       <div class="field"><label>Phone</label><input type="tel" id="pPhone"></div>
-      <div class="field"><label>MR # <span class="muted" style="font-weight:400;font-size:11px">(auto)</span></label><input type="text" id="pMrn" readonly tabindex="-1" title="MR numbers are assigned automatically when the patient is saved" style="background:var(--bg);cursor:default;font-weight:700;letter-spacing:.5px;color:var(--teal-dark)"></div>
+      <div class="field"><label>MR # <span class="muted" style="font-weight:400;font-size:11px">(auto)</span></label><input type="text" id="pMrn" data-norail="1" readonly tabindex="-1" title="MR numbers are assigned automatically when the patient is saved" style="background:var(--bg);cursor:default;font-weight:700;letter-spacing:.5px;color:var(--teal-dark)"></div>
       <div class="field" style="grid-column:span 2"><label>Address</label><input type="text" id="pAddress"></div>
+      <div class="field" style="grid-column:span 2"><label>CNIC <span class="muted small" style="font-weight:400">(optional)</span>
+        <button type="button" class="swx" id="pCnicSw" onclick="cnicPrintToggle()"
+          title="Off by default. Switch on to print the CNIC on this one prescription.">
+          <span class="swx-k"></span><span class="swx-t">Print on this Rx</span></button></label>
+        <input type="text" id="pCnic" inputmode="numeric" placeholder="35202-1234567-1" oninput="cnicFormat(this)"></div>
     </div>
     <div class="grid g3 mt">
       <div class="field"><label>Known allergies</label><textarea class="ta-s" id="pAllergies" placeholder="e.g. Penicillin"></textarea></div>
-      <div class="field"><label>Medical history</label><textarea class="ta-s" id="pMedHx" placeholder="e.g. DM, HTN, Asthma"></textarea></div>
+      <div class="field"><label>Medical history</label>
+        <div class="chiprow hx-chips" id="pMedHxChips" style="margin-bottom:6px"></div>
+        <textarea class="ta-s" id="pMedHx" placeholder="e.g. DM, HTN, Asthma"></textarea></div>
       <div class="field"><label>Surgical history</label><textarea class="ta-s" id="pSurgHx" placeholder="e.g. TKR (left) 2023&#10;Appendectomy 2019"></textarea></div>
     </div>
   </div>
 
-  <div class="card">
+  <div class="card fr-pane" data-rk="notes">
     <h2><span class="step">2</span> Clinical notes</h2>
     <div class="vitals-wrap" id="vitalsWrap">
       <div class="vitals-head">
@@ -1607,10 +1673,10 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </div>
     <div class="btn-bar" style="margin-bottom:12px">
       <div class="med-search-wrap" style="flex:1;min-width:200px">
-        <input type="text" id="ntSearch" placeholder="🔍 Search clinical-notes templates…" autocomplete="off">
+        <input type="text" id="ntSearch" data-norail="1" placeholder="🔍 Search clinical-notes templates…" autocomplete="off">
         <div class="med-suggest" id="ntSuggest"></div>
       </div>
-      <select id="ntSelect" style="max-width:240px"><option value="">🗒️ Insert clinical-notes template…</option></select>
+      <select id="ntSelect" data-norail="1" style="max-width:240px"><option value="">🗒️ Insert clinical-notes template…</option></select>
       <button class="btn btn-ghost btn-sm" onclick="insertNoteTemplate()">Insert</button>
       <button class="btn btn-ghost btn-sm" onclick="saveAsNoteTemplate()" title="Save just the clinical notes (complaints, findings, diagnosis, investigations, advice, plan) as a reusable notes template — medicines are NOT included">💾 Save notes as template</button>
     </div>
@@ -1625,7 +1691,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <div class="field mt">
       <label>Bring at next visit <span class="muted small" style="font-weight:400">(tests to get done before coming back — printed in a box on the prescription)</span></label>
       <div class="btn-bar" style="margin-bottom:6px">
-        <div class="chiprow" id="nvChips"></div>
+        <div class="chiprow" id="nvChips" data-norail="1"></div>
         <button class="btn btn-ghost btn-sm" onclick="nvCopyFromTests()" title="Copy what you typed in Investigations">↑ Copy from Investigations</button>
       </div>
       <textarea class="ta-s" id="cNextTests" placeholder="e.g. MRI right femur with contrast&#10;CBC, ESR/CRP"></textarea>
@@ -1639,14 +1705,14 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </div>
   </div>
 
-  <div class="card">
+  <div class="card fr-pane" data-rk="rx">
     <h2><span class="step">3</span> Prescription <span class="rx-count" id="rxCount">0</span></h2>
     <div class="btn-bar" style="margin-bottom:12px">
       <div class="med-search-wrap" style="flex:1;min-width:220px">
-        <input type="text" id="tplSearch" placeholder="🔍 Search prescription templates — e.g. “OA”, “post-op”…" autocomplete="off">
+        <input type="text" id="tplSearch" data-norail="1" placeholder="🔍 Search prescription templates — e.g. “OA”, “post-op”…" autocomplete="off">
         <div class="med-suggest" id="tplSuggest"></div>
       </div>
-      <select id="tplSelect" style="max-width:260px">
+      <select id="tplSelect" data-norail="1" style="max-width:260px">
         <option value="">💊 Insert prescription (medicines)…</option>
       </select>
       <button class="btn btn-ghost btn-sm" onclick="insertTemplate()">Insert</button>
@@ -1655,7 +1721,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <div class="fav-bar" id="favBar"></div>
     <div class="btn-bar" style="margin-bottom:12px;align-items:stretch">
       <div class="med-search-wrap" style="flex:1;min-width:220px">
-        <input type="text" id="medSearch" placeholder="Search by brand, generic or category — e.g. “painkillers”, “antibiotics”, “gels”, “DMARDs”…" autocomplete="off">
+        <input type="text" id="medSearch" data-norail="1" placeholder="Search by brand, generic or category — e.g. “painkillers”, “antibiotics”, “gels”, “DMARDs”…" autocomplete="off">
         <div class="med-suggest" id="medSuggest"></div>
       </div>
       <button type="button" class="btn btn-ghost hidden" id="rxRepeatBtn" onclick="repeatLastRx()">↻ Repeat last prescription</button>
@@ -1676,16 +1742,16 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </div>
   </div>
 
-  <div class="card">
+  <div class="card fr-pane" data-rk="plan">
     <h2><span class="step">4</span> Instructions, plan &amp; follow-up</h2>
     <div class="grid g2">
       <div class="field">
         <label>Instructions</label>
         <div class="med-search-wrap" style="margin-bottom:6px">
-          <input type="text" id="ipSearch" placeholder="🔍 Search instructions — e.g. “knee”, “cast”, “wound”…" autocomplete="off">
+          <input type="text" id="ipSearch" data-norail="1" placeholder="🔍 Search instructions — e.g. “knee”, “cast”, “wound”…" autocomplete="off">
           <div class="med-suggest" id="ipSuggest"></div>
         </div>
-        <select id="urduPreset" style="margin-bottom:6px">
+        <select id="urduPreset" data-norail="1" style="margin-bottom:6px">
           <option value="">＋ Insert standard instructions (English + اردو)…</option>
         </select>
         <textarea id="cPlan" style="min-height:110px" placeholder="e.g. Quadriceps strengthening exercises, weight reduction…"></textarea>
@@ -1699,14 +1765,20 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       </div>
     </div>
     <div class="field mt">
-      <label>Follow-up</label>
+      <label>Follow-up
+        <button type="button" class="swx on" id="cFuSw" onclick="fuBoxToggle()"
+          title="Switch the follow-up box off — nothing is printed and the patient is not put on the due list">
+          <span class="swx-k"></span><span class="swx-t">Print follow-up box</span></button>
+      </label>
+      <div id="cFuOffNote" class="fu-off hidden">Follow-up box is switched off — no date is printed and this patient will not appear in the due list.</div>
+      <div id="cFuControls">
       <div class="btn-bar" style="margin-bottom:7px">
         <button class="btn btn-ghost btn-sm" onclick="setFu(7,'1 week')">+1 wk</button>
         <button class="btn btn-ghost btn-sm" onclick="setFu(14,'2 weeks')">+2 wk</button>
         <button class="btn btn-ghost btn-sm" onclick="setFu(21,'3 weeks')">+3 wk</button>
         <button class="btn btn-ghost btn-sm" onclick="setFu(28,'4 weeks')">+4 wk</button>
         <button class="btn btn-ghost btn-sm" onclick="setFu(42,'6 weeks')">+6 wk</button>
-        <select id="fuMore" onchange="fuMoreSel(this)" style="width:auto;padding:5px 9px;font-size:12.5px;border-radius:7px">
+        <select id="fuMore" data-norail="1" onchange="fuMoreSel(this)" style="width:auto;padding:5px 9px;font-size:12.5px;border-radius:7px">
           <option value="">More…</option>
           <option value="56|8 weeks">+8 wk</option>
           <option value="70|10 weeks">+10 wk</option>
@@ -1726,6 +1798,10 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <button type="button" class="btn btn-ghost" id="cFuCal" onclick="openFuCal()"
           title="Pick a date and see how many are already booked that day">📅 Month view</button>
       </div>
+      </div>
+    </div>
+  </div>
+
     </div>
   </div>
 
@@ -1787,6 +1863,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="field"><label>Age</label><input type="text" id="apAge" placeholder="e.g. 34 y" autocomplete="off"></div>
       <div class="field"><label>Sex</label><select id="apSex"><option value=""></option><option>Male</option><option>Female</option></select></div>
       <div class="field"><label>Address</label><input type="text" id="apAddress" placeholder="Town / area" autocomplete="off"></div>
+      <div class="field"><label>CNIC <span class="muted small" style="font-weight:400">(optional)</span></label>
+        <input type="text" id="apCnic" inputmode="numeric" placeholder="35202-1234567-1" autocomplete="off"
+          oninput="cnicFormat(this)" title="Saved with the patient record. Never printed unless you tick the CNIC box on the prescription."></div>
     </div>
     <div class="grid g3 mt">
       <div class="field"><label>Date</label><input type="date" id="apDate"></div>
@@ -1863,36 +1942,17 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <!-- ============ TAB: PATIENTS ============ -->
 <section class="tab" id="tab-patients">
   <div class="page-head">Patients &amp; Follow-ups</div>
-  <div class="card" id="lostCard">
-    <h2>Never came back <span class="rx-count" id="lostCount">0</span></h2>
-    <p class="muted small" style="margin-bottom:10px">Patients you asked to return whose date has passed with no visit since. The due list above shows who is <i>coming</i>; this shows who quietly <i>disappeared</i>.</p>
-    <div class="btn-bar" style="margin-bottom:10px">
-      <select id="lostWindow" style="width:auto" onchange="renderLost()">
-        <option value="7">Overdue by more than a week</option>
-        <option value="14" selected>Overdue by more than 2 weeks</option>
-        <option value="30">Overdue by more than a month</option>
-        <option value="90">Overdue by more than 3 months</option>
-      </select>
-      <span class="muted small" id="lostSub"></span>
-    </div>
-    <table class="list">
-      <thead><tr><th style="width:130px">Was due</th><th>Patient</th><th>Phone</th><th>Diagnosis</th><th style="width:170px"></th></tr></thead>
-      <tbody id="lostBody"></tbody>
-    </table>
-    <p class="muted small mt" id="lostEmpty">Nobody has slipped through — everyone you asked back has been seen.</p>
+  <div class="scr-bar" id="patModeBar" style="margin-bottom:10px">
+    <span style="flex:1"></span>
+    <div class="seg" style="margin:0"><button class="seg-btn" id="patModeRail" onclick="railSetMode('pat','rail')">Sidebar</button><button class="seg-btn" id="patModeFull" onclick="railSetMode('pat','full')">Everything</button></div>
   </div>
-  <div class="card" id="fuCard">
-    <h2>Follow-ups due <span class="rx-count" id="fuCount">0</span></h2>
-    <table class="list">
-      <thead><tr><th>Due</th><th>Patient</th><th>Phone</th><th>Diagnosis</th><th style="width:150px"></th></tr></thead>
-      <tbody id="fuBody"></tbody>
-    </table>
-    <p class="muted small mt" id="fuEmpty">No follow-ups due — set a follow-up date when saving a prescription and patients will appear here when due (overdue + next 14 days).</p>
-  </div>
-  <div class="card" id="patientListCard">
+  <div class="fr-wrap" id="patWrap">
+    <aside class="fr-rail" id="patRail"></aside>
+    <div class="fr-panes" id="patPanes">
+  <div class="card fr-pane" id="patientListCard" data-rk="records">
     <h2>Patient records</h2>
     <div class="search-row">
-      <input type="text" id="patListSearch" placeholder="Search by name, phone or MR #…" autocomplete="off">
+      <input type="text" id="patListSearch" data-norail="1" placeholder="Search by name, phone or MR #…" autocomplete="off">
       <span class="muted small" id="patCountLabel"></span>
     </div>
     <div class="reg-selbar hidden" id="patSelBar">
@@ -1907,6 +1967,34 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <div class="empty hidden" id="patEmpty"><span class="ei">🗂</span><b>No patients yet</b><br>They're added automatically when you save a prescription.</div>
   </div>
 
+  <div class="card fr-pane" data-rk="due">
+    <h2>Follow-ups due <span class="rx-count" id="fuCount">0</span></h2>
+    <table class="list">
+      <thead><tr><th>Due</th><th>Patient</th><th>Phone</th><th>Diagnosis</th><th style="width:150px"></th></tr></thead>
+      <tbody id="fuBody"></tbody>
+    </table>
+    <p class="muted small mt" id="fuEmpty">No follow-ups due — set a follow-up date when saving a prescription and patients will appear here when due (overdue + next 14 days).</p>
+  </div>
+  <div class="card fr-pane" data-rk="lost">
+    <h2>Never came back <span class="rx-count" id="lostCount">0</span></h2>
+    <p class="muted small" style="margin-bottom:10px">Patients you asked to return whose date has passed with no visit since. The follow-ups-due list shows who is <i>coming</i>; this shows who quietly <i>disappeared</i>.</p>
+    <div class="btn-bar" style="margin-bottom:10px">
+      <select id="lostWindow" data-norail="1" style="width:auto" onchange="renderLost()">
+        <option value="7">Overdue by more than a week</option>
+        <option value="14" selected>Overdue by more than 2 weeks</option>
+        <option value="30">Overdue by more than a month</option>
+        <option value="90">Overdue by more than 3 months</option>
+      </select>
+      <span class="muted small" id="lostSub"></span>
+    </div>
+    <table class="list">
+      <thead><tr><th style="width:130px">Was due</th><th>Patient</th><th>Phone</th><th>Diagnosis</th><th style="width:170px"></th></tr></thead>
+      <tbody id="lostBody"></tbody>
+    </table>
+    <p class="muted small mt" id="lostEmpty">Nobody has slipped through — everyone you asked back has been seen.</p>
+  </div>
+    </div>
+  </div>
   <div class="card hidden" id="patientDetailCard">
     <div class="btn-bar" style="justify-content:space-between">
       <h2 id="pdName" style="margin:0"></h2>
@@ -1976,114 +2064,220 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <section class="tab" id="tab-discharge">
   <div class="page-head">Discharge Summaries</div>
   <div id="dsFormScreen" class="scr hidden">
-  <div class="scr-bar"><button class="btn btn-ghost" onclick="dsShowList()">← Back to list</button><span id="dsFormCrumb">New discharge summary</span></div>
-  <div class="card">
-    <h2 id="dsFormTitle">New discharge summary</h2>
-    <div class="med-search-wrap" style="margin-bottom:12px">
-      <input type="text" id="dsPtSearch" placeholder="Search existing patient… (or type details manually)" autocomplete="off">
-      <div class="med-suggest" id="dsPtSuggest"></div>
-    </div>
-    <div class="grid g5">
-      <div class="field" style="grid-column:span 2"><label>Patient name <span class="req">*</span></label><input type="text" id="dsName"></div>
-      <div class="field"><label>MR number <span class="muted small" style="font-weight:400">(hospital)</span></label><input type="text" id="dsMrn" placeholder="hospital MR number" title="Prints on the discharge summary. Fills in from the clinic record, but you can overwrite it with the hospital's own MR number."></div>
-      <div class="field"><label>Age</label><input type="text" id="dsAge"></div>
-      <div class="field"><label>Sex</label><select id="dsSex"><option value=""></option><option>Male</option><option>Female</option></select></div>
-    </div>
-    <div class="btn-bar mt" style="margin-bottom:4px">
-      <button class="btn btn-ghost btn-sm" onclick="fillDischargeFromLastVisit()">↺ Fill from patient's last visit</button>
-      <span class="muted small">Pulls diagnosis, medicines, advice and follow-up from the most recent saved prescription.</span>
-    </div>
-    <div class="mt"><div class="grid g4">
-        <div class="field"><label>Date of admission</label><input type="date" id="dcAdmit"></div>
-        <div class="field"><label>Date of discharge</label><input type="date" id="dcDischarge"></div>
-        <div class="field" style="grid-column:span 2"><label>Procedure / operation performed (with date)
+  <div class="scr-bar"><button class="btn btn-ghost" onclick="dsShowList()">← Back to list</button><span id="dsFormCrumb">New discharge summary</span>
+    <span style="flex:1"></span>
+    <div class="seg" style="margin:0"><button class="seg-btn" id="dsModeRail" onclick="railSetMode('ds','rail')">Sidebar</button><button class="seg-btn" id="dsModeFull" onclick="railSetMode('ds','full')">Full form</button></div>
+    <button class="btn btn-green" onclick="saveDischarge(false)">💾 Save</button></div>
+  <h2 id="dsFormTitle" class="hidden">New discharge summary</h2>
+  <div class="fr-wrap" id="dsWrap">
+    <aside class="fr-rail" id="dsRail"></aside>
+    <div class="fr-panes" id="dsPanes">
+
+      <!-- 1 · PATIENT & IDs -->
+      <div class="card fr-pane" data-rk="pt">
+        <h2>Patient &amp; identification</h2>
+        <div class="med-search-wrap" style="margin-bottom:12px">
+          <input type="text" id="dsPtSearch" data-norail="1" placeholder="Search existing patient… (or type details manually)" autocomplete="off">
+          <div class="med-suggest" id="dsPtSuggest"></div>
+        </div>
+        <div class="btn-bar" style="margin-bottom:10px">
+          <button class="btn btn-ghost btn-sm" onclick="fillDischargeFromLastVisit()">↺ Fill from patient's last visit</button>
+          <span class="muted small">Pulls diagnosis, history, medicines, advice and follow-up from the most recent saved prescription.</span>
+        </div>
+        <div class="grid g4">
+          <div class="field" style="grid-column:span 2"><label>Patient name <span class="req">*</span></label><input type="text" id="dsName"></div>
+          <div class="field"><label>Age</label><input type="text" id="dsAge"></div>
+          <div class="field"><label>Sex</label><select id="dsSex"><option value=""></option><option>Male</option><option>Female</option></select></div>
+          <div class="field"><label>MR number <span class="muted small" style="font-weight:400">(hospital)</span></label>
+            <input type="text" id="dsMrn" placeholder="hospital MR number" title="Prints on the discharge summary. Fills in from the clinic record, but you can overwrite it with the hospital's own MR number."></div>
+          <div class="field"><label>Clinic registration # <span class="muted small" style="font-weight:400">(from the prescription)</span></label>
+            <input type="text" id="dsClinicNo" placeholder="e.g. FH-260731-0007" title="Your own clinic MR number, picked up from the linked patient record. Printed alongside the hospital MR number."></div>
+          <div class="field"><label>CNIC <span class="muted small" style="font-weight:400">(optional)</span>
+            <button type="button" class="swx" id="dsCnicSw" onclick="cnicPrintToggle()" title="Off by default — switch on to print the CNIC on this summary.">
+              <span class="swx-k"></span><span class="swx-t">Print</span></button></label>
+            <input type="text" id="dsCnic" inputmode="numeric" placeholder="35202-1234567-1" oninput="cnicFormat(this)"></div>
+          <div class="field"><label>Document date</label><input type="date" id="dsDate" data-norail="1"></div>
+        </div>
+      </div>
+
+      <!-- 2 · ADMISSION -->
+      <div class="card fr-pane" data-rk="adm">
+        <h2>Admission &amp; history</h2>
+        <div class="grid g2">
+          <div class="field"><label>Date of admission</label><input type="date" id="dcAdmit"></div>
+          <div class="field"><label>Date of discharge</label><input type="date" id="dcDischarge"></div>
+        </div>
+        <div class="grid g2 mt">
+          <div class="field"><label>Diagnosis</label><textarea class="ta-s" id="dcDiagnosis"></textarea></div>
+          <div class="field"><label>Presenting complaints</label><textarea class="ta-s" id="dcClinical" placeholder="e.g. Pain and inability to bear weight on the right thigh after a road traffic accident"></textarea></div>
+        </div>
+        <div class="field mt"><label>Clinical findings <span class="muted small" style="font-weight:400">(examination)</span></label>
+          <textarea class="ta-s" id="dcFindings" placeholder="e.g. Deformity and tenderness mid-thigh, distal pulses intact, no neurological deficit"></textarea></div>
+        <div class="field mt"><label>Medical history</label>
+          <div class="chiprow hx-chips" id="dcMedHxChips" style="margin-bottom:6px"></div>
+          <textarea class="ta-s" id="dcMedHx" placeholder="e.g. DM, HTN"></textarea></div>
+        <div class="grid g2 mt">
+          <div class="field"><label>Surgical history</label><textarea class="ta-s" id="dcSurgHx" placeholder="e.g. Appendectomy 2019"></textarea></div>
+          <div class="field"><label>Known allergies</label><textarea class="ta-s" id="dcAllergies" placeholder="e.g. Penicillin"></textarea></div>
+        </div>
+      </div>
+
+      <!-- 3 · OPERATIVE -->
+      <div class="card fr-pane" data-rk="op">
+        <h2>Operation</h2>
+        <div class="field"><label>Procedure / operation performed (with date)
           <label class="small" style="display:inline;font-weight:400;margin-left:10px;color:var(--muted)"><input type="checkbox" id="dcAddLog" checked style="width:auto;vertical-align:middle"> also add to surgery logbook (and keep it in step)</label></label>
           <textarea class="ta-s" id="dcProc" placeholder="e.g. ORIF right femur with intramedullary nail — 10 Jul 2026"></textarea></div>
-      </div>
-      <div class="grid g2 mt">
-        <div class="field"><label>Diagnosis</label><textarea class="ta-s" id="dcDiagnosis"></textarea></div>
-        <div class="field"><label>Presenting complaints</label><textarea class="ta-s" id="dcClinical" placeholder="e.g. Pain and inability to bear weight on the right thigh after a road traffic accident"></textarea></div>
-      </div>
-      <div class="grid g2 mt">
-        <div class="field" style="grid-column:span 2"><label>Clinical findings <span class="muted small" style="font-weight:400">(examination)</span></label><textarea class="ta-s" id="dcFindings" placeholder="e.g. Deformity and tenderness mid-thigh, distal pulses intact, no neurological deficit"></textarea></div>
-      </div>
-      <div class="grid g3 mt">
-        <div class="field"><label>Medical history</label><textarea class="ta-s" id="dcMedHx" placeholder="e.g. DM, HTN"></textarea></div>
-        <div class="field"><label>Surgical history</label><textarea class="ta-s" id="dcSurgHx" placeholder="e.g. Appendectomy 2019"></textarea></div>
-        <div class="field"><label>Known allergies</label><textarea class="ta-s" id="dcAllergies" placeholder="e.g. Penicillin"></textarea></div>
-      </div>
-      <div class="field mt"><label>Hospital course / operative notes</label><textarea class="ta-s" id="dcCourse" placeholder="e.g. Uneventful recovery; mobilised with walker on day 2…"></textarea></div>
-      <div class="grid g2 mt">
-        <div class="field"><label>Condition at discharge</label>
-          <input type="text" id="dcCondition" list="dcCondList" placeholder="e.g. Stable, wound healthy, ambulating with walker">
-          <datalist id="dcCondList">
-            <option value="Stable — discharged home in satisfactory condition"></option>
-            <option value="Stable, wound healthy, ambulating with walker"></option>
-            <option value="Stable, wound healthy, full weight bearing allowed"></option>
-            <option value="Stable, partial weight bearing on the operated limb"></option>
-            <option value="Stable, non weight bearing — strictly no weight on the operated limb"></option>
-            <option value="Improved, pain controlled on oral medication"></option>
-            <option value="Discharged on request / against medical advice"></option>
-            <option value="Referred onward for further management"></option>
-          </datalist>
-          <span class="muted small">Printed on the summary just above the discharge medicines.</span></div>
-        <div class="field"><label>Condition — اردو <span class="muted small" style="font-weight:400">(optional)</span></label>
-          <input type="text" id="dcConditionUr" dir="rtl" placeholder="مثلاً: حالت بہتر، زخم ٹھیک، واکر کے ساتھ چل رہے ہیں"></div>
-      </div>
-      <div class="field mt"><label>Discharge medications</label>
-        <div class="med-search-wrap" style="margin-bottom:10px">
-          <input type="text" id="dsMedSearch" placeholder="Search by brand, generic or category — same directory as prescriptions" autocomplete="off">
-          <div class="med-suggest" id="dsMedSuggest"></div>
+        <div class="field mt"><label>Operative findings <span class="muted small" style="font-weight:400">(what you found at surgery)</span></label>
+          <textarea class="ta-s" id="dcOpFindings" placeholder="e.g. Comminuted mid-shaft femoral fracture, no butterfly fragment; sciatic nerve intact; 300 ml blood loss"></textarea></div>
+        <div class="grid g2 mt">
+          <div class="field"><label>Implant / prosthesis used</label>
+            <input type="text" id="dcImplant" list="implantList" placeholder="e.g. PFNA 10×200mm (auto-fills company from inventory)" oninput="dcImplantAutoCo()">
+            <datalist id="implantList"></datalist></div>
+          <div class="field"><label>Implant company / manufacturer</label>
+            <input type="text" id="dcImplantCo" list="implantCoList" placeholder="e.g. Implantcast / Synthes / AK">
+            <datalist id="implantCoList"></datalist></div>
         </div>
+        <div class="grid g2 mt">
+          <div class="field"><label>Condition at discharge</label>
+            <input type="text" id="dcCondition" list="dcCondList" placeholder="e.g. Stable, wound healthy, ambulating with walker">
+            <datalist id="dcCondList">
+              <option value="Stable — discharged home in satisfactory condition"></option>
+              <option value="Stable, wound healthy, ambulating with walker"></option>
+              <option value="Stable, wound healthy, full weight bearing allowed"></option>
+              <option value="Stable, partial weight bearing on the operated limb"></option>
+              <option value="Stable, non weight bearing — strictly no weight on the operated limb"></option>
+              <option value="Improved, pain controlled on oral medication"></option>
+              <option value="Discharged on request / against medical advice"></option>
+              <option value="Referred onward for further management"></option>
+            </datalist>
+            <span class="muted small">Printed on the summary just above the discharge medicines.</span></div>
+          <div class="field"><label>Condition — اردو <span class="muted small" style="font-weight:400">(optional)</span></label>
+            <input type="text" id="dcConditionUr" dir="rtl" placeholder="مثلاً: حالت بہتر، زخم ٹھیک، واکر کے ساتھ چل رہے ہیں"></div>
+        </div>
+      </div>
+
+      <!-- 4 · HOSPITAL COURSE -->
+      <div class="card fr-pane" data-rk="course">
+        <h2>Hospital course &amp; investigations</h2>
+        <div class="field"><label>Hospital course / progress</label>
+          <textarea class="ta-s" id="dcCourse" style="min-height:120px" placeholder="e.g. Uneventful recovery; mobilised with walker on day 2…"></textarea></div>
+        <div class="field mt"><label>Investigations at discharge <span class="muted small" style="font-weight:400">(optional)</span></label>
+          <textarea class="ta-s" id="dcInvest" placeholder="e.g. Hb 11.2, WBC 8.9, X-ray shows acceptable reduction"></textarea></div>
+      </div>
+
+      <!-- 5 · MEDICINES -->
+      <div class="card fr-pane" data-rk="meds">
+        <h2>Discharge medications <span class="rx-count" id="dsRxCount">0</span></h2>
+        <div class="btn-bar" style="margin-bottom:12px">
+          <div class="med-search-wrap" style="flex:1;min-width:220px">
+            <input type="text" id="dsTplSearch" data-norail="1" placeholder="🔍 Search prescription templates — e.g. “post-op”, “ORIF”…" autocomplete="off">
+            <div class="med-suggest" id="dsTplSuggest"></div>
+          </div>
+          <select id="dsTplSelect" data-norail="1" style="max-width:260px"><option value="">💊 Insert prescription (medicines)…</option></select>
+          <button class="btn btn-ghost btn-sm" onclick="dsInsertTemplate()">Insert</button>
+        </div>
+        <div class="fav-bar" id="dsFavBar"></div>
+        <div class="btn-bar" style="margin-bottom:12px;align-items:stretch">
+          <div class="med-search-wrap" style="flex:1;min-width:220px">
+            <input type="text" id="dsMedSearch" data-norail="1" placeholder="Search by brand, generic or category — same directory as prescriptions" autocomplete="off">
+            <div class="med-suggest" id="dsMedSuggest"></div>
+          </div>
+          <button type="button" class="btn btn-ghost hidden" id="dsRepeatBtn" onclick="dsRepeatLastRx()">↻ Copy last prescription</button>
+        </div>
+        <div id="dsRxAlerts"></div>
         <table class="list">
           <thead><tr>
             <th style="width:21%">Medicine</th><th style="width:14%">Dosage</th>
-        <th style="width:15%">Frequency</th><th style="width:19%">Duration</th>
+            <th style="width:15%">Frequency</th><th style="width:19%">Duration</th>
             <th>Instructions</th><th style="width:36px"></th>
           </tr></thead>
           <tbody id="dsRxBody"></tbody>
         </table>
-        <button class="btn btn-ghost btn-sm mt" onclick="addRxRow(null,'dsRxBody')">+ Add blank line</button>
+        <div class="btn-bar mt">
+          <button class="btn btn-ghost btn-sm" onclick="addRxRow(null,'dsRxBody')">+ Add blank line</button>
+          <span class="muted small">Dosage, frequency, duration and instructions fill in automatically.</span>
+        </div>
         <div id="dsMonitor" class="rx-monitor"></div>
       </div>
-      <div class="grid g2 mt">
-        <div class="field"><label>Implant / prosthesis used</label>
-          <input type="text" id="dcImplant" list="implantList" placeholder="e.g. PFNA 10×200mm (auto-fills company from inventory)" oninput="dcImplantAutoCo()">
-          <datalist id="implantList"></datalist></div>
-        <div class="field"><label>Implant company / manufacturer</label>
-          <input type="text" id="dcImplantCo" list="implantCoList" placeholder="e.g. Implantcast / Synthes / AK">
-          <datalist id="implantCoList"></datalist></div>
+
+      <!-- 6 · ADVICE & FOLLOW-UP -->
+      <div class="card fr-pane" data-rk="advice">
+        <h2>Instructions &amp; follow-up</h2>
+        <div class="field"><label>Instructions &amp; wound care</label>
+          <div class="med-search-wrap" style="margin-bottom:6px">
+            <input type="text" id="ipSearchDs" data-norail="1" placeholder="🔍 Search instructions — e.g. “cast”, “wound”, “hip”…" autocomplete="off">
+            <div class="med-suggest" id="ipSuggestDs"></div>
+          </div>
+          <select id="urduPresetDs" data-norail="1" style="margin-bottom:6px">
+            <option value="">＋ Insert standard instructions (English + اردو)…</option>
+          </select>
+          <textarea id="dcInstr" style="min-height:110px"></textarea>
+        </div>
+        <div class="field mt">
+          <label>Follow-up
+            <button type="button" class="swx on" id="dsFuSw" onclick="dsFuBoxToggle()"
+              title="Switch the follow-up off — nothing is printed and the patient is not put on the due list">
+              <span class="swx-k"></span><span class="swx-t">Print follow-up</span></button>
+          </label>
+          <div id="dsFuOffNote" class="fu-off hidden">Follow-up is switched off — nothing is printed and this patient will not appear in the due list.</div>
+          <div id="dsFuControls">
+            <div class="btn-bar" style="margin-bottom:7px">
+              <button class="btn btn-ghost btn-sm" onclick="dsSetFu(7,'1 week')">+1 wk</button>
+              <button class="btn btn-ghost btn-sm" onclick="dsSetFu(14,'2 weeks')">+2 wk</button>
+              <button class="btn btn-ghost btn-sm" onclick="dsSetFu(21,'3 weeks')">+3 wk</button>
+              <button class="btn btn-ghost btn-sm" onclick="dsSetFu(28,'4 weeks')">+4 wk</button>
+              <button class="btn btn-ghost btn-sm" onclick="dsSetFu(42,'6 weeks')">+6 wk</button>
+              <select id="dsFuMore" data-norail="1" onchange="dsFuMoreSel(this)" style="width:auto;padding:5px 9px;font-size:12.5px;border-radius:7px">
+                <option value="">More…</option>
+                <option value="56|8 weeks">+8 wk</option>
+                <option value="70|10 weeks">+10 wk</option>
+                <option value="84|12 weeks">+12 wk</option>
+                <option value="120|4 months">+4 mo</option>
+                <option value="180|6 months">+6 mo</option>
+                <option value="365|1 year">+1 yr</option>
+              </select>
+            </div>
+            <div class="btn-bar" style="margin-bottom:7px;align-items:flex-start">
+              <span class="muted small" style="padding-top:4px;flex:none">for…</span>
+              <div class="chiprow" id="dsFuWhatChips"></div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <input type="text" id="dcFu" placeholder="e.g. OPD after 2 weeks for stitch removal; X-ray at 6 weeks" style="flex:1;min-width:260px">
+              <input type="date" id="dsFuDate" style="width:170px" title="Due-list date">
+              <button type="button" class="btn btn-ghost" onclick="openFuCal('ds')"
+                title="Pick a date and see how many are already booked that day">📅 Month view</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="field mt"><label>X-ray images — printed at the bottom of page 1 (max 2: pre-op &amp; post-op)</label>
+
+      <!-- 7 · IMAGES -->
+      <div class="card fr-pane" data-rk="imgs">
+        <h2>X-ray images</h2>
+        <p class="muted small" style="margin-bottom:10px">Up to two — pre-op and post-op. They print as a band across the foot of page 1.</p>
         <div class="btn-bar">
           <button class="btn btn-ghost btn-sm" onclick="$('dsImgFile').click()">📷 Add X-ray images…</button>
           <input type="file" id="dsImgFile" accept="image/*" multiple class="hidden" onchange="addDsImages(event)">
         </div>
         <div class="img-strip" id="dsImgStrip"></div>
       </div>
-      <div class="field mt"><label>Instructions &amp; wound care</label>
-        <div class="med-search-wrap" style="margin-bottom:6px">
-          <input type="text" id="ipSearchDs" placeholder="🔍 Search instructions — e.g. “cast”, “wound”, “hip”…" autocomplete="off">
-          <div class="med-suggest" id="ipSuggestDs"></div>
-        </div>
-        <select id="urduPresetDs" style="margin-bottom:6px">
-          <option value="">＋ Insert standard instructions (English + اردو)…</option>
-        </select>
-        <textarea id="dcInstr" style="min-height:110px"></textarea>
+
+      <!-- 8 · QR & PRINTING -->
+      <div class="card fr-pane" data-rk="print">
+        <h2>QR code &amp; printing</h2>
+        <div class="field"><label>QR code to print on this summary <span class="muted small" style="font-weight:400">(from your QR Code Library)</span></label>
+          <select id="dsQrSel" style="max-width:100%"><option value="">— No QR code —</option></select>
+          <span class="muted small">Leave on “No QR code” to print none. The pre-selected one comes from Settings ▸ Prescriptions &amp; printing.</span></div>
       </div>
-      <div class="field mt"><label>Follow-up</label><input type="text" id="dcFu" placeholder="e.g. OPD after 2 weeks for stitch removal; X-ray at 6 weeks"></div>
-      <div class="field mt"><label>QR code to print on this summary <span class="muted small" style="font-weight:400">(from your QR Code Library)</span></label>
-        <select id="dsQrSel" style="max-width:100%"><option value="">— No QR code —</option></select></div>
+
     </div>
-    <div class="grid g3 mt">
-      <div class="field"><label>Document date</label><input type="date" id="dsDate"></div>
-    </div>
+  </div>
     <div class="btn-bar mt">
       <button class="btn btn-green" onclick="saveDischarge(true)">💾 Save &amp; Print</button>
       <button class="btn btn-primary" onclick="saveDischarge(false)">Save</button>
       <button class="btn btn-danger" onclick="clearDsForm()">Clear</button>
     </div>
-  </div>
   </div>
   <div id="dsListScreen" class="scr">
   <div class="card">
@@ -2603,7 +2797,10 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <option value="normal">Normal</option><option value="large">Large</option><option value="xlarge">Extra large</option>
       </select></div>
       <div class="field"><label>Printed look</label><select id="sRxFinish"><option value="grey">Soft grey headings, black text</option><option value="plain">Plain — flat black &amp; white</option><option value="teal">Teal accents — headings &amp; rules in your clinic colour</option><option value="wm">Faint ℞ watermark behind the medicines</option></select></div>
-      <div class="field"><label>QR code on prescriptions</label><select id="sQrRx"><option value="on">On — any phone can scan the full prescription</option><option value="off">Off</option></select></div>
+      <div class="field"><label>QR code on prescriptions</label><select id="sQrRx"><option value="on">On — any phone can scan the full prescription</option><option value="off">Off — never print a QR code</option></select></div>
+      <div class="field"><label>Default QR code <span class="muted small" style="font-weight:400">(pre-selected on a new prescription or discharge)</span></label>
+        <select id="sDefQrId"><option value="">— No QR code —</option></select>
+        <span class="muted small">You can still pick a different one, or none, on any single prescription.</span></div>
       <div class="field"><label>Default follow-up on new prescriptions</label><select id="sDefFu">
         <option value="">None — choose per patient</option>
         <option value="7|1 week">1 week</option><option value="14|2 weeks">2 weeks</option>
@@ -3456,6 +3653,9 @@ function migrateDB(){
   if(!db.settings.sync.suppressed) db.settings.sync.suppressed={};
   // v25: separate registry from clinic patients; clean queue label; add exercise QR codes
   if(db.settings.defQrId===undefined) db.settings.defQrId='';
+  if(db.settings.visitFormMode===undefined) db.settings.visitFormMode='rail';
+  if(db.settings.dsFormMode===undefined)    db.settings.dsFormMode='rail';
+  if(db.settings.patFormMode===undefined)   db.settings.patFormMode='rail';
   if(db.leaflets && typeof LEAF_UR!=='undefined'){ db.leaflets.forEach(l=>{ if(!l.bodyUr && LEAF_UR[l.title]) l.bodyUr=LEAF_UR[l.title]; }); }
   if(typeof db.settings.navLabels==='object' && db.settings.navLabels && typeof db.settings.navLabels.queue==='string' && db.settings.navLabels.queue.indexOf('<span')>=0) delete db.settings.navLabels.queue;
   if(db.registry && db.patients){
@@ -3738,7 +3938,7 @@ function showTab(name, isRefresh){
   if(name==='appts'){ renderAppts(); renderReminders(); }
   if(name==='videos') renderVideos();
   if(name==='queue') renderQueue();
-  if(name==='patients'){ renderPatientList(); renderFollowups(); if(typeof renderLost==='function') renderLost(); }
+  if(name==='patients'){ renderPatientList(); renderFollowups(); if(typeof renderLost==='function') renderLost(); if(typeof railApply==='function' && RAILS['pat']) try{ railApply('pat'); }catch(e){} }
   if(name==='medicines') renderMedList();
   if(name==='documents') renderDocList();
   if(name==='discharge'){ if(!isRefresh) scrShow('ds','list'); renderDsList(); }
@@ -3777,8 +3977,9 @@ function applyTabAccess(name){
 }
 
 /* ================= SETTINGS ================= */
-const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent',sFuDayCap:'fuDayCap',sVitalsDefault:'vitalsDefault'};
+const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sDefQrId:'defQrId',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent',sFuDayCap:'fuDayCap',sVitalsDefault:'vitalsDefault'};
 function loadSettingsForm(){
+  if(typeof renderRxQrSelect==='function') renderRxQrSelect();   // fill the default-QR picker first
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) $(el).value = db.settings[key]||''; }
   applyBrand();
 }
@@ -4028,6 +4229,207 @@ async function doErase(){
 }
 function wipeData(){ openEraseModal(); }   // back-compat
 
+/* ================= COLOUR-TINTED FORM RAILS =================
+   One component behind every sidebar in the app. A rail is a list of tiles; each tile
+   owns one pane (an ordinary .card carrying data-rk). "Sidebar" shows one pane at a
+   time, "Full form" shows the lot. Each tile carries its own colour, an icon and a
+   tick that fills in as soon as anything in its pane is filled.                     */
+const RAILS = {};
+function railDef(key, cfg){ cfg.cur = cfg.cur || cfg.items[0].k; RAILS[key] = cfg; }
+function railMode(key){ const c=RAILS[key]; return (db.settings[c.setting]==='full') ? 'full' : 'rail'; }
+function railSetMode(key, m){
+  const c=RAILS[key]; if(!c) return;
+  db.settings[c.setting] = (m==='full') ? 'full' : 'rail';
+  persist(); railApply(key);
+}
+function railPaneEl(key, rk){
+  const c=RAILS[key]; const host=$(c.panes); if(!host) return null;
+  return host.querySelector('.fr-pane[data-rk="'+rk+'"]');
+}
+function railPaneFilled(key, rk){
+  const pane = railPaneEl(key, rk); if(!pane) return 0;
+  let n=0;
+  pane.querySelectorAll('input,textarea,select').forEach(function(ctrl){
+    const t=(ctrl.type||'').toLowerCase();
+    if(t==='checkbox'||t==='radio'||t==='button'||t==='file'||t==='hidden'||t==='search') return;
+    if(ctrl.dataset && ctrl.dataset.norail) return;
+    if(String(ctrl.value||'').trim()) n++;
+  });
+  return n;
+}
+function railTicks(key){
+  const c=RAILS[key]; const rail=$(c.rail); if(!rail) return;
+  rail.querySelectorAll('.frt-tick').forEach(function(el){
+    const it = c.items.filter(function(x){ return x.k===el.dataset.tick; })[0];
+    if(it && typeof it.count==='function'){          // list rails show how many are in there
+      let n=0; try{ n=it.count()||0; }catch(e){}
+      el.classList.add('frt-num');
+      el.classList.toggle('done', n>0);
+      el.textContent = n ? String(n) : '';
+    } else {
+      el.classList.toggle('done', railPaneFilled(key, el.dataset.tick) > 0);
+    }
+  });
+}
+function railTicksSoon(key){
+  clearTimeout(RAILS[key].__t);
+  RAILS[key].__t = setTimeout(function(){ railTicks(key); }, 250);
+}
+function railBuild(key){
+  const c=RAILS[key]; const rail=$(c.rail); if(!rail) return;
+  rail.innerHTML = c.items.map(function(it,i){
+    return '<button type="button" class="fr-tile" data-rk="'+it.k+'" data-tint="'+(i%8)+'" '+
+      'onclick="railPick(\''+key+'\',\''+it.k+'\')">'+
+      '<span class="frt-ic">'+it.ic+'</span>'+
+      '<span class="frt-tx"><b>'+esc(it.t)+'</b><span>'+esc(it.s||'')+'</span></span>'+
+      '<span class="frt-tick" data-tick="'+it.k+'"></span></button>';
+  }).join('');
+  const host=$(c.panes);
+  if(host && !c.__bound){
+    host.addEventListener('input', function(){ railTicksSoon(key); });
+    host.addEventListener('change', function(){ railTicksSoon(key); });
+    c.__bound = true;
+  }
+  railApply(key);
+}
+function railPick(key, rk){
+  const c=RAILS[key]; if(!c) return;
+  c.cur = rk;
+  if(railMode(key)!=='rail'){ railSetMode(key,'rail'); return; }
+  railApply(key);
+  const w=$(c.wrap);
+  if(w && window.innerWidth<=900) w.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function railApply(key){
+  const c=RAILS[key]; if(!c) return;
+  const full = railMode(key)==='full';
+  const w=$(c.wrap); if(w) w.classList.toggle('fr-full', full);
+  const host=$(c.panes);
+  if(host) host.querySelectorAll('.fr-pane').forEach(function(p){
+    p.classList.toggle('hidden', !full && p.dataset.rk!==c.cur); });
+  const rail=$(c.rail);
+  if(rail) rail.querySelectorAll('.fr-tile').forEach(function(b){
+    b.classList.toggle('on', !full && b.dataset.rk===c.cur); });
+  const a=$(c.segRail), b=$(c.segFull);
+  if(a) a.classList.toggle('active', !full);
+  if(b) b.classList.toggle('active', full);
+  railTicks(key);
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+/* ---- the three rails this app ships with ---- */
+railDef('visit', {setting:'visitFormMode', wrap:'visitWrap', rail:'visitRail', panes:'visitPanes',
+  segRail:'vModeRail', segFull:'vModeFull', items:[
+    {k:'pt',    ic:'🧑', t:'Patient',            s:'Name, MR #, history, CNIC'},
+    {k:'notes', ic:'🩺', t:'Clinical notes',     s:'Vitals, complaints, findings'},
+    {k:'rx',    ic:'💊', t:'Prescription',       s:'Medicines & templates'},
+    {k:'plan',  ic:'📅', t:'Advice & follow-up', s:'Instructions, plan, next visit'}
+  ]});
+railDef('ds', {setting:'dsFormMode', wrap:'dsWrap', rail:'dsRail', panes:'dsPanes',
+  segRail:'dsModeRail', segFull:'dsModeFull', items:[
+    {k:'pt',     ic:'🧑', t:'Patient & IDs',   s:'Name, MR #, clinic reg #'},
+    {k:'adm',    ic:'🏥', t:'Admission',       s:'Dates, diagnosis, history'},
+    {k:'op',     ic:'🦴', t:'Operation',       s:'Procedure, findings, implant'},
+    {k:'course', ic:'📈', t:'Hospital course', s:'Progress & investigations'},
+    {k:'meds',   ic:'💊', t:'Medicines',       s:'Discharge medications'},
+    {k:'advice', ic:'📝', t:'Advice & follow-up', s:'Wound care, next visit'},
+    {k:'imgs',   ic:'🩻', t:'X-rays',          s:'Pre-op & post-op images'},
+    {k:'print',  ic:'🖨', t:'QR & printing',   s:'What prints on the summary'}
+  ]});
+railDef('pat', {setting:'patFormMode', wrap:'patWrap', rail:'patRail', panes:'patPanes',
+  segRail:'patModeRail', segFull:'patModeFull', items:[
+    {k:'records', ic:'🗂', t:'Patient records', s:'Everyone on file',
+     count:function(){ return db.patients.filter(function(p){ return !p.regOnly; }).length; }},
+    {k:'due',     ic:'⏰', t:'Follow-ups due', s:'Who is coming back',
+     count:function(){ return (typeof fuDueList==='function') ? fuDueList().length : 0; }},
+    {k:'lost',    ic:'🔍', t:'Never came back', s:'Who quietly disappeared',
+     count:function(){ return (typeof lostList==='function') ? lostList().length : 0; }}
+  ]});
+function railsInit(){
+  ['visit','ds','pat'].forEach(function(k){ try{ railBuild(k); }catch(e){} });
+}
+
+/* jump straight to the pane holding a given control (used after "fill from last visit") */
+function railReveal(key, ctrlId){
+  const c=RAILS[key]; if(!c) return;
+  const el=$(ctrlId); if(!el) return;
+  const pane=el.closest('.fr-pane'); if(!pane) return;
+  if(railMode(key)==='rail') railPick(key, pane.dataset.rk);
+}
+
+/* ================= CNIC =================
+   Captured at the appointment desk and kept on the patient record. It is NEVER
+   printed unless the little switch beside the box is turned on for that one print. */
+function cnicFormat(el){
+  const d = String(el.value||'').replace(/\D/g,'').slice(0,13);
+  let out = d.slice(0,5);
+  if(d.length>5)  out += '-'+d.slice(5,12);
+  if(d.length>12) out += '-'+d.slice(12,13);
+  el.value = out;
+}
+let cnicPrintOn = false;
+function cnicPrintSet(on){
+  cnicPrintOn = !!on;
+  const sw=$('pCnicSw'); if(sw) sw.classList.toggle('on', cnicPrintOn);
+  const sw2=$('dsCnicSw'); if(sw2) sw2.classList.toggle('on', cnicPrintOn);
+}
+function cnicPrintToggle(){
+  cnicPrintSet(!cnicPrintOn);
+  toast(cnicPrintOn ? 'CNIC will be printed on this one' : 'CNIC will not be printed');
+  if(typeof draftAfter==='function') draftAfter('visit');
+}
+
+/* ================= ONE-CLICK COMORBID CHIPS =================
+   The same list sits above every "Medical history" box (prescription and discharge).
+   A chip adds or removes its term from the free text, so anything you type by hand
+   is left alone. "No known comorbid" is exclusive — picking it clears the rest.  */
+const COMORBIDS = ['DM','HTN','IHD','CVA','Asthma','COPD','CKD',
+                   'On anticoagulants','Smoker','Previous anaesthesia problem','Drug allergy'];
+const COMORBID_NONE = 'No known comorbid';
+function hxTerms(box){
+  return String((box&&box.value)||'').split(/[,\n;]+/).map(s=>s.trim()).filter(Boolean);
+}
+function hxHas(box, term){
+  const t=term.toLowerCase();
+  return hxTerms(box).some(x=>x.toLowerCase()===t);
+}
+function hxWrite(box, list){
+  box.value = list.join(', ');
+  box.dispatchEvent(new Event('input',{bubbles:true}));
+  box.dispatchEvent(new Event('change',{bubbles:true}));
+}
+function hxToggle(boxId, term){
+  const box=$(boxId); if(!box) return;
+  let list = hxTerms(box);
+  const t = term.toLowerCase();
+  const had = list.some(x=>x.toLowerCase()===t);
+  if(had){ list = list.filter(x=>x.toLowerCase()!==t); }
+  else if(term===COMORBID_NONE){ list = [COMORBID_NONE]; }
+  else {
+    list = list.filter(x=>x.toLowerCase()!==COMORBID_NONE.toLowerCase());
+    list.push(term);
+  }
+  hxWrite(box, list);
+  hxPaint(boxId);
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+function hxPaint(boxId){
+  const row=$(boxId+'Chips'), box=$(boxId);
+  if(!row||!box) return;
+  row.querySelectorAll('.chip[data-hx]').forEach(function(b){
+    b.classList.toggle('on', hxHas(box, b.dataset.hx));
+  });
+}
+function hxInit(boxId){
+  const row=$(boxId+'Chips'), box=$(boxId);
+  if(!row||!box) return;
+  row.innerHTML = COMORBIDS.concat([COMORBID_NONE]).map(function(t){
+    return '<button type="button" class="chip'+(t===COMORBID_NONE?' chip-none':'')+'" data-hx="'+esc(t)+'" '+
+           'onclick="hxToggle(\''+boxId+'\',\''+t.replace(/'/g,"\\'")+'\')">'+esc(t)+'</button>';
+  }).join('');
+  box.addEventListener('input', function(){ hxPaint(boxId); });
+  hxPaint(boxId);
+}
+
 /* ================= VISIT FORM / RX BUILDER ================= */
 let linkedPatientId = null;
 let editingVisitId = null;   // set when re-opening an existing prescription to edit in place (no new visit on save)
@@ -4060,7 +4462,8 @@ function setupSuggest(inputId, boxId, getItems, renderItem, onPick){
     } else if(e.key==='Enter'){
       if(hi>=0 && items[hi]){ e.preventDefault(); onPick(items[hi]); close(); }
       else if(items.length===1){ e.preventDefault(); onPick(items[0]); close(); }
-    } else if(e.key==='Escape'){ close(); }
+    } else if(e.key==='Tab'){ close(); }   /* Tab moves on — it never picks a suggestion */
+    else if(e.key==='Escape'){ close(); }
   });
 }
 
@@ -4086,7 +4489,9 @@ function linkPatient(pid){
   $('pName').value=p.name; $('pAge').value=p.age||''; $('pSex').value=p.sex||'';
   $('pPhone').value=p.phone||''; $('pMrn').value=p.mrn||''; $('pAddress').value=p.address||'';
   $('pAllergies').value=p.allergies||'NKDA'; $('pMedHx').value=p.medHx||''; $('pSurgHx').value=p.surgHx||'';
+  if($('pCnic')) $('pCnic').value = p.cnic||'';
   tintAllergyBox();
+  if(typeof hxPaint==='function') hxPaint('pMedHx');
   const nVisits = db.visits.filter(v=>v.patientId===pid).length;
   $('ptLinkedLabel').textContent = '📋 Existing patient: '+p.name+' ('+p.mrn+') — '+nVisits+' previous visit'+(nVisits===1?'':'s');
   $('ptLinked').classList.remove('hidden');
@@ -4098,7 +4503,8 @@ function linkPatient(pid){
 function unlinkPatient(){
   linkedPatientId = null;
   $('ptLinked').classList.add('hidden');
-  ['pName','pAge','pPhone','pMrn','pAddress','pAllergies','pMedHx','pSurgHx'].forEach(id=>$(id).value='');
+  ['pName','pAge','pPhone','pMrn','pAddress','pAllergies','pMedHx','pSurgHx','pCnic'].forEach(id=>{ if($(id)) $(id).value=''; });
+  if(typeof hxPaint==='function') hxPaint('pMedHx');
   $('pSex').value='';
   showMrnPreview();
   tintAllergyBox();
@@ -4368,7 +4774,7 @@ function addRxRow(m, bodyId){
   });
   tr.addEventListener('input', e=>{
     const t = e.target;
-    if(t.classList.contains('rx-name')){ renderRxAlerts(); return; }
+    if(t.classList.contains('rx-name')){ rxRefreshFor(body); return; }
     if(t.classList.contains('combo-cust')){ tr.querySelector('input.'+t.dataset.base).value = t.value; regenRow(tr); return; }
     if(t.classList.contains('rx-dur-n')){ syncDur(tr); regenRow(tr); return; }
     if(t.classList.contains('rx-dur-cust')){ tr.querySelector('input.rx-dur').value = t.value; regenRow(tr); return; }
@@ -4402,17 +4808,22 @@ function addRxRow(m, bodyId){
 
   body.appendChild(tr);
   body.appendChild(trU);
+  rxRefreshFor(body);
+}
+/* one refresh entry point — the discharge table has its own counter and alert box */
+function rxRefreshFor(body){
+  if(body && body.id==='dsRxBody'){ if(typeof dsRxRefresh==='function') dsRxRefresh(); return; }
   updateRxCount();
   renderRxAlerts();
   if(typeof renderDrugMonitors==='function') renderDrugMonitors();
 }
 function removeRxRow(btn){
   const tr = btn.closest('tr');
+  const body = tr.parentElement;
   const nxt = tr.nextElementSibling;
   if(nxt && nxt.classList.contains('rx-ur-row')) nxt.remove();
   tr.remove();
-  updateRxCount();
-  renderRxAlerts();
+  rxRefreshFor(body);
 }
 function updateRxCount(){ $('rxCount').textContent = $('rxBody').querySelectorAll('tr.rx-main-row').length; }
 function collectRx(bodyId){
@@ -4434,13 +4845,18 @@ function collectVisitForm(){
     patient:{
       name:$('pName').value.trim(), age:$('pAge').value.trim(), sex:$('pSex').value,
       phone:$('pPhone').value.trim(), mrn:$('pMrn').value.trim(), address:$('pAddress').value.trim(),
-      allergies:$('pAllergies').value.trim(), medHx:$('pMedHx').value.trim(), surgHx:$('pSurgHx').value.trim()
+      allergies:$('pAllergies').value.trim(), medHx:$('pMedHx').value.trim(), surgHx:$('pSurgHx').value.trim(),
+      cnic:($('pCnic')?$('pCnic').value.trim():'')
     },
+    printCnic: cnicPrintOn,
     complaints:$('cComplaints').value.trim(), findings:$('cFindings').value.trim(),
     diagnosis:$('cDiagnosis').value.trim(), tests:$('cTests').value.trim(),
     plan:$('cPlan').value.trim(), proc:$('cProc').value.trim(),
-    nextTests:$('cNextTests').value.trim(), followUp:$('cFollowUp').value.trim(),
-    followUpDate:$('cFuDate').value, fee: parseFloat($('cFee').value)||0, qrId: ($('cQrSel')?$('cQrSel').value:''),
+    nextTests:$('cNextTests').value.trim(),
+    followUp: fuBoxOn ? $('cFollowUp').value.trim() : '',
+    followUpDate: fuBoxOn ? $('cFuDate').value : '',
+    fuOff: !fuBoxOn,
+    fee: parseFloat($('cFee').value)||0, qrId: ($('cQrSel')?$('cQrSel').value:''),
     vitals: collectVitals(),
     meds: collectRx()
   };
@@ -4449,8 +4865,7 @@ function collectVisitForm(){
 function saveVisit(andPrint){
   if(!requireEdit()) return;
   const f = collectVisitForm();
-  db.settings.defQrId = f.qrId||'';
-  if(!f.patient.name){ toast('⚠ Patient name is required'); $('pName').focus(); return; }
+  if(!f.patient.name){ toast('⚠ Patient name is required'); railReveal('visit','pName'); $('pName').focus(); return; }
   const safety = checkRxSafety(f.meds, f.patient.allergies);
   if(safety.danger.length){
     if(!confirm('ALLERGY WARNING\n\n'+safety.danger.join('\n')+'\n\nPrescribe anyway?')) return;
@@ -4486,7 +4901,7 @@ function saveVisit(andPrint){
       complaints: f.complaints, findings: f.findings,
       diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc,
       nextTests: f.nextTests, followUp: f.followUp,
-      followUpDate: f.followUpDate, fee: f.fee, qrId: f.qrId, meds: f.meds, vitals: f.vitals,
+      followUpDate: f.followUpDate, fuOff: f.fuOff, printCnic: f.printCnic, fee: f.fee, qrId: f.qrId, meds: f.meds, vitals: f.vitals,
       images: (editing.images||[]).concat(visitImgs.map(x=>x.id)),
       editedAt: new Date().toISOString(), editedBy: byTag()
     });
@@ -4499,7 +4914,7 @@ function saveVisit(andPrint){
       complaints: f.complaints, findings: f.findings,
       diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc,
       nextTests: f.nextTests, followUp: f.followUp,
-      followUpDate: f.followUpDate, fuDone: false, fee: f.fee, qrId: f.qrId, meds: f.meds, vitals: f.vitals,
+      followUpDate: f.followUpDate, fuOff: f.fuOff, printCnic: f.printCnic, fuDone: false, fee: f.fee, qrId: f.qrId, meds: f.meds, vitals: f.vitals,
       images: visitImgs.map(x=>x.id),
       by: byTag(),
       dur: Math.round(vtElapsedMs()/1000)
@@ -4571,7 +4986,10 @@ function clearVisitForm(ask){
   $('cFee').value = db.settings.defFee || '';
   if(typeof vitalsDefault==='function') vitalsDefault();
   if(typeof repeatBtnRefresh==='function') repeatBtnRefresh();
-  if(typeof renderRxQrSelect==='function') renderRxQrSelect();
+  if(typeof renderRxQrSelect==='function') renderRxQrSelect(true);
+  if(typeof fuBoxSet==='function') fuBoxSet(true, true);
+  if(typeof cnicPrintSet==='function') cnicPrintSet(false);
+  if(typeof hxPaint==='function') hxPaint('pMedHx');
   applyDefFu();
   refreshFieldStatus();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -4589,6 +5007,10 @@ function fieldPrimaryControl(field){
     /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) && !el.readOnly && !el.disabled &&
     !skip.includes((el.type||'').toLowerCase()));
   return usable.length ? usable[usable.length-1] : null;
+}
+function railTicksAll(){
+  if(typeof RAILS!=='undefined') Object.keys(RAILS).forEach(function(k){ try{ railTicks(k); }catch(e){} });
+  if(typeof regRailTicks==='function') try{ regRailTicks(); }catch(e){}
 }
 function fldVisible(rec){ return rec.ctrl.offsetParent !== null; }   // only fields on the current tab
 /* exactly ONE golden marker (the field you're in, or the next empty one to fill);
@@ -4629,12 +5051,14 @@ function initFieldStatus(){
   });
   updateFieldCursor();
 }
-function refreshFieldStatus(){ updateFieldCursor(); }
+function refreshFieldStatus(){ updateFieldCursor();
+  clearTimeout(window.__railTickT);
+  window.__railTickT = setTimeout(railTicksAll, 120); }
 
 let printPreviewMode = false;
 function previewRx(){
   const f = collectVisitForm();
-  if(!f.patient.name){ toast('⚠ Enter at least the patient name to preview'); return; }
+  if(!f.patient.name){ toast('⚠ Enter at least the patient name to preview'); railReveal('visit','pName'); $('pName').focus(); return; }
   const visit = {date:new Date().toISOString(), ...f};
   printPreviewMode = true;
   printVisit(visit, f.patient);
@@ -4754,7 +5178,8 @@ function lastVisitDate(pid){
 function openPatient(pid){
   const p = db.patients.find(x=>x.id===pid); if(!p) return;
   currentPatientId = pid;
-  $('patientListCard').classList.add('hidden');
+  const pw=$('patWrap'); if(pw) pw.classList.add('hidden');
+  const pb=$('patModeBar'); if(pb) pb.classList.add('hidden');
   $('patientDetailCard').classList.remove('hidden');
   if($('pdSeg')) pdView('visits');
   $('pdName').innerHTML = patAvatar(p.name, true)+esc(p.name)+'  <span class="muted" style="font-weight:500">·  '+esc(p.mrn)+'</span>';
@@ -4836,7 +5261,8 @@ function renderPatientTimeline(pid){
 }
 function closePatientDetail(){
   $('patientDetailCard').classList.add('hidden');
-  $('patientListCard').classList.remove('hidden');
+  const pw=$('patWrap'); if(pw) pw.classList.remove('hidden');
+  const pb=$('patModeBar'); if(pb) pb.classList.remove('hidden');
   renderPatientList();
 }
 function deletePatient(pid){
@@ -4923,8 +5349,11 @@ function copyVisitToForm(vid){
   $('cPlan').value=v.plan||''; $('cProc').value=v.proc||'';
   $('cNextTests').value=v.nextTests||''; $('cFollowUp').value=v.followUp||'';
   if(v.followUpDate && $('cFuDate')) $('cFuDate').value=v.followUpDate;
+  if(typeof fuBoxSet==='function') fuBoxSet(!v.fuOff, true);
+  if(typeof cnicPrintSet==='function') cnicPrintSet(v.printCnic);
   if(typeof vitalsSet==='function') vitalsSet(v.vitals||{});
-  if(typeof renderRxQrSelect==='function'){ renderRxQrSelect(); if($('cQrSel')) $('cQrSel').value=v.qrId||''; }
+  if(typeof renderRxQrSelect==='function'){ renderRxQrSelect();
+    if($('cQrSel')) $('cQrSel').value = (v.qrId!=null ? v.qrId : (db.settings.defQrId||'')); }
   (v.meds||[]).forEach(m=>addRxRow(m));
   editingVisitId = vid;
   updateEditBanner(v);
@@ -5115,9 +5544,9 @@ function renderSetRail(){
   rail.innerHTML = setRailProfile()+
     '<div class="set-search"><input type="text" id="setSearch" placeholder="🔍 Search settings…" autocomplete="off" oninput="setSearchRun()"></div>'+
     '<div class="set-cats" id="setCatList">'+
-      SET_CATS.map(c=>'<button class="set-cat'+(setCatCur===c.k?' on':'')+'" data-k="'+c.k+'" onclick="setCat(\''+c.k+'\')">'+
-        '<span class="sc-ic">'+c.ic+'</span><span class="sc-tx"><b>'+esc(c.t)+'</b><span>'+esc(c.s)+'</span></span></button>').join('')+
-      (canTab('settings')?'<button class="set-cat" onclick="showTab(\'sync\')"><span class="sc-ic">☁️</span><span class="sc-tx"><b>Cloud sync</b><span>Share data with your other devices</span></span></button>':'')+
+      SET_CATS.map((c,i)=>'<button class="fr-tile set-cat'+(setCatCur===c.k?' on':'')+'" data-tint="'+(i%8)+'" data-k="'+c.k+'" onclick="setCat(\''+c.k+'\')">'+
+        '<span class="frt-ic">'+c.ic+'</span><span class="frt-tx"><b>'+esc(c.t)+'</b><span>'+esc(c.s)+'</span></span></button>').join('')+
+      (canTab('settings')?'<button class="fr-tile set-cat" data-tint="6" onclick="showTab(\'sync\')"><span class="frt-ic">☁️</span><span class="frt-tx"><b>Cloud sync</b><span>Share data with your other devices</span></span></button>':'')+
     '</div>';
 }
 function setCards(){ return [...document.querySelectorAll('#setPane > .card[data-set]')]; }
@@ -5180,7 +5609,7 @@ function renderFuWhatChips(){
     }).join('') +
     '<button type="button" class="chip'+(fuWhatSel===-2?' on':'')+'" onclick="fuPickWhen(-2)" title="Come back only if there is a problem">SOS</button>' +
     '<button type="button" class="chip'+(fuWhatSel===-3?' on':'')+'" onclick="fuPickWhen(-3)">tomorrow</button>' +
-    '<select id="fuWhatMore" class="chip-sel'+(moreOn?' on':'')+'" onchange="fuPickWhat(parseInt(this.value,10))">'+
+    '<select id="fuWhatMore" data-norail="1" class="chip-sel'+(moreOn?' on':'')+'" onchange="fuPickWhat(parseInt(this.value,10))">'+
       '<option value="-1">More…</option>'+
       more.map(function(x){ return '<option value="'+x.i+'"'+(fuWhatSel===x.i?' selected':'')+'>'+esc(x.w[0])+'</option>'; }).join('')+
     '</select>';
@@ -5242,7 +5671,24 @@ function nvCopyFromTests(){
   toast('Copied '+add.length+' line'+(add.length>1?'s':''));
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
 }
+/* ---- the follow-up box can be switched off in one click ----
+   Off means: nothing printed in the bottom-right box AND the patient is not put on
+   the due list. What you typed stays in the boxes, so switching it back on restores it. */
+let fuBoxOn = true;
+function fuBoxSet(on, silent){
+  fuBoxOn = !!on;
+  const sw=$('cFuSw'); if(sw) sw.classList.toggle('on', fuBoxOn);
+  const c=$('cFuControls'); if(c) c.classList.toggle('hidden', !fuBoxOn);
+  const n=$('cFuOffNote'); if(n) n.classList.toggle('hidden', fuBoxOn);
+  if(!silent && typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+function fuBoxToggle(){
+  fuBoxSet(!fuBoxOn);
+  toast(fuBoxOn ? 'Follow-up box on' : 'Follow-up box off — nothing printed, not on the due list');
+  if(typeof draftAfter==='function') draftAfter('visit');
+}
 function setFu(days, label){
+  if(!fuBoxOn) fuBoxSet(true);
   $('cFuDate').value = localISO(new Date(Date.now()+days*86400000));
   $('cFuDate').dataset.auto='1';
   if(label){
@@ -5568,6 +6014,7 @@ setupSuggest('apPtSearch','apPtSuggest',
   p => '<b>'+esc(p.name)+'</b> <span class="g">'+esc(p.mrn)+' · '+esc(p.phone||'')+'</span>',
   p => { apPatientId = p.id; $('apPtSearch').value = p.name; $('apPhone').value = p.phone||''; $('apName').value='';
          $('apAge').value = p.age||''; $('apSex').value = p.sex||''; $('apAddress').value = p.address||'';
+         if($('apCnic')) $('apCnic').value = p.cnic||'';
          $('apLinkedLabel').textContent = '📋 '+p.name+' ('+p.mrn+')'; }
 );
 $('apPtSearch').addEventListener('input', function(){ if(!this.value.trim()){ apPatientId=null; $('apLinkedLabel').textContent=''; } });
@@ -5581,10 +6028,11 @@ function bookAppt(){
   const time=$('apTime').value||'';
   const newAppt = syncTouch({id:uid('a'), date, time, name, phone:$('apPhone').value.trim(),
     age:$('apAge').value.trim(), sex:$('apSex').value, address:$('apAddress').value.trim(),
+    cnic:($('apCnic')?$('apCnic').value.trim():''),
     patientId:pid, note:$('apNote').value.trim(), status:'booked', createdAt:new Date().toISOString(), by:byTag()});
   db.appts.push(newAppt);
   apPatientId=null;
-  ['apPtSearch','apName','apPhone','apAge','apAddress','apTime','apNote'].forEach(id=>$(id).value='');
+  ['apPtSearch','apName','apPhone','apAge','apAddress','apCnic','apTime','apNote'].forEach(id=>{ if($(id)) $(id).value=''; });
   $('apSex').value='';
   $('apLinkedLabel').textContent='';
   $('apViewDate').value = date;
@@ -5889,6 +6337,7 @@ function refreshTplSelect(){
   const sel = $('tplSelect');
   sel.innerHTML = '<option value="">💊 Insert prescription (medicines)…</option>' +
     ordSort(db.templates).map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');
+  if(typeof dsRefreshTplSelect==='function') dsRefreshTplSelect();
 }
 function applyTemplate(t){
   if(!t) return;
@@ -5990,7 +6439,7 @@ function renderTplList(){
   ).join('') || '<tr><td colspan="5" class="muted">No templates yet.</td></tr>';
   makeReorderable('tplListBody','templates',tplOrderChanged);
 }
-function tplOrderChanged(){ renderTplList(); refreshTplSelect(); if(typeof renderFavBar==='function') renderFavBar(); }
+function tplOrderChanged(){ renderTplList(); refreshTplSelect(); if(typeof renderFavBar==='function') renderFavBar(); if(typeof dsRefreshTplSelect==='function'){ dsRefreshTplSelect(); dsFavRender(); } }
 function deleteTpl(id){
   const t = db.templates.find(x=>x.id===id);
   if(!confirm('Delete template “'+t.name+'”?')) return;
@@ -5999,12 +6448,32 @@ function deleteTpl(id){
 }
 
 /* ================= FOLLOW-UPS DUE ================= */
-function renderFollowups(){
-  const today = localISO();
+/* A follow-up promise can come from a prescription OR from a discharge summary — both
+   land on the same due list. Discharge entries are wrapped to look like a visit so the
+   rest of the follow-up machinery does not have to know the difference. */
+function dischargeFuEntries(){
+  return (db.documents||[]).filter(function(d){
+      return d.type==='discharge' && (d.dc||{}).fuDate && !(d.dc||{}).fuOff && !d.fuDone; })
+    .map(function(d){
+      return {id:d.id, __doc:true, patientId:d.patientId||null, date:d.date,
+              followUpDate:d.dc.fuDate, followUp:d.dc.fu||'',
+              diagnosis:(d.dc||{}).diagnosis||'', name:d.name, fuDone:!!d.fuDone};
+    });
+}
+function fuRecord(id){
+  return db.visits.find(function(x){ return x.id===id; }) ||
+         (db.documents||[]).find(function(x){ return x.id===id; }) || null;
+}
+function fuDueList(){
   const horizon = localISO(new Date(Date.now()+14*86400000));
   const floor = localISO(new Date(Date.now()-30*86400000));
-  const due = db.visits.filter(v=>v.followUpDate && !v.fuDone && v.followUpDate>=floor && v.followUpDate<=horizon)
+  return db.visits.concat(dischargeFuEntries())
+    .filter(v=>v.followUpDate && !v.fuDone && v.followUpDate>=floor && v.followUpDate<=horizon)
     .sort((a,b)=>a.followUpDate.localeCompare(b.followUpDate));
+}
+function renderFollowups(){
+  const today = localISO();
+  const due = fuDueList();
   $('fuCount').textContent = due.length;
   $('fuEmpty').style.display = due.length? 'none':'block';
   $('fuBody').innerHTML = due.map(v=>{
@@ -6019,8 +6488,9 @@ function renderFollowups(){
   }).join('');
 }
 function fuDone(vid){
-  const v = db.visits.find(x=>x.id===vid); if(!v) return;
-  v.fuDone = true; persist(); renderFollowups();
+  const v = fuRecord(vid); if(!v) return;
+  v.fuDone = true; if(typeof syncTouch==='function') syncTouch(v);
+  persist(); renderFollowups();
   if(typeof renderLost==='function') renderLost();
 }
 
@@ -6076,7 +6546,10 @@ setupSuggest('dsPtSearch','dsPtSuggest',
   p => '<b>'+esc(p.name)+'</b> <span class="g">'+esc(p.mrn)+' · '+esc(p.age||'')+' '+esc(p.sex||'')+'</span>',
   p => { dsPatientId = p.id; $('dsName').value=p.name; $('dsAge').value=p.age||''; $('dsSex').value=p.sex||'';
          if(!$('dsMrn').value.trim()) $('dsMrn').value = p.mrn||'';
-         $('dsPtSearch').value=''; toast('Patient selected: '+p.name); }
+         if($('dsClinicNo') && !$('dsClinicNo').value.trim()) $('dsClinicNo').value = p.mrn||'';
+         if($('dsCnic') && !$('dsCnic').value.trim()) $('dsCnic').value = p.cnic||'';
+         $('dsPtSearch').value=''; dsRepeatBtnRefresh(); if(typeof railTicks==='function') railTicks('ds');
+         toast('Patient selected: '+p.name); }
 );
 $('dsSearch').addEventListener('input', renderDsList);
 setupSuggest('dsMedSearch','dsMedSuggest',
@@ -6084,10 +6557,18 @@ setupSuggest('dsMedSearch','dsMedSuggest',
     .sort(medSort)
     .slice(0,40),
   m => '<b>'+esc(m.name)+'</b> <span class="g">'+esc(m.generic||'')+(m.co?' — '+esc(m.co):'')+'</span> <span class="cat-chip">'+esc(m.cat||'')+'</span>'+(m.cls?' <span class="cls-chip">'+esc(m.cls)+'</span>':'')+'<br><span class="defaults">'+esc(m.dose)+' · '+esc(m.freq)+' · '+esc(m.dur)+(m.instr?' · '+esc(m.instr):'')+'</span>',
-  m => { addRxRow(m,'dsRxBody'); $('dsMedSearch').value=''; $('dsMedSearch').focus(); }
+  m => { addRxRow(m,'dsRxBody'); dsRxRefresh(); $('dsMedSearch').value=''; $('dsMedSearch').focus(); }
+);
+setupSuggest('dsTplSearch','dsTplSuggest',
+  q => db.templates.filter(t => (t.name+' '+(t.diagnosis||'')).toLowerCase().includes(q)).slice(0,12),
+  t => '<b>'+esc(t.name)+'</b> <span class="g">'+esc(t.diagnosis||'')+'</span><br><span class="defaults">'+
+       ((t.meds||[]).length? (t.meds.length+' medicines: '+esc(t.meds.map(m=>m.name.replace(/^(Tab|Cap|Inj|Syp)\s*/i,'')).slice(0,3).join(', '))+((t.meds.length>3)?'…':'')) : 'no medicines')+'</span>',
+  t => { dsApplyTemplate(t); $('dsTplSearch').value=''; }
 );
 function fillDsFromVisit(v){
   const pt = db.patients.find(x=>x.id===v.patientId)||{};
+  if($('dsClinicNo') && !$('dsClinicNo').value.trim()) $('dsClinicNo').value = pt.mrn||'';
+  if($('dsCnic') && !$('dsCnic').value.trim()) $('dsCnic').value = pt.cnic||'';
   $('dcDiagnosis').value = v.diagnosis||'';
   $('dcClinical').value = v.complaints||'';
   $('dcFindings').value = v.findings||'';
@@ -6098,7 +6579,12 @@ function fillDsFromVisit(v){
   (v.meds||[]).forEach(m=>addRxRow(m,'dsRxBody'));
   $('dcInstr').value = v.plan||'';
   $('dcFu').value = v.followUp||'';
+  if($('dsFuDate') && v.followUpDate) $('dsFuDate').value = v.followUpDate;
+  if(v.fuOff) dsFuBoxSet(false, true); else dsFuBoxSet(true, true);
   if(v.proc) $('dcProc').value = v.proc;
+  if(typeof hxPaint==='function') hxPaint('dcMedHx');
+  dsRxRefresh(); dsRepeatBtnRefresh();
+  if(typeof railTicks==='function') railTicks('ds');
   refreshFieldStatus();
 }
 function fillDischargeFromLastVisit(){
@@ -6115,6 +6601,8 @@ function dischargeFromVisit(vid){
   clearDsForm();
   dsPatientId = p.id;
   $('dsName').value = p.name||''; $('dsAge').value = p.age||''; $('dsSex').value = p.sex||''; $('dsMrn').value = p.mrn||'';
+  if($('dsClinicNo')) $('dsClinicNo').value = p.mrn||'';
+  if($('dsCnic')) $('dsCnic').value = p.cnic||'';
   $('dcAdmit').value = localISO(new Date(v.date));
   fillDsFromVisit(v);
   setDsImagesFromVisit(v);
@@ -6126,23 +6614,30 @@ function collectDsForm(){
   return {
     type:'discharge', date:$('dsDate').value||localISO(), patientId:dsPatientId,
     name:$('dsName').value.trim(), mrn:$('dsMrn').value.trim(), age:$('dsAge').value.trim(), sex:$('dsSex').value,
+    clinicNo: ($('dsClinicNo')?$('dsClinicNo').value.trim():''),
+    cnic: ($('dsCnic')?$('dsCnic').value.trim():''),
+    printCnic: cnicPrintOn,
     dc:{admit:$('dcAdmit').value, discharge:$('dcDischarge').value, diagnosis:$('dcDiagnosis').value.trim(),
         clinical:$('dcClinical').value.trim(), findings:$('dcFindings').value.trim(),
         medHx:$('dcMedHx').value.trim(), surgHx:$('dcSurgHx').value.trim(),
         allergies:$('dcAllergies').value.trim(),
-        proc:$('dcProc').value.trim(), course:$('dcCourse').value.trim(),
+        proc:$('dcProc').value.trim(), opFindings:$('dcOpFindings')?$('dcOpFindings').value.trim():'',
+        course:$('dcCourse').value.trim(), invest:$('dcInvest')?$('dcInvest').value.trim():'',
         implant:$('dcImplant').value.trim(), implantCo:$('dcImplantCo').value.trim(),
         medsArr: collectRx('dsRxBody'),
         images: dsImgs.map(x=>({id:x.id, label:(x.label||'').trim()})),
         condition:$('dcCondition').value.trim(), conditionUr:$('dcConditionUr').value.trim(),
-        instr:$('dcInstr').value.trim(), fu:$('dcFu').value.trim()},
+        instr:$('dcInstr').value.trim(),
+        fu: dsFuBoxOn ? $('dcFu').value.trim() : '',
+        fuDate: (dsFuBoxOn && $('dsFuDate')) ? $('dsFuDate').value : '',
+        fuOff: !dsFuBoxOn},
     qrId: ($('dsQrSel') ? $('dsQrSel').value : '')
   };
 }
 function saveDischarge(andPrint){
   if(!requireEdit()) return;
   const f = collectDsForm();
-  if(!f.name){ toast('⚠ Patient name is required'); $('dsName').focus(); return; }
+  if(!f.name){ toast('⚠ Patient name is required'); railReveal('ds','dsName'); $('dsName').focus(); return; }
   let d;
   const wasNew = !editingDsId;
   if(editingDsId){ d = db.documents.find(x=>x.id===editingDsId); const dsBefore=undoSnap(d); Object.assign(d, f); syncTouch(d); logActivity('edit','discharge',f.name, undoOne('documents', dsBefore, d)); }
@@ -6160,17 +6655,151 @@ function saveDischarge(andPrint){
 }
 function clearDsForm(){
   dsPatientId = null; editingDsId = null;
-  ['dsPtSearch','dsName','dsMrn','dsAge','dsMedSearch','dcDiagnosis','dcClinical','dcFindings','dcMedHx','dcSurgHx','dcAllergies','dcProc','dcCourse','dcImplant','dcImplantCo','dcCondition','dcConditionUr','dcInstr','dcFu'].forEach(id=>$(id).value='');
-  if(typeof renderRxQrSelect==='function') renderRxQrSelect();
-  if($('dsQrSel')) $('dsQrSel').value = db.settings.defQrId||'';
+  ['dsPtSearch','dsName','dsMrn','dsClinicNo','dsCnic','dsAge','dsMedSearch','dsTplSearch',
+   'dcDiagnosis','dcClinical','dcFindings','dcMedHx','dcSurgHx','dcAllergies','dcProc','dcOpFindings',
+   'dcCourse','dcInvest','dcImplant','dcImplantCo','dcCondition','dcConditionUr','dcInstr','dcFu','dsFuDate']
+    .forEach(id=>{ if($(id)) $(id).value=''; });
+  if(typeof renderRxQrSelect==='function') renderRxQrSelect(true);
   $('dsRxBody').innerHTML='';
   $('dsSex').value='';
   $('dsDate').value = localISO(); $('dcAdmit').value=''; $('dcDischarge').value='';
   dsImgs = []; renderDsImgStrip();
   $('dcAddLog').checked = true;
   $('dsFormTitle').textContent = 'New discharge summary';
+  dsFuWhatSel=-1; dsFuWhenDays=0; dsFuWhenLabel='';
+  dsFuBoxSet(true, true); dsRenderFuChips();
+  cnicPrintSet(false);
+  if(typeof hxPaint==='function') hxPaint('dcMedHx');
+  dsRxRefresh(); dsFavRender(); dsRefreshTplSelect(); dsRepeatBtnRefresh();
+  if(RAILS['ds']){ RAILS['ds'].cur='pt'; railApply('ds'); }
   refreshFieldStatus();
 }
+/* ================= DISCHARGE: FOLLOW-UP, LIKE THE PRESCRIPTION =================
+   Same quick chips, same month view, same one-click off switch. A discharge follow-up
+   date also puts the patient on the follow-ups-due list, which the old free-text box
+   could never do.                                                                    */
+let dsFuBoxOn = true, dsFuWhatSel = -1, dsFuWhenDays = 0, dsFuWhenLabel = '';
+function dsFuBoxSet(on, silent){
+  dsFuBoxOn = !!on;
+  const sw=$('dsFuSw'); if(sw) sw.classList.toggle('on', dsFuBoxOn);
+  const c=$('dsFuControls'); if(c) c.classList.toggle('hidden', !dsFuBoxOn);
+  const n=$('dsFuOffNote'); if(n) n.classList.toggle('hidden', dsFuBoxOn);
+  if(!silent && typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+function dsFuBoxToggle(){
+  dsFuBoxSet(!dsFuBoxOn);
+  toast(dsFuBoxOn ? 'Follow-up on' : 'Follow-up off — nothing printed, not on the due list');
+  if(typeof draftAfter==='function') draftAfter('discharge');
+}
+function dsRenderFuChips(){
+  const host=$('dsFuWhatChips'); if(!host || typeof FU_WHAT==='undefined') return;
+  const inline = FU_WHAT.map(function(w,i){ return {w:w,i:i}; }).filter(function(x){ return x.w[2]; });
+  const more   = FU_WHAT.map(function(w,i){ return {w:w,i:i}; }).filter(function(x){ return !x.w[2]; });
+  const moreOn = more.some(function(x){ return x.i===dsFuWhatSel; });
+  host.innerHTML =
+    inline.map(function(x){
+      return '<button type="button" class="chip'+(dsFuWhatSel===x.i?' on':'')+'" onclick="dsFuPickWhat('+x.i+')">'+esc(x.w[0])+'</button>';
+    }).join('') +
+    '<button type="button" class="chip'+(dsFuWhatSel===-2?' on':'')+'" onclick="dsFuPickWhen(-2)" title="Come back only if there is a problem">SOS</button>' +
+    '<select data-norail="1" class="chip-sel'+(moreOn?' on':'')+'" onchange="dsFuPickWhat(parseInt(this.value,10))">'+
+      '<option value="-1">More…</option>'+
+      more.map(function(x){ return '<option value="'+x.i+'"'+(dsFuWhatSel===x.i?' selected':'')+'>'+esc(x.w[0])+'</option>'; }).join('')+
+    '</select>';
+}
+function dsFuCompose(){
+  const box=$('dcFu'); if(!box) return;
+  const what = (dsFuWhatSel>=0 && FU_WHAT[dsFuWhatSel]) ? FU_WHAT[dsFuWhatSel][1] : '';
+  if(dsFuWhatSel===-2){ box.value = 'Review SOS' + (what?' '+what:''); }
+  else {
+    const when = dsFuWhenLabel ? ('Review after '+dsFuWhenLabel) : 'Review';
+    box.value = (when + (what?' '+what:'')).trim();
+  }
+  box.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function dsFuPickWhat(i){
+  if(isNaN(i)) i=-1;
+  dsFuWhatSel = (dsFuWhatSel===i && i>=0) ? -1 : i;
+  dsRenderFuChips(); dsFuCompose();
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+function dsFuPickWhen(kind){
+  dsFuWhatSel = (dsFuWhatSel===kind) ? -1 : kind;
+  dsRenderFuChips();
+  if(dsFuWhatSel===-2 && $('dsFuDate')) $('dsFuDate').value='';
+  dsFuCompose();
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+function dsSetFu(days, label){
+  if(!dsFuBoxOn) dsFuBoxSet(true);
+  const el=$('dsFuDate'); if(el){ el.value = localISO(new Date(Date.now()+days*86400000)); el.dataset.auto='1'; }
+  if(label){
+    dsFuWhenDays=days; dsFuWhenLabel=label;
+    if(dsFuWhatSel===-2) dsFuWhatSel=-1;
+    dsRenderFuChips(); dsFuCompose();
+  }
+}
+function dsFuMoreSel(sel){
+  if(!sel.value) return;
+  const parts = sel.value.split('|');
+  dsSetFu(+parts[0], parts[1]);
+  sel.value='';
+}
+
+/* ================= DISCHARGE MEDICINES: THE PRESCRIPTION'S OWN TOOLKIT ================= */
+function dsRefreshTplSelect(){
+  const sel=$('dsTplSelect'); if(!sel) return;
+  sel.innerHTML = '<option value="">💊 Insert prescription (medicines)…</option>' +
+    ordSort(db.templates).map(function(t){ return '<option value="'+t.id+'">'+esc(t.name)+'</option>'; }).join('');
+}
+function dsApplyTemplate(t){
+  if(!t) return;
+  if(!(t.meds||[]).length){ toast('“'+t.name+'” has no medicines'); return; }
+  (t.meds||[]).forEach(function(m){ addRxRow(m,'dsRxBody'); });
+  dsRxRefresh();
+  toast('Medicines from “'+t.name+'” added — adjust for this patient');
+}
+function dsInsertTemplate(){
+  const sel=$('dsTplSelect');
+  const t=db.templates.find(function(x){ return x.id===sel.value; });
+  if(!t){ toast('Choose a template first'); return; }
+  dsApplyTemplate(t); sel.value='';
+}
+function dsFavRender(){
+  const bar=$('dsFavBar'); if(!bar) return;
+  const meds=favMeds().map(function(id){ return db.meds.find(function(m){ return m.id===id; }); }).filter(Boolean);
+  const tpls=favTpls().map(function(id){ return db.templates.find(function(t){ return t.id===id; }); }).filter(Boolean);
+  if(!meds.length && !tpls.length){
+    bar.innerHTML='<span class="fav-hint">★ Star medicines or templates to pin them here for one-tap adding.</span>'; return; }
+  bar.innerHTML =
+    tpls.map(function(t){ return '<button class="fav-chip fav-tpl" onclick="dsApplyTemplate(db.templates.find(x=>x.id===\''+t.id+'\'))" title="Apply template">📋 '+esc(t.name)+'</button>'; }).join('')+
+    meds.map(function(m){ return '<button class="fav-chip" onclick="addRxRow(db.meds.find(x=>x.id===\''+m.id+'\'),\'dsRxBody\');dsRxRefresh()" title="Add to the discharge medicines">＋ '+esc(m.name)+'</button>'; }).join('');
+}
+function dsRxRefresh(){
+  const n=$('dsRxBody') ? $('dsRxBody').querySelectorAll('tr.rx-main-row').length : 0;
+  const c=$('dsRxCount'); if(c) c.textContent = n;
+  if(typeof renderRxAlerts==='function') try{ renderRxAlerts('dsRxBody','dsRxAlerts',$('dcAllergies')?$('dcAllergies').value:''); }catch(e){}
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+function dsRepeatBtnRefresh(){
+  const b=$('dsRepeatBtn'); if(!b) return;
+  const v = dsPatientId ? lastVisitOf(dsPatientId) : null;
+  b.classList.toggle('hidden', !v);
+  if(v) b.title = 'Copy the '+((v.meds||[]).length)+' medicine'+(((v.meds||[]).length)===1?'':'s')+
+                  ' from this patient’s visit on '+fmtDate(v.date);
+}
+function dsRepeatLastRx(){
+  if(!dsPatientId){ toast('Pick an existing patient first'); return; }
+  const v=lastVisitOf(dsPatientId);
+  if(!v){ toast('No earlier prescription on file for this patient'); return; }
+  const have=collectRx('dsRxBody').length;
+  if(have && !confirm('Replace the '+have+' medicine line'+(have===1?'':'s')+
+     ' already typed with the '+(v.meds||[]).length+' from '+fmtDate(v.date)+'?')) return;
+  $('dsRxBody').innerHTML='';
+  (v.meds||[]).forEach(function(m){ addRxRow(m,'dsRxBody'); });
+  dsRxRefresh();
+  toast('Copied '+((v.meds||[]).length)+' medicine'+(((v.meds||[]).length)===1?'':'s')+' from '+fmtDate(v.date));
+}
+
 /* ================= FORMS OPEN AS THEIR OWN SCREEN =================
    Every area lands on its list; the form takes the whole screen with a Back button,
    so a form and a list are never on top of each other.                              */
@@ -6181,7 +6810,9 @@ function scrShow(prefix, which){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function dsShowList(){ scrShow('ds','list'); if(typeof renderDsList==='function') renderDsList(); }
-function dsShowForm(){ scrShow('ds','form'); const c=$('dsFormCrumb'); if(c) c.textContent=$('dsFormTitle').textContent; }
+function dsShowForm(){ scrShow('ds','form'); const c=$('dsFormCrumb'); if(c) c.textContent=$('dsFormTitle').textContent;
+  if(typeof railApply==='function' && RAILS['ds']) try{ railApply('ds'); }catch(e){}
+  if(typeof dsFavRender==='function'){ dsFavRender(); dsRefreshTplSelect(); dsRepeatBtnRefresh(); } }
 function dsNew(){ if(!requireEdit()) return; clearDsForm(); dsShowForm(); }
 function opShowList(){ scrShow('op','list'); if(typeof renderOpLog==='function') renderOpLog(); }
 function opShowForm(){ scrShow('op','form'); const c=$('opFormCrumb'); if(c) c.textContent=$('opFormTitle').textContent; }
@@ -6227,6 +6858,20 @@ function dsMrnOf(d){
   if(d.patientId){ const p=db.patients.find(x=>x.id===d.patientId); if(p && p.mrn) return String(p.mrn); }
   return '';
 }
+/* the CLINIC's own registration number, carried across from the prescription record.
+   Kept separate from the hospital MR number, which is typed by the ward. */
+function dsClinicNoOf(d){
+  if(!d) return '';
+  if(String(d.clinicNo||'').trim()) return String(d.clinicNo).trim();
+  if(d.patientId){ const p=db.patients.find(x=>x.id===d.patientId); if(p && p.mrn) return String(p.mrn); }
+  return '';
+}
+function dsCnicOf(d){
+  if(!d) return '';
+  if(String(d.cnic||'').trim()) return String(d.cnic).trim();
+  if(d.patientId){ const p=db.patients.find(x=>x.id===d.patientId); if(p && p.cnic) return String(p.cnic); }
+  return '';
+}
 function renderDsList(){
   const q = ($('dsSearch').value||'').trim().toLowerCase();
   const docs = db.documents.filter(d=>d.type==='discharge')
@@ -6251,9 +6896,13 @@ function loadDs(id){
   $('dsDate').value=d.date; $('dsName').value=d.name; $('dsAge').value=d.age||''; $('dsSex').value=d.sex||'';
   $('dsMrn').value = dsMrnOf(d);
   const dc=d.dc||{};
+  $('dsClinicNo').value = d.clinicNo || dsClinicNoOf(d);
+  $('dsCnic').value = d.cnic || dsCnicOf(d);
+  cnicPrintSet(d.printCnic);
   $('dcAdmit').value=dc.admit||''; $('dcDischarge').value=dc.discharge||''; $('dcDiagnosis').value=dc.diagnosis||'';
   $('dcClinical').value=dc.clinical||''; $('dcFindings').value=dc.findings||''; $('dcMedHx').value=dc.medHx||''; $('dcSurgHx').value=dc.surgHx||''; $('dcAllergies').value=dc.allergies||'';
-  $('dcProc').value=dc.proc||''; $('dcCourse').value=dc.course||'';
+  $('dcProc').value=dc.proc||''; $('dcOpFindings').value=dc.opFindings||'';
+  $('dcCourse').value=dc.course||''; $('dcInvest').value=dc.invest||'';
   $('dcImplant').value=dc.implant||''; $('dcImplantCo').value=dc.implantCo||'';
   $('dsRxBody').innerHTML='';
   if(dc.medsArr && dc.medsArr.length){
@@ -6271,8 +6920,11 @@ function loadDs(id){
   }
   $('dcCondition').value=dc.condition||''; $('dcConditionUr').value=dc.conditionUr||'';
   $('dcInstr').value=dc.instr||''; $('dcFu').value=dc.fu||'';
+  $('dsFuDate').value = dc.fuDate||'';
+  dsFuBoxSet(!dc.fuOff, true); dsRenderFuChips();
+  if(typeof hxPaint==='function') hxPaint('dcMedHx');
   if(typeof renderRxQrSelect==='function') renderRxQrSelect();
-  if($('dsQrSel')) $('dsQrSel').value = d.qrId||'';
+  if($('dsQrSel')) $('dsQrSel').value = (d.qrId!=null ? d.qrId : (db.settings.defQrId||''));
   $('dcAddLog').checked = d.addLog!==false;
   dsImgs = [];
   renderDsImgStrip();
@@ -6285,6 +6937,8 @@ function loadDs(id){
   })();
   $('dsFormTitle').textContent = 'Edit discharge summary';
   const cr=$('dsFormCrumb'); if(cr) cr.textContent='Edit discharge summary';
+  dsRxRefresh(); dsFavRender(); dsRefreshTplSelect(); dsRepeatBtnRefresh();
+  if(RAILS['ds']){ RAILS['ds'].cur='pt'; railApply('ds'); }
   refreshFieldStatus();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -6373,10 +7027,14 @@ async function printDoc(d, forcePlain){
     const dc = d.dc||{};
     const sec = (h,v,cls)=> v? '<div class="dc-sec'+(cls?' '+cls:'')+'"><h4>'+h+'</h4><p>'+esc(v)+'</p></div>' : '';
     const cell = (l,v)=>'<td class="lbl">'+l+'</td><td>'+esc(v||'—')+'</td>';
+    const clinicNo = dsClinicNoOf(d), cnic = d.printCnic ? dsCnicOf(d) : '';
     inner = '<div class="doc-title" style="margin-top:0">DISCHARGE SUMMARY</div>'+
       '<table class="dc-info"><tbody>'+
-        '<tr>'+cell('Patient name', d.name)+cell('MR #', dsMrnOf(d))+'</tr>'+
-        '<tr>'+cell('Age / Sex', [d.age,d.sex].filter(Boolean).join(' / '))+cell('Consultant', db.settings.docName)+'</tr>'+
+        '<tr>'+cell('Patient name', d.name)+cell('MR # (hospital)', dsMrnOf(d))+'</tr>'+
+        '<tr>'+cell('Age / Sex', [d.age,d.sex].filter(Boolean).join(' / '))+
+               cell('Clinic reg #', clinicNo)+'</tr>'+
+        (cnic? '<tr>'+cell('CNIC', cnic)+cell('Consultant', db.settings.docName)+'</tr>'
+             : '<tr>'+cell('Consultant', db.settings.docName)+cell('', '')+'</tr>')+
         '<tr>'+cell('Date of admission', dc.admit?fmtDate(dc.admit):'')+cell('Date of discharge', dc.discharge?fmtDate(dc.discharge):'')+'</tr>'+
       '</tbody></table>'+
       sec('Diagnosis', dc.diagnosis, 'dc-dx') +
@@ -6387,11 +7045,13 @@ async function printDoc(d, forcePlain){
         ? '<div class="dc-sec"><h4>Known allergies</h4><p>'+esc(dc.allergies)+'</p></div>'
         : '<div class="dc-sec dc-allergy"><h4>Known allergies</h4><p>⚠ '+esc(dc.allergies)+'</p></div>') : '') +
       sec('Procedure / operation performed', dc.proc) +
+      sec('Operative findings', dc.opFindings) +
       sec('Implant / prosthesis used', [dc.implant, dc.implantCo&&('('+dc.implantCo+')')].filter(Boolean).join(' ')) +
       sec('Hospital course', dc.course) +
+      sec('Investigations at discharge', dc.invest) +
       sec('Condition at discharge', dc.condition) +
       (((db.settings.urduRx||'on')!=='off' && dc.conditionUr)
-        ? '<div class="dc-sec dc-sec-ur" dir="rtl"><h4>\u0631\u062e\u0635\u062a \u06a9\u06d2 \u0648\u0642\u062a \u062d\u0627\u0644\u062a</h4><p>'+esc(dc.conditionUr)+'</p></div>' : '') +
+        ? '<div class="dc-sec dc-sec-ur" dir="rtl"><h4>رخصت کے وقت حالت</h4><p>'+esc(dc.conditionUr)+'</p></div>' : '') +
       ((dc.medsArr && dc.medsArr.length) ?
         '<div class="dc-sec"><h4>Discharge medications</h4>'+dc.medsArr.map((m,i)=>{
           const urOn = (db.settings.urduRx||'on')!=='off';
@@ -6403,115 +7063,216 @@ async function printDoc(d, forcePlain){
         }).join('')+'</div>'
       : dc.meds? '<div class="dc-sec"><h4>Discharge medications</h4>'+dc.meds.split('\n').map(line=>{
         const t = line.trim(); if(!t) return '';
-        return /[\u0600-\u06FF]/.test(t) ? '<p class="mur dc-mur">'+esc(t)+'</p>' : '<p class="dc-med">'+esc(t)+'</p>';
+        return /[؀-ۿ]/.test(t) ? '<p class="mur dc-mur">'+esc(t)+'</p>' : '<p class="dc-med">'+esc(t)+'</p>';
       }).join('')+'</div>' : '') +
       (()=>{ const ins = splitByScript(dc.instr||'');
         return (ins.en? sec('Instructions & wound care', ins.en):'')+
                (ins.ur? '<div class="dc-sec dc-sec-ur"><h4>ہدایات برائے مریض</h4><p>'+esc(ins.ur)+'</p></div>':''); })() +
-      sec('Follow-up', dc.fu) +
-      (((db.settings.urduRx||'on')!=='off' && fuUrduFor(dc.fu))
-        ? '<div class="dc-sec dc-sec-ur" dir="rtl"><h4>\u0622\u0626\u0646\u062f\u06c1 \u0645\u0639\u0627\u0626\u0646\u06c1</h4><p>'+esc(fuUrduFor(dc.fu))+'</p></div>' : '');
+      (dc.fuOff ? '' :
+        (sec('Follow-up', [dc.fu, dc.fuDate? ('Next visit: '+fmtDMY(dc.fuDate)) : ''].filter(Boolean).join('\n')) +
+         (((db.settings.urduRx||'on')!=='off' && fuUrduFor(dc.fu))
+           ? '<div class="dc-sec dc-sec-ur" dir="rtl"><h4>آئندہ معائنہ</h4><p>'+esc(fuUrduFor(dc.fu))+'</p></div>' : '')));
   } else {
     inner = strip + '<div class="doc-title">'+(DOC_TITLES[d.type]||'')+'</div>' +
       '<div class="doc-body">'+esc(d.body||'')+'</div>';
   }
-  $('printArea').innerHTML = '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+rxFinishCls()+'">'+
-    (pad?'':buildPlainHeader()) + inner +
-    '<div class="rx-foot" style="margin-top:9mm"><div class="fu">'+ buildDocQr(d) +'</div>'+
-    '<div class="sig"><div class="line"></div>'+esc(s.docName||'Signature')+'</div></div>'+
-  '</div></div>';
-  const box = applyPageGeom(pad, 18);
-  const pa = $('printArea'), sheet = pa.querySelector('.rx-sheet');
-  const availH = box.availH - (pad ? 2 : 0);
-  const contentW = box.contentW;
+  /* the images that print as a band across the foot of page 1 */
   const dcImgs = (d.type==='discharge' && d.dc && d.dc.images) ? d.dc.images.slice(0,2) : [];
+  let figs = '';
   if(dcImgs.length){
-    // fetch images and anchor them as a band at the bottom of page 1;
-    // text flows to page 2 when long, images stay pinned when short
     const recs = await Promise.all(dcImgs.map(x=>imgGet(x.id).catch(()=>null)));
-    const figs = recs.map((r,i)=> r ?
+    figs = recs.map((r,i)=> r ?
       '<figure class="dc-fig'+(recs.filter(Boolean).length===1?' solo':'')+'"><img src="'+r.full+'">'+
       '<figcaption>'+esc(dcImgs[i].label||'')+'</figcaption></figure>' : '').join('');
     if(figs){
-      // pre-decode so the print snapshot always includes the images
+      // pre-decode, so the print snapshot always carries the pictures
       await Promise.all(recs.filter(Boolean).map(r=>new Promise(res=>{
         const im = new Image(); im.onload = res; im.onerror = res; im.src = r.full; })));
-      const GUARD_MM = 4;          // keeps band safely inside page 1
-      const pxPerMm = 96/25.4;
-      pa.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:'+contentW+'mm';
-      // measure the REAL band height in this exact layout (captions may wrap)
-      const probe = document.createElement('div');
-      probe.className = 'dc-imgband';
-      probe.innerHTML = figs;
-      sheet.appendChild(probe);
-      const bandPx = probe.offsetHeight;
-      sheet.removeChild(probe);
-      const bandMm = bandPx / pxPerMm;
-      const bandTopMm = availH - GUARD_MM - bandMm;   // absolute position on page 1
-      const targetPx = bandTopMm * pxPerMm;
-      // long sections may split across the page break instead of leaving a hole above the band
-      sheet.querySelectorAll('.dc-sec').forEach(el=>{
-        if(el.offsetHeight > 30*pxPerMm) el.style.pageBreakInside = 'auto';
-      });
-      // find where flowing text reaches the band, reserve that space so nothing overlaps
-      const kids = [...sheet.children];
-      let k = kids.length;
-      for(let i=0;i<kids.length;i++){
-        if(kids[i].offsetTop + kids[i].offsetHeight > targetPx){ k = i; break; }
-      }
-      let insertRef = kids[k]||null;
-      // if the crossing block is a multi-paragraph section (e.g. medication list),
-      // split it at a paragraph boundary so page 1 is used fully — never separating
-      // a medicine from its Urdu line
-      const cand = kids[k];
-      if(cand && cand.classList && cand.classList.contains('dc-sec')){
-        const parts = [...cand.children].filter(x=>x.tagName==='P');
-        if(parts.length>1){
-          let fit = -1;
-          for(let i=0;i<parts.length;i++){
-            if(parts[i].offsetTop + parts[i].offsetHeight <= targetPx - 4) fit = i; else break;
-          }
-          while(fit>=0 && parts[fit+1] && parts[fit+1].classList.contains('mur')) fit--;
-          if(fit>=0 && fit<parts.length-1){
-            const cont = document.createElement('div');
-            cont.className = cand.className;
-            cont.style.pageBreakInside = 'auto';
-            for(let i=fit+1;i<parts.length;i++) cont.appendChild(parts[i]);
-            sheet.insertBefore(cont, cand.nextSibling);
-            insertRef = cont;
-          }
-        }
-      }
-      const holder = document.createElement('div');
-      holder.className = 'dc-bandwrap';
-      const sp = document.createElement('div');
-      const rv = document.createElement('div');
-      rv.style.height = (bandMm + GUARD_MM).toFixed(1)+'mm';
-      holder.appendChild(sp); holder.appendChild(rv);
-      sheet.insertBefore(holder, insertRef);
-      // set the spacer from the holder's REAL position (margins included)
-      sp.style.height = Math.max(0, (targetPx - holder.offsetTop)/pxPerMm).toFixed(1)+'mm';
-      // pin the band itself at fixed mm coordinates — it can never be pushed to page 2
-      sheet.style.position = 'relative';
-      const band = document.createElement('div');
-      band.className = 'dc-imgband dc-band-abs';
-      band.style.cssText = 'position:absolute;left:0;right:0;top:'+bandTopMm.toFixed(1)+'mm';
-      band.innerHTML = figs;
-      sheet.appendChild(band);
-      pa.style.cssText = '';
     }
-  } else {
-    // fit check: compact typeface if the document is long, else let it flow to page 2
-    pa.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:'+contentW+'mm';
-    if(sheet.offsetHeight > availH*96/25.4) sheet.classList.add('compact');
-    const fits = !(sheet.offsetHeight > availH*96/25.4);
-    window.__lastPrintFits = fits;
-    rxFlowPageNums(sheet, fits ? 1 : Math.ceil(sheet.offsetHeight/(availH*96/25.4)), availH*96/25.4);
-    pa.style.cssText = '';
   }
-  if(printPreviewMode){ printPreviewMode = false; showPrintPreview(); return; }
+  const footHtml = '<div class="rx-foot dc-foot"><div class="fu">'+ buildDocQr(d) +'</div>'+
+    '<div class="sig"><div class="line"></div>'+esc(s.docName||'Signature')+'</div></div>';
+  const sheetHtml = '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+rxFinishCls()+'">'+
+    (pad?'':buildPlainHeader()) +
+    '<div class="doc-flow">'+ inner + footHtml +'</div>'+
+    (figs? '<div class="dc-imgband">'+figs+'</div>' : '')+
+  '</div></div>';
+
+  const box = pageBox(pad, 18, 'A4');
+  setPageStyle(box, 'A4', false);          // documents paginate themselves now, same as prescriptions
+  const pa = $('printArea');
+  let cancelled = false, asked = false;
+  const layout = ()=>{
+    pa.innerHTML = sheetHtml;              // docPaginate consumes the source, so rebuild every pass
+    let res = docPaginate(pa, box, false);
+    if(res.pages > 1){
+      pa.innerHTML = sheetHtml;
+      const tight = docPaginate(pa, box, true);
+      if(tight.pages < res.pages) res = tight;
+      else { pa.innerHTML = sheetHtml; res = docPaginate(pa, box, false); }
+    }
+    window.__lastPrintFits = (res.pages <= 1);
+  };
+  layout();
+  const whenReady = (fn)=>{ if(document.fonts && document.fonts.ready && document.fonts.ready.then)
+      document.fonts.ready.then(()=>setTimeout(fn,40)); else setTimeout(fn,60); };
+  if(printPreviewMode){ printPreviewMode = false; whenReady(()=>{ layout(); showPrintPreview(); }); return; }
   showPrintTipOnce();
-  setTimeout(()=>window.print(), 60);
+  whenReady(()=>{ if(!cancelled){ layout(); window.print(); } });
+}
+
+/* ==================== DOCUMENT PAGINATION ====================
+   Same principle as rxPaginate, one column instead of two: build real page boxes and
+   pour the blocks into them. The X-ray band is pinned to the foot of page 1 and the
+   text simply stops short of it — which is what the old absolute-position hack was
+   trying to do by measuring pixel offsets inside a browser-fragmented block, and why
+   a long summary with X-rays printed half an empty page and then demographics over
+   the pictures.                                                                     */
+function docPaginate(pa, box, compact){
+  const MM = 96/25.4;
+  const src = pa.querySelector('.rx-sheet');
+  if(!src) return {pages:0};
+  const srcCls = src.className + (compact ? ' compact' : '');
+  const head = src.querySelector('.rx-head');
+  const flow = src.querySelector('.doc-flow');
+  const band = src.querySelector('.dc-imgband');
+  const kids = flow ? Array.prototype.slice.call(flow.children) : [];
+
+  pa.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:'+box.pw+'mm';
+  const pages = [];
+  const mkPage = ()=>{
+    const pg = document.createElement('div');
+    pg.className = 'rx-sheetpage';
+    pg.style.cssText = 'width:'+box.pw+'mm;height:'+box.ph+'mm;'+
+      'padding:'+box.top+'mm '+box.side+'mm '+box.bot+'mm '+box.side+'mm';
+    const sh = document.createElement('div');
+    sh.className = srcCls;
+    pg.appendChild(sh);
+    pa.appendChild(pg);
+    pages.push(pg);
+    return {pg, sh};
+  };
+  const first = mkPage();
+  if(head) first.sh.appendChild(head);
+
+  let bandH = 0;
+  if(band){ first.pg.appendChild(band); bandH = band.offsetHeight; }
+
+  const usablePx = (box.ph - box.top - box.bot) * MM;
+  const safePx   = RX_SAFE_MM * MM;
+  const pgnoPx   = 16;
+
+  const colH = (col)=>{
+    const last = col.lastElementChild;
+    if(!last) return 0;
+    const mb = parseFloat(getComputedStyle(last).marginBottom) || 0;
+    return (last.getBoundingClientRect().bottom - col.getBoundingClientRect().top) + mb;
+  };
+  /* A section taller than the room left is cut at a paragraph boundary and continues on
+     the next sheet — never between a medicine and its Urdu line. */
+  /* one long paragraph is cut at a word boundary, so a page is never left half empty
+     just because the next section happens to be a solid block of prose */
+  const splitPara = (el, p, col, room)=>{
+    const node = p.firstChild;
+    if(!node || node.nodeType !== 3) return null;
+    const text = node.nodeValue;
+    if(text.length < 90) return null;
+    const top = col.getBoundingClientRect().top;
+    const r = document.createRange();
+    let lo = 0, hi = text.length, best = 0;
+    while(lo <= hi){
+      const mid = (lo + hi) >> 1;
+      r.setStart(node, 0); r.setEnd(node, mid);
+      const rects = r.getClientRects();
+      const b = rects.length ? rects[rects.length-1].bottom : top;
+      if(b - top <= room){ best = mid; lo = mid + 1; } else hi = mid - 1;
+    }
+    const cut = text.lastIndexOf(' ', best);
+    if(cut < 40 || text.length - cut < 25) return null;   // not worth a heading of its own
+    node.nodeValue = text.slice(0, cut);
+    const cont = document.createElement('div');
+    cont.className = el.className;
+    const h = el.querySelector('h4');
+    if(h){ const h2=document.createElement('h4');
+      h2.textContent = h.textContent.replace(/\s*\(continued\)\s*$/i,'')+' (continued)';
+      cont.appendChild(h2); }
+    const p2 = document.createElement('p');
+    p2.className = p.className;
+    if(p.getAttribute('dir')) p2.setAttribute('dir', p.getAttribute('dir'));
+    p2.textContent = text.slice(cut+1);
+    cont.appendChild(p2);
+    return cont;
+  };
+  const splitOff = (el, col, room)=>{
+    if(!el.classList || !el.classList.contains('dc-sec')) return null;
+    const ps = Array.prototype.slice.call(el.children).filter(x=>x.tagName==='P');
+    if(ps.length === 1) return splitPara(el, ps[0], col, room);
+    if(ps.length < 2) return null;
+    const top = col.getBoundingClientRect().top;
+    let fit = -1;
+    for(let i=0;i<ps.length;i++){
+      if(ps[i].getBoundingClientRect().bottom - top <= room) fit = i; else break;
+    }
+    while(fit>=0 && ps[fit+1] && ps[fit+1].classList.contains('mur')) fit--;
+    if(fit < 0 || fit >= ps.length-1) return null;
+    const cont = document.createElement('div');
+    cont.className = el.className;
+    const h = el.querySelector('h4');
+    if(h){ const h2=document.createElement('h4');
+      h2.textContent = h.textContent.replace(/\s*\(continued\)\s*$/i,'')+' (continued)';
+      cont.appendChild(h2); }
+    for(let i=fit+1;i<ps.length;i++) cont.appendChild(ps[i]);
+    return cont;
+  };
+  /* returns true when at least part of a block was placed — a split counts, because the
+     head of the block stays on this page even though the queue length does not change. */
+  const pour = (col, room)=>{
+    let placed = false;
+    while(kids.length){
+      const el = kids[0];
+      col.appendChild(el);
+      if(colH(col) > room){
+        const rest = splitOff(el, col, room);
+        if(rest){ kids.shift(); kids.unshift(rest); return true; }
+        if(col.children.length > 1){ col.removeChild(el); return placed; }
+        // a single block taller than a whole page — let it print rather than loop for ever
+      }
+      kids.shift();
+      placed = true;
+    }
+    return placed;
+  };
+
+  let pageNo = 1, cur = first;
+  const roomFor = (pageNo, sh)=>{
+    const base = usablePx - sh.offsetHeight - pgnoPx - safePx;
+    return Math.max(40, base - (pageNo===1 && bandH ? bandH + safePx : 0));
+  };
+  pour(first.sh, roomFor(1, first.sh));
+  while(kids.length && pageNo < 40){
+    pageNo++;
+    cur = mkPage();
+    if(!pour(cur.sh, roomFor(pageNo, cur.sh))) break;   // nothing fits anywhere — stop, don't loop
+  }
+
+  if(band){
+    band.style.cssText = 'position:absolute;left:'+box.side+'mm;right:'+box.side+'mm;'+
+      'bottom:'+(box.bot + RX_SAFE_MM)+'mm;margin:0';
+  }
+  pages.forEach((pg, i)=>{
+    pg.style.position = 'relative';
+    if(i < pages.length-1) pg.style.breakAfter = 'page';
+    if(pages.length < 2) return;
+    const n = document.createElement('div');
+    n.className = 'rx-pgno';
+    n.textContent = 'Page '+(i+1)+' of '+pages.length;
+    n.style.cssText = 'position:absolute;left:'+box.side+'mm;bottom:'+(box.bot+2)+'mm';
+    pg.appendChild(n);
+  });
+  const page0 = src.closest('.rx-page') || src;
+  if(page0 && page0.parentElement === pa) pa.removeChild(page0);
+  pa.style.cssText = '';
+  return {pages:pages.length};
 }
 /* preview any saved record before committing paper to it */
 function previewSavedVisit(vid){
@@ -6720,7 +7481,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.07.31-b38';
+const APP_BUILD = '2026.08.02-b39';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -7656,13 +8417,14 @@ function checkRxSafety(meds, allergies){
     warn.push('💡 NSAID without gastric cover — consider adding a PPI (e.g. Risek / Nexum)');
   return {danger, warn};
 }
-function renderRxAlerts(){
-  const box = $('rxAlerts'); if(!box) return;
-  const res = checkRxSafety(collectRx(), $('pAllergies').value);
+function renderRxAlerts(bodyId, boxId, allergies){
+  const box = $(boxId||'rxAlerts'); if(!box) return;
+  const res = checkRxSafety(collectRx(bodyId||'rxBody'),
+                            allergies!=null ? allergies : $('pAllergies').value);
   box.innerHTML =
     res.danger.map(d=>'<div class="alert-danger">'+esc(d)+'</div>').join('') +
     res.warn.map(w=>'<div class="alert-warn">'+esc(w)+'</div>').join('');
-  if(typeof renderDrugMonitors==='function') renderDrugMonitors();
+  if(!bodyId && typeof renderDrugMonitors==='function') renderDrugMonitors();
 }
 
 /* ================= SURGERY LOGBOOK ================= */
@@ -7841,8 +8603,9 @@ function waVisit(vid){
   window.open('https://wa.me/'+ph+'?text='+encodeURIComponent(t), '_blank');
 }
 function waRemind(vid){
-  const v = db.visits.find(x=>x.id===vid); if(!v) return;
-  const p = db.patients.find(x=>x.id===v.patientId)||{};
+  const v0 = fuRecord(vid); if(!v0) return;
+  const v = v0.dc ? {followUpDate:v0.dc.fuDate, followUp:v0.dc.fu, patientId:v0.patientId} : v0;
+  const p = db.patients.find(x=>x.id===v.patientId)||{name:v0.name||''};
   const s = db.settings;
   const t = 'Reminder from *'+(s.clinicName||'the clinic')+'* ('+(s.docName||'')+'):\n'+
     p.name+', your follow-up visit is due'+(v.followUpDate?' on *'+fmtDate(v.followUpDate)+'*':'')+'. '+
@@ -8118,9 +8881,12 @@ function fuDateBox(v){
 function buildRxQr(v,p){
   try{
     if((db.settings.qrRx||'on')==='off' || typeof QRenc === 'undefined') return '';
-    const want = (v && v.qrId) || db.settings.defQrId || '';
+    /* An empty string is an EXPLICIT "— No QR code —". Only a missing/undefined
+       qrId (an old record saved before the picker existed) falls back to the default. */
+    const want = (v && v.qrId != null) ? String(v.qrId) : (db.settings.defQrId || '');
+    if(!want) return '';
     const qc=(db.qrcodes||[]).find(x=>x.id===want);
-    if(!qc) return '';
+    if(!qc || !String(qc.text||'').trim()) return '';
     const svg = QRenc.svg(qc.text, 24);
     if(!svg) return '';
     return '<div class="rx-qr">'+svg+'<div class="qr-cap">'+esc(qc.label||'')+'</div></div>';
@@ -8130,17 +8896,26 @@ function qrOptionsHtml(){
   return '<option value="">— No QR code —</option>'+
     (db.qrcodes||[]).map(q=>'<option value="'+q.id+'">'+esc(q.label)+'</option>').join('');
 }
-function renderRxQrSelect(){
-  const sel=$('cQrSel');
-  if(sel){ const cur=sel.value; sel.innerHTML=qrOptionsHtml(); sel.value=cur||db.settings.defQrId||''; }
-  const ds=$('dsQrSel');
-  if(ds){ const cur=ds.value; ds.innerHTML=qrOptionsHtml(); ds.value=cur||db.settings.defQrId||''; }
+/* Repaint the QR pickers. `toDefault` is used only when a form is being reset —
+   otherwise the picker keeps exactly what is in it, including a deliberate blank. */
+function renderRxQrSelect(toDefault){
+  const def = db.settings.defQrId || '';
+  ['cQrSel','dsQrSel'].forEach(function(id){
+    const sel=$(id); if(!sel) return;
+    const cur = toDefault ? def : sel.value;
+    sel.innerHTML = qrOptionsHtml();
+    sel.value = cur;
+    if(sel.value !== cur) sel.value = '';   // the chosen code was deleted → no QR
+  });
+  const s=$('sDefQrId');
+  if(s){ const cur=s.value; s.innerHTML=qrOptionsHtml(); s.value = cur || def; }
 }
 /* the QR block printed on a discharge summary */
 function buildDocQr(d){
   try{
     if((db.settings.qrRx||'on')==='off' || typeof QRenc === 'undefined') return '';
-    const want = (d && d.qrId) || db.settings.defQrId || '';
+    const want = (d && d.qrId != null) ? String(d.qrId) : (db.settings.defQrId || '');
+    if(!want) return '';
     const qc=(db.qrcodes||[]).find(x=>x.id===want);
     if(!qc || !String(qc.text||'').trim()) return '';
     const svg = QRenc.svg(qc.text, 22);
@@ -8268,6 +9043,7 @@ function printVisit(v, p, forcePlain){
       (p.age?'<span><b>Age:</b> '+esc(p.age)+'</span>':'')+
       (p.sex?'<span><b>Sex:</b> '+esc(p.sex)+'</span>':'')+
       (p.mrn?'<span><b>MR #:</b> '+esc(p.mrn)+'</span>':'')+
+      ((v.printCnic && p.cnic)?'<span><b>CNIC:</b> '+esc(p.cnic)+'</span>':'')+
       '<span class="rx-dt"><b>Date:</b> '+fmtDate(v.date)+'<span class="rx-tm"> &nbsp;<b>Time:</b> '+fmtTime(v.date)+'</span></span>'+
       patBarcode(p)+
     '</div>'+
@@ -8630,15 +9406,19 @@ function regPaneFilled(rk){
   });
   return n;
 }
+const REG_SUB_ICONS = ['🧑','📜','🔬','🩻','🗓','🦴','🧵','💉','💊','⚠️','🔁','🦵'];
 function regBuildRail(){
   const rail=$('regFRail'); if(!rail) return;
-  let html='';
+  let html='', n=0;
   REG_SCHEMA.forEach(function(sec,si){
     html+='<div class="regf-grp">'+esc(sec.name)+'</div>';
     sec.subs.forEach(function(sub,bi){
       const rk=si+'-'+bi;
-      html+='<button type="button" class="regf-cat'+(regRailCur===rk?' on':'')+'" data-rk="'+rk+'" onclick="regRailPick(\''+rk+'\')">'+
-        '<span class="rc-tx">'+esc(sub.name)+'</span><span class="rc-tick" data-tick="'+rk+'">·</span></button>';
+      html+='<button type="button" class="fr-tile regf-cat'+(regRailCur===rk?' on':'')+'" data-tint="'+(n%8)+'" data-rk="'+rk+'" onclick="regRailPick(\''+rk+'\')">'+
+        '<span class="frt-ic">'+(REG_SUB_ICONS[n%REG_SUB_ICONS.length])+'</span>'+
+        '<span class="frt-tx"><b>'+esc(sub.name)+'</b><span>'+esc(sec.name)+'</span></span>'+
+        '<span class="frt-tick rc-tick" data-tick="'+rk+'"></span></button>';
+      n++;
     });
   });
   rail.innerHTML=html;
@@ -8646,9 +9426,7 @@ function regBuildRail(){
 }
 function regRailTicks(){
   document.querySelectorAll('#regFRail .rc-tick').forEach(function(el){
-    const n=regPaneFilled(el.dataset.tick);
-    el.textContent = n? '✓' : '·';
-    el.classList.toggle('done', n>0);
+    el.classList.toggle('done', regPaneFilled(el.dataset.tick) > 0);
   });
 }
 function regRailTicksSoon(){ clearTimeout(window.__regTick); window.__regTick=setTimeout(regRailTicks, 250); }
@@ -10236,7 +11014,7 @@ function lostFollowups(minDays){
   const cutoff=localISO(new Date(Date.now()-minDays*86400000));
   const out=[];
   const seen=new Set();
-  (db.visits||[]).filter(v=>v.followUpDate && !v.fuDone && v.followUpDate<=cutoff && v.patientId)
+  (db.visits||[]).concat(dischargeFuEntries()).filter(v=>v.followUpDate && !v.fuDone && v.followUpDate<=cutoff && v.patientId)
     .sort((a,b)=>String(b.followUpDate).localeCompare(String(a.followUpDate)))
     .forEach(v=>{
       if(seen.has(v.patientId)) return;
@@ -10253,10 +11031,13 @@ function lostFollowups(minDays){
     });
   return out;
 }
+function lostList(){
+  const sel=$('lostWindow');
+  return lostFollowups(parseInt(sel&&sel.value,10)||14);
+}
 function renderLost(){
   const sel=$('lostWindow'); if(!sel) return;
-  const days=parseInt(sel.value,10)||14;
-  const list=lostFollowups(days);
+  const list=lostList();
   $('lostCount').textContent=list.length;
   $('lostEmpty').style.display=list.length?'none':'block';
   const today=new Date(localISO()+'T12:00:00');
@@ -10274,6 +11055,7 @@ function renderLost(){
       '<td><button class="btn btn-ghost btn-sm" onclick="waRemind(\''+v.id+'\')" title="WhatsApp them">📤</button> '+
       '<button class="btn btn-ghost btn-sm" onclick="fuDone(\''+v.id+'\')" title="Stop chasing this one">✓ Close</button></td></tr>';
   }).join('');
+  if(typeof railTicks==='function' && RAILS['pat']) try{ railTicks('pat'); }catch(e){}
 }
 
 /* ==================== DRAG TO REORDER ====================
@@ -10382,8 +11164,10 @@ function fuLoadClass(total){
   const cap=fuDayCap();
   return total>=cap ? 'l2' : total>=Math.ceil(cap*0.6) ? 'l1' : 'l0';
 }
-function openFuCal(){
-  const cur=$('cFuDate') && $('cFuDate').value;
+let fuCalTarget = 'cFuDate';
+function openFuCal(which){
+  fuCalTarget = (which==='ds') ? 'dsFuDate' : 'cFuDate';
+  const cur=$(fuCalTarget) && $(fuCalTarget).value;
   const base=cur ? new Date(cur+'T12:00:00') : new Date();
   fuCalMonth=new Date(base.getFullYear(), base.getMonth(), 1);
   let m=$('fuCalModal');
@@ -10411,7 +11195,7 @@ function renderFuCal(){
   const y=fuCalMonth.getFullYear(), mo=fuCalMonth.getMonth();
   const first=new Date(y,mo,1), days=new Date(y,mo+1,0).getDate();
   const lead=first.getDay();                       // 0 = Sunday
-  const today=localISO(), sel=($('cFuDate')||{}).value||'';
+  const today=localISO(), sel=($(fuCalTarget)||{}).value||'';
   const MON=['January','February','March','April','May','June','July',
              'August','September','October','November','December'];
   let g='';
@@ -10451,7 +11235,7 @@ function renderFuCal(){
     '</div>';
 }
 function fuCalPick(iso){
-  const el=$('cFuDate'); if(el){ el.value=iso; el.dataset.auto=''; 
+  const el=$(fuCalTarget); if(el){ el.value=iso; el.dataset.auto=''; 
     el.dispatchEvent(new Event('change',{bubbles:true})); }
   closeFuCal();
   if(iso){
@@ -10492,6 +11276,12 @@ const DRAFT_FORMS={
       $('cPlan').value=f.plan||''; $('cProc').value=f.proc||'';
       $('cNextTests').value=f.nextTests||''; $('cFollowUp').value=f.followUp||'';
       $('cFuDate').value=f.followUpDate||''; $('cFee').value=f.fee||'';
+      if(typeof fuBoxSet==='function') fuBoxSet(!f.fuOff, true);
+      if(typeof cnicPrintSet==='function') cnicPrintSet(f.printCnic);
+      if($('pCnic')) $('pCnic').value = p.cnic||'';
+      if(typeof hxPaint==='function') hxPaint('pMedHx');
+      if(typeof renderRxQrSelect==='function') renderRxQrSelect();
+      if($('cQrSel')) $('cQrSel').value = (f.qrId!=null ? f.qrId : (db.settings.defQrId||''));
       $('rxBody').innerHTML=''; (f.meds||[]).forEach(m=>addRxRow(m));
       if(typeof updateRxCount==='function') updateRxCount();
       editingVisitId = (d.editing && db.visits.some(v=>v.id===d.editing)) ? d.editing : null;
@@ -10504,8 +11294,8 @@ const DRAFT_FORMS={
     tab:'discharge', label:'discharge summary', icon:'🏥',
     read(){ return {f:collectDsForm(), editing:editingDsId}; },
     filled(d){ const f=d.f||{}, c=f.dc||{};
-      return !!(f.name||c.diagnosis||c.clinical||c.findings||c.proc||c.course||c.condition||c.instr||c.fu||
-                (c.medsArr&&c.medsArr.length)); },
+      return !!(f.name||c.diagnosis||c.clinical||c.findings||c.proc||c.opFindings||c.course||c.invest||
+                c.condition||c.instr||c.fu||(c.medsArr&&c.medsArr.length)); },
     describe(d){ const f=d.f||{}, c=f.dc||{};
       return [f.name||'(no name yet)', c.diagnosis||c.proc||''].filter(Boolean).join(' · '); },
     write(d){
@@ -10515,17 +11305,25 @@ const DRAFT_FORMS={
       editingDsId=(d.editing && db.documents.some(x=>x.id===d.editing)) ? d.editing : null;
       $('dsDate').value=f.date||localISO(); $('dsName').value=f.name||'';
       $('dsAge').value=f.age||''; $('dsSex').value=f.sex||''; $('dsMrn').value=f.mrn||'';
+      if($('dsClinicNo')) $('dsClinicNo').value=f.clinicNo||'';
+      if($('dsCnic')) $('dsCnic').value=f.cnic||'';
+      if(typeof cnicPrintSet==='function') cnicPrintSet(f.printCnic);
       $('dcAdmit').value=c.admit||''; $('dcDischarge').value=c.discharge||'';
       $('dcDiagnosis').value=c.diagnosis||''; $('dcClinical').value=c.clinical||'';
       $('dcFindings').value=c.findings||''; $('dcMedHx').value=c.medHx||'';
       $('dcSurgHx').value=c.surgHx||''; $('dcAllergies').value=c.allergies||'';
-      $('dcProc').value=c.proc||''; $('dcCourse').value=c.course||'';
+      $('dcProc').value=c.proc||''; if($('dcOpFindings')) $('dcOpFindings').value=c.opFindings||'';
+      $('dcCourse').value=c.course||''; if($('dcInvest')) $('dcInvest').value=c.invest||'';
       $('dcImplant').value=c.implant||''; $('dcImplantCo').value=c.implantCo||'';
       $('dcCondition').value=c.condition||''; $('dcConditionUr').value=c.conditionUr||'';
       $('dcInstr').value=c.instr||''; $('dcFu').value=c.fu||'';
+      if($('dsFuDate')) $('dsFuDate').value=c.fuDate||'';
+      if(typeof dsFuBoxSet==='function'){ dsFuBoxSet(!c.fuOff, true); dsRenderFuChips(); }
+      if(typeof hxPaint==='function') hxPaint('dcMedHx');
       if(typeof renderRxQrSelect==='function') renderRxQrSelect();
-      if($('dsQrSel')) $('dsQrSel').value = f.qrId||'';
+      if($('dsQrSel')) $('dsQrSel').value = (f.qrId!=null ? f.qrId : (db.settings.defQrId||''));
       $('dsRxBody').innerHTML=''; (c.medsArr||[]).forEach(m=>addRxRow(m,'dsRxBody'));
+      if(typeof dsRxRefresh==='function'){ dsRxRefresh(); dsFavRender(); dsRefreshTplSelect(); dsRepeatBtnRefresh(); }
       $('dsFormTitle').textContent = editingDsId ? 'Edit discharge summary' : 'New discharge summary';
     }
   },
@@ -10978,7 +11776,7 @@ function phShow(el){
   if(!phItems.length) return phHide();
   phTarget=el; phIdx=-1;
   const pop=phEnsurePanel();
-  pop.innerHTML='<div class="ph-hd">Your usual wording — <span class="kbd">\u2193</span> pick, <span class="kbd">Tab</span> take the first</div>'+
+  pop.innerHTML='<div class="ph-hd">Your usual wording — <span class="kbd">\u2193</span> pick, <span class="kbd">Enter</span> insert, <span class="kbd">Esc</span> close &nbsp;(Tab just moves on)</div>'+
     phItems.map((it,ix)=>'<div class="ph-it" data-ix="'+ix+'" onmousedown="event.preventDefault();phPick('+ix+')">'+
       '<span class="ph-t">'+esc(it.t)+'</span>'+(it.n>1?'<span class="ph-n">'+it.n+'\u00d7</span>':'')+'</div>').join('');
   const r=el.getBoundingClientRect();
@@ -11013,7 +11811,9 @@ document.addEventListener('keydown', e=>{
   if(e.target!==phTarget) return;
   if(e.key==='ArrowDown'){ e.preventDefault(); phIdx=Math.min(phItems.length-1, phIdx+1); phHi(); }
   else if(e.key==='ArrowUp'){ e.preventDefault(); phIdx=Math.max(-1, phIdx-1); phHi(); }
-  else if(e.key==='Tab'){ e.preventDefault(); phPick(phIdx>=0?phIdx:0); }
+  /* Tab is for moving to the next box — never for accepting a suggestion.
+     Just dismiss the panel and let the browser move the focus. */
+  else if(e.key==='Tab'){ phHide(); }
   else if(e.key==='Enter' && phIdx>=0){ e.preventDefault(); phPick(phIdx); }
   else if(e.key==='Escape'){ phHide(); }
 }, true);
@@ -11100,9 +11900,9 @@ function favMeds(){ return db.settings.favMeds=db.settings.favMeds||[]; }
 function favTpls(){ return db.settings.favTpls=db.settings.favTpls||[]; }
 function isFavMed(id){ return favMeds().includes(id); }
 function isFavTpl(id){ return favTpls().includes(id); }
-function toggleFavMed(id){ const a=favMeds(); const i=a.indexOf(id); if(i<0) a.push(id); else a.splice(i,1); db.settings.favMedsAt=new Date().toISOString(); persist(); renderFavBar(); if(typeof renderMedList==='function') renderMedList();
+function toggleFavMed(id){ const a=favMeds(); const i=a.indexOf(id); if(i<0) a.push(id); else a.splice(i,1); db.settings.favMedsAt=new Date().toISOString(); persist(); renderFavBar(); if(typeof dsFavRender==='function') dsFavRender(); if(typeof renderMedList==='function') renderMedList();
   if(typeof syncPushFavs==='function' && navigator.onLine){ clearTimeout(window.__favPush); window.__favPush=setTimeout(()=>syncPushFavs().catch(()=>{}),1200); } }
-function toggleFavTpl(id){ const a=favTpls(); const i=a.indexOf(id); if(i<0) a.push(id); else a.splice(i,1); db.settings.favMedsAt=new Date().toISOString(); persist(); renderFavBar(); if(typeof renderTplList==='function') renderTplList();
+function toggleFavTpl(id){ const a=favTpls(); const i=a.indexOf(id); if(i<0) a.push(id); else a.splice(i,1); db.settings.favMedsAt=new Date().toISOString(); persist(); renderFavBar(); if(typeof dsFavRender==='function') dsFavRender(); if(typeof renderTplList==='function') renderTplList();
   if(typeof syncPushFavs==='function' && navigator.onLine){ clearTimeout(window.__favPush); window.__favPush=setTimeout(()=>syncPushFavs().catch(()=>{}),1200); } }
 function renderFavBar(){
   const bar=$('favBar'); if(!bar) return;
@@ -11921,6 +12721,9 @@ if(typeof wrapTablesForMobile==='function') wrapTablesForMobile();
 if(typeof mSetTitle==='function') mSetTitle();
 if(typeof renderFavBar==='function') renderFavBar();
 if(typeof renderRxQrSelect==='function') renderRxQrSelect();
+try{ railsInit(); }catch(e){}
+try{ hxInit('pMedHx'); hxInit('dcMedHx'); }catch(e){}
+try{ if(typeof dsFavRender==='function') dsFavRender(); if(typeof dsRefreshTplSelect==='function') dsRefreshTplSelect(); }catch(e){}
 if(db.settings.sync && db.settings.sync.auto && db.settings.sync.url){ setTimeout(()=>{ try{ startAutoSync(); }catch(e){} }, 1500); }
 if(db.qrcodes && !db.qrcodes.length){ db.qrcodes=qrSeed(); persist(); }
 if(db.leaflets && !db.leaflets.length){ db.leaflets=leafSeed(); persist(); }
