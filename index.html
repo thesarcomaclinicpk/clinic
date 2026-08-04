@@ -18,22 +18,27 @@
   --field:#ffffff; --field-bd:#d5dee8; --hover:#f8fbfc; --th:#7a8a9c; --row-bd:#f0f4f8;
   --ch-accent:#0891b2; --ch-grid:#eef2f6; --ch-axis:#cbd5e1; --ch-label:#64748b; --ch-val:#334155;
   --teal:#0e7490; --teal-dark:#0b5468; --teal-deep:#0a3d4d; --teal-light:#e8f7fa;
+  /* --teal-dark doubles as a TEXT colour, so dark mode flips it to a pale tint. Anything
+     that paints it as a BACKGROUND under white text must use --teal-grad instead, which
+     stays dark in both themes — otherwise the white text lands on a near-white fill. */
+  --teal-grad:#0b5468;
+  --hero1:#0e7490; --hero2:#0b5468; --hero3:#0a3d4d;
   --ink:#1c2b36; --muted:#64748b; --line:#e4eaf0; --bg:#f4f7f9;
   --card:#ffffff; --danger:#dc2626; --green:#0f9d6a; --amber:#d97706;
   --side-w:230px;
 }
 /* accent color themes (Settings → Clinic preferences) */
-html[data-accent="navy"]{--teal:#2957c8;--teal-dark:#1e3f96;--teal-deep:#152a63;--teal-light:#e9effd;--ch-accent:#3b6ee0}
+html[data-accent="navy"]{--teal:#2957c8;--teal-dark:#1e3f96;--teal-grad:#1e3f96;--teal-deep:#152a63;--teal-light:#e9effd;--ch-accent:#3b6ee0}
 html[data-accent="navy"] #side{background:linear-gradient(180deg,#152a63 0%,#1c3a85 60%,#20439a 100%)}
 html[data-accent="navy"] .home-hero{background:linear-gradient(118deg,#2957c8 0%,#1e3f96 52%,#14224e 100%)}
 html[data-accent="navy"] .lock-side{background:linear-gradient(160deg,#2957c8 0%,#1e3f96 55%,#14224e 100%)}
 html[data-accent="navy"] #rxTimer{background:linear-gradient(135deg,#2957c8,#1e3f96)}
-html[data-accent="maroon"]{--teal:#a8324a;--teal-dark:#7d2439;--teal-deep:#571726;--teal-light:#fdeef1;--ch-accent:#c2415c}
+html[data-accent="maroon"]{--teal:#a8324a;--teal-dark:#7d2439;--teal-grad:#7d2439;--teal-deep:#571726;--teal-light:#fdeef1;--ch-accent:#c2415c}
 html[data-accent="maroon"] #side{background:linear-gradient(180deg,#571726 0%,#6e1e30 60%,#7d2439 100%)}
 html[data-accent="maroon"] .home-hero{background:linear-gradient(118deg,#a8324a 0%,#7d2439 52%,#3d0f1a 100%)}
 html[data-accent="maroon"] .lock-side{background:linear-gradient(160deg,#a8324a 0%,#7d2439 55%,#3d0f1a 100%)}
 html[data-accent="maroon"] #rxTimer{background:linear-gradient(135deg,#a8324a,#7d2439)}
-html[data-accent="forest"]{--teal:#1e7d4f;--teal-dark:#14563a;--teal-deep:#0c3a26;--teal-light:#e9f9f0;--ch-accent:#26995f}
+html[data-accent="forest"]{--teal:#1e7d4f;--teal-dark:#14563a;--teal-grad:#14563a;--teal-deep:#0c3a26;--teal-light:#e9f9f0;--ch-accent:#26995f}
 html[data-accent="forest"] #side{background:linear-gradient(180deg,#0c3a26 0%,#125137 60%,#155e40 100%)}
 html[data-accent="forest"] .home-hero{background:linear-gradient(118deg,#1e7d4f 0%,#14563a 52%,#092b1d 100%)}
 html[data-accent="forest"] .lock-side{background:linear-gradient(160deg,#1e7d4f 0%,#14563a 55%,#092b1d 100%)}
@@ -42,6 +47,7 @@ html[data-theme="dark"]{
   --field:#101b26; --field-bd:#2b3d4f; --hover:#152331; --th:#7e93a8; --row-bd:#1d2c3a;
   --ch-grid:#1c2b39; --ch-axis:#33475a; --ch-label:#7e93a8; --ch-val:#c3d3e0;
   --teal:#1997bd; --teal-dark:#bfe9f4; --teal-deep:#0a3d4d; --teal-light:#0d2a34;
+  --teal-grad:#0c4c60; --hero1:#116075; --hero2:#0c4557; --hero3:#082f3c;
   --ink:#dbe7f0; --muted:#8fa4b8; --line:#233545; --bg:#0b141d;
   --card:#121e2a; --danger:#f87171; --green:#22b581; --amber:#f0a04b;
 }
@@ -190,7 +196,7 @@ section.tab.active{display:block;animation:fadeIn .26s cubic-bezier(.3,.7,.4,1)}
   padding:20px 22px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05)}
 .card h2{font-size:13px;color:#3d5a68;margin-bottom:14px;display:flex;
   align-items:center;gap:9px;text-transform:uppercase;letter-spacing:.9px;font-weight:700}
-.card h2 .step{position:relative;background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:#fff;border-radius:50%;
+.card h2 .step{position:relative;background:linear-gradient(135deg,var(--teal),var(--teal-grad));color:#fff;border-radius:50%;
   width:23px;height:23px;flex:none;display:inline-flex;align-items:center;justify-content:center;
   font-size:12px;letter-spacing:0;box-shadow:0 1px 3px rgba(14,116,144,.35);transition:background .3s ease}
 .card.fs-complete h2 .step{background:linear-gradient(135deg,#16a34a,#15803d);color:transparent;animation:stepPop .38s cubic-bezier(.3,.8,.4,1)}
@@ -314,7 +320,7 @@ html[data-theme="dark"] .allergy-ok{color:#6ad78f}
 .lock-wrap{display:flex;border-radius:22px;overflow:hidden;box-shadow:0 26px 70px rgba(15,23,42,.28);
   max-height:94vh;animation:lockIn .4s cubic-bezier(.3,.8,.4,1) both}
 @keyframes lockIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
-.lock-side{width:295px;background:linear-gradient(160deg,var(--teal) 0%,var(--teal-dark) 55%,#14313e 100%);
+.lock-side{width:295px;background:linear-gradient(160deg,var(--teal) 0%,var(--teal-grad) 55%,#14313e 100%);
   color:#fff;padding:44px 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;flex:none}
 .lk-logo{width:86px!important;height:86px!important;font-size:44px!important;border-radius:24px!important;
@@ -348,7 +354,7 @@ html[data-theme="dark"] .fl-field input:focus{border-color:#38bdf8;box-shadow:in
 html[data-theme="dark"] .fl-field input:focus + label{color:#38bdf8}
 /* remembered-account welcome */
 #liWho{margin-bottom:14px}
-.li-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:#fff;
+.li-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-grad));color:#fff;
   font-size:22px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
 .li-name{font-weight:600;font-size:15px}
 .li-sub{font-size:12px;color:var(--muted);margin-top:2px}
@@ -375,7 +381,7 @@ body[data-role="staff"] #ng-practice{display:none!important}
 #qNavCount.hidden{display:none}
 /* ---------- Home / landing ---------- */
 .home-hero{position:relative;overflow:hidden;
-  background:linear-gradient(120deg,var(--teal) 0%,var(--teal-dark) 55%,var(--teal-deep) 100%);
+  background:linear-gradient(120deg,var(--hero1) 0%,var(--hero2) 55%,var(--hero3) 100%);
   border-radius:22px;color:#fff;padding:34px 40px;margin-bottom:20px;
   display:flex;align-items:center;justify-content:space-between;gap:24px;
   box-shadow:0 18px 44px rgba(10,95,122,.34)}
@@ -387,9 +393,9 @@ body[data-role="staff"] #ng-practice{display:none!important}
 .hh-left{position:relative;z-index:1}
 .hh-greet{font-size:29px;font-weight:800;letter-spacing:-.5px;text-shadow:0 1px 10px rgba(0,0,0,.12)}
 .hh-date{opacity:.92;font-size:14px;margin-top:7px;font-weight:500}
-.hh-clinic{opacity:.72;font-size:11.5px;margin-top:15px;letter-spacing:.7px;text-transform:uppercase;font-weight:600}
+.hh-clinic{opacity:.82;font-size:11.5px;margin-top:15px;letter-spacing:.7px;text-transform:uppercase;font-weight:600}
 .hh-soc{margin-top:17px;display:flex;gap:9px;flex-wrap:wrap}
-.hh-soc a{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;
+.hh-soc a{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:999px;
   padding:6px 15px;font-size:12px;font-weight:600;text-decoration:none;backdrop-filter:blur(6px);
   transition:transform .14s, background .14s, color .14s}
 .hh-soc a:hover{transform:translateY(-2px);background:#fff;color:var(--teal-deep)}
@@ -445,21 +451,31 @@ html[data-theme="dark"] .vid-card{background:#121e2a;border-color:#233545}
 .pp-fit{font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:20px;white-space:nowrap}
 .pp-fit.ok{background:rgba(34,197,94,.16);color:#86efac}
 .pp-fit.over{background:rgba(245,158,11,.18);color:#fcd34d}
-.pp-scroll{flex:1;overflow:auto;padding:26px 0 40px;display:flex;justify-content:center}
+/* The sheets are laid out at real millimetre size and then ZOOMED, not transform-scaled.
+   A transform leaves the untouched layout box behind, so the scroll area reserved the full
+   unscaled height (a lake of empty space under the paper) and centring an over-wide sheet
+   clipped its left edge with no way to scroll back to it. zoom reflows, so the scroller
+   sees the real on-screen size and `margin:auto` centres without ever cutting anything off. */
+.pp-scroll{flex:1;overflow:auto;padding:22px 0 34px}
 .pp-sheet{width:210mm;min-height:297mm;display:flex;flex-direction:column;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.55);
-  transform:scale(.78);transform-origin:top center;border-radius:3px;flex:none;
+  border-radius:3px;flex:none;margin:0 auto;zoom:var(--ppz,.78);
   animation:ppIn .3s ease both}
 /* the self-paginated preview: real sheets, with the pre-printed zones hatched behind them */
-.pp-sheet:has(.pp-page){background:transparent;box-shadow:none;min-height:0;gap:20px}
-.pp-page{position:relative;flex:none;border-radius:3px;overflow:hidden;
+.pp-sheet:has(.pp-page){background:transparent;box-shadow:none;min-height:0;gap:26px;width:210mm}
+.pp-page{position:relative;flex:none;width:210mm;border-radius:3px;overflow:hidden;
   box-shadow:0 18px 60px rgba(0,0,0,.55);background:#fff}
 .pp-page .rx-sheetpage{position:relative;z-index:1;background:transparent}
+.pp-cap{flex:none;text-align:center;font-size:13px;font-weight:600;color:#8fb0c2;letter-spacing:.4px;margin:0 0 -14px}
 .pp-hatch{position:absolute;left:0;right:0;z-index:0;display:flex;align-items:center;justify-content:center;
   background:repeating-linear-gradient(-45deg,#f2f7f9 0 10px,#e9f2f5 10px 20px)}
-.pp-hatch-top{top:0}
-.pp-hatch-bot{bottom:0}
+.pp-hatch-top{top:0;border-bottom:1px dashed #b9cdd6}
+.pp-hatch-bot{bottom:0;border-top:1px dashed #b9cdd6}
 .pp-hatch span{font-size:12px;color:#7a97a5;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
-@keyframes ppIn{from{opacity:0;transform:scale(.74) translateY(12px)}to{opacity:1;transform:scale(.78) translateY(0)}}
+.pp-zoom{display:flex;align-items:center;gap:2px;background:#243444;border:1px solid #3a5065;border-radius:8px;padding:2px}
+.pp-zoom button{background:none;border:0;color:#cfe3ee;font-size:15px;line-height:1;padding:5px 9px;border-radius:6px;cursor:pointer}
+.pp-zoom button:hover{background:#31465b}
+.pp-zoom .pp-zval{font-size:12px;color:#9fb8c8;min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
+@keyframes ppIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .pp-sheet .rx-page{padding:0!important}
 .pp-body{flex:1 0 auto;box-sizing:border-box}
 .pp-margin{flex:none}
@@ -467,7 +483,7 @@ html[data-theme="dark"] .vid-card{background:#121e2a;border-color:#233545}
   display:flex;align-items:center;justify-content:center;border-bottom:1px dashed #b9cdd6}
 .pp-margin span{font-size:12px;color:#7a97a5;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
 /* ---------- consultation timer ---------- */
-#rxTimer{position:fixed;right:24px;bottom:22px;z-index:90;background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+#rxTimer{position:fixed;right:24px;bottom:22px;z-index:90;background:linear-gradient(135deg,var(--teal),var(--teal-grad));
   color:#fff;border-radius:999px;padding:10px 18px;font-size:15px;font-weight:700;letter-spacing:.5px;
   box-shadow:0 8px 22px rgba(10,95,122,.4);display:flex;align-items:center;gap:8px;cursor:default;user-select:none}
 #rxTimer.hidden{display:none}
@@ -777,6 +793,37 @@ tr.reg-rowsel{background:var(--teal-tint,rgba(20,140,140,.08))}
 .ro-badge{background:#fff7ed;border:1px solid #fed7aa;color:#9a5b00;border-radius:10px;padding:9px 13px;margin-bottom:14px;font-size:13px}
 body.dark .ro-badge, body[data-theme=dark] .ro-badge{background:rgba(154,91,0,.16);border-color:rgba(254,215,170,.35);color:#f6c88a}
 .viewonly .btn-green,.viewonly .btn-danger,.viewonly [data-edit-only]{display:none!important}
+/* ---- approvals, pinned to the top of the one bell ----
+   They used to scroll away under a day's worth of saves and edits. Now they sit in a sticky
+   block at the head of the panel: the activity list scrolls underneath them and they never
+   leave the screen while anything is waiting. Amber, so the panel reads at a glance as
+   "something needs you" rather than "here is what happened". */
+.notif-pin{background:#fff7ed;border-bottom:2px solid #f0a04b;
+  box-shadow:0 6px 14px rgba(180,83,9,.13)}
+html[data-theme="dark"] .notif-pin{background:#2a1c08;border-bottom-color:#7a5a1c}
+.notif-pin .np-h{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:8px;
+  padding:9px 13px 8px;font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;
+  color:#b45309;background:inherit}
+html[data-theme="dark"] .notif-pin .np-h{color:#fbbf24}
+.notif-pin .np-h .np-n{background:#ea580c;color:#fff;border-radius:999px;padding:1px 8px;
+  font-size:10.5px;letter-spacing:.2px}
+.notif-pin .np-h .np-pin{margin-left:auto;font-weight:600;letter-spacing:0;text-transform:none;
+  font-size:10.5px;opacity:.8}
+.notif-pin .notif-sec{background:transparent;color:#b45309;padding-top:4px}
+html[data-theme="dark"] .notif-pin .notif-sec{color:#fbbf24}
+.notif-pin .notif-item{background:transparent;border-bottom-color:rgba(240,160,75,.35)}
+.notif-pin .notif-item:last-child{border-bottom:none}
+.notif-pin .np-mine{opacity:.85}
+.na-chip{background:#ea580c;color:#fff;border-radius:999px;padding:2px 10px;font-size:11px;
+  font-weight:800;letter-spacing:.3px;margin-left:9px;white-space:nowrap}
+/* the bell itself turns amber while something is waiting on you */
+#notifBtn.has-appr,#mBell.has-appr{color:#b45309}
+#notifBtn.has-appr{border-color:#f0a04b;background:#fff7ed}
+html[data-theme="dark"] #notifBtn.has-appr{background:#2a1c08;color:#fbbf24;border-color:#7a5a1c}
+#mBell.has-appr{color:#fde68a}
+.notif-badge.appr{background:#ea580c;animation:apprPulse 1.9s ease-in-out infinite}
+@keyframes apprPulse{0%,100%{box-shadow:0 0 0 0 rgba(234,88,12,.55)}55%{box-shadow:0 0 0 6px rgba(234,88,12,0)}}
+@media (prefers-reduced-motion:reduce){.notif-badge.appr{animation:none}}
 /* notifications bell */
 #notifBtn{position:fixed;top:14px;right:18px;z-index:57;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);
   background:var(--card);color:var(--ink);font-size:19px;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center}
@@ -873,7 +920,7 @@ html[data-theme="dark"] .ph-hd{background:#16242f}
 .fr-nav .frn-b .frn-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fr-nav .frn-b .frn-ar{font-size:15px;line-height:1;flex:none;opacity:.7}
 .fr-nav .frn-next{border-color:var(--teal);background:var(--teal);color:#fff}
-.fr-nav .frn-next:hover:not(:disabled){background:var(--teal-dark);color:#fff;border-color:var(--teal-dark)}
+.fr-nav .frn-next:hover:not(:disabled){background:var(--teal-grad);color:#fff;border-color:var(--teal-grad)}
 .fr-nav .frn-mid{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:90px}
 .fr-nav .frn-dots{display:flex;gap:6px}
 .fr-nav .frn-dot{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;transition:.15s;padding:0;border:none}
@@ -883,6 +930,252 @@ html[data-theme="dark"] .ph-hd{background:#16242f}
 .fr-nav .frn-kbd kbd{font:inherit;background:var(--hover,#eef3f6);border:1px solid var(--line);
   border-radius:5px;padding:1px 5px;margin:0 1px}
 @media(max-width:600px){ .fr-nav .frn-kbd{display:none} .fr-nav .frn-b{max-width:42%} }
+/* ================= PHONE: form section picker (a sticky bar + a full-screen grid) =================
+   On a desktop the rail is a column you can always see. Squeezed onto a phone it became a
+   horizontal strip of half-cut tiles with the descriptions dropped — you could not tell where
+   you were or how much was left. So on a phone the rail is replaced by one compact bar that
+   always says where you are, opens the whole set as colour cards when tapped, and lets you
+   swipe straight through the form without going near a menu.                                */
+.pr-bar{display:none}
+.pr-sheet{display:none}
+@media(max-width:900px){
+  .fr-wrap:not(.fr-full) .fr-rail{display:none}
+  .regf-wrap:not(.regf-full) .regf-rail{display:none}
+  .fr-wrap:not(.fr-full), .regf-wrap:not(.regf-full){grid-template-columns:1fr}
+  .pr-bar{display:block;position:sticky;top:0;z-index:9;background:var(--card);
+    border:1px solid var(--line);border-radius:14px;padding:9px 12px 10px;margin:0 0 12px;
+    cursor:pointer;box-shadow:0 3px 14px rgba(0,0,0,.07);
+    border-left:5px solid var(--tile-ac,var(--teal))}
+  .pr-bar:active{transform:scale(.995)}
+  .pr-t{display:flex;align-items:center;gap:10px}
+  .pr-ic{width:32px;height:32px;flex:none;border-radius:10px;background:var(--tile-ic,var(--teal-light));
+    display:flex;align-items:center;justify-content:center;font-size:16px}
+  .pr-n{flex:1;min-width:0;line-height:1.3}
+  .pr-n b{display:block;font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pr-n span{display:block;font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pr-c{flex:none;font-size:11.5px;font-weight:800;color:var(--muted);white-space:nowrap}
+  .pr-v{flex:none;font-size:12px;color:var(--muted)}
+  .pr-prog{display:flex;gap:3px;margin-top:9px}
+  .pr-prog i{flex:1;height:4px;border-radius:2px;background:var(--line);transition:.2s}
+  .pr-prog i.done{background:var(--green,#16a34a)}
+  .pr-prog i.cur{background:var(--tile-ac,var(--teal))}
+  .pr-swipe{text-align:center;font-size:11px;color:#a9b7c3;padding:2px 0 0}
+  /* the full-screen picker */
+  .pr-sheet{display:block;position:fixed;inset:0;z-index:210;visibility:hidden}
+  .pr-sheet.open{visibility:visible}
+  .pr-scrim{position:absolute;inset:0;background:rgba(6,20,28,.5);opacity:0;transition:opacity .22s}
+  .pr-sheet.open .pr-scrim{opacity:1}
+  .pr-card{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:22px 22px 0 0;
+    padding:8px 13px calc(20px + env(safe-area-inset-bottom));max-height:82%;overflow:auto;
+    transform:translateY(100%);transition:transform .26s cubic-bezier(.3,1.05,.4,1);
+    box-shadow:0 -12px 40px rgba(0,0,0,.32)}
+  .pr-sheet.open .pr-card{transform:none}
+  .pr-grab{width:40px;height:4px;border-radius:3px;background:#cbd5e1;margin:5px auto 12px}
+  .pr-h{display:flex;align-items:center;justify-content:space-between;margin:0 2px 11px}
+  .pr-h b{font-size:15px}
+  .pr-h button{background:none;border:0;font-size:20px;color:var(--muted);cursor:pointer;padding:0 6px;width:auto}
+  .pr-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .pr-grid .fr-tile{flex-direction:column;align-items:flex-start;gap:7px;padding:12px 11px;width:100%;min-width:0}
+  .pr-grid .fr-tile .frt-tx span{display:block!important}
+  .pr-grid .fr-tile .frt-tick{position:absolute;top:8px;right:9px}
+  .pr-gh{grid-column:1/-1;font-size:10.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+    color:var(--muted);margin:8px 2px 0}
+  /* the walk bar at the foot of the form gets thumb-sized */
+  .fr-nav{position:sticky;bottom:0;z-index:8;box-shadow:0 -3px 14px rgba(0,0,0,.07);flex-wrap:nowrap}
+  /* the dots are the picker bar's job on a phone — nineteen of them overflowed the screen
+     and shoved the whole form sideways */
+  .fr-nav .frn-dots{display:none}
+  .fr-nav .frn-mid{min-width:0;flex:0 1 auto}
+  .fr-nav .frn-b{flex:1 1 0;max-width:none;justify-content:center}
+  .fr-nav .frn-b .frn-t{max-width:100%}
+  .fr-nav .frn-b{padding:11px 14px;max-width:40%}
+  .fr-nav .frn-dot{width:9px;height:9px}
+  .fr-nav .frn-dot.on{width:22px}
+}
+@media(max-width:768px){
+  .pr-bar{top:calc(54px + env(safe-area-inset-top))}
+  .fr-nav{bottom:calc(60px + env(safe-area-inset-bottom))}
+}
+
+/* ================= PHONE: bottom tab bar + a drawer built for a thumb ================= */
+#mTabBar{display:none}
+.nsub{display:none}
+.nlab{display:contents}
+.nlab,.nsub{font-style:normal}   /* both are <i> elements, used only as hooks */
+@media(max-width:768px){
+  #mTabBar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:57;height:calc(58px + env(safe-area-inset-bottom));
+    padding-bottom:env(safe-area-inset-bottom);background:var(--card);border-top:1px solid var(--line);
+    box-shadow:0 -2px 14px rgba(0,0,0,.08)}
+  #mTabBar button{flex:1;background:none;border:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:3px;font-size:10px;font-weight:700;color:#93a5b4;cursor:pointer;
+    position:relative;padding:0;min-width:0;font-family:inherit}
+  #mTabBar button .mt-i{width:22px;height:22px;display:block}
+  #mTabBar button .mt-i svg{width:22px;height:22px}
+  #mTabBar button .mt-l{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+  #mTabBar button.on{color:var(--teal)}
+  #mTabBar button.on::before{content:"";position:absolute;top:0;left:26%;right:26%;height:3px;
+    border-radius:0 0 3px 3px;background:var(--teal)}
+  #mTabBar button:active{background:var(--hover)}
+  #mTabBar .mt-b{position:absolute;top:4px;right:22%;background:#e11d48;color:#fff;font-size:9px;
+    font-weight:800;border-radius:999px;padding:0 4px;min-width:15px;line-height:15px;text-align:center}
+  main{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
+  #rxTimer{bottom:calc(72px + env(safe-area-inset-bottom))}
+  .mic-btn{bottom:calc(72px + env(safe-area-inset-bottom))}
+  /* --- the drawer, rebuilt as colour tiles --- */
+  #side .mnav-search{margin:0 3px 12px}
+  #side .mnav-search input{width:100%;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.17);
+    color:#eaf8fc;border-radius:11px;padding:11px 13px;font-size:15px!important}
+  #side .mnav-search input::placeholder{color:#8fc0d0}
+  /* the same trap as .fr-tile: #side nav is a flex column, so without flex:0 0 auto the
+     tiles squash themselves to fit instead of letting the drawer scroll, and the second
+     line of every one of them is clipped. */
+  #side nav button[data-tab]{align-items:center!important;gap:11px;flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.13);
+    background:rgba(255,255,255,.07);border-radius:13px;padding:11px 12px!important;margin-bottom:7px;
+    position:relative;overflow:hidden;min-height:52px}
+  #side nav .nav-group{flex:0 0 auto}
+  #side nav{padding-bottom:8px}
+  /* the label and its count sit on ONE row; the subtitle goes underneath */
+  #side nav button[data-tab] .nlab{display:flex;align-items:center;gap:7px;min-width:0;
+    font-size:13.6px;font-weight:600;line-height:1.25}
+  #side nav button[data-tab] .nlab > span{flex:none}
+  #side nav button[data-tab] #qNavCount{width:auto;padding:1px 7px;font-size:10.5px;border-radius:999px}
+  #side nav button[data-tab]::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--mt-ac,#0d9488);opacity:.9}
+  #side nav button[data-tab].active{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3)}
+  #side nav button[data-tab] svg{width:19px;height:19px;flex:none;margin-left:2px}
+  #side nav button[data-tab] > span{display:flex!important;flex-direction:column;min-width:0;flex:1;line-height:1.3}
+  #side nav button[data-tab] .nsub{display:block;font-size:10.8px;color:#9fd0de;font-weight:400;margin-top:1px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #side .nav-gh{padding:11px 10px 7px}
+  #side .nav-gh span{font-size:11px}
+  #side .nav-sub{margin-left:0;padding-left:0;border-left:0}
+  #side nav button[data-tab].mnav-hide{display:none!important}
+  #side .nav-group.mnav-hide{display:none!important}
+  /* --- the More sheet --- */
+  #mMore{position:fixed;inset:0;z-index:212;visibility:hidden}
+  #mMore.open{visibility:visible}
+  #mMore .pr-scrim{position:absolute;inset:0;background:rgba(6,20,28,.5);opacity:0;transition:opacity .22s}
+  #mMore.open .pr-scrim{opacity:1}
+  #mMore .pr-card{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:22px 22px 0 0;
+    padding:8px 13px calc(18px + env(safe-area-inset-bottom));max-height:86%;overflow:auto;
+    transform:translateY(100%);transition:transform .26s cubic-bezier(.3,1.05,.4,1)}
+  #mMore.open .pr-card{transform:none}
+  .mm-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+  .mm-grid button{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 5px 11px;
+    display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10.5px;font-weight:700;
+    color:var(--ink);cursor:pointer;font-family:inherit;line-height:1.25;text-align:center;
+    position:relative;overflow:hidden;min-width:0}
+  .mm-grid button::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--mt-ac,var(--teal))}
+  .mm-grid button svg{width:22px;height:22px;color:var(--mt-ac,var(--teal))}
+  .mm-grid button span{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  .mm-cap{font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);
+    margin:15px 2px 8px}
+  .mm-cap:first-child{margin-top:2px}
+}
+/* the picker for which four live in the bar */
+.mb-pick{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.mb-pick .chip.on{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700}
+/* ================= CASE FILES: staged images & documents per registry case ================= */
+.cf-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.cf-top .cf-ttl{font-weight:700;font-size:14px;flex:1;min-width:120px}
+.cf-drive{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:12px;
+  padding:9px 12px;background:var(--card);margin-bottom:13px;font-size:12.5px;flex-wrap:wrap}
+.cf-drive .cd-dot{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex:none}
+.cf-drive.on .cd-dot{background:var(--green,#16a34a);box-shadow:0 0 0 3px rgba(22,181,129,.18)}
+.cf-drive.warn{border-color:#f0a04b;background:rgba(240,160,75,.07)}
+.cf-drive .cd-tx{flex:1;min-width:150px;line-height:1.5;color:var(--muted)}
+.cf-drive .cd-tx b{color:var(--ink)}
+.cf-stage{border:1px solid var(--line);border-radius:14px;background:var(--card);margin-bottom:11px;overflow:hidden;
+  position:relative}
+.cf-stage::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tile-ac,var(--teal));opacity:.5}
+.cf-stage.open::before{opacity:1;width:5px}
+.cf-sh{display:flex;align-items:center;gap:11px;width:100%;background:none;border:0;cursor:pointer;
+  padding:12px 13px 12px 16px;text-align:left;font-family:inherit;color:var(--ink)}
+.cf-stage.open .cf-sh{background:var(--tile-bg,var(--teal-light))}
+.cf-sh .cs-ic{width:32px;height:32px;flex:none;border-radius:10px;background:var(--tile-ic,var(--teal-light));
+  display:flex;align-items:center;justify-content:center;font-size:16px}
+.cf-sh .cs-tx{flex:1;min-width:0;line-height:1.3}
+.cf-sh .cs-tx b{display:block;font-size:13.5px;font-weight:700}
+.cf-sh .cs-tx span{display:block;font-size:11.3px;color:var(--muted);margin-top:2px}
+.cf-sh .cs-n{flex:none;font-size:11.5px;font-weight:800;border-radius:999px;padding:2px 9px;
+  background:var(--tile-ic,var(--teal-light));color:var(--tile-ac,var(--teal-dark))}
+.cf-sh .cs-n.zero{background:transparent;color:#b6c4d0}
+.cf-sh .cs-v{flex:none;font-size:12px;color:var(--muted);transition:transform .22s}
+.cf-stage.open .cf-sh .cs-v{transform:rotate(180deg)}
+.cf-body{display:none;padding:4px 13px 14px 16px;border-top:1px solid var(--line)}
+.cf-stage.open .cf-body{display:block}
+.cf-acts{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 4px}
+.cf-drop{border:1.5px dashed var(--line);border-radius:12px;padding:16px 12px;text-align:center;
+  color:var(--muted);font-size:12.5px;cursor:pointer;transition:.15s;margin-top:9px}
+.cf-drop:hover,.cf-drop.hot{border-color:var(--teal);background:var(--teal-light);color:var(--teal-dark);border-style:solid}
+/* one attached file */
+.cf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:10px;margin-top:11px}
+.cf-it{position:relative;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--bg);
+  cursor:pointer;transition:.15s}
+.cf-it:hover{border-color:var(--teal);transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.10)}
+.cf-it .ci-img{width:100%;height:92px;object-fit:cover;display:block;background:#e8eef3}
+.cf-it .ci-doc{height:92px;display:flex;align-items:center;justify-content:center;font-size:30px;background:var(--hover)}
+.cf-it .ci-m{padding:6px 8px 7px;line-height:1.35}
+.cf-it .ci-m b{display:block;font-size:11px;font-weight:600;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cf-it .ci-m span{display:block;font-size:10px;color:var(--muted);margin-top:1px}
+.cf-it .ci-rm{position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;border:none;
+  background:rgba(15,25,33,.62);color:#fff;font-size:12px;line-height:1;cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;opacity:0;transition:.15s}
+.cf-it:hover .ci-rm{opacity:1}
+.cf-it .ci-up{position:absolute;top:5px;left:5px;border-radius:999px;font-size:9.5px;font-weight:800;
+  padding:2px 7px;letter-spacing:.3px;text-transform:uppercase}
+.ci-up.done{background:rgba(22,163,74,.92);color:#fff}
+.ci-up.pend{background:rgba(217,119,6,.92);color:#fff}
+.ci-up.err{background:rgba(220,38,38,.92);color:#fff}
+.ci-up.off{background:rgba(100,116,139,.85);color:#fff}
+.cf-empty{font-size:12.5px;color:var(--muted);padding:6px 2px 2px}
+.cf-save{font-size:11.5px;color:var(--muted);margin-top:8px}
+/* compression readout */
+.cf-cmp{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--green,#16a34a);
+  background:rgba(22,163,74,.10);border-radius:999px;padding:3px 10px;margin-top:9px}
+/* ---- follow-up folders & the timeline ---- */
+.fuf-new{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:13px;margin-bottom:13px}
+.fuf-new h4{margin:0 0 9px;font-size:13px;font-weight:700}
+.fuf-lab{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px}
+.fuf-lab .chip.on{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700}
+.fuf-row{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end}
+.fuf-row .field{flex:1;min-width:130px;margin:0}
+/* the timeline */
+.tl{position:relative;margin:4px 0 0;padding-left:26px}
+.tl::before{content:"";position:absolute;left:8px;top:6px;bottom:10px;width:2px;border-radius:2px;
+  background:linear-gradient(180deg,var(--teal),var(--line))}
+.tl-it{position:relative;margin-bottom:13px}
+.tl-it::before{content:"";position:absolute;left:-22px;top:15px;width:11px;height:11px;border-radius:50%;
+  background:var(--card);border:2.5px solid var(--teal);box-shadow:0 0 0 3px var(--bg)}
+.tl-it.last::before{background:var(--teal)}
+.tl-card{border:1px solid var(--line);border-radius:13px;background:var(--card);overflow:hidden;transition:.15s}
+.tl-card:hover{border-color:var(--teal);box-shadow:0 6px 18px rgba(0,0,0,.07)}
+.tl-h{display:flex;align-items:center;gap:9px;padding:10px 12px;flex-wrap:wrap}
+.tl-h .tl-lab{background:var(--teal);color:#fff;border-radius:999px;padding:3px 12px;font-size:12px;
+  font-weight:800;letter-spacing:.3px;flex:none}
+.tl-h .tl-dt{font-size:12px;color:var(--muted);flex:1;min-width:80px}
+.tl-h .tl-n{font-size:11px;color:var(--muted);flex:none}
+.tl-h .tl-x{flex:none}
+.tl-note{padding:0 12px 11px;font-size:13px;line-height:1.6;color:var(--ink);white-space:pre-wrap}
+.tl-note:empty{display:none}
+.tl-note.ph{color:#a9b7c3;font-style:italic}
+.tl-thumbs{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 11px}
+.tl-thumbs img{width:52px;height:40px;object-fit:cover;border-radius:7px;border:1px solid var(--line);cursor:pointer}
+.tl-thumbs .more{width:52px;height:40px;border-radius:7px;border:1px dashed var(--line);display:flex;
+  align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted)}
+.tl-foot{display:flex;gap:7px;flex-wrap:wrap;padding:0 12px 12px}
+html[data-theme="dark"] .cf-it{background:#101b26}
+html[data-theme="dark"] .cf-it .ci-img{background:#182634}
+@media(max-width:768px){
+  .cf-drive{padding:10px}
+  .cf-drive .cd-tx{flex:1 0 100%;margin-bottom:2px}
+  .cf-drive .btn{flex:1 1 auto;justify-content:center}
+  .cf-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}
+  .tl{padding-left:22px}
+  .fuf-row .field{min-width:100%}
+}
 /* ---- shared date filter bar ---- */
 /* ---- drug interaction panel (on screen only, never printed) ---- */
 .ix-wrap{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
@@ -1136,9 +1429,21 @@ html[data-theme="dark"] .set-prof:hover{background:#16242f}
 .btn.btn-warnish{border-color:#f59e0b;color:#b45309;background:#fffbeb}
 html[data-theme="dark"] .btn.btn-warnish{background:#2a2010;color:#fcd34d;border-color:#6b5220}
 html[data-theme="dark"] .ph-n{background:#1b2b38}
-#notifPanel{position:fixed;top:62px;right:18px;z-index:120;width:min(380px,92vw);max-height:72vh;overflow:auto;background:var(--card);
+/* The panel is a flex column, not one long scroller: the header and the pinned approvals
+   are fixed panes and only the activity list scrolls. Sticky positioning nearly worked, but
+   the header scrolled away with it — and the point of pinning is that the things needing a
+   decision are on screen whatever you do. */
+#notifPanel{position:fixed;top:62px;right:18px;z-index:120;width:min(380px,92vw);max-height:72vh;
+  display:flex;flex-direction:column;overflow:hidden;background:var(--card);
   border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.3)}
-.notif-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card)}
+.notif-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
+  border-bottom:1px solid var(--line);background:var(--card);flex:none}
+/* flex:0 0 auto, not 0 1 auto — otherwise the activity list below claims the space and the
+   pinned pane shrinks under its own content, cutting the Approve buttons off. It grows to fit
+   what is waiting, up to half the panel, and only then scrolls inside itself. */
+#notifPin{flex:0 0 auto;overflow:auto;max-height:52%}
+#notifPin:empty{display:none}
+#notifBody{flex:1 1 auto;overflow:auto;min-height:80px}
 .notif-item{padding:10px 14px;border-bottom:1px solid var(--row-bd);font-size:13px;display:flex;gap:10px;align-items:flex-start}
 .notif-item .ni-ic{font-size:16px;flex:none}
 .notif-item .ni-tx{flex:1}
@@ -1148,7 +1453,8 @@ html[data-theme="dark"] .ph-n{background:#1b2b38}
 .notif-item.notif-undone{opacity:.62}
 .notif-item.notif-undone .ni-tx b{text-decoration:line-through}
 .notif-sec{padding:8px 14px 2px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
-@media(max-width:768px){ #notifBtn{display:none} #notifPanel{top:calc(56px + env(safe-area-inset-top));right:8px} }
+@media(max-width:768px){ #notifBtn{display:none}
+  #notifPanel{top:calc(56px + env(safe-area-inset-top));right:8px;left:8px;width:auto} }
 @media(min-width:769px){ #mBell{display:none} }
 .online-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;vertical-align:middle;box-shadow:0 0 0 2px rgba(34,197,94,.25)}
 .hsync{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:13px}
@@ -1576,7 +1882,7 @@ html[data-theme="dark"] .ne-group{background:#0f2530}
 
 /* ================= MOBILE (drawer + responsive) ================= */
 #mtopbar{display:none;position:fixed;top:0;left:0;right:0;height:52px;z-index:58;
-  background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:#fff;align-items:center;gap:12px;padding:0 12px;
+  background:linear-gradient(135deg,var(--teal),var(--teal-grad));color:#fff;align-items:center;gap:12px;padding:0 12px;
   box-shadow:0 2px 10px rgba(0,0,0,.22)}
 /* full-screen PWA: clear the notch / status bar area */
 @media(max-width:768px){
@@ -1765,7 +2071,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 </div>
 <button id="notifBtn" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="notifBadge">0</span></button>
 <div id="notifPanel" class="hidden">
-  <div class="notif-head"><b>Notifications</b><div><button class="btn btn-ghost btn-sm" onclick="markNotifRead()">Mark all read</button><button class="btn btn-ghost btn-sm" id="notifClearAll" onclick="clearAllNotifications()" title="Empty the whole panel">🗑 Clear all</button><button class="btn btn-ghost btn-sm" onclick="toggleNotif()">✕</button></div></div>
+  <div class="notif-head"><b>Notifications</b><span id="notifApprChip" class="hidden"></span><div><button class="btn btn-ghost btn-sm" onclick="markNotifRead()">Mark all read</button><button class="btn btn-ghost btn-sm" id="notifClearAll" onclick="clearAllNotifications()" title="Empty the whole panel">🗑 Clear all</button><button class="btn btn-ghost btn-sm" onclick="toggleNotif()">✕</button></div></div>
+  <div id="notifPin"></div>
   <div id="notifBody"></div>
 </div>
 <main>
@@ -3236,6 +3543,12 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <p class="muted small mt">Text size lives on the left-hand bar (<b>A−</b> / <b>A+</b>). Press <b>Tab</b> at the top of any page for a “skip to the main content” link.</p>
   </div>
 
+  <div class="card" data-set="app">
+    <h2>📱 The bar at the bottom of your phone</h2>
+    <p class="muted small" style="margin-top:-4px">Four places you can reach with your thumb, without opening any menu. Tap to choose which four — the newest choice replaces the oldest. Everything else stays one tap away under <b>More</b>. This only shows on a phone.</p>
+    <div class="mb-pick" id="mbPick"></div>
+    <p class="muted small" id="mbCount" style="margin-top:9px"></p>
+  </div>
   <div class="card" data-set="app" id="pwaCard">
     <h2>📱 Install as an app</h2>
     <p class="muted small" style="margin-top:-4px">Puts the clinic on your home screen. It opens full-screen (no browser bars) and keeps working with no internet — nothing else to set up.</p>
@@ -3459,6 +3772,64 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div><div class="reg-subhead" style="display:flex;justify-content:space-between;align-items:center">Recent changes <button class="btn btn-ghost btn-sm" style="padding:1px 10px;font-size:11px" onclick="clearActivity()">Clear</button></div><div id="activityLogBody" class="small"></div></div>
     </div>
   </div>
+  <!-- ===== Google Drive ===== -->
+  <div class="card" data-set="gdrive">
+    <h2>🗂 Google Drive — where the full-resolution files live</h2>
+    <p class="muted small" style="margin-top:-4px">Every image you attach to a tumour registry case is kept here in a compressed copy so the app stays fast, while the <b>untouched original</b> is uploaded to your Drive. “View complete record” opens that case's folder. The app is only ever given access to folders and files it created itself — it cannot see the rest of your Drive.</p>
+    <div id="gdStatus" style="margin:12px 0"></div>
+    <div class="grid g2">
+      <div class="field"><label>Google OAuth client ID</label>
+        <input type="text" id="gdClientId" data-norail="1" placeholder="123456789-abcdef.apps.googleusercontent.com" autocomplete="off" spellcheck="false"></div>
+      <div class="field"><label>Top-level folder name in your Drive</label>
+        <input type="text" id="gdRootName" data-norail="1" placeholder="Clinic Case Files"></div>
+    </div>
+    <div class="btn-bar" style="margin-top:6px">
+      <button class="btn" onclick="gdSaveSettings()">💾 Save Drive settings</button>
+      <button class="btn btn-ghost btn-sm" onclick="gdRunQueue()">↻ Upload anything waiting</button>
+      <button class="btn btn-ghost btn-sm" onclick="gdHelp()">❔ How do I get a client ID?</button>
+    </div>
+    <div class="cf-drive" style="margin-top:14px;display:block">
+      <b style="color:var(--ink)">Where a file actually ends up</b>
+      <div style="margin-top:7px;line-height:1.75">
+        <b>1 · The original, full resolution</b> → your <b>Google&nbsp;Drive</b>, in this case's folder.
+        Until it gets there it waits in this browser and is marked <i>Queued</i>; once Drive confirms it,
+        the local copy of the original is deleted.<br>
+        <b>2 · A compressed copy + thumbnail</b> → this <b>device only</b>, in the browser's own store,
+        so the record opens instantly and works offline. These are <b>not</b> uploaded to Supabase and
+        <b>not</b> synced — on your other devices the app shows a Drive placeholder and opens the original.<br>
+        <b>3 · The index</b> — file names, sizes, dates, your follow-up notes and the Drive links →
+        the registry entry itself, which <b>does</b> sync through <b>Supabase</b> to your other devices.
+      </div>
+      <div style="margin-top:8px;color:var(--muted)">So: Supabase carries the paperwork, Drive carries the pictures,
+      this device keeps a fast copy. <b>If Drive is not set up, nothing leaves this device</b> — the originals
+      simply stay here, which is why the badge says <i>Local</i>.</div>
+    </div>
+    <p class="muted small" style="margin-top:10px">Folders are made for you, once per case:<br>
+      <code style="font-size:11.5px">Clinic Case Files / 2601010001 — Ahmed Khan / 01 Pre-op docs · 02 Pre-op planning · 03 Intra-op · 04 Post-op · 05 Histopathology · 06 Follow-up / 8-52</code></p>
+  </div>
+
+  <!-- ===== Image quality ===== -->
+  <div class="card" data-set="gdrive">
+    <h2>📷 Image compression</h2>
+    <p class="muted small" style="margin-top:-4px">A phone photograph arrives at 3–8&nbsp;MB. The copy kept on this device is shrunk so a hundred cases still open instantly and sync quickly; the original is what goes to Drive. <b>Plain films are detected automatically</b> and treated more gently than clinical photographs, because JPEG throws away exactly the faint grey detail a fracture line lives in.</p>
+    <div class="grid g2" style="margin-top:12px">
+      <div class="field"><label>Clinical photos — longest side <span class="muted" id="cqDimV"></span></label>
+        <input type="range" id="cqDim" data-norail="1" min="800" max="4000" step="100" oninput="cmpPreview()"></div>
+      <div class="field"><label>Clinical photos — quality <span class="muted" id="cqQV"></span></label>
+        <input type="range" id="cqQ" data-norail="1" min="50" max="98" step="1" oninput="cmpPreview()"></div>
+      <div class="field"><label>Radiographs — longest side <span class="muted" id="cqXdimV"></span></label>
+        <input type="range" id="cqXdim" data-norail="1" min="800" max="4000" step="100" oninput="cmpPreview()"></div>
+      <div class="field"><label>Radiographs — quality <span class="muted" id="cqXqV"></span></label>
+        <input type="range" id="cqXq" data-norail="1" min="50" max="98" step="1" oninput="cmpPreview()"></div>
+    </div>
+    <div class="btn-bar" style="align-items:center">
+      <span class="swx" id="cqGentleWrap"><input type="checkbox" id="cqGentle" data-norail="1" onchange="cmpSave()"><label for="cqGentle" style="margin:0;font-size:12.5px">Detect radiographs automatically</label></span>
+      <button class="btn btn-sm" onclick="cmpSave()">💾 Save</button>
+      <button class="btn btn-ghost btn-sm" onclick="cmpReset()">↺ Back to the defaults</button>
+      <button class="btn btn-ghost btn-sm" onclick="cmpTry()">🧪 Try it on an image</button>
+    </div>
+    <div id="cqOut" class="muted small" style="margin-top:10px"></div>
+  </div>
   <div class="card" data-set="data">
     <h2>💾 Storage space</h2>
     <p class="muted small" style="margin-bottom:12px">How much of this device’s local storage your records are using. X-ray images don’t count here — they’re kept in a separate large store. When this gets high, export a backup and archive old years, or ask me to upgrade the storage.</p>
@@ -3515,11 +3886,18 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   <div class="pp-tools">
     <span class="pp-title">Print preview — exactly as it lands on the page</span>
     <span class="pp-fit" id="ppFit"></span>
+    <span class="pp-zoom">
+      <button onclick="ppZoomBy(-1)" title="Zoom out">−</button>
+      <span class="pp-zval" id="ppZVal">78%</span>
+      <button onclick="ppZoomBy(1)" title="Zoom in">+</button>
+      <button onclick="ppZoomFit()" title="Fit the whole sheet on screen" style="font-size:12px;padding:5px 8px">Fit</button>
+      <button onclick="ppZoomSet(1)" title="Actual printed size" style="font-size:12px;padding:5px 8px">100%</button>
+    </span>
     <button class="btn btn-ghost btn-sm" onclick="showPrintSetup()" style="background:#243444;color:#cfe3ee;border-color:#3a5065" title="Seeing the file path or page title on the paper? Fix it here">⚙ Printer setup</button>
     <button class="btn btn-green" onclick="closePrintPreview();window.print()">🖨 Print now</button>
     <button class="btn btn-ghost" onclick="closePrintPreview()" style="background:#243444;color:#cfe3ee;border-color:#3a5065">✕ Close</button>
   </div>
-  <div class="pp-scroll"><div class="pp-sheet" id="ppSheet"></div></div>
+  <div class="pp-scroll" id="ppScroll"><div class="pp-sheet" id="ppSheet"></div></div>
 </div>
 <div id="vPlayer" class="hidden" onclick="if(event.target===this) closeVideo()">
   <button class="iv-btn iv-close" onclick="closeVideo()">✕</button>
@@ -4028,7 +4406,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 39;
+const SEED_VERSION = 40;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -4194,6 +4572,14 @@ function migrateDB(){
   if(!db.mdt) db.mdt=[];
   if(!db.mdtMeetings) db.mdtMeetings=[];
   try{ navAddOncology(); }catch(e){}
+  /* Drive reconnects silently when access was already granted in this browser, then works
+     through anything that queued while the app was closed. */
+  setTimeout(function(){ try{ if(typeof gdConfigured==='function' && gdConfigured() && gdSecureOrigin()) gdRunQueue(); }catch(e){} }, 2500);
+  // v40: registry case files, Google Drive and image compression
+  if(!db.settings.gdrive) db.settings.gdrive={clientId:'', rootName:'Clinic Case Files'};
+  if(!db.settings.imgQual) db.settings.imgQual={};
+  if(!db.settings.fuLabels) db.settings.fuLabels=[];
+  (db.registry||[]).forEach(function(r){ if(r && r.cf){ if(!Array.isArray(r.cf.fu)) r.cf.fu=[]; } });
   // v24: cloud sync config
   if(!db.settings.sync) db.settings.sync={url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false};
   if(!db.settings.sync.knownIds) db.settings.sync.knownIds={};
@@ -4482,6 +4868,8 @@ function showTab(name, isRefresh){
     document.querySelectorAll('.nav-group').forEach(g=>{ if(g.querySelector('button[data-tab="'+name+'"]')) g.classList.add('open'); });
   }
   document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id==='tab-'+name));
+  if(typeof renderMBar==='function') try{ renderMBar(); }catch(e){}
+  if(typeof mMoreClose==='function') mMoreClose();
   if(name==='home') renderHome();
   if(name==='appts'){ renderAppts(); renderReminders(); }
   if(name==='videos') renderVideos();
@@ -5045,6 +5433,7 @@ function railApply(key){
   if(b) b.classList.toggle('active', full);
   railTicks(key);
   railNavRender(key);
+  if(typeof prRender==='function') prRender(key);
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
 }
 /* ---- the three rails this app ships with ---- */
@@ -7267,8 +7656,10 @@ function showPrintPreview(){
     /* Prescriptions paginate themselves, so the preview is simply the real sheets — each
        page box already carries the margins. The hatched strips only mark where the
        pre-printed letterhead and footer sit; they are not part of the layout. */
-    $('ppSheet').innerHTML = Array.prototype.map.call(boxes, function(b){
-      return '<div class="pp-page">'+
+    const n = boxes.length;
+    $('ppSheet').innerHTML = Array.prototype.map.call(boxes, function(b, i){
+      return (n>1 ? '<div class="pp-cap">Sheet '+(i+1)+' of '+n+'</div>' : '')+
+        '<div class="pp-page">'+
         '<div class="pp-hatch pp-hatch-top" style="height:'+topMm+'mm">'+
           (padMode?'<span>Your pre-printed letterhead sits here</span>':'')+'</div>'+
         '<div class="pp-hatch pp-hatch-bot" style="height:'+botMm+'mm">'+
@@ -7290,9 +7681,47 @@ function showPrintPreview(){
       : '⚠ Needs '+n+' sheets — shorten it, or load '+n+' letterhead sheets';
   }
   $('printPreview').classList.remove('hidden');
+  $('ppScroll').scrollTop = 0;
+  ppZoomFit();
+}
+/* ---- preview zoom ----
+   The sheets are built at true millimetre size; the zoom is what makes a 297 mm page
+   readable in a browser window. It defaults to whatever fits the window, so the doctor
+   always opens on a whole sheet rather than a corner of one. */
+let ppZ = 0.78;
+const PP_STEPS = [.35,.45,.55,.65,.78,.9,1,1.25,1.5];
+function ppZoomSet(z){
+  ppZ = Math.min(2, Math.max(.25, z));
+  const sh = $('ppSheet'); if(sh) sh.style.setProperty('--ppz', ppZ);
+  const v = $('ppZVal'); if(v) v.textContent = Math.round(ppZ*100)+'%';
+}
+function ppZoomBy(dir){
+  let i = PP_STEPS.findIndex(s=>s > ppZ + .001);
+  if(dir < 0){ i = PP_STEPS.filter(s=>s < ppZ - .001).length - 1; }
+  i = Math.min(PP_STEPS.length-1, Math.max(0, i));
+  ppZoomSet(PP_STEPS[i]);
+}
+function ppZoomFit(){
+  const sc = $('ppScroll'); if(!sc) return ppZoomSet(.78);
+  const MM = 96/25.4;
+  const pages = $('ppSheet').querySelectorAll('.pp-page').length || 1;
+  const capH = pages > 1 ? 26 : 0;                       // the "Sheet n of m" caption line
+  const availW = sc.clientWidth  - 56;
+  const availH = sc.clientHeight - 56;
+  const z = Math.min(availW / (210*MM), availH / (297*MM + capH));
+  ppZoomSet(Math.min(1, Math.max(.25, Math.floor(z*100)/100)));
 }
 function closePrintPreview(){ $('printPreview').classList.add('hidden'); }
-document.addEventListener('keydown', e=>{ if(e.key==='Escape' && $('printPreview') && !$('printPreview').classList.contains('hidden')) closePrintPreview(); });
+addEventListener('resize', ()=>{ const p=$('printPreview');
+  if(p && !p.classList.contains('hidden')) ppZoomFit(); });
+document.addEventListener('keydown', e=>{
+  const p = $('printPreview');
+  if(!p || p.classList.contains('hidden')) return;
+  if(e.key==='Escape'){ closePrintPreview(); return; }
+  if(e.key==='+' || e.key==='='){ e.preventDefault(); ppZoomBy(1); }
+  else if(e.key==='-' || e.key==='_'){ e.preventDefault(); ppZoomBy(-1); }
+  else if(e.key==='0'){ e.preventDefault(); ppZoomFit(); }
+});
 
 /* ================= PATIENTS TAB ================= */
 let currentPatientId = null;
@@ -7755,6 +8184,7 @@ const SET_CATS = [
   {k:'templates', ic:'📋', t:'Templates & library', s:'Prescription, notes and instruction libraries'},
   {k:'team',      ic:'👥', t:'Users & access',     s:'Staff accounts, permissions, who signed in'},
   {k:'data',      ic:'💾', t:'Storage & backup',   s:'Space used, export, import, reset'},
+  {k:'gdrive',    ic:'🗂', t:'Google Drive & images', s:'Full-resolution originals, folders, compression'},
   {k:'app',       ic:'⚙️', t:'App preferences',    s:'Theme, text size, shortcuts, install as an app'}
 ];
 let setCatCur = 'clinic';
@@ -7823,6 +8253,9 @@ function setSearchRun(){
 function renderSettingsShell(){
   renderSetRail();
   setCat(setCatCur);
+  if(typeof renderGdSetting==='function') renderGdSetting();
+  if(typeof renderCmpSetting==='function') renderCmpSetting();
+  if(typeof renderMBarPick==='function') renderMBarPick();
 }
 /* ---- follow-up: pick WHEN with the week buttons, then WHAT for ----
    The wording is kept in the exact shapes the Urdu translator understands, so the
@@ -8236,12 +8669,20 @@ function renderHome(){
   animateCounts($('homeTiles'));
   $('haQueueSub').textContent = waiting ? (waiting+' waiting — next token '+((db.queue||[]).filter(q=>q.date===today&&q.status==='waiting').sort((a,b)=>a.token-b.token)[0]||{}).token) : 'Add arrivals, call by token';
   $('haPtSub').textContent = db.patients.length ? (db.patients.length+' records — search & history') : 'Search records & history';
-  // pending account approvals (admin only)
-  const pend = db.users.filter(u=>u.status==='pending');
-  $('homeApproval').innerHTML = (pend.length && currentUser && currentUser.role==='admin')
-    ? '<div class="home-approve"><span>🔔</span><span style="flex:1"><b>'+pend.length+' new account'+(pend.length>1?'s':'')+'</b> waiting for your approval: '+esc(pend.map(u=>u.name).join(', '))+'</span>'+
-      '<button class="btn btn-primary btn-sm" onclick="showTab(\'settings\')">Review</button></div>'
-    : '';
+  /* Everything waiting on the doctor, in one banner, opening the approvals bell — accounts
+     and registry changes together, so neither can be the one that gets forgotten. */
+  const nAppr = (typeof apprCount==='function') ? apprCount() : 0;
+  if(nAppr){
+    const d = apprData();
+    const bits = [];
+    if(d.access.length)  bits.push('<b>'+d.access.length+' new account'+(d.access.length>1?'s':'')+'</b> ('+esc(d.access.map(u=>u.name).join(', '))+')');
+    if(d.changes.length) bits.push('<b>'+d.changes.length+' registry change'+(d.changes.length>1?'s':'')+'</b>');
+    $('homeApproval').innerHTML = '<div class="home-approve"><span>\u2705</span>'+
+      '<span style="flex:1">'+bits.join(' and ')+' waiting for your approval.</span>'+
+      '<button class="btn btn-primary btn-sm" onclick="toggleNotif(event)">Review</button></div>';
+  } else {
+    $('homeApproval').innerHTML = '';
+  }
   // follow-ups due (top 6)
   const fuRows = fuDue.slice(0,6).map(v=>{
     const p = db.patients.find(x=>x.id===v.patientId)||{};
@@ -9522,8 +9963,11 @@ function docPaginate(pa, box, compact){
   };
 
   let pageNo = 1, cur = first;
+  /* colH() below measures from the TOP of the sheet, so the heading block that is already
+     inside it is part of every measurement — the room must not subtract it a second time or
+     page 1 gives away a whole heading's worth of space and stops short of the footer. */
   const roomFor = (pageNo, sh)=>{
-    const base = usablePx - sh.offsetHeight - pgnoPx - safePx;
+    const base = usablePx - pgnoPx - safePx;
     return Math.max(40, base - (pageNo===1 && bandH ? bandH + safePx : 0));
   };
   pour(first.sh, roomFor(1, first.sh));
@@ -9544,7 +9988,7 @@ function docPaginate(pa, box, compact){
     const n = document.createElement('div');
     n.className = 'rx-pgno';
     n.textContent = 'Page '+(i+1)+' of '+pages.length;
-    n.style.cssText = 'position:absolute;left:'+box.side+'mm;bottom:'+(box.bot+2)+'mm';
+    n.style.cssText = 'position:absolute;left:'+box.side+'mm;bottom:'+(box.bot+RX_SAFE_MM)+'mm';
     pg.appendChild(n);
   });
   const page0 = src.closest('.rx-page') || src;
@@ -9759,7 +10203,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.03-b42';
+const APP_BUILD = '2026.08.04-b46';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -10123,28 +10567,102 @@ function notifData(){
   const unread = acts.filter(a=>!a.read).length;
   return {owner, pending, changes, acts, unread};
 }
-function notifCount(){ const d=notifData(); return d.pending.length + (d.owner?d.changes.length:0) + d.unread; }
-function renderNotif(){
-  const d=notifData(), n=notifCount();
-  ['notifBadge','mBellBadge'].forEach(id=>{ const b=$(id); if(b){ b.textContent=n>99?'99+':String(n); b.classList.toggle('hidden', n===0); } });
-  const body=$('notifBody'); if(!body) return;
-  let h='';
-  if(d.pending.length){
-    h+='<div class="notif-sec">Access requests</div>';
-    d.pending.forEach(u=>{ h+='<div class="notif-item unread"><span class="ni-ic">🙋</span><div class="ni-tx"><b>'+esc(u.name)+'</b> is requesting access'+
-      '<div class="ni-sub">'+esc(u.email||u.uid||'')+(u.requestedAt?' · '+timeAgo(u.requestedAt):'')+'</div>'+
-      '<div class="btn-bar" style="margin-top:6px"><button class="btn btn-green btn-sm" onclick="approveUser(\''+u.id+'\')">Approve &amp; set access</button> '+
-      '<button class="btn btn-ghost btn-sm" onclick="denyUser(\''+u.id+'\')">Reject</button></div></div></div>'; });
+/* ==================== APPROVALS — their own bell ====================
+   Approvals used to sit at the top of the activity panel. On a busy day forty edits, saves
+   and deletes pile in underneath and the two things that actually need a decision — somebody
+   waiting for access, a registry change waiting to be let in — scroll away and get missed.
+
+   So they have their own bell now, and the two feeds never mix:
+     🔔  activity   — what happened. Nothing here needs you.
+     ✅  approvals  — what is waiting on YOU. Amber, and it pulses until it is empty.
+
+   Crucially, "Clear all" on the activity panel no longer touches approvals. An approval
+   leaves this list when it is approved or rejected, and at no other time.               */
+function apprData(){
+  const owner = (typeof isOwnerNow === 'function') ? isOwnerNow() : false;
+  const users = (db.users||[]).filter(function(u){ return u.status === 'pending'; });
+  const all   = (typeof pendingList === 'function') ? pendingList() : [];
+  const mine  = all.filter(function(p){ return p.byId === (currentUser && currentUser.id); });
+  return {owner: owner,
+          access: owner ? users : [],
+          changes: owner ? all : [],
+          waiting: owner ? [] : mine};      // a staff member's own, shown for information
+}
+/* the badge counts only what needs a decision FROM YOU */
+function apprCount(){ const d = apprData(); return d.access.length + d.changes.length; }
+function apprWaiting(){ return apprData().waiting.length; }
+
+/* The approvals block that gets pinned to the head of the one bell. It is built here rather
+   than inside renderNotif so it stays a single, self-contained thing — approvals are the part
+   that must never quietly change shape. */
+function apprHTML(){
+  const d = apprData(), n = apprCount(), w = apprWaiting();
+  if(!n && !w) return '';
+  let h = '<div class="notif-pin"><div class="np-h">'+
+    (n ? 'Needs you <span class="np-n">'+n+'</span>' : 'Waiting on the owner')+
+    '<span class="np-pin">\ud83d\udccc pinned</span></div>';
+  if(d.access.length){
+    h += '<div class="notif-sec">Access requests</div>';
+    d.access.forEach(function(u){
+      h += '<div class="notif-item unread"><span class="ni-ic">\ud83d\ude4b</span><div class="ni-tx">'+
+        '<b>'+esc(u.name)+'</b> is requesting access'+
+        '<div class="ni-sub">'+esc(u.email||u.uid||'')+(u.requestedAt?' \u00b7 '+timeAgo(u.requestedAt):'')+'</div>'+
+        '<div class="btn-bar" style="margin-top:6px">'+
+          '<button class="btn btn-green btn-sm" onclick="approveUser(\''+u.id+'\')">Approve &amp; set access</button> '+
+          '<button class="btn btn-ghost btn-sm" onclick="denyUser(\''+u.id+'\')">Reject</button>'+
+        '</div></div></div>';
+    });
   }
   if(d.changes.length){
-    h+='<div class="notif-sec">'+(d.owner?'Registry changes to approve':'Your changes awaiting approval')+'</div>';
-    d.changes.forEach(p=>{ h+='<div class="notif-item unread"><span class="ni-ic">'+(p.op==='edit'?'✏️':'➕')+'</span><div class="ni-tx">'+
-      '<b>'+esc(p.by||'A user')+'</b> wants to '+(p.op==='edit'?'edit':'add')+' registry <b>'+esc(p.label||'')+'</b>'+
-      '<div class="ni-sub">'+timeAgo(p.at)+'</div>'+
-      (d.owner?'<div class="btn-bar" style="margin-top:6px"><button class="btn btn-green btn-sm" onclick="approvePendingChange(\''+p.id+'\')">Approve</button> '+
-        '<button class="btn btn-ghost btn-sm" onclick="rejectPendingChange(\''+p.id+'\')">Reject</button></div>':'<div class="ni-sub">⏳ waiting for the owner</div>')+
-      '</div></div>'; });
+    h += '<div class="notif-sec">Registry changes to approve</div>';
+    d.changes.forEach(function(p){
+      h += '<div class="notif-item unread"><span class="ni-ic">'+(p.op==='edit'?'\u270f\ufe0f':'\u2795')+'</span><div class="ni-tx">'+
+        '<b>'+esc(p.by||'A user')+'</b> wants to '+(p.op==='edit'?'edit':'add')+
+        ' registry <b>'+esc(p.label||'')+'</b>'+
+        '<div class="ni-sub">'+timeAgo(p.at)+'</div>'+
+        '<div class="btn-bar" style="margin-top:6px">'+
+          '<button class="btn btn-green btn-sm" onclick="approvePendingChange(\''+p.id+'\')">Approve</button> '+
+          '<button class="btn btn-ghost btn-sm" onclick="rejectPendingChange(\''+p.id+'\')">Reject</button>'+
+        '</div></div></div>';
+    });
   }
+  if(d.waiting.length){
+    h += '<div class="notif-sec">Your changes, waiting for the owner</div>';
+    d.waiting.forEach(function(p){
+      h += '<div class="notif-item np-mine"><span class="ni-ic">\u23f3</span><div class="ni-tx">'+
+        'You asked to '+(p.op==='edit'?'edit':'add')+' registry <b>'+esc(p.label||'')+'</b>'+
+        '<div class="ni-sub">'+timeAgo(p.at)+' \u00b7 waiting for the clinic owner</div>'+
+      '</div></div>';
+    });
+  }
+  return h + '</div>';
+}
+
+
+/* One bell again. It counts the activity you have not read PLUS anything waiting on you,
+   and while something is waiting it turns amber and pulses — so the bell itself, not just
+   the panel, tells you the difference between "things happened" and "you are holding
+   something up". */
+function notifCount(){ return notifData().unread + apprCount() + apprWaiting(); }
+function renderNotif(){
+  const d=notifData(), n=notifCount(), a=apprCount();
+  ['notifBadge','mBellBadge'].forEach(id=>{ const b=$(id); if(b){
+    b.textContent=n>99?'99+':String(n);
+    b.classList.toggle('hidden', n===0);
+    b.classList.toggle('appr', a>0); } });
+  ['notifBtn','mBell'].forEach(id=>{ const b=$(id); if(b){
+    b.classList.toggle('has-appr', a>0);
+    b.title = a ? (a+' item'+(a===1?'':'s')+' waiting for your approval, pinned to the top')
+                : 'Notifications'; } });
+  const chip=$('notifApprChip');
+  if(chip){ chip.textContent = a ? (a+' need'+(a===1?'s':'')+' you') : '';
+            chip.className = a ? 'na-chip' : 'hidden'; }
+  const body=$('notifBody'); if(!body) return;
+  /* Approvals live in their own fixed pane above the activity list, so the list scrolls
+     underneath them and they cannot be buried under a day's worth of saves and edits —
+     which is exactly how they used to get missed. */
+  const pin = $('notifPin'); if(pin) pin.innerHTML = apprHTML();
+  let h = '';
   if(d.acts.length){
     h+='<div class="notif-sec" style="display:flex;justify-content:space-between;align-items:center">Recent activity <button class="btn btn-ghost btn-sm" style="padding:1px 9px;font-size:11px" onclick="clearActivity()">Clear</button></div>';
     d.acts.slice(0,40).forEach(a=>{ h+='<div class="notif-item'+(a.read?'':' unread')+(a.undone?' notif-undone':'')+'"><span class="ni-ic">'+(a.undone?'\u21a9':actIcon(a.action))+'</span>'+
@@ -10169,23 +10687,23 @@ function markNotifRead(){ (db.activity||[]).forEach(a=>a.read=true); persist(); 
    somebody waiting for access, a registry change waiting for approval — is counted
    and named in the confirmation, so nothing actionable disappears without you
    knowing it did. Records themselves are never touched. */
+/* Empties the ACTIVITY feed. It can no longer sweep away an approval by accident — that
+   was the whole reason approvals were moved out from under it. An approval leaves the
+   approvals bell when it is approved or rejected, and at no other time. */
 async function clearAllNotifications(){
-  const d=notifData();
-  const live = d.pending.length + (d.owner ? d.changes.filter(p=>p.status==='pending'||!p.status).length : 0);
-  let msg='Clear the notifications panel?\n\nThe activity feed will be emptied on this device and across your other devices. Your records are not affected.';
-  if(live) msg += '\n\n\u26a0 '+live+' item'+(live===1?'':'s')+' still need'+(live===1?'s':'')+
-    ' a decision from you (access requests / registry approvals). Press OK to dismiss those too — the requests themselves stay in Settings ▸ Users and in the Registry, so you can still act on them there.';
+  const live = (typeof apprCount==='function') ? apprCount() : 0;
+  let msg='Clear the activity feed?\n\nIt will be emptied on this device and across your other devices. Your records are not affected.';
+  if(live) msg += '\n\n\u2705 '+live+' approval'+(live===1?'':'s')+' will be left alone — they stay on the approvals bell until you approve or reject them.';
   if(!confirm(msg)) return;
   const now=new Date().toISOString();
   db.activity=[]; db.settings.activityClearedAt=now;
-  db.settings.notifDismissedAt=now;                 // hides settled + actionable items from the panel
-  (db.pendingChanges||[]).forEach(p=>{ if(!pendingResolved(p)) p.dismissedAt=now; });
+  db.settings.notifDismissedAt=now;
   persist();
-  renderNotif(); if(typeof renderActivityLog==='function') renderActivityLog();
+  renderNotif();
+  if(typeof renderActivityLog==='function') renderActivityLog();
   if(typeof syncPushActivity==='function') syncPushActivity().catch(()=>{});
-  if(typeof syncPushPending==='function') syncPushPending().catch(()=>{});
-  toast(live? 'Notifications cleared — pending requests are still in Users / Registry'
-            : 'Notifications cleared');
+  toast(live ? 'Activity cleared — '+live+' approval'+(live===1?'':'s')+' still waiting'
+             : 'Activity cleared');
 }
 async function clearActivity(){
   if(!confirm('Clear the recent-activity list? (Records aren’t affected — this only clears the activity feed.)')) return;
@@ -11888,6 +12406,11 @@ function printVisit(v, p, forcePlain){
   setPageStyle(box, paper, false);    // prescriptions paginate themselves
   const pa = $('printArea');
   let asked = false, cancelled = false;
+  /* Capture the preview flag once. It is a global that has to be cleared before the deferred
+     re-layout runs, and layout() used to read it live — so the second pass thought it was a
+     real print job and popped the "needs N sheets" confirm, whose Cancel silently killed the
+     preview that was about to be shown. */
+  const isPreview = printPreviewMode;
 
   /* Everything below is measurement, and measurement is only right once the webfonts are
      loaded — the Nastaliq Urdu face changes every line height. So the pass is a function:
@@ -11906,7 +12429,7 @@ function printVisit(v, p, forcePlain){
       else { pa.innerHTML = sheetHtml; res = rxPaginate(pa, box, paper, false); }
     }
     window.__lastPrintFits = (res.pages <= 1);
-    if(res.pages > 1 && !printPreviewMode && !asked){
+    if(res.pages > 1 && !isPreview && !asked){
       asked = true;
       const ok = confirm('This prescription needs '+res.pages+' sheets.\n\nPress OK to print anyway (load '+res.pages+' letterhead sheets in the printer),\nor Cancel to go back and shorten it.');
       if(!ok) cancelled = true;
@@ -11922,7 +12445,7 @@ function printVisit(v, p, forcePlain){
       document.fonts.ready.then(()=>setTimeout(fn, 40));
     else setTimeout(fn, 60);
   };
-  if(printPreviewMode){
+  if(isPreview){
     printPreviewMode = false;
     whenReady(()=>{ if(!cancelled){ layout(); if(!cancelled) showPrintPreview(); } });
     return;
@@ -11943,7 +12466,7 @@ function printVisit(v, p, forcePlain){
    margins as its own padding, and content is measured into it item by item. The browser is
    only asked to do one thing: start a new sheet after each box. Nothing is positioned
    relative to a fragment, so there is nothing left to drift.                            */
-const RX_SAFE_MM = 5;          // clear air between the printed block and the pre-printed area
+const RX_SAFE_MM = 6;          // clear air between the printed block and the pre-printed area
 function rxPaginate(pa, box, paper, compact){
   const MM = 96/25.4;
   const src = pa.querySelector('.rx-sheet');
@@ -12067,7 +12590,7 @@ function rxPaginate(pa, box, paper, compact){
     const n = document.createElement('div');
     n.className = 'rx-pgno';
     n.textContent = 'Page '+(i+1)+' of '+pages.length;
-    n.style.cssText = 'position:absolute;left:'+box.side+'mm;bottom:'+(box.bot+2)+'mm';
+    n.style.cssText = 'position:absolute;left:'+box.side+'mm;bottom:'+(box.bot+RX_SAFE_MM)+'mm';
     pg.appendChild(n);
   });
   // the old single-flow sheet has been emptied into the pages — drop it
@@ -12202,6 +12725,15 @@ function regBuildForm(){
       panes.appendChild(card);
     });
   });
+  /* Case files and the follow-up timeline are not schema fields — they hold attachments and
+     notes rather than values — so they get their own panes, keyed 'cf' and 'fu'. */
+  ['cf','fu'].forEach(function(k){
+    const card=document.createElement('div');
+    card.className='card regf-pane'; card.dataset.rk=k;
+    card.style.cssText='margin-bottom:16px;padding-top:14px';
+    card.innerHTML='<div id="'+(k==='cf'?'cfPane':'cfFuPane')+'"></div>';
+    panes.appendChild(card);
+  });
   const nav=document.createElement('div');
   nav.className='fr-nav'; nav.id='regFNav';
   panes.appendChild(nav);
@@ -12239,13 +12771,24 @@ function regBuildRail(){
       n++;
     });
   });
+  html+='<div class="regf-grp">Case file</div>'+
+    '<button type="button" class="fr-tile regf-cat'+(regRailCur==='cf'?' on':'')+'" data-tint="6" data-rk="cf" onclick="regRailPick(\'cf\')">'+
+      '<span class="frt-ic">\ud83d\uddc2</span>'+
+      '<span class="frt-tx"><b>Case files</b><span>Images &amp; documents by stage</span></span>'+
+      '<span class="frt-tick rc-tick" data-tick="cf"></span></button>'+
+    '<button type="button" class="fr-tile regf-cat'+(regRailCur==='fu'?' on':'')+'" data-tint="4" data-rk="fu" onclick="regRailPick(\'fu\')">'+
+      '<span class="frt-ic">\ud83d\udcc8</span>'+
+      '<span class="frt-tx"><b>Follow-up notes</b><span>A note &amp; folder per visit</span></span>'+
+      '<span class="frt-tick rc-tick" data-tick="fu"></span></button>';
   rail.innerHTML=html;
   regRailTicks();
 }
 function regRailTicks(){
   document.querySelectorAll('#regFRail .rc-tick').forEach(function(el){
+    if(el.dataset.tick==='cf' || el.dataset.tick==='fu') return;   // counted by cfTicks()
     el.classList.toggle('done', regPaneFilled(el.dataset.tick) > 0);
   });
+  if(typeof cfTicks==='function') cfTicks();
 }
 function regRailTicksSoon(){ clearTimeout(window.__regTick); window.__regTick=setTimeout(regRailTicks, 250); }
 function regRailPick(rk){
@@ -12254,6 +12797,7 @@ function regRailPick(rk){
   document.querySelectorAll('#regFPanes .regf-pane').forEach(function(p){ p.classList.toggle('hidden', p.dataset.rk!==rk); });
   document.querySelectorAll('#regFRail .regf-cat').forEach(function(b){ b.classList.toggle('on', b.dataset.rk===rk); });
   regNavRender();
+  if(typeof prRender==='function') prRender('reg');
   const w=$('regFWrap'); if(w && window.innerWidth<=900) w.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function regFormMode(){ return (db.settings.regFormMode==='full') ? 'full' : 'rail'; }
@@ -12273,10 +12817,13 @@ function regApplyMode(){
   if(b) b.classList.toggle('active', full);
   regRailTicks();
   regNavRender();
+  if(typeof prRender==='function') prRender('reg');
 }
 function regRailKeys(){
   const keys=[], names=[];
   REG_SCHEMA.forEach(function(sec,si){ sec.subs.forEach(function(sub,bi){ keys.push(si+'-'+bi); names.push(sub.name); }); });
+  keys.push('cf'); names.push('Case files');
+  keys.push('fu'); names.push('Follow-up notes');
   return {keys, names};
 }
 function regNavRender(){
@@ -12489,6 +13036,7 @@ function regNew(){
   if(!regFormBuilt) regBuildForm();
   regEditingId=null; regLinkedPatientId=null;
   regFillForm({});
+  cfStart({}); cfRender();
   window.__regSuggested = regPreviewNo(localISO());
   regSet('regNo', window.__regSuggested);
   regSet('firstVisit', localISO());
@@ -12504,6 +13052,7 @@ function regEdit(id){
   const r=(db.registry||[]).find(x=>x.id===id); if(!r) return;
   regEditingId=id; regLinkedPatientId=r.patientId||null;
   regFillForm(r);
+  cfStart(r); cfRender();
   $('regFormTitle').textContent='Edit registry entry — '+(r.name||r.regNo||'');
   regUpdateLinkLine();
   $('regFormWrap').classList.add('show');
@@ -12521,11 +13070,12 @@ function regDelete(id){
   persist(); regRenderList(); regRenderKpis(); regRenderAnalytics();
   toast('Registry entry deleted');
 }
-function regCloseForm(){ $('regFormWrap').classList.remove('show'); regEditingId=null; regLinkedPatientId=null; scrShow('reg','list'); }
+function regCloseForm(){ $('regFormWrap').classList.remove('show'); regEditingId=null; regLinkedPatientId=null; cfWork=null; scrShow('reg','list'); }
 
 function regSave(){
   if(!requireEdit()) return;
   const rec = regCollect();
+  cfCommit(rec);           // attachments and follow-up notes travel with the entry
   if(!rec.name && !rec.mrn){ toast('⚠ Enter at least a patient name or MR number'); return; }
 
   // keep demographics in sync with the linked patient record
@@ -12563,6 +13113,7 @@ function regSave(){
     logActivity('add','registry',(saved.regNo?saved.regNo+' — ':'')+(saved.name||''), undoOne('registry', null, saved));
   }
   persist(); regCloseForm(); regRenderList(); regRenderKpis(); regRenderAnalytics();
+  if(typeof gdRunQueue==='function') setTimeout(gdRunQueue, 400);
   const extra = window.__regSettledMsg; window.__regSettledMsg='';
   toast(extra ? ('Registry entry saved — '+extra)
     : ('Registry entry saved — No. '+(saved.regNo||'')+(regHasSurgDate(saved)?'':' (provisional — add the date of surgery)')));
@@ -12691,12 +13242,45 @@ function regRenderList(){
     '<td class="small">'+(r.dateSurg?fmtDate(r.dateSurg):'—')+'</td>'+
     '<td>'+regBadges(r)+'</td>'+
     '<td><button class="btn btn-ghost btn-sm" onclick="regEdit(\''+r.id+'\')">Open</button> '+
+       regRecordBtn(r)+
        '<button class="btn btn-ghost btn-sm" title="Bring this case to the MDT board" onclick="mdtFromRegistry(\''+r.id+'\')">🧑\u200d⚕️ MDT</button> '+
        '<button class="btn btn-ghost btn-sm" title="Printable summary (PDF)" onclick="regPrintEntry(\''+r.id+'\')">🖨</button> '+
        '<button class="btn btn-danger btn-sm" onclick="regDelete(\''+r.id+'\')">✕</button></td></tr>';
   }).join('');
   regUpdateSelUI(rows);
   if(typeof regUpdateFixBadge==='function') regUpdateFixBadge();
+}
+/* One tap from the list straight into this case's Drive folder — the doctor should not have
+   to open the whole form just to look at the pictures. */
+function regRecordBtn(r){
+  const cf = r.cf || {};
+  const n = (typeof cfCount==='function') ? cfCount(cfOf(r)) : 0;
+  const link = (cf.drive && cf.drive.caseLink) || cf.manualLink || '';
+  const title = link ? 'Open the complete record in Google Drive'
+    : (n ? n+' attachment(s) — press to make this case\'s Drive folder' : 'No files attached yet');
+  return '<button class="btn btn-ghost btn-sm" title="'+esc(title)+'" onclick="regOpenRecord(\''+r.id+'\')">'+
+    (link?'🗂':'📎')+(n?' '+n:'')+'</button> ';
+}
+async function regOpenRecord(id){
+  const r=(db.registry||[]).filter(x=>x.id===id)[0]; if(!r) return;
+  const cf = cfOf(r);
+  const link = (cf.drive && cf.drive.caseLink) || cf.manualLink || '';
+  if(link){ window.open(link,'_blank','noopener'); if(typeof gdRunQueue==='function') gdRunQueue(); return; }
+  const why = gdReason();
+  if(why){
+    if(confirm('This case has no Drive folder yet.\n\n'+why+'\n\nOpen the case file instead?')){
+      regEdit(id); setTimeout(function(){ regRailPick('cf'); }, 250);
+    }
+    return;
+  }
+  toast('Making this case\'s folder in Drive…');
+  try{
+    await gdStageFolder(r, 'preop', null);
+    const l = (r.cf.drive||{}).caseLink;
+    regRenderList();
+    if(l) window.open(l, '_blank', 'noopener');
+    gdRunQueue();
+  }catch(e){ toast('⚠ Could not reach Google Drive'); }
 }
 function regUpdateSelUI(rows){
   rows=rows||regFiltered();
@@ -13483,12 +14067,1151 @@ function renderToolsTab(name){
 }
 
 
+/* ==================== IMAGE COMPRESSOR ====================
+   Every photo the doctor takes on a phone arrives as 3-8 MB. Stored raw, a hundred cases
+   would blow past what a browser will keep and make every sync crawl. So the copy the app
+   keeps is compressed and the ORIGINAL goes to Google Drive untouched — the record stays
+   light and instant, and the full-resolution file is still one tap away.
+
+   Radiographs are treated more gently than clinical photographs. A plain film is nearly
+   grey, and JPEG's colour subsampling throws away exactly the fine light-grey detail that
+   a fracture line lives in — so anything that measures as greyscale gets more pixels and a
+   higher quality setting automatically.                                                  */
+const CMP_DEF = {maxDim:2000, q:88, xrayDim:2400, xrayQ:93, thumb:300, thumbQ:72};
+function cmpCfg(){
+  const s = (db.settings && db.settings.imgQual) || {};
+  const n = (v,d,lo,hi)=>{ const x=parseInt(v,10); return (isFinite(x) && x>=lo && x<=hi) ? x : d; };
+  return {
+    maxDim: n(s.maxDim, CMP_DEF.maxDim, 800, 4000),
+    q:      n(s.q,      CMP_DEF.q,      50,  98),
+    xrayDim:n(s.xrayDim,CMP_DEF.xrayDim,800, 4000),
+    xrayQ:  n(s.xrayQ,  CMP_DEF.xrayQ,  50,  98),
+    gentle: s.gentle !== false            // auto-detect radiographs, on by default
+  };
+}
+function cmpSetCfg(patch){
+  db.settings.imgQual = Object.assign({}, db.settings.imgQual||{}, patch);
+  persist();
+}
+function dataUrlBytes(u){
+  const i = String(u||'').indexOf(',');
+  if(i < 0) return 0;
+  const b = String(u).length - i - 1;
+  return Math.max(0, Math.round(b * 3 / 4) - ((/=$/.test(u)) ? (/==$/.test(u) ? 2 : 1) : 0));
+}
+function fmtBytes(n){
+  n = +n || 0;
+  if(n >= 1048576) return (n/1048576).toFixed(n >= 10485760 ? 0 : 1)+' MB';
+  if(n >= 1024) return Math.round(n/1024)+' KB';
+  return n+' B';
+}
+/* is this a plain film? sample a grid of pixels and look at how far apart the channels are */
+function cmpIsGrey(cv){
+  try{
+    const w = Math.min(60, cv.width), h = Math.min(60, cv.height);
+    const c = document.createElement('canvas'); c.width=w; c.height=h;
+    const x = c.getContext('2d', {willReadFrequently:true});
+    x.drawImage(cv, 0, 0, w, h);
+    const d = x.getImageData(0, 0, w, h).data;
+    let sum = 0, n = 0;
+    for(let i=0; i<d.length; i+=4){
+      if(d[i+3] < 20) continue;
+      sum += Math.abs(d[i]-d[i+1]) + Math.abs(d[i+1]-d[i+2]) + Math.abs(d[i]-d[i+2]);
+      n++;
+    }
+    return n ? (sum/n) < 14 : false;
+  }catch(e){ return false; }
+}
+function cmpDraw(src, maxDim, q){
+  const sw = src.width || src.naturalWidth, sh = src.height || src.naturalHeight;
+  const s = Math.min(1, maxDim/Math.max(sw, sh));
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(sw*s)); c.height = Math.max(1, Math.round(sh*s));
+  const cx = c.getContext('2d');
+  cx.imageSmoothingEnabled = true; cx.imageSmoothingQuality = 'high';
+  cx.drawImage(src, 0, 0, c.width, c.height);
+  return {url: c.toDataURL('image/jpeg', q), w: c.width, h: c.height, canvas: c};
+}
+function cmpLoad(file){
+  return new Promise((res, rej)=>{
+    if(window.createImageBitmap){
+      createImageBitmap(file).then(res).catch(()=>cmpLoadImg(file).then(res, rej));
+    } else cmpLoadImg(file).then(res, rej);
+  });
+}
+function cmpLoadImg(file){
+  return new Promise((res, rej)=>{
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = ()=>{ res(img); setTimeout(()=>URL.revokeObjectURL(url), 4000); };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); rej(new Error('not an image')); };
+    img.src = url;
+  });
+}
+/* returns {full, thumb, w, h, bytes, origBytes, grey} */
+async function compressImage(file){
+  const cfg = cmpCfg();
+  const src = await cmpLoad(file);
+  const probe = cmpDraw(src, 220, 0.8);                    // cheap canvas to test for grey
+  const grey  = cfg.gentle && cmpIsGrey(probe.canvas);
+  const maxD  = grey ? cfg.xrayDim : cfg.maxDim;
+  const q     = (grey ? cfg.xrayQ : cfg.q) / 100;
+  const full  = cmpDraw(src, maxD, q);
+  const thumb = cmpDraw(src, CMP_DEF.thumb, CMP_DEF.thumbQ/100);
+  if(src.close) try{ src.close(); }catch(e){}
+  return {full: full.url, thumb: thumb.url, w: full.w, h: full.h,
+          bytes: dataUrlBytes(full.url), origBytes: file.size||0, grey: grey};
+}
+
+/* ---- originals, held only until Drive has them ---- */
+function origDB(){ return new Promise((res,rej)=>{ const r = indexedDB.open('rxclinic_orig',1);
+  r.onupgradeneeded = ()=>r.result.createObjectStore('orig');
+  r.onsuccess = ()=>res(r.result); r.onerror = ()=>rej(r.error); }); }
+async function origPut(id, blob){ const d = await origDB(); return new Promise((res,rej)=>{
+  const t = d.transaction('orig','readwrite'); t.objectStore('orig').put(blob, id);
+  t.oncomplete = res; t.onerror = ()=>rej(t.error); }); }
+async function origGet(id){ const d = await origDB(); return new Promise((res,rej)=>{
+  const t = d.transaction('orig'); const g = t.objectStore('orig').get(id);
+  g.onsuccess = ()=>res(g.result||null); g.onerror = ()=>rej(g.error); }); }
+async function origDel(id){ const d = await origDB(); return new Promise((res,rej)=>{
+  const t = d.transaction('orig','readwrite'); t.objectStore('orig').delete(id);
+  t.oncomplete = res; t.onerror = ()=>rej(t.error); }); }
+
+/* ==================== GOOGLE DRIVE ====================
+   Scope is drive.file — the app can only ever see and touch the files it created itself.
+   It cannot read the rest of the doctor's Drive, which is the right level of access for
+   something holding patient images.
+
+   Two hard constraints worth remembering:
+     * Google will not issue a token to a page opened as a file:// URL. The app has to be
+       served from https, or from localhost while testing.
+     * The OAuth client ID is per-deployment, so it lives in Settings rather than in code.
+   Everything degrades: with no client ID, or offline, uploads simply queue and the doctor
+   can still paste a folder link by hand.                                                */
+const GD_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+const GD_FOLDER_MIME = 'application/vnd.google-apps.folder';
+let gdToken = null, gdTokenExp = 0, gdClient = null, gdBusy = false;
+
+function gdCfg(){ if(!db.settings.gdrive) db.settings.gdrive = {}; return db.settings.gdrive; }
+function gdRootName(){ return (gdCfg().rootName||'').trim() || 'Clinic Case Files'; }
+function gdConfigured(){ return !!String(gdCfg().clientId||'').trim(); }
+function gdSecureOrigin(){
+  return location.protocol === 'https:' ||
+         location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+}
+function gdConnected(){ return !!gdToken && Date.now() < gdTokenExp; }
+function gdReason(){
+  if(!gdSecureOrigin())  return 'Google can only sign you in when the app is opened from a web address (https), not from a file on the disk.';
+  if(!gdConfigured())    return 'Add your Google client ID in Settings → Google Drive to switch this on.';
+  if(!navigator.onLine)  return 'You are offline — anything you add is queued and uploads by itself when you are back.';
+  if(!gdConnected())     return 'Not connected yet — press Connect and choose your Google account.';
+  return '';
+}
+function gdLoadGis(){
+  return new Promise((res, rej)=>{
+    if(window.google && google.accounts && google.accounts.oauth2) return res();
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client'; s.async = true; s.defer = true;
+    s.onload = ()=>res(); s.onerror = ()=>rej(new Error('Could not load Google sign-in'));
+    document.head.appendChild(s);
+  });
+}
+/* Sign in. `quiet` asks Google for a token without showing anything, which works when the
+   doctor has already granted access in this browser — that is what makes the app reconnect
+   by itself on the next visit instead of nagging. */
+function gdConnect(quiet){
+  return new Promise(async (res)=>{
+    if(!gdSecureOrigin() || !gdConfigured()) return res(false);
+    try{ await gdLoadGis(); }catch(e){ if(!quiet) toast('⚠ '+e.message); return res(false); }
+    try{
+      gdClient = google.accounts.oauth2.initTokenClient({
+        client_id: String(gdCfg().clientId).trim(),
+        scope: GD_SCOPE,
+        callback: (r)=>{
+          if(r && r.access_token){
+            gdToken = r.access_token;
+            gdTokenExp = Date.now() + ((+r.expires_in||3600) - 120)*1000;
+            gdCfg().everConnected = true; persist();
+            gdPaint();
+            if(!quiet) toast('✓ Google Drive connected');
+            gdRunQueue();
+            res(true);
+          } else { gdPaint(); res(false); }
+        },
+        error_callback: ()=>{ gdPaint(); res(false); }
+      });
+      gdClient.requestAccessToken(quiet ? {prompt:''} : {});
+    }catch(e){ if(!quiet) toast('⚠ Google sign-in failed'); res(false); }
+  });
+}
+function gdDisconnect(){
+  try{ if(gdToken && window.google && google.accounts) google.accounts.oauth2.revoke(gdToken, ()=>{}); }catch(e){}
+  gdToken = null; gdTokenExp = 0; gdCfg().everConnected = false; persist(); gdPaint();
+  toast('Google Drive disconnected');
+}
+async function gdEnsure(){
+  if(gdConnected()) return true;
+  if(!gdSecureOrigin() || !gdConfigured() || !navigator.onLine) return false;
+  return await gdConnect(true);
+}
+async function gdApi(url, opts){
+  const o = Object.assign({}, opts||{});
+  o.headers = Object.assign({}, o.headers||{}, {Authorization:'Bearer '+gdToken});
+  const r = await fetch(url, o);
+  if(r.status === 401){ gdToken = null; throw new Error('auth'); }
+  if(!r.ok) throw new Error('Drive '+r.status+' '+(await r.text()).slice(0,120));
+  return await r.json();
+}
+function gdEsc(s){ return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+/* a folder of this name under this parent, made once and remembered */
+async function gdFolder(name, parentId){
+  const q = "mimeType='"+GD_FOLDER_MIME+"' and trashed=false and name='"+gdEsc(name)+"'"+
+            " and '"+(parentId||'root')+"' in parents";
+  const found = await gdApi('https://www.googleapis.com/drive/v3/files?q='+encodeURIComponent(q)+
+    '&fields=files(id,webViewLink)&pageSize=1');
+  if(found.files && found.files.length) return found.files[0];
+  return await gdApi('https://www.googleapis.com/drive/v3/files?fields=id,webViewLink', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({name:name, mimeType:GD_FOLDER_MIME, parents:[parentId||'root']})
+  });
+}
+function gdCaseFolderName(rec){
+  const no = String(rec.regNo||'').trim(), nm = String(rec.name||'').trim();
+  return (no ? no : 'no-number') + (nm ? ' — '+nm : '');
+}
+/* Build (or find) the folder for one stage of one case, caching every id on the record so
+   the tree is only ever created once. */
+async function gdStageFolder(rec, stageKey, fuId){
+  if(!await gdEnsure()) return null;
+  const cf = cfOf(rec);
+  cf.drive = cf.drive || {};
+  if(!cf.drive.rootId){
+    const f = await gdFolder(gdRootName(), gdCfg().rootFolderId || 'root');
+    cf.drive.rootId = f.id;
+  }
+  if(!cf.drive.caseId){
+    const f = await gdFolder(gdCaseFolderName(rec), cf.drive.rootId);
+    cf.drive.caseId = f.id; cf.drive.caseLink = f.webViewLink || gdFolderLink(f.id);
+  }
+  let bucket, name;
+  if(fuId){
+    const fu = (cf.fu||[]).filter(x=>x.id===fuId)[0];
+    if(!fu) return null;
+    if(!cf.drive.fuRootId){
+      const f = await gdFolder('06 Follow-up', cf.drive.caseId);
+      cf.drive.fuRootId = f.id;
+    }
+    if(!fu.drive || !fu.drive.id){
+      const f = await gdFolder(fu.label || 'Follow-up', cf.drive.fuRootId);
+      fu.drive = {id:f.id, link:f.webViewLink || gdFolderLink(f.id)};
+    }
+    persist();
+    return fu.drive;
+  }
+  const st = CF_STAGES.filter(s=>s.k===stageKey)[0];
+  if(!st) return null;
+  bucket = cf[stageKey] = cf[stageKey] || {items:[]};
+  if(!bucket.drive || !bucket.drive.id){
+    const f = await gdFolder(st.dir, cf.drive.caseId);
+    bucket.drive = {id:f.id, link:f.webViewLink || gdFolderLink(f.id)};
+  }
+  persist();
+  return bucket.drive;
+}
+function gdFolderLink(id){ return 'https://drive.google.com/drive/folders/'+id; }
+async function gdUpload(blob, name, parentId){
+  const meta = {name:name, parents:[parentId]};
+  const fd = new FormData();
+  fd.append('metadata', new Blob([JSON.stringify(meta)], {type:'application/json'}));
+  fd.append('file', blob);
+  return await gdApi('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart'+
+    '&fields=id,webViewLink,name', {method:'POST', body:fd});
+}
+
+/* ---- the upload queue ----
+   Nothing is lost if Drive is unreachable. Every attachment carries its own state, and the
+   original blob sits in its own IndexedDB store until Drive confirms it. The runner simply
+   walks the registry looking for work, so it recovers after a reload, a crash or a week
+   offline without needing a separate queue to stay in step.                              */
+let gdQueueRunning = false;
+function gdPending(){
+  let n = 0;
+  (db.registry||[]).forEach(function(rec){
+    const cf = rec.cf; if(!cf) return;
+    cfEachBucket(cf, function(b){ (b.items||[]).forEach(function(it){ if(it.up !== 'done') n++; }); });
+  });
+  return n;
+}
+async function gdRunQueue(){
+  if(gdQueueRunning) return;
+  if(!navigator.onLine || !gdSecureOrigin() || !gdConfigured()) { gdPaint(); return; }
+  if(!await gdEnsure()){ gdPaint(); return; }
+  gdQueueRunning = true;
+  try{
+    for(const rec of (db.registry||[])){
+      const cf = rec.cf; if(!cf) continue;
+      const buckets = [];
+      CF_STAGES.forEach(s=>{ if(cf[s.k]) buckets.push({b:cf[s.k], stage:s.k, fu:null}); });
+      (cf.fu||[]).forEach(f=>buckets.push({b:f, stage:null, fu:f.id}));
+      for(const bk of buckets){
+        const todo = (bk.b.items||[]).filter(it=>it.up !== 'done');
+        if(!todo.length) continue;
+        let dest = null;
+        try{ dest = await gdStageFolder(rec, bk.stage, bk.fu); }catch(e){ if(String(e.message)==='auth') { gdQueueRunning=false; return; } }
+        if(!dest || !dest.id) continue;
+        for(const it of todo){
+          try{
+            const blob = await origGet(it.id);
+            if(!blob){ it.up = 'done'; it.noOrig = true; continue; }   // original already gone
+            const up = await gdUpload(blob, it.name || (it.id+'.jpg'), dest.id);
+            it.up = 'done'; it.drive = {id:up.id, link:up.webViewLink || ''};
+            await origDel(it.id);
+            persist();
+            if(typeof cfRender === 'function') cfRender();
+          }catch(e){
+            if(String(e.message) === 'auth'){ gdQueueRunning = false; gdPaint(); return; }
+            it.up = 'error'; it.err = String(e.message||'').slice(0,90); persist();
+          }
+        }
+      }
+    }
+  } finally { gdQueueRunning = false; gdPaint(); }
+}
+addEventListener('online', ()=>{ setTimeout(gdRunQueue, 1200); });
+
+/* ==================== CASE FILES ==================== */
+const CF_STAGES = [
+  {k:'preop',   ic:'📋', t:'Pre-op docs',      s:'Referral, labs, consent, old notes',  dir:'01 Pre-op docs',      tint:0},
+  {k:'plan',    ic:'📐', t:'Pre-op planning',  s:'Templating, measurements, cutting guides', dir:'02 Pre-op planning', tint:2},
+  {k:'intraop', ic:'🔪', t:'Intra-op',         s:'Photographs from theatre',            dir:'03 Intra-op',         tint:3},
+  {k:'postop',  ic:'🩻', t:'Post-op',          s:'Check films, wound, mobilisation',    dir:'04 Post-op',          tint:6},
+  {k:'path',    ic:'🔬', t:'Histopathology',   s:'Reports, slides, margins, necrosis',  dir:'05 Histopathology',   tint:5}
+];
+const CF_TINT = {};
+CF_STAGES.forEach(s=>CF_TINT[s.k] = s.tint);
+
+/* default follow-up labels, in the doctor's own shorthand: 8/52 = 8 weeks, 3/12 = 3 months */
+const FU_LABELS_DEF = ['2/52','4/52','6/52','8/52','12/52','6/12','9/12','1 yr','18/12','2 yr','3 yr','5 yr'];
+function fuLabels(){
+  const own = (db.settings.fuLabels || []).filter(x=>String(x||'').trim());
+  const gone = db.settings.fuLabelsOff || [];
+  return FU_LABELS_DEF.filter(x=>gone.indexOf(x)<0).concat(own.filter(x=>FU_LABELS_DEF.indexOf(x)<0));
+}
+function fuLabelAdd(v){
+  v = String(v||'').trim(); if(!v) return;
+  db.settings.fuLabels = db.settings.fuLabels || [];
+  const off = db.settings.fuLabelsOff || [];
+  if(off.indexOf(v) >= 0) db.settings.fuLabelsOff = off.filter(x=>x!==v);
+  if(fuLabels().indexOf(v) < 0) db.settings.fuLabels.push(v);
+  persist();
+}
+function fuLabelDel(v){
+  db.settings.fuLabels = (db.settings.fuLabels||[]).filter(x=>x!==v);
+  if(FU_LABELS_DEF.indexOf(v) >= 0){
+    db.settings.fuLabelsOff = (db.settings.fuLabelsOff||[]).concat([v]);
+  }
+  persist();
+}
+
+function cfBlank(){
+  const o = {drive:null, fu:[]};
+  CF_STAGES.forEach(s=>{ o[s.k] = {items:[], drive:null}; });
+  return o;
+}
+function cfOf(rec){
+  if(!rec.cf) rec.cf = cfBlank();
+  CF_STAGES.forEach(s=>{ if(!rec.cf[s.k]) rec.cf[s.k] = {items:[], drive:null}; });
+  if(!Array.isArray(rec.cf.fu)) rec.cf.fu = [];
+  return rec.cf;
+}
+function cfEachBucket(cf, fn){
+  CF_STAGES.forEach(s=>{ if(cf[s.k]) fn(cf[s.k], s.k); });
+  (cf.fu||[]).forEach(f=>fn(f, 'fu:'+f.id));
+}
+function cfCount(cf){
+  let n = 0; cfEachBucket(cf, b=>{ n += (b.items||[]).length; }); return n;
+}
+
+/* the case being edited. Attachments are allowed before the entry has ever been saved —
+   they are held here and travel into the record the moment it is written. */
+let cfWork = null, cfOpenStage = 'preop', cfFuLabel = '';
+function cfStart(rec){
+  cfWork = JSON.parse(JSON.stringify(cfOf(rec || {})));
+  cfOpenStage = 'preop'; cfFuLabel = '';
+}
+function cfCommit(rec){ if(cfWork) rec.cf = JSON.parse(JSON.stringify(cfWork)); }
+
+async function cfAdd(stageKey, fuId, fileList){
+  if(!cfWork) cfStart({});
+  const files = Array.prototype.slice.call(fileList||[]);
+  if(!files.length) return;
+  const bucket = fuId ? (cfWork.fu||[]).filter(x=>x.id===fuId)[0] : cfWork[stageKey];
+  if(!bucket) return;
+  bucket.items = bucket.items || [];
+  let savedBytes = 0, added = 0;
+  for(const f of files){
+    const id = uid('cfi');
+    const isImg = /^image\//.test(f.type||'') || /\.(jpe?g|png|webp|heic|heif|gif|bmp)$/i.test(f.name||'');
+    try{
+      if(isImg){
+        const r = await compressImage(f);
+        await imgPut(id, {full:r.full, thumb:r.thumb, name:f.name||'', addedAt:new Date().toISOString()});
+        await origPut(id, f);                                   // the untouched original, for Drive
+        bucket.items.push({id, kind:'img', name:f.name||'image.jpg', mime:f.type||'image/jpeg',
+          bytes:r.bytes, origBytes:r.origBytes, w:r.w, h:r.h, grey:r.grey,
+          addedAt:new Date().toISOString(), by:(typeof byTag==='function'?byTag():''), up:'pending'});
+        savedBytes += Math.max(0, (r.origBytes||0) - (r.bytes||0));
+      } else {
+        await origPut(id, f);
+        bucket.items.push({id, kind:'file', name:f.name||'document', mime:f.type||'',
+          bytes:f.size||0, origBytes:f.size||0,
+          addedAt:new Date().toISOString(), by:(typeof byTag==='function'?byTag():''), up:'pending'});
+      }
+      added++;
+    }catch(e){ toast('⚠ Could not read '+(f.name||'file')); }
+  }
+  cfSyncBack();
+  cfRender();
+  if(added) toast(added+' file(s) attached'+(savedBytes>0 ? ' — '+fmtBytes(savedBytes)+' saved by compression' : ''));
+  gdRunQueue();
+}
+/* an entry that already exists gets its attachments written straight through, so a photo is
+   never lost because the form was closed without pressing Save */
+function cfSyncBack(){
+  if(!cfWork) return;
+  if(typeof regEditingId !== 'undefined' && regEditingId){
+    const rec = (db.registry||[]).filter(x=>x.id===regEditingId)[0];
+    if(rec){ rec.cf = JSON.parse(JSON.stringify(cfWork)); persist(); }
+  }
+}
+async function cfRemove(stageKey, fuId, id){
+  if(!confirm('Remove this attachment from the case file?\n\n(Anything already uploaded stays in Google Drive.)')) return;
+  const bucket = fuId ? (cfWork.fu||[]).filter(x=>x.id===fuId)[0] : cfWork[stageKey];
+  if(!bucket) return;
+  bucket.items = (bucket.items||[]).filter(x=>x.id!==id);
+  try{ await imgDel(id); }catch(e){}
+  try{ await origDel(id); }catch(e){}
+  cfSyncBack(); cfRender();
+}
+async function cfOpenItem(stageKey, fuId, id){
+  const bucket = fuId ? (cfWork.fu||[]).filter(x=>x.id===fuId)[0] : cfWork[stageKey];
+  const it = (bucket && (bucket.items||[]).filter(x=>x.id===id)[0]);
+  if(!it) return;
+  if(it.kind === 'img'){
+    /* The compressed copies live in this browser's own store and are not synced — the record
+       only carries the metadata. On a second device the picture is not here, but Drive has
+       the original, so fall through to that rather than opening an empty viewer. */
+    const here = await imgGet(id).catch(()=>null);
+    if(!here){
+      if(it.drive && it.drive.link){ window.open(it.drive.link,'_blank','noopener'); return; }
+      toast('That image was added on another device — open the Drive folder to see it');
+      return;
+    }
+    const ids = (bucket.items||[]).filter(x=>x.kind==='img').map(x=>x.id);
+    openViewerIds(ids, Math.max(0, ids.indexOf(id)));
+    return;
+  }
+  if(it.drive && it.drive.link){ window.open(it.drive.link, '_blank', 'noopener'); return; }
+  const blob = await origGet(id);
+  if(!blob){ toast('That file is only in Google Drive now — use Open folder'); return; }
+  const u = URL.createObjectURL(blob);
+  window.open(u, '_blank', 'noopener');
+  setTimeout(()=>URL.revokeObjectURL(u), 60000);
+}
+
+/* ---- follow-up folders ---- */
+function cfFuAdd(){
+  if(!cfWork) cfStart({});
+  const label = (cfFuLabel || String(($('cfFuCustom')||{}).value||'')).trim();
+  if(!label){ toast('⚠ Pick or type a follow-up interval first'); return; }
+  const date = String(($('cfFuDate')||{}).value||'') || localISO();
+  if((cfWork.fu||[]).some(f=>f.label===label && f.date===date)){
+    toast('⚠ There is already a '+label+' folder on that date'); return;
+  }
+  const fu = {id:uid('fu'), label:label, date:date, note:'', items:[], drive:null,
+              createdAt:new Date().toISOString(), by:(typeof byTag==='function'?byTag():'')};
+  cfWork.fu = (cfWork.fu||[]).concat([fu]);
+  cfWork.fu.sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));
+  cfFuLabel = '';
+  const cu = $('cfFuCustom'); if(cu) cu.value = '';
+  cfSyncBack(); cfRender();
+  toast('Follow-up '+label+' added');
+  gdRunQueue();
+}
+function cfFuDel(id){
+  const fu = (cfWork.fu||[]).filter(x=>x.id===id)[0]; if(!fu) return;
+  const n = (fu.items||[]).length;
+  if(!confirm('Delete the '+fu.label+' follow-up'+(n?(' and its '+n+' attachment(s)'):'')+'?\n\n(Anything already in Google Drive stays there.)')) return;
+  (fu.items||[]).forEach(it=>{ imgDel(it.id).catch(()=>{}); origDel(it.id).catch(()=>{}); });
+  cfWork.fu = (cfWork.fu||[]).filter(x=>x.id!==id);
+  cfSyncBack(); cfRender();
+}
+function cfFuNote(id, v){
+  const fu = (cfWork.fu||[]).filter(x=>x.id===id)[0]; if(!fu) return;
+  fu.note = v; fu.noteAt = new Date().toISOString();
+  clearTimeout(window.__cfNoteT);
+  window.__cfNoteT = setTimeout(()=>{ cfSyncBack(); cfTicks(); }, 500);
+}
+function cfFuPick(v){ cfFuLabel = (cfFuLabel === v) ? '' : v; cfRenderFuNew(); }
+function cfFuNewLabel(){
+  const v = prompt('Add a follow-up interval you want to keep for good\n(e.g. 10/52, 15/12, 7 yr):');
+  if(v === null) return;
+  const t = String(v).trim(); if(!t) return;
+  fuLabelAdd(t); cfFuLabel = t; cfRenderFuNew();
+  toast('“'+t+'” added — it will be there next time and on your other devices');
+}
+async function cfOpenDrive(stageKey, fuId){
+  const rec = (typeof regEditingId!=='undefined' && regEditingId)
+    ? (db.registry||[]).filter(x=>x.id===regEditingId)[0] : null;
+  const bucket = fuId ? (cfWork.fu||[]).filter(x=>x.id===fuId)[0] : (cfWork[stageKey]||{});
+  if(bucket && bucket.drive && bucket.drive.link){ window.open(bucket.drive.link,'_blank','noopener'); return; }
+  if(!rec){ toast('⚠ Save the entry once, then the Drive folder can be made'); return; }
+  const why = gdReason();
+  if(why){ toast('⚠ '+why); return; }
+  toast('Creating the folder in Drive…');
+  try{
+    const d = await gdStageFolder(rec, stageKey, fuId);
+    cfWork = JSON.parse(JSON.stringify(cfOf(rec)));
+    cfRender();
+    if(d && d.link) window.open(d.link, '_blank', 'noopener');
+  }catch(e){ toast('⚠ Could not reach Google Drive'); }
+}
+/* the one button the doctor actually wants: everything for this case, in Drive */
+async function cfOpenCase(){
+  const rec = (typeof regEditingId!=='undefined' && regEditingId)
+    ? (db.registry||[]).filter(x=>x.id===regEditingId)[0] : null;
+  if(!rec){ toast('⚠ Save the entry once first — then its Drive folder can be made'); return; }
+  const cf = cfOf(rec);
+  if(cf.drive && cf.drive.caseLink){ window.open(cf.drive.caseLink,'_blank','noopener'); gdRunQueue(); return; }
+  if(cf.manualLink){ window.open(cf.manualLink,'_blank','noopener'); return; }
+  const why = gdReason();
+  if(why){ toast('⚠ '+why); return; }
+  toast('Opening the case folder in Drive…');
+  try{
+    await gdStageFolder(rec, 'preop', null);
+    cfWork = JSON.parse(JSON.stringify(cfOf(rec)));
+    cfRender();
+    const link = (rec.cf.drive||{}).caseLink;
+    if(link) window.open(link, '_blank', 'noopener');
+    gdRunQueue();
+  }catch(e){ toast('⚠ Could not reach Google Drive'); }
+}
+function cfSetManualLink(){
+  const cur = (cfWork && cfWork.manualLink) || '';
+  const v = prompt('Paste the Google Drive folder link for this case\n(leave empty to clear):', cur);
+  if(v === null) return;
+  if(!cfWork) cfStart({});
+  cfWork.manualLink = String(v).trim();
+  cfSyncBack(); cfRender();
+}
+
+/* ---- rendering ---- */
+function cfUpBadge(it){
+  if(it.up === 'done')  return '<span class="ci-up done" title="In Google Drive at full resolution">Drive</span>';
+  if(it.up === 'error') return '<span class="ci-up err" title="'+esc(it.err||'Upload failed — it will try again')+'">Retry</span>';
+  if(!gdConfigured() || !gdSecureOrigin()) return '<span class="ci-up off" title="Held on this device — Drive is not set up">Local</span>';
+  return '<span class="ci-up pend" title="Waiting to upload to Google Drive">Queued</span>';
+}
+function cfItemHTML(stageKey, fuId, it){
+  const arg = "'"+(stageKey||'')+"','"+(fuId||'')+"','"+it.id+"'";
+  const saved = (it.origBytes && it.bytes && it.origBytes > it.bytes)
+    ? fmtBytes(it.origBytes)+' → '+fmtBytes(it.bytes) : fmtBytes(it.bytes||it.origBytes||0);
+  return '<div class="cf-it" onclick="cfOpenItem('+arg+')" title="'+esc(it.name||'')+'">'+
+    (it.kind === 'img'
+      ? '<img class="ci-img" data-cfimg="'+it.id+'" alt="'+esc(it.name||'')+'">'
+      : '<div class="ci-doc">'+(/pdf/i.test(it.mime||it.name||'') ? '📕' : '📄')+'</div>')+
+    cfUpBadge(it)+
+    '<button class="ci-rm" title="Remove" onclick="event.stopPropagation();cfRemove('+arg+')">✕</button>'+
+    '<div class="ci-m"><b>'+esc(it.name||'')+'</b><span>'+saved+(it.grey?' · film':'')+'</span></div>'+
+  '</div>';
+}
+/* thumbnails live in IndexedDB, so they are filled in after the markup lands */
+const CF_ELSEWHERE = 'data:image/svg+xml;utf8,'+encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120">'+
+  '<rect width="160" height="120" fill="#e8eef3"/>'+
+  '<text x="80" y="58" font-size="30" text-anchor="middle">\u2601\uFE0F</text>'+
+  '<text x="80" y="84" font-size="11" fill="#7a8a9c" text-anchor="middle" '+
+  'font-family="sans-serif">in Drive</text></svg>');
+function cfPaintThumbs(root){
+  (root||document).querySelectorAll('img[data-cfimg]').forEach(function(el){
+    if(el.dataset.done) return;
+    el.dataset.done = '1';
+    imgGet(el.dataset.cfimg).then(function(r){
+      el.src = (r && (r.thumb || r.full)) || CF_ELSEWHERE;   // added on another device
+    }).catch(function(){ el.src = CF_ELSEWHERE; });
+  });
+}
+function cfStageHTML(st){
+  const b = (cfWork && cfWork[st.k]) || {items:[]};
+  const n = (b.items||[]).length;
+  const open = cfOpenStage === st.k;
+  return '<div class="cf-stage fr-tile-tint'+(open?' open':'')+'" data-tint="'+st.tint+'" style="'+cfTintVars(st.tint)+'">'+
+    '<button type="button" class="cf-sh" onclick="cfToggle(\''+st.k+'\')">'+
+      '<span class="cs-ic">'+st.ic+'</span>'+
+      '<span class="cs-tx"><b>'+esc(st.t)+'</b><span>'+esc(st.s)+'</span></span>'+
+      '<span class="cs-n'+(n?'':' zero')+'">'+(n||'—')+'</span>'+
+      '<span class="cs-v">▾</span></button>'+
+    '<div class="cf-body">'+
+      '<div class="cf-acts">'+
+        '<button type="button" class="btn btn-sm" onclick="cfPick(\''+st.k+'\',\'\')">📎 Add files</button>'+
+        '<button type="button" class="btn btn-ghost btn-sm" onclick="cfPick(\''+st.k+'\',\'\',1)">📷 Camera</button>'+
+        '<button type="button" class="btn btn-ghost btn-sm" onclick="cfOpenDrive(\''+st.k+'\',\'\')">📁 Open folder in Drive ↗</button>'+
+      '</div>'+
+      (n ? '<div class="cf-grid">'+(b.items||[]).map(it=>cfItemHTML(st.k,'',it)).join('')+'</div>'
+         : '<div class="cf-drop" ondragover="event.preventDefault();this.classList.add(\'hot\')" '+
+           'ondragleave="this.classList.remove(\'hot\')" '+
+           'ondrop="event.preventDefault();this.classList.remove(\'hot\');cfAdd(\''+st.k+'\',\'\',event.dataTransfer.files)" '+
+           'onclick="cfPick(\''+st.k+'\',\'\')">Drop images or PDFs here, or tap to choose</div>')+
+    '</div></div>';
+}
+const CF_TINT_VARS = [
+  ['#0d9488','#f0fdfa','#ccfbf1'], ['#d97706','#fffbeb','#fef3c7'], ['#4f46e5','#eef2ff','#e0e7ff'],
+  ['#e11d48','#fff1f2','#ffe4e6'], ['#16a34a','#f0fdf4','#dcfce7'], ['#7c3aed','#f5f3ff','#ede9fe'],
+  ['#0284c7','#f0f9ff','#e0f2fe'], ['#ea580c','#fff7ed','#ffedd5']
+];
+function cfTintVars(i){
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const t = CF_TINT_VARS[i % 8];
+  const darkBg = ['#0c2320','#291f0d','#171a33','#2b1119','#0e2417','#1d1533','#0a1f2e','#2a1508'][i%8];
+  const darkIc = ['#123f39','#43330f','#252a55','#471a27','#163a24','#2e2153','#0f3249','#442310'][i%8];
+  return '--tile-ac:'+t[0]+';--tile-bg:'+(dark?darkBg:t[1])+';--tile-ic:'+(dark?darkIc:t[2])+';';
+}
+function cfToggle(k){ cfOpenStage = (cfOpenStage === k) ? '' : k; cfRender(); }
+function cfPick(stageKey, fuId, camera){
+  let inp = $('cfFilePick');
+  if(!inp){
+    inp = document.createElement('input'); inp.type='file'; inp.id='cfFilePick';
+    inp.multiple = true; inp.style.display='none'; document.body.appendChild(inp);
+  }
+  inp.accept = camera ? 'image/*' : 'image/*,application/pdf,.pdf,.doc,.docx,.txt';
+  if(camera) inp.setAttribute('capture','environment'); else inp.removeAttribute('capture');
+  inp.onchange = function(){ const f = inp.files; inp.value=''; cfAdd(stageKey, fuId, f); };
+  inp.click();
+}
+function cfDriveBarHTML(){
+  const why = gdReason();
+  const pend = gdPending();
+  const ok = !why;
+  const cf = cfWork || {};
+  const caseLink = (cf.drive && cf.drive.caseLink) || cf.manualLink || '';
+  return '<div class="cf-drive'+(ok?' on':(gdConfigured()?' warn':''))+'" id="cfDriveBar">'+
+    '<span class="cd-dot"></span>'+
+    '<span class="cd-tx">'+(ok
+      ? '<b>Google Drive connected.</b> Full-resolution originals upload by themselves'+
+        (pend ? ' — <b>'+pend+'</b> waiting' : '.')
+      : esc(why))+'</span>'+
+    (ok ? '' : (gdConfigured() && gdSecureOrigin()
+        ? '<button type="button" class="btn btn-sm" onclick="gdConnect(false)">Connect</button>' : ''))+
+    (gdConfigured() && !gdSecureOrigin() ? '' :
+      '<button type="button" class="btn btn-ghost btn-sm" onclick="showTab(\'settings\');setTimeout(function(){setCat(\'gdrive\')},60)">⚙ Drive setup</button>')+
+    '<button type="button" class="btn btn-green btn-sm" onclick="cfOpenCase()">🗂 View complete record ↗</button>'+
+    (caseLink ? '' : '<button type="button" class="btn btn-ghost btn-sm" onclick="cfSetManualLink()">🔗 Paste a folder link</button>')+
+  '</div>';
+}
+function cfRender(){
+  const host = $('cfPane'); if(!host || !cfWork) return;
+  host.innerHTML =
+    '<div class="cf-top"><span class="cf-ttl">Case files</span>'+
+      '<span class="muted small">'+cfCount(cfWork)+' attachment(s) · originals go to Drive, compressed copies stay here</span></div>'+
+    cfDriveBarHTML()+
+    CF_STAGES.map(cfStageHTML).join('');
+  cfPaintThumbs(host);
+  cfRenderFu();
+  cfTicks();
+}
+function gdPaint(){
+  const bar = $('cfDriveBar');
+  if(bar && cfWork){ bar.outerHTML = cfDriveBarHTML(); }
+  const s = $('gdStatus'); if(s && typeof renderGdSetting === 'function') renderGdSetting();
+}
+
+/* ---- follow-up notes: one card per visit, newest at the bottom of the timeline ---- */
+function cfRenderFuNew(){
+  const host = $('cfFuNew'); if(!host) return;
+  const labs = fuLabels();
+  host.innerHTML =
+    '<h4>New follow-up visit</h4>'+
+    '<div class="fuf-lab">'+
+      labs.map(l=>'<span class="tb-cw"><button type="button" class="chip'+(cfFuLabel===l?' on':'')+'" '+
+        'onclick="cfFuPick(\''+esc(l).replace(/'/g,"\\'")+'\')">'+esc(l)+'</button></span>').join('')+
+      '<button type="button" class="tb-add" onclick="cfFuNewLabel()">+ add</button>'+
+    '</div>'+
+    '<div class="fuf-row">'+
+      '<div class="field"><label>Or type an interval</label>'+
+        '<input type="text" id="cfFuCustom" data-norail="1" placeholder="e.g. 10/52" autocomplete="off"></div>'+
+      '<div class="field"><label>Date of visit</label>'+
+        '<input type="date" id="cfFuDate" data-norail="1" value="'+localISO()+'"></div>'+
+      '<button type="button" class="btn" onclick="cfFuAdd()">＋ Add follow-up</button>'+
+    '</div>';
+}
+function cfRenderFu(){
+  const host = $('cfFuPane'); if(!host || !cfWork) return;
+  const list = (cfWork.fu||[]).slice().sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));
+  host.innerHTML =
+    '<div class="cf-top"><span class="cf-ttl">Follow-up notes &amp; folders</span>'+
+      '<span class="muted small">'+list.length+' visit(s) recorded</span></div>'+
+    '<div class="fuf-new" id="cfFuNew"></div>'+
+    (list.length
+      ? '<div class="tl">'+list.map((f,i)=>cfFuCardHTML(f, i===list.length-1)).join('')+'</div>'
+      : '<p class="muted small">No follow-up visits yet. Pick an interval above — 8/52 for eight weeks after surgery, 3/12 for three months — and a folder and a note are made for that visit.</p>');
+  cfRenderFuNew();
+  cfPaintThumbs(host);
+}
+function cfFuCardHTML(f, last){
+  const items = f.items || [];
+  const imgs = items.filter(x=>x.kind==='img');
+  const q = "'','"+f.id+"'";
+  return '<div class="tl-it'+(last?' last':'')+'">'+
+    '<div class="tl-card">'+
+      '<div class="tl-h">'+
+        '<span class="tl-lab">'+esc(f.label||'—')+'</span>'+
+        '<span class="tl-dt">'+(f.date?fmtDMY(f.date):'no date')+'</span>'+
+        '<span class="tl-n">'+(items.length?items.length+' file(s)':'no files')+'</span>'+
+        '<button type="button" class="btn btn-ghost btn-sm tl-x" onclick="cfFuDel(\''+f.id+'\')" title="Delete this follow-up">🗑</button>'+
+      '</div>'+
+      '<div style="padding:0 12px 10px">'+
+        '<textarea class="ta-s" data-norail="1" rows="3" placeholder="What did you find at this visit? Function, pain, ROM, wound, imaging, plan…" '+
+          'oninput="cfFuNote(\''+f.id+'\', this.value)">'+esc(f.note||'')+'</textarea>'+
+      '</div>'+
+      (imgs.length ? '<div class="tl-thumbs">'+
+        imgs.slice(0,6).map(it=>'<img data-cfimg="'+it.id+'" onclick="cfOpenItem('+q+',\''+it.id+'\')" alt="">').join('')+
+        (imgs.length>6 ? '<span class="more">+'+(imgs.length-6)+'</span>' : '')+'</div>' : '')+
+      '<div class="tl-foot">'+
+        '<button type="button" class="btn btn-sm" onclick="cfPick(\'\',\''+f.id+'\')">📎 Add files</button>'+
+        '<button type="button" class="btn btn-ghost btn-sm" onclick="cfPick(\'\',\''+f.id+'\',1)">📷 Camera</button>'+
+        '<button type="button" class="btn btn-ghost btn-sm" onclick="cfOpenDrive(\'\',\''+f.id+'\')">📁 Folder in Drive ↗</button>'+
+      '</div>'+
+    '</div></div>';
+}
+function cfTicks(){
+  const a = document.querySelector('#regFRail .rc-tick[data-tick="cf"]');
+  if(a){ const n = cfWork ? (CF_STAGES.reduce((t,s)=>t+((cfWork[s.k]||{}).items||[]).length,0)) : 0;
+    a.classList.add('frt-num'); a.classList.toggle('done', n>0); a.textContent = n?String(n):''; }
+  const b = document.querySelector('#regFRail .rc-tick[data-tick="fu"]');
+  if(b){ const n = cfWork ? (cfWork.fu||[]).length : 0;
+    b.classList.add('frt-num'); b.classList.toggle('done', n>0); b.textContent = n?String(n):''; }
+}
+
+
+/* ---- Google Drive settings panel ---- */
+function renderGdSetting(){
+  const host = $('gdStatus'); if(!host) return;
+  const c = gdCfg();
+  const why = gdReason();
+  const pend = (typeof gdPending==='function') ? gdPending() : 0;
+  let cls = 'cf-drive', body;
+  if(!why){ cls += ' on';
+    body = '<b>Connected.</b> Originals upload by themselves'+(pend?(' — <b>'+pend+'</b> file(s) waiting'):'.');
+  } else { if(gdConfigured()) cls += ' warn'; body = esc(why); }
+  host.innerHTML = '<div class="'+cls+'"><span class="cd-dot"></span><span class="cd-tx">'+body+'</span>'+
+    (gdConfigured() && gdSecureOrigin() && why
+      ? '<button class="btn btn-sm" onclick="gdConnect(false)">Connect Google Drive</button>' : '')+
+    (!why ? '<button class="btn btn-ghost btn-sm" onclick="gdDisconnect()">Disconnect</button>' : '')+
+    '</div>';
+  const a = $('gdClientId'); if(a && document.activeElement !== a) a.value = c.clientId||'';
+  const b = $('gdRootName'); if(b && document.activeElement !== b) b.value = c.rootName||'';
+}
+function gdSaveSettings(){
+  const c = gdCfg();
+  c.clientId = String(($('gdClientId')||{}).value||'').trim();
+  c.rootName = String(($('gdRootName')||{}).value||'').trim();
+  persist(); renderGdSetting();
+  toast('Drive settings saved');
+  if(c.clientId && gdSecureOrigin()) gdConnect(false);
+}
+function gdHelp(){
+  alert(
+    'Getting a Google client ID — about ten minutes, once.\n\n'+
+    '1.  Go to console.cloud.google.com and create a project (any name).\n'+
+    '2.  APIs & Services → Library → enable "Google Drive API".\n'+
+    '3.  APIs & Services → OAuth consent screen → External → fill in the app name and\n'+
+    '     your email → add yourself under Test users.\n'+
+    '4.  APIs & Services → Credentials → Create credentials →\n'+
+    '     OAuth client ID → Web application.\n'+
+    '5.  Under "Authorised JavaScript origins" add the exact address you open this app\n'+
+    '     from, e.g.  https://yourclinic.example.com\n'+
+    '     (Google will not accept a file:// path — the app has to be on a web address.)\n'+
+    '6.  Copy the client ID it gives you and paste it into the box here.\n\n'+
+    'This address, right now, is:\n     '+location.origin+
+    (gdSecureOrigin() ? '' : '\n\n⚠ That is not an address Google will accept. Put the file on a web\n     address, or open it from http://localhost while testing.')
+  );
+}
+/* ---- compression settings panel ---- */
+function renderCmpSetting(){
+  const c = cmpCfg();
+  const set = (id, v)=>{ const e=$(id); if(e) e.value = v; };
+  set('cqDim', c.maxDim); set('cqQ', c.q); set('cqXdim', c.xrayDim); set('cqXq', c.xrayQ);
+  const g = $('cqGentle'); if(g) g.checked = c.gentle !== false;
+  cmpPreview();
+}
+function cmpPreview(){
+  const v = (id)=>parseInt((($(id)||{}).value||'0'),10);
+  const t = (id, s)=>{ const e=$(id); if(e) e.textContent = s; };
+  t('cqDimV',  v('cqDim')+' px');
+  t('cqQV',    v('cqQ')+'%');
+  t('cqXdimV', v('cqXdim')+' px');
+  t('cqXqV',   v('cqXq')+'%');
+  /* a 12 MP phone photo is about 4 MB; JPEG size runs roughly with pixel count and quality,
+     so this gives an honest order-of-magnitude before the doctor commits to a setting */
+  const est = (dim, q)=>{
+    const px = dim*dim*0.62;                       // a 4:3 frame at that longest side
+    const bpp = 0.045 * Math.pow(q/85, 3.1);       // bytes per pixel, fitted to real files
+    return fmtBytes(Math.round(px*bpp));
+  };
+  const o = $('cqOut');
+  if(o && !o.dataset.busy) o.innerHTML =
+    'A 4&nbsp;MB phone photo lands at roughly <b>'+est(v('cqDim'), v('cqQ'))+'</b>, '+
+    'and a plain film at roughly <b>'+est(v('cqXdim'), v('cqXq'))+'</b>.';
+}
+function cmpSave(){
+  const v = (id)=>parseInt((($(id)||{}).value||'0'),10);
+  cmpSetCfg({maxDim:v('cqDim'), q:v('cqQ'), xrayDim:v('cqXdim'), xrayQ:v('cqXq'),
+             gentle: !!(($('cqGentle')||{}).checked)});
+  toast('Image quality saved');
+  cmpPreview();
+}
+function cmpReset(){
+  db.settings.imgQual = {}; persist(); renderCmpSetting(); toast('Back to the defaults');
+}
+/* run the real compressor on a real file so the doctor can judge it with their own eyes */
+function cmpTry(){
+  let inp = $('cqTryFile');
+  if(!inp){ inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+    inp.id='cqTryFile'; inp.style.display='none'; document.body.appendChild(inp); }
+  inp.onchange = async function(){
+    const f = inp.files && inp.files[0]; inp.value='';
+    if(!f) return;
+    const o = $('cqOut'); if(!o) return;
+    o.dataset.busy = '1';
+    o.innerHTML = 'Compressing…';
+    try{
+      cmpSetCfg({maxDim:parseInt($('cqDim').value,10), q:parseInt($('cqQ').value,10),
+                 xrayDim:parseInt($('cqXdim').value,10), xrayQ:parseInt($('cqXq').value,10),
+                 gentle: !!$('cqGentle').checked});
+      const r = await compressImage(f);
+      o.innerHTML = '<div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">'+
+        '<img src="'+r.full+'" style="max-width:230px;border-radius:10px;border:1px solid var(--line)">'+
+        '<div style="line-height:1.7"><b>'+esc(f.name)+'</b><br>'+
+        fmtBytes(r.origBytes)+' → <b style="color:var(--green,#16a34a)">'+fmtBytes(r.bytes)+'</b>'+
+        ' &nbsp;(' + Math.max(1, Math.round(100 - r.bytes/Math.max(1,r.origBytes)*100)) + '% smaller)<br>'+
+        r.w+' × '+r.h+' px<br>'+
+        (r.grey ? 'Read as a <b>radiograph</b> — the gentler setting was used.' :
+                  'Read as a <b>colour photograph</b>.')+
+        '<br><span class="muted small">Drive still receives the original, untouched.</span></div></div>';
+    }catch(e){ o.innerHTML = '⚠ That file could not be read as an image.'; }
+    o.dataset.busy = '';
+  };
+  inp.click();
+}
+
+
 /* ===== Sidebar model (generated) ===== */
 const TAB_ICONS={"mdt": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"8\" cy=\"8\" r=\"2.6\"/><circle cx=\"16.4\" cy=\"8.6\" r=\"2.2\"/><path d=\"M3.4 18c.6-2.8 2.4-4.3 4.6-4.3s4 1.5 4.6 4.3\"/><path d=\"M14.4 13.6c2 .3 3.4 1.6 4 3.6\"/><path d=\"M12 20.5h9\"/></svg>", "home": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11l8-7 8 7\"/><path d=\"M6 9.5V20h12V9.5\"/><path d=\"M10 20v-6h4v6\"/></svg>", "visit": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 8v8M8 12h8\"/></svg>", "registry": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 4h9l3 3v13H6z\"/><path d=\"M9 4v4h6\"/><path d=\"M9.5 13.5l1.6 1.6 3-3.2\"/><circle cx=\"12\" cy=\"12\" r=\"9\" opacity=\"0\"/></svg>", "queue": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 8a2 2 0 0 0 2-2h12a2 2 0 0 0 2 2v2a2.2 2.2 0 0 0 0 4v2a2 2 0 0 0-2 2H6a2 2 0 0 0-2-2v-2a2.2 2.2 0 0 0 0-4z\"/><path d=\"M12 9v1.5M12 13.5V15\"/></svg>", "appts": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"5.5\" width=\"16\" height=\"15\" rx=\"2\"/><path d=\"M8 3.5V7M16 3.5V7M4 10.5h16\"/><path d=\"M9 14.5l2 2 4-4\"/></svg>", "patients": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"9\" cy=\"8\" r=\"3.2\"/><path d=\"M3.8 19c.7-3 2.7-4.6 5.2-4.6s4.5 1.6 5.2 4.6\"/><circle cx=\"16.8\" cy=\"9.2\" r=\"2.4\"/><path d=\"M15.6 14.7c2.2.4 3.7 1.7 4.3 3.9\"/></svg>", "discharge": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M14 3v4h4\"/><path d=\"M9.3 14.8l2 2 3.6-3.8\"/></svg>", "documents": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M14 3v4h4\"/><path d=\"M9 12h6M9 16h6\"/></svg>", "oplog": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"6\" y=\"5\" width=\"12\" height=\"16\" rx=\"2\"/><path d=\"M9.5 5V3.5h5V5\"/><path d=\"M9.5 10.5h5M9.5 14h5M9.5 17.5h3\"/></svg>", "medicines": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3.5\" y=\"9.5\" width=\"17\" height=\"8\" rx=\"4\" transform=\"rotate(-35 12 13.5)\"/><path d=\"M8.6 8.9l6.8 4.8\"/></svg>", "videos": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"3\"/><path d=\"M10 9.2l5 2.8-5 2.8z\"/></svg>", "scores": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M8 7h8M8 11h8M8 15h4\"/></svg>", "inventory": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 8l9-5 9 5-9 5z\"/><path d=\"M3 8v8l9 5 9-5V8\"/><path d=\"M12 13v8\"/></svg>", "income": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"7\" width=\"18\" height=\"10\" rx=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"2.4\"/><path d=\"M6.4 12h.01M17.6 12h.01\"/></svg>", "analytics": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 20v-7M12 20V5M19 20v-4\"/></svg>", "settings": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 8h14M5 16h14\"/><circle cx=\"10\" cy=\"8\" r=\"2.2\"/><circle cx=\"14.5\" cy=\"16\" r=\"2.2\"/></svg>"};
 const TAB_LABELS_DEFAULT={"home": "Home", "visit": "New Prescription", "registry": "Tumour Registry", "mdt": "MDT Board", "queue": "Queue", "appts": "Appointments", "patients": "Patients", "discharge": "Discharge", "documents": "Documents", "oplog": "Op Log", "medicines": "Medicines", "videos": "Exercises", "scores": "Scores & Criteria", "inventory": "Implants & Inventory", "income": "Income", "analytics": "Analytics", "settings": "Settings"};
 const GROUP_ICONS={"ng-onco": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3c2.2 1.6 2.2 4.2 0 5.8-2.2 1.6-2.2 4.2 0 5.8\"/><path d=\"M12 3c-2.2 1.6-2.2 4.2 0 5.8 2.2 1.6 2.2 4.2 0 5.8\"/><circle cx=\"12\" cy=\"18.5\" r=\"2.5\"/></svg>", "ng-clinic": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 3v6a5 5 0 0 0 10 0V3\"/><path d=\"M12 14v3a4 4 0 0 0 8 0v-1\"/><circle cx=\"20\" cy=\"14\" r=\"2\"/></svg>", "ng-docs": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M14 3v4h4\"/><path d=\"M9 12h6M9 16h6\"/></svg>", "ng-library": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.5 7a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z\"/></svg>", "ng-tools": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 6a3.5 3.5 0 0 0-4.9 4.9l-5 5a1.5 1.5 0 0 0 2.1 2.1l5-5A3.5 3.5 0 0 0 18 10\"/><path d=\"M13.5 10.5l6 6\"/></svg>", "ng-practice": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 19V10M10 19V5M16 19v-7\"/><path d=\"M20 19H4\"/></svg>"};
 const GROUP_TITLES_DEFAULT={"ng-onco": "Oncology", "ng-clinic": "Clinic Day", "ng-docs": "Paperwork", "ng-library": "Library & Logs", "ng-tools": "Clinical Tools", "ng-practice": "Practice"};
 const DEFAULT_NAV=[{"type": "leaf", "tab": "home"}, {"type": "leaf", "tab": "visit"}, {"type": "group", "id": "ng-onco", "open": true, "children": [{"type": "leaf", "tab": "registry"}, {"type": "leaf", "tab": "mdt"}]}, {"type": "group", "id": "ng-clinic", "open": true, "children": [{"type": "leaf", "tab": "queue"}, {"type": "leaf", "tab": "appts"}, {"type": "leaf", "tab": "patients"}]}, {"type": "group", "id": "ng-docs", "open": false, "children": [{"type": "leaf", "tab": "discharge"}, {"type": "leaf", "tab": "documents"}]}, {"type": "group", "id": "ng-library", "open": false, "children": [{"type": "leaf", "tab": "oplog"}, {"type": "leaf", "tab": "medicines"}, {"type": "leaf", "tab": "videos"}]}, {"type": "group", "id": "ng-tools", "open": false, "children": [{"type": "leaf", "tab": "scores"}, {"type": "leaf", "tab": "inventory"}]}, {"type": "group", "id": "ng-practice", "open": false, "children": [{"type": "leaf", "tab": "income"}, {"type": "leaf", "tab": "analytics"}, {"type": "leaf", "tab": "settings"}]}];
+
+/* ==================== PHONE FORM NAVIGATION ====================
+   One picker bar instead of a squashed rail, plus swiping between sections. The bar is the
+   thing that was missing: on a phone you could never see which section you were in, how many
+   there were, or which ones you had already filled.
+
+   Everything here is driven by the SAME item list the desktop rail uses, so a section added
+   to a form appears on the phone without a second edit.                                  */
+const PR_BP = 900;
+function prPhone(){ return window.innerWidth <= PR_BP; }
+/* one shape for every rail in the app, including the registry's own */
+function prAdapter(key){
+  if(key === 'reg'){
+    const items = [];
+    REG_SCHEMA.forEach(function(sec, si){
+      sec.subs.forEach(function(sub, bi){
+        items.push({k:si+'-'+bi, ic:REG_SUB_ICONS[items.length % REG_SUB_ICONS.length],
+                    t:sub.name, s:sec.name, grp:sec.name});
+      });
+    });
+    items.push({k:'cf', ic:'\ud83d\uddc2', t:'Case files',      s:'Images & documents by stage', grp:'Case file'});
+    items.push({k:'fu', ic:'\ud83d\udcc8', t:'Follow-up notes', s:'A note & folder per visit',   grp:'Case file'});
+    return {items:items, cur:regRailCur, full:(regFormMode()==='full'),
+            panes:'regFPanes', wrap:'regFWrap',
+            pick:function(rk){ regRailPick(rk); },
+            filled:function(rk){
+              if(rk==='cf') return cfWork ? CF_STAGES.reduce(function(t,s){ return t+((cfWork[s.k]||{}).items||[]).length; },0) : 0;
+              if(rk==='fu') return cfWork ? (cfWork.fu||[]).length : 0;
+              return regPaneFilled(rk); }};
+  }
+  const c = RAILS[key]; if(!c) return null;
+  return {items:c.items, cur:c.cur, full:(railMode(key)==='full'),
+          panes:c.panes, wrap:c.wrap,
+          pick:function(rk){ railPick(key, rk); },
+          filled:function(rk){
+            const it = c.items.filter(function(x){ return x.k===rk; })[0];
+            if(it && typeof it.count === 'function'){ try{ return it.count()||0; }catch(e){ return 0; } }
+            return railPaneFilled(key, rk); }};
+}
+function prTint(i){
+  const t = ['#0d9488','#d97706','#4f46e5','#e11d48','#16a34a','#7c3aed','#0284c7','#ea580c'][i%8];
+  const dark = document.documentElement.getAttribute('data-theme')==='dark';
+  const bg = dark ? ['#0c2320','#291f0d','#171a33','#2b1119','#0e2417','#1d1533','#0a1f2e','#2a1508'][i%8]
+                  : ['#f0fdfa','#fffbeb','#eef2ff','#fff1f2','#f0fdf4','#f5f3ff','#f0f9ff','#fff7ed'][i%8];
+  const ic = dark ? ['#123f39','#43330f','#252a55','#471a27','#163a24','#2e2153','#0f3249','#442310'][i%8]
+                  : ['#ccfbf1','#fef3c7','#e0e7ff','#ffe4e6','#dcfce7','#ede9fe','#e0f2fe','#ffedd5'][i%8];
+  return '--tile-ac:'+t+';--tile-bg:'+bg+';--tile-ic:'+ic+';';
+}
+/* the sticky bar, rebuilt whenever the open section changes */
+function prRender(key){
+  const a = prAdapter(key); if(!a) return;
+  const host = $(a.panes); if(!host) return;
+  let bar = host.querySelector(':scope > .pr-bar');
+  if(a.full || !prPhone()){ if(bar) bar.remove(); return; }
+  if(!bar){
+    bar = document.createElement('div');
+    bar.className = 'pr-bar';
+    bar.setAttribute('role','button');
+    bar.setAttribute('aria-label','Choose a section');
+    bar.onclick = function(){ prOpen(key); };
+    host.insertBefore(bar, host.firstChild);
+    prBindSwipe(key, host);
+  }
+  let i = a.items.map(function(x){ return x.k; }).indexOf(a.cur);
+  if(i < 0) i = 0;
+  const it = a.items[i];
+  bar.setAttribute('style', prTint(i));
+  bar.innerHTML =
+    '<div class="pr-t"><span class="pr-ic">'+it.ic+'</span>'+
+      '<span class="pr-n"><b>'+esc(it.t)+'</b><span>'+esc(it.s||'')+'</span></span>'+
+      '<span class="pr-c">'+(i+1)+' of '+a.items.length+'</span>'+
+      '<span class="pr-v">\u25b2</span></div>'+
+    '<div class="pr-prog">'+a.items.map(function(x, ix){
+      const cls = (ix===i) ? 'cur' : (a.filled(x.k) > 0 ? 'done' : '');
+      return '<i class="'+cls+'"></i>'; }).join('')+'</div>';
+}
+function prSheetEl(){
+  let s = $('prSheet');
+  if(!s){
+    s = document.createElement('div'); s.id='prSheet'; s.className='pr-sheet';
+    s.innerHTML = '<div class="pr-scrim" onclick="prClose()"></div>'+
+      '<div class="pr-card"><div class="pr-grab"></div>'+
+      '<div class="pr-h"><b>Jump to a section</b><button type="button" aria-label="Close" onclick="prClose()">\u2715</button></div>'+
+      '<div class="pr-grid" id="prGrid"></div></div>';
+    document.body.appendChild(s);
+  }
+  return s;
+}
+let prKey = null;
+function prOpen(key){
+  prKey = key;
+  const a = prAdapter(key); if(!a) return;
+  const s = prSheetEl();
+  let html = '', lastGrp = null;
+  a.items.forEach(function(it, i){
+    if(it.grp && it.grp !== lastGrp){ html += '<div class="pr-gh">'+esc(it.grp)+'</div>'; lastGrp = it.grp; }
+    const n = a.filled(it.k);
+    html += '<button type="button" class="fr-tile'+(it.k===a.cur?' on':'')+'" data-tint="'+(i%8)+'" '+
+      'style="'+prTint(i)+'" onclick="prGo(\''+String(it.k).replace(/'/g,"\\'")+'\')">'+
+      '<span class="frt-ic">'+it.ic+'</span>'+
+      '<span class="frt-tx"><b>'+esc(it.t)+'</b><span>'+esc(it.s||'')+'</span></span>'+
+      '<span class="frt-tick'+(n>0?' done frt-num':'')+'">'+(n>0 ? (typeof n==='number'&&n>0?'\u2713':'') : '')+'</span></button>';
+  });
+  $('prGrid').innerHTML = html;
+  requestAnimationFrame(function(){ s.classList.add('open'); });
+}
+function prClose(){ const s = $('prSheet'); if(s) s.classList.remove('open'); }
+function prGo(rk){
+  const a = prAdapter(prKey); if(!a) return;
+  prClose();
+  setTimeout(function(){
+    a.pick(rk);
+    const w = $(a.wrap); if(w) w.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 130);
+}
+/* swipe between sections — but never steal a swipe meant for a wide table, a carousel,
+   or the text the doctor is selecting inside a note */
+function prBindSwipe(key, host){
+  if(host.dataset.prSwipe) return;
+  host.dataset.prSwipe = '1';
+  let x0 = null, y0 = null, ok = false;
+  host.addEventListener('touchstart', function(e){
+    if(e.touches.length !== 1){ ok = false; return; }
+    const t = e.target;
+    ok = !(t.closest('input,textarea,select,.tscroll,.snap,.cf-grid,.tl-thumbs,.chiprow,.rom-dial,.slr-gauge,[contenteditable]'));
+    if(!ok) return;
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+  }, {passive:true});
+  host.addEventListener('touchend', function(e){
+    if(!ok || x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    const dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if(Math.abs(dx) < 62 || Math.abs(dy) > 55) return;
+    prStep(key, dx < 0 ? 1 : -1);
+  }, {passive:true});
+}
+function prStep(key, dir){
+  const a = prAdapter(key); if(!a || a.full) return;
+  let i = a.items.map(function(x){ return x.k; }).indexOf(a.cur);
+  if(i < 0) i = 0;
+  const j = i + dir;
+  if(j < 0 || j >= a.items.length) return;
+  a.pick(a.items[j].k);
+  const w = $(a.wrap); if(w) w.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function prRenderAll(){
+  ['visit','ds','pat','mdt'].forEach(function(k){ try{ prRender(k); }catch(e){} });
+  try{ if(typeof regFormBuilt !== 'undefined' && regFormBuilt) prRender('reg'); }catch(e){}
+}
+addEventListener('resize', function(){
+  clearTimeout(window.__prT);
+  window.__prT = setTimeout(prRenderAll, 200);
+});
+
+/* ==================== PHONE BOTTOM BAR ====================
+   Four destinations under the thumb and a More sheet for the rest. Which four is the
+   doctor's choice — a surgeon who lives in the registry should not have to pass through a
+   menu to reach it.                                                                      */
+const MBAR_DEF = ['home','visit','queue','patients'];
+const TAB_SHORT = {home:'Home', visit:'New Rx', registry:'Registry', mdt:'MDT', queue:'Queue',
+  appts:'Diary', patients:'Patients', discharge:'Discharge', documents:'Docs', oplog:'Op log',
+  medicines:'Drugs', videos:'Videos', scores:'Scores', inventory:'Stock', income:'Income',
+  analytics:'Stats', settings:'Settings', sync:'Sync'};
+const TAB_SUBS = {home:'Today at a glance', visit:'Write & print', registry:'Sarcoma cases',
+  mdt:'Cases & decisions', queue:'Tokens & arrivals', appts:'Bookings & calendar',
+  patients:'Records & history', discharge:'Summaries for going home', documents:'Certificates & letters',
+  oplog:'Every operation', medicines:'Your drug library', videos:'Exercises for patients',
+  scores:'MSTS, TESS, criteria', inventory:'Implants & stock', income:'Fees & expenses',
+  analytics:'Ten practice metrics', settings:'Clinic, printing, app', sync:'Your other devices'};
+const TAB_TINT = {home:0, visit:2, registry:5, mdt:3, queue:1, appts:6, patients:4, discharge:0,
+  documents:6, oplog:2, medicines:3, videos:7, scores:5, inventory:1, income:4, analytics:6,
+  settings:2, sync:6};
+function tabAc(tab){ return ['#0d9488','#d97706','#4f46e5','#e11d48','#16a34a','#7c3aed','#0284c7','#ea580c'][(TAB_TINT[tab]||0)%8]; }
+function mBarTabs(){
+  const want = (db.settings.mobBar && db.settings.mobBar.length) ? db.settings.mobBar : MBAR_DEF;
+  const out = want.filter(function(t){ return TAB_LABELS_DEFAULT[t] && userAllowed(currentUser, t); }).slice(0,4);
+  MBAR_DEF.forEach(function(t){ if(out.length<4 && out.indexOf(t)<0 && userAllowed(currentUser,t)) out.push(t); });
+  return out;
+}
+function allNavTabs(){
+  const out = [];
+  navModel().forEach(function(item){
+    if(item.hidden) return;
+    if(item.type === 'leaf'){ if(userAllowed(currentUser, item.tab)) out.push({tab:item.tab, grp:'Main'}); }
+    else (item.children||[]).forEach(function(c){
+      if(!c.hidden && userAllowed(currentUser, c.tab)) out.push({tab:c.tab, grp:grpTitle(item)}); });
+  });
+  return out;
+}
+function renderMBar(){
+  let bar = $('mTabBar');
+  if(!bar){
+    bar = document.createElement('nav'); bar.id='mTabBar';
+    bar.setAttribute('aria-label','Main');
+    document.body.appendChild(bar);
+  }
+  const cur = (document.querySelector('section.tab.active')||{}).id || '';
+  const now = cur.replace('tab-','');
+  const tabs = mBarTabs();
+  const waiting = (db.queue||[]).filter(function(q){ return q.date===localISO() && q.status==='waiting'; }).length;
+  const due = (typeof fuDueList==='function') ? fuDueList().length : 0;
+  const badge = {queue:waiting, patients:due, mdt:(db.mdt||[]).filter(function(m){ return m.stage!=='done'; }).length};
+  bar.innerHTML = tabs.map(function(t){
+    const b = badge[t]||0;
+    return '<button type="button" class="'+(now===t?'on':'')+'" onclick="showTab(\''+t+'\');renderMBar()" '+
+      'style="--mt-ac:'+tabAc(t)+'" aria-label="'+esc(navLabel(t))+'">'+
+      '<span class="mt-i">'+tabIcon(t)+'</span>'+
+      '<span class="mt-l">'+esc(TAB_SHORT[t]||navLabel(t))+'</span>'+
+      (b>0 ? '<span class="mt-b">'+(b>9?'9+':b)+'</span>' : '')+'</button>';
+  }).join('')+
+  '<button type="button" class="'+(tabs.indexOf(now)<0?'on':'')+'" onclick="mMoreOpen()" aria-label="More">'+
+    '<span class="mt-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg></span>'+
+    '<span class="mt-l">More</span></button>';
+}
+function mMoreOpen(){
+  let m = $('mMore');
+  if(!m){
+    m = document.createElement('div'); m.id='mMore';
+    m.innerHTML = '<div class="pr-scrim" onclick="mMoreClose()"></div>'+
+      '<div class="pr-card"><div class="pr-grab"></div>'+
+      '<div class="pr-h"><b>Everything else</b><button type="button" aria-label="Close" onclick="mMoreClose()">\u2715</button></div>'+
+      '<div id="mMoreBody"></div></div>';
+    document.body.appendChild(m);
+  }
+  const inBar = mBarTabs();
+  const rest = allNavTabs().filter(function(x){ return inBar.indexOf(x.tab) < 0; });
+  let html = '', grp = null;
+  rest.forEach(function(x, i){
+    if(x.grp !== grp){
+      if(grp !== null) html += '</div>';
+      html += '<div class="mm-cap">'+esc(x.grp)+'</div><div class="mm-grid">';
+      grp = x.grp;
+    }
+    html += '<button type="button" style="--mt-ac:'+tabAc(x.tab)+'" onclick="showTab(\''+x.tab+'\');mMoreClose();renderMBar()">'+
+      tabIcon(x.tab)+'<span>'+esc(TAB_SHORT[x.tab]||navLabel(x.tab))+'</span></button>';
+  });
+  if(grp !== null) html += '</div>';
+  $('mMoreBody').innerHTML = html;
+  requestAnimationFrame(function(){ m.classList.add('open'); });
+}
+function mMoreClose(){ const m = $('mMore'); if(m) m.classList.remove('open'); }
+
+/* ---- the drawer's own search, phone only ---- */
+function mNavSearch(v){
+  const q = String(v||'').trim().toLowerCase();
+  const nav = $('sideNav'); if(!nav) return;
+  nav.querySelectorAll('button[data-tab]').forEach(function(b){
+    b.classList.toggle('mnav-hide', !!q && (b.textContent||'').toLowerCase().indexOf(q) < 0);
+  });
+  nav.querySelectorAll('.nav-group').forEach(function(g){
+    const any = !!g.querySelector('button[data-tab]:not(.mnav-hide)');
+    g.classList.toggle('mnav-hide', !!q && !any);
+    if(q) g.classList.add('open');
+  });
+}
+function mNavDecorate(){
+  const nav = $('sideNav'); if(!nav) return;
+  let box = nav.parentElement.querySelector('.mnav-search');
+  if(!box){
+    box = document.createElement('div'); box.className='mnav-search';
+    box.innerHTML = '<input type="search" id="mNavQ" placeholder="Search the menu…" '+
+      'autocomplete="off" data-norail="1" oninput="mNavSearch(this.value)">';
+    nav.parentElement.insertBefore(box, nav);
+  }
+  nav.querySelectorAll('button[data-tab]').forEach(function(b){
+    const t = b.dataset.tab;
+    b.style.setProperty('--mt-ac', tabAc(t));
+    const sp = b.querySelector('span');
+    if(sp && !sp.querySelector('.nsub')){
+      /* move the label (and the queue count that rides with it) into one row, so the
+         subtitle can sit on a second line without the count stretching across the tile */
+      const lab = document.createElement('i'); lab.className = 'nlab';
+      while(sp.firstChild) lab.appendChild(sp.firstChild);
+      sp.appendChild(lab);
+      const i = document.createElement('i'); i.className='nsub';
+      i.textContent = TAB_SUBS[t] || '';
+      sp.appendChild(i);
+    }
+  });
+}
+/* ---- choosing which four live in the bar (Settings → App preferences) ---- */
+function renderMBarPick(){
+  const host = $('mbPick'); if(!host) return;
+  const cur = mBarTabs();
+  host.innerHTML = allNavTabs().map(function(x){
+    const on = cur.indexOf(x.tab) >= 0;
+    return '<button type="button" class="chip'+(on?' on':'')+'" onclick="mBarToggle(\''+x.tab+'\')">'+
+      esc(TAB_SHORT[x.tab]||navLabel(x.tab))+'</button>';
+  }).join('');
+  const n = $('mbCount');
+  if(n) n.textContent = cur.length+' of 4 chosen — ' + cur.map(function(t){ return TAB_SHORT[t]||t; }).join(' · ');
+}
+function mBarToggle(tab){
+  let cur = mBarTabs().slice();
+  const i = cur.indexOf(tab);
+  if(i >= 0) cur.splice(i,1);
+  else { if(cur.length >= 4) cur.shift(); cur.push(tab); }
+  db.settings.mobBar = cur; persist();
+  renderMBarPick(); renderMBar();
+}
+
 
 /* ==================== CUSTOMISABLE SIDEBAR + LABEL EDITING ==================== */
 const FOLDER_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg>';
@@ -13523,6 +15246,8 @@ function renderSidebar(){
     }
   });
   nav.innerHTML=h;
+  if(typeof mNavDecorate==='function') mNavDecorate();
+  if(typeof renderMBar==='function') renderMBar();
   // restore active state + dots
   const cur=document.querySelector('section.tab.active');
   const name=cur?cur.id.replace('tab-',''):null;
