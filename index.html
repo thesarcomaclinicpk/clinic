@@ -775,6 +775,16 @@ input.rx-ur:focus{border-style:solid}
 /* ===== Tumour Registry ===== */
 #tab-registry .reg-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .reg-selbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;padding:8px 12px;background:var(--teal-tint,rgba(20,140,140,.08));border:1px solid var(--teal);border-radius:12px}
+.reg-selbar > span:first-child{font-size:13px;margin-right:2px}
+.reg-selbar .btn{flex:none}
+.sel-cb{width:17px;height:17px;cursor:pointer}
+@media(max-width:768px){
+  /* a selection bar you can actually work with on a phone: it follows you down the list */
+  .reg-selbar{position:sticky;top:calc(54px + env(safe-area-inset-top));z-index:7;
+    box-shadow:0 4px 14px rgba(0,0,0,.10);background:var(--card);border-color:var(--teal)}
+  .reg-selbar .btn{flex:1 1 auto;justify-content:center;min-width:0}
+  .reg-selbar > span:first-child{flex:1 0 100%}
+}
 .reg-selbar #regSelCount{font-weight:700;color:var(--teal);margin-right:2px}
 .reg-menu-head{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:6px 12px 2px}
 tr.reg-rowsel{background:var(--teal-tint,rgba(20,140,140,.08))}
@@ -930,6 +940,77 @@ html[data-theme="dark"] .ph-hd{background:#16242f}
 .fr-nav .frn-kbd kbd{font:inherit;background:var(--hover,#eef3f6);border:1px solid var(--line);
   border-radius:5px;padding:1px 5px;margin:0 1px}
 @media(max-width:600px){ .fr-nav .frn-kbd{display:none} .fr-nav .frn-b{max-width:42%} }
+/* ================= PHONE LIST TYPOGRAPHY =================
+   The sizes across the app had drifted to a mix of 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5 and
+   14 px depending on which screen you were on, which is why the lists read as "all over the
+   place". Every list now sits on one four-step scale.                                       */
+:root{ --t-title:15px; --t-body:13px; --t-meta:11.5px; --t-chip:10.5px; }
+@media(max-width:768px){
+  table.list th{font-size:10.5px;letter-spacing:.5px}
+  table.list td{font-size:var(--t-body)}
+  table.list td b{font-size:var(--t-body);font-weight:700}
+  table.list td .small, table.list td .muted{font-size:var(--t-meta)}
+  .empty b{font-size:var(--t-title)}
+}
+/* ================= REGISTRY ON A PHONE: cards, grouped by month ================= */
+.reg-cards{display:none}
+@media(max-width:768px){
+  table.list.rec-table{display:none}
+  #tab-registry .reg-table{display:none}
+  .reg-cards{display:block}
+  .rc-grp{position:sticky;top:calc(54px + env(safe-area-inset-top));z-index:6;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    background:var(--bg);padding:10px 3px 7px;font-size:var(--t-meta);font-weight:800;
+    letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+  .rc-grp .n{background:var(--teal-light);color:var(--teal-dark);border-radius:999px;
+    padding:1px 9px;font-size:10px;letter-spacing:.2px;flex:none}
+  .rc-grp.warn{color:#b45309}
+  .rc-grp.warn .n{background:#fef3c7;color:#92400e}
+  .rc{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:11px 12px;margin-bottom:9px;overflow:hidden;cursor:pointer;transition:.14s}
+  .rc:active{transform:scale(.995)}
+  .rc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--rc-ac,#94a3b8)}
+  .rc.on{border-color:var(--teal);box-shadow:0 6px 18px rgba(14,116,144,.16)}
+  .rc-h{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+  .rc-h b{font-size:var(--t-title);font-weight:700;flex:1;min-width:0;letter-spacing:-.2px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rc-no{font-size:var(--t-meta);font-weight:800;color:var(--teal-dark);
+    font-variant-numeric:tabular-nums;letter-spacing:.2px;flex:none}
+  .rc-no.warn{color:#d97706}
+  .rc-dx{font-size:var(--t-body);line-height:1.4;margin-bottom:5px}
+  .rc-dx .sub{color:var(--muted);font-size:var(--t-meta)}
+  .rc-op{font-size:var(--t-body);color:var(--muted);line-height:1.4;display:flex;gap:6px;margin-bottom:8px}
+  .rc-op .i{flex:none;opacity:.75}
+  .rc-op .t{min-width:0}
+  .rc-f{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .rc-f .dt{font-size:var(--t-meta);color:var(--muted);margin-left:auto;white-space:nowrap}
+  .rc-f .reg-tag{font-size:var(--t-chip)}
+  .rc-cb{position:absolute;top:9px;right:9px;width:22px;height:22px;margin:0;
+    accent-color:var(--teal);cursor:pointer;display:none}
+  body.reg-picking .rc-cb{display:block}
+  body.reg-picking .rc-h{padding-right:26px}
+  .rc-mr{font-size:var(--t-meta);color:var(--muted)}
+  .rc-more{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+  .rc-more .btn{flex:1 1 auto;justify-content:center;font-size:var(--t-meta);padding:7px 8px}
+  .rc-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;
+    font-size:var(--t-meta);color:var(--muted);font-weight:700;margin:0 2px 8px}
+  .rc-bar button{background:none;border:0;color:var(--teal);font-weight:700;font-size:var(--t-meta);
+    cursor:pointer;padding:2px 4px;width:auto;font-family:inherit}
+  .rc-empty{padding:26px 10px;text-align:center;color:var(--muted);font-size:var(--t-body)}
+  /* A whole screen of chrome before the first case is a screen you have to scroll past every
+     time. The numbers, the toolbar and the date filter all get tighter on a phone. */
+  #tab-registry .grid.g5, #tab-registry #regKpis{grid-template-columns:1fr 1fr 1fr!important;gap:7px}
+  #tab-registry .tile{padding:9px 8px;border-radius:11px}
+  #tab-registry .tile .tv{font-size:19px}
+  #tab-registry .tile .tl{font-size:9.5px;letter-spacing:.3px}
+  #tab-registry .reg-toolbar .btn{flex:1 1 auto;justify-content:center;font-size:var(--t-body);padding:9px 10px}
+  #tab-registry .reg-toolbar .reg-menu-wrap{flex:1 1 auto;display:flex}
+  .dfbar{padding:7px 8px;gap:5px}
+  .dfbar .df-p{font-size:var(--t-meta);padding:4px 9px}
+  .dfbar input[type=date]{font-size:var(--t-meta)!important;padding:5px 7px;max-width:132px}
+  .dfbar .df-count{font-size:var(--t-meta)}
+  .search-row input, #regSearch{font-size:16px!important;padding:10px 12px}
+}
 /* ================= PHONE: form section picker (a sticky bar + a full-screen grid) =================
    On a desktop the rail is a column you can always see. Squeezed onto a phone it became a
    horizontal strip of half-cut tiles with the descriptions dropped — you could not tell where
@@ -1035,6 +1116,10 @@ html[data-theme="dark"] .ph-hd{background:#16242f}
     position:relative;overflow:hidden;min-height:52px}
   #side nav .nav-group{flex:0 0 auto}
   #side nav{padding-bottom:8px}
+  /* the bottom bar sits over the drawer, so the drawer's own footer — where Sign out lives —
+     has to end above it or it can never be tapped */
+  #side{padding-bottom:calc(64px + env(safe-area-inset-bottom))!important}
+  #side .side-foot{padding-bottom:6px}
   /* the label and its count sit on ONE row; the subtitle goes underneath */
   #side nav button[data-tab] .nlab{display:flex;align-items:center;gap:7px;min-width:0;
     font-size:13.6px;font-weight:600;line-height:1.25}
@@ -2514,7 +2599,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button class="btn btn-danger btn-sm" onclick="deleteSelectedPatients()">🗑 Delete selected</button>
       <button class="btn btn-ghost btn-sm" onclick="patClearSel()">Clear</button>
     </div>
-    <table class="list">
+    <div class="reg-cards" id="patCards"></div>
+    <table class="list rec-table">
       <thead><tr><th style="width:34px"><input type="checkbox" id="patSelAll" title="Select all shown" onclick="patToggleSelAll(this.checked)"></th><th>MR #</th><th>Name</th><th>Age / Sex</th><th>Diagnosis</th><th>Phone</th><th>Visits</th><th>Last visit</th><th style="width:150px"></th></tr></thead>
       <tbody id="patListBody"></tbody>
     </table>
@@ -2565,8 +2651,10 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button class="seg-btn" id="pdSegTl" onclick="pdView('timeline')">Full timeline</button>
     </div>
     <div id="pdVisitsWrap">
+      <div class="reg-selbar hidden" id="visitSelBar"></div>
       <table class="list">
-        <thead><tr><th>Date</th><th>Diagnosis</th><th>Medicines</th><th style="width:170px"></th></tr></thead>
+        <thead><tr><th style="width:34px"><input type="checkbox" id="visitSelAll" title="Select all" onclick="visitToggleSelAll(this.checked)"></th>
+          <th>Date</th><th>Diagnosis</th><th>Medicines</th><th style="width:170px"></th></tr></thead>
         <tbody id="pdVisits"></tbody>
       </table>
     </div>
@@ -2841,8 +2929,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <input type="text" id="dsSearch" placeholder="Search by patient, diagnosis, procedure…" autocomplete="off">
       <span class="muted small" id="dsCountLabel"></span>
     </div>
-    <table class="list">
-      <thead><tr><th>Date</th><th>Patient</th><th>Diagnosis</th><th>Procedure</th><th style="width:230px"></th></tr></thead>
+    <div class="reg-selbar hidden" id="dsSelBar"></div>
+    <div class="reg-cards" id="dsCards"></div>
+    <table class="list rec-table">
+      <thead><tr><th style="width:34px"><input type="checkbox" id="dsSelAll" title="Select all shown" onclick="dsToggleSelAll(this.checked)"></th>
+        <th>Date</th><th>Patient</th><th>Diagnosis</th><th>Procedure</th><th style="width:230px"></th></tr></thead>
       <tbody id="dsListBody"></tbody>
     </table>
     <div class="empty hidden" id="dsEmpty"><span class="ei">🏥</span><b>No discharge summaries yet</b><br>Create one above, or use the 🏥 button on any visit in a patient's record.</div>
@@ -2897,8 +2988,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <div class="search-row">
       <input type="text" id="docSearch" placeholder="Search by patient or type…" autocomplete="off" oninput="renderDocList()">
     </div>
-    <table class="list">
-      <thead><tr><th>Date</th><th>Patient</th><th>Type</th><th style="width:200px"></th></tr></thead>
+    <div class="reg-selbar hidden" id="docSelBar"></div>
+    <div class="reg-cards" id="docCards"></div>
+    <table class="list rec-table">
+      <thead><tr><th style="width:34px"><input type="checkbox" id="docSelAll" title="Select all shown" onclick="docToggleSelAll(this.checked)"></th>
+        <th>Date</th><th>Patient</th><th>Type</th><th style="width:200px"></th></tr></thead>
       <tbody id="docListBody"></tbody>
     </table>
     <div class="empty hidden" id="docEmpty"><span class="ei">📄</span><b>No documents yet</b><br>Certificates and letters you save will appear here.</div>
@@ -2948,8 +3042,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button class="btn btn-primary btn-sm" onclick="exportOpCsv()">⬇ Export for audit (Excel/CSV)</button>
       <span class="muted small" id="opCountLabel"></span>
     </div>
-    <table class="list">
-      <thead><tr><th>Date</th><th>Patient</th><th>Diagnosis</th><th>Procedure</th><th>Implant</th><th>Anesth.</th><th style="width:110px"></th></tr></thead>
+    <div class="reg-selbar hidden" id="opSelBar"></div>
+    <div class="reg-cards" id="opCards"></div>
+    <table class="list rec-table">
+      <thead><tr><th style="width:34px"><input type="checkbox" id="opSelAll" title="Select all shown" onclick="opToggleSelAll(this.checked)"></th>
+        <th>Date</th><th>Patient</th><th>Diagnosis</th><th>Procedure</th><th>Implant</th><th>Anesth.</th><th style="width:110px"></th></tr></thead>
       <tbody id="opListBody"></tbody>
     </table>
     <div class="empty hidden" id="opEmpty"><span class="ei">🦴</span><b>No operations logged yet</b><br>Add them above, or they're added automatically when you save a discharge with a procedure.</div>
@@ -2967,16 +3064,21 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <div class="pending-banner hidden" id="regPendingBanner"></div>
     <div class="reg-toolbar">
       <button class="btn btn-green" onclick="regNew()">+ New registry entry</button>
+      <!-- housekeeping. Hidden entirely once every number is settled and every date is sane —
+           there is nothing to check, so there is no reason for the buttons to sit there. -->
+      <span id="regFixWrap" class="hidden" style="display:contents">
       <button class="btn btn-ghost" onclick="openRegDateFix()" id="regFixBtn" title="Find cases with a missing or odd date of surgery">🩹 Check dates</button>
       <div class="reg-menu-wrap">
-        <button class="btn btn-ghost" onclick="regToggleMenu('regNoMenu',event)">🔢 Numbers ▾</button>
+        <button class="btn btn-ghost" onclick="regToggleMenu('regNoMenu',event)" id="regNoBtn">🔢 Numbers ▾</button>
         <div class="reg-menu hidden" id="regNoMenu">
           <div class="reg-menu-head">Registry numbers</div>
+          <button onclick="regCloseMenus();regConvertOld()" id="regOldBtn">🔁 Convert old-style numbers</button>
           <button onclick="regCloseMenus();openRegRestore()">↩ Restore original numbers</button>
           <button onclick="regCloseMenus();regRenumberPrompt()">🔢 Renumber all by surgery date…</button>
           <button onclick="regCloseMenus();openRegDateFix()">🩹 Check dates of surgery</button>
         </div>
       </div>
+      </span>
       <div class="reg-menu-wrap">
         <button class="btn btn-primary btn-sm" onclick="regToggleMenu('regImpMenu',event)">⬆ Import ▾</button>
         <div class="reg-menu hidden" id="regImpMenu">
@@ -2997,19 +3099,15 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <input type="text" id="regSearch" placeholder="Search any field — e.g. osteosarcoma, femur, R0…" autocomplete="off" spellcheck="false" style="max-width:340px" oninput="regRenderList()">
     </div>
     <div class="dfbar" id="regDf"></div>
-    <div class="reg-selbar hidden" id="regSelBar">
-      <span id="regSelCount">0 selected</span>
-      <button class="btn btn-primary btn-sm" onclick="regExportXlsx(true)">📊 Export selected → Excel</button>
-      <button class="btn btn-ghost btn-sm" onclick="regExportCsv(true)">📄 CSV</button>
-      <button class="btn btn-ghost btn-sm" onclick="regClearSel()">Clear selection</button>
-    </div>
-    <table class="list">
+    <div class="reg-selbar hidden" id="regSelBar"></div>
+    <div class="reg-cards" id="regCards"></div>
+    <table class="list reg-table">
       <thead><tr>
         <th style="width:34px"><input type="checkbox" id="regSelAll" title="Select all shown" onclick="regToggleSelAll(this.checked)"></th>
         <th style="width:88px">Reg #</th><th>Patient</th><th>Diagnosis</th>
-        <th style="width:120px">Site</th><th style="width:72px">Grade</th>
-        <th style="width:96px">Surgery</th><th style="width:120px">Status</th>
-        <th style="width:150px"></th>
+        <th>Procedure</th>
+        <th style="width:96px">Surgery</th><th style="width:112px">Status</th>
+        <th style="width:196px"></th>
       </tr></thead>
       <tbody id="regListBody"></tbody>
     </table>
@@ -3414,9 +3512,19 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button class="btn btn-primary" onclick="syncNow()">↻ Sync now</button>
       <button class="btn btn-ghost" onclick="syncPush().then(()=>toast('Uploaded')).catch(e=>toast('⚠ '+e.message))" title="Send this device's data up">⬆ Upload all</button>
       <button class="btn btn-ghost" onclick="if(confirm('Download cloud data and merge into this device?')) syncPull(false).then(()=>toast('Downloaded')).catch(e=>toast('⚠ '+e.message))" title="Bring cloud data down">⬇ Download all</button>
-      <label class="small" style="display:flex;align-items:center;gap:6px;margin-left:8px"><input type="checkbox" id="syncAuto" style="width:auto" onchange="syncToggleAuto(this.checked)"> Keep in sync automatically</label>
     </div>
     <p class="muted small mt">Two-way sync merges records (never deletes). Your assistant's new entries appear here, and yours on his device.</p>
+  </div>
+
+  <div class="card" data-set="sync">
+    <h2>📡 How often devices talk to each other</h2>
+    <p class="muted small" style="margin-top:-4px">Supabase's free plan allows two million <b>realtime messages</b> a month, and it counts one for every device that <i>receives</i> an update — so a single change with three devices connected costs three or four. This is where that budget goes.</p>
+    <div class="mb-pick" id="syncModePick" style="margin-top:12px"></div>
+    <div id="syncBudget" style="margin-top:14px"></div>
+    <div class="btn-bar" style="margin-top:10px">
+      <button class="btn btn-ghost btn-sm" onclick="syncResetMeter()">↺ Reset the meter</button>
+      <button class="btn btn-ghost btn-sm" onclick="syncExplain()">❔ What counts as a message?</button>
+    </div>
   </div>
 
   <div class="card">
@@ -4406,7 +4514,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 40;
+const SEED_VERSION = 41;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -4580,6 +4688,20 @@ function migrateDB(){
   if(!db.settings.imgQual) db.settings.imgQual={};
   if(!db.settings.fuLabels) db.settings.fuLabels=[];
   (db.registry||[]).forEach(function(r){ if(r && r.cf){ if(!Array.isArray(r.cf.fu)) r.cf.fu=[]; } });
+  /* v41: a number is provisional whenever it was NOT built from a date of surgery — that is the
+     whole rule. Marking it here means an entry imported or created before the rule existed
+     still settles itself the first time a surgery date is typed. */
+  if(typeof regNormaliseFlags==='function') regNormaliseFlags();
+  /* v42: realtime budget. Anyone already running auto-sync is moved to the polling mode once,
+     because the account this app ships to was 40% over Supabase's free allowance when the
+     amplification bug was found. Polling opens no realtime connection at all, so the usage
+     goes to zero immediately; Instant is one tap away in Settings once the meter proves the
+     fix works. */
+  if(db.settings.sync && !db.settings.sync.modeMigrated){
+    db.settings.sync.modeMigrated = true;
+    if(db.settings.sync.auto) db.settings.sync.mode = 'poll';
+    db.settings.sync.noticeDue = true;
+  }
   // v24: cloud sync config
   if(!db.settings.sync) db.settings.sync={url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false};
   if(!db.settings.sync.knownIds) db.settings.sync.knownIds={};
@@ -7743,6 +7865,8 @@ function renderPatientList(){
     .sort((a,b)=> lastVisitDate(b.id).localeCompare(lastVisitDate(a.id)));
   const alive=new Set(rows.map(p=>p.id));
   [...patSel].forEach(id=>{ if(!db.patients.some(p=>p.id===id)) patSel.delete(id); });
+  window.__patShown = rows.map(p=>p.id);
+  if(typeof cardsRender==='function') cardsRender('pat', rows);
   $('patListBody').innerHTML = rows.map(p=>{
     const vs = db.visits.filter(v=>v.patientId===p.id);
     const last = vs.length ? fmtDate(vs[vs.length-1].date) : '—';
@@ -7774,7 +7898,7 @@ const patSel = new Set();
 function patUpdateSelUI(rows){
   rows = rows || db.patients.filter(p=>!p.regOnly);
   const n=patSel.size;
-  const bar=$('patSelBar'); if(bar){ bar.classList.toggle('hidden', n===0); $('patSelCount').textContent=n+' selected'; }
+  selBar('patSelBar', patSel, {print:'patBatchPrint()', del:'deleteSelectedPatients()', clear:'patClearSel()'});
   const all=$('patSelAll'); if(all){ const shown=rows.length, sel=rows.filter(p=>patSel.has(p.id)).length; all.checked=shown>0&&sel===shown; all.indeterminate=sel>0&&sel<shown; }
 }
 function patToggleOne(id,on){ if(on) patSel.add(id); else patSel.delete(id);
@@ -7809,6 +7933,7 @@ function lastVisitDate(pid){
   return vs.length ? vs[vs.length-1].date : '';
 }
 function openPatient(pid){
+  if(typeof visitSel!=='undefined' && currentPatientId !== pid) visitSel.clear();
   const p = db.patients.find(x=>x.id===pid); if(!p) return;
   currentPatientId = pid;
   const pw=$('patWrap'); if(pw) pw.classList.add('hidden');
@@ -7828,8 +7953,10 @@ function openPatient(pid){
   $('pdHx').innerHTML = [p.allergies && ('<span class="'+(isNoAllergy(p.allergies)?'allergy-ok':'allergy-flag')+'">Allergies: '+esc(p.allergies)+'</span>'),
     p.medHx && ('Medical Hx: '+esc(p.medHx)), p.surgHx && ('Surgical Hx: '+esc(p.surgHx))].filter(Boolean).join(' &nbsp;·&nbsp; ');
   const vs = db.visits.filter(v=>v.patientId===pid).slice().reverse();
+  window.__visitShown = vs.map(v=>v.id);
   $('pdVisits').innerHTML = vs.length ? vs.map(v=>
-    '<tr><td>'+fmtDate(v.date)+((v.by||v.dur)?'<br><span class="small muted">'+[v.by&&('by '+esc(v.by)), v.dur&&(Math.max(1,Math.round(v.dur/60))+' min')].filter(Boolean).join(' · ')+'</span>':'')+'</td>'+
+    '<tr'+(visitSel.has(v.id)?' class="reg-rowsel"':'')+'><td>'+selCheckbox(visitSel, v.id, 'visitToggleOne')+'</td>'+
+    '<td>'+fmtDate(v.date)+((v.by||v.dur)?'<br><span class="small muted">'+[v.by&&('by '+esc(v.by)), v.dur&&(Math.max(1,Math.round(v.dur/60))+' min')].filter(Boolean).join(' · ')+'</span>':'')+'</td>'+
     '<td>'+esc(v.diagnosis||'—')+'</td>'+
     '<td class="small">'+esc((v.meds||[]).map(m=>m.name).join(', ')||'—')+'</td>'+
     '<td>'+
@@ -7842,7 +7969,20 @@ function openPatient(pid){
       ((v.images&&v.images.length)?' <button class="btn btn-ghost btn-sm" onclick="viewVisitImages(\''+v.id+'\')" title="View attached images">📎 '+v.images.length+'</button>':'')+
       ' <button class="btn btn-danger btn-sm" onclick="deleteVisit(\''+v.id+'\')" title="Delete this prescription version">✕</button>'+
     '</td></tr>'
-  ).join('') : '<tr><td colspan="4" class="muted">No visits recorded.</td></tr>';
+  ).join('') : '<tr><td colspan="5" class="muted">No visits recorded.</td></tr>';
+  visitUpdateSelUI();
+}
+function visitToggleOne(id,on){ selToggle(visitSel, id, on, visitUpdateSelUI);
+  const cb=document.querySelector('#pdVisits input[onclick*="'+id+'"]');
+  if(cb) cb.closest('tr').classList.toggle('reg-rowsel', on); }
+function visitToggleSelAll(on){ selAll(visitSel, window.__visitShown||[], on, function(){
+  if(currentPatientId) openPatient(currentPatientId); }); }
+function visitClearSel(){ visitSel.clear(); if(currentPatientId) openPatient(currentPatientId); }
+function visitUpdateSelUI(){
+  selBar('visitSelBar', visitSel, {print:'visitBatchPrint()', del:'visitBatchDelete()', clear:'visitClearSel()'});
+  const shown=(window.__visitShown||[]), sel=shown.filter(id=>visitSel.has(id)).length;
+  const all=$('visitSelAll');
+  if(all){ all.checked = shown.length>0 && sel===shown.length; all.indeterminate = sel>0 && sel<shown.length; }
 }
 /* ---- one scrollable story of everything on file for a patient ---- */
 function pdView(which){
@@ -9592,8 +9732,11 @@ function renderDsList(){
   $('dsEmpty').classList.toggle('hidden', all.length>0);
   $('dsCountLabel').textContent = docs.length+' discharge summaries';
   dfCount('ds', docs.length, all.length, !!q);
+  window.__dsShown = docs.map(d=>d.id);
+  if(typeof cardsRender==='function') cardsRender('ds', docs);
   $('dsListBody').innerHTML = docs.map(d=>
-    '<tr><td>'+fmtDate(d.date)+(d.by?'<br><span class="small muted">by '+esc(d.by)+'</span>':'')+'</td><td><b>'+esc(d.name)+'</b>'+(dsFindOp(d)?' <span title="Also in the operation logbook">🦴</span>':'')+(dsMrnOf(d)?'<br><span class="small muted">MR '+esc(dsMrnOf(d))+'</span>':'')+(d.age?'<br><span class="small muted">'+esc(d.age)+' '+esc(d.sex||'')+'</span>':'')+'</td>'+
+    '<tr'+(dsSel.has(d.id)?' class="reg-rowsel"':'')+'><td>'+selCheckbox(dsSel, d.id, 'dsToggleOne')+'</td>'+
+    '<td>'+fmtDate(d.date)+(d.by?'<br><span class="small muted">by '+esc(d.by)+'</span>':'')+'</td><td><b>'+esc(d.name)+'</b>'+(dsFindOp(d)?' <span title="Also in the operation logbook">🦴</span>':'')+(dsMrnOf(d)?'<br><span class="small muted">MR '+esc(dsMrnOf(d))+'</span>':'')+(d.age?'<br><span class="small muted">'+esc(d.age)+' '+esc(d.sex||'')+'</span>':'')+'</td>'+
     '<td class="small">'+esc((d.dc||{}).diagnosis||'—')+'</td><td class="small">'+esc((d.dc||{}).proc||'—')+'</td>'+
     '<td><button class="btn btn-ghost btn-sm" onclick="previewSavedDoc(\''+d.id+'\')" title="See exactly how it will print">👁 Preview</button> '+
     '<button class="btn btn-ghost btn-sm" onclick="printSavedDoc(\''+d.id+'\')">🖨 Print</button> '+
@@ -9601,6 +9744,18 @@ function renderDsList(){
     '<button class="btn btn-ghost btn-sm" onclick="loadDs(\''+d.id+'\')">Edit</button> '+
     '<button class="btn btn-danger btn-sm" onclick="deleteDs(\''+d.id+'\')">✕</button></td></tr>'
   ).join('');
+  dsUpdateSelUI();
+}
+function dsToggleOne(id,on){ selToggle(dsSel, id, on, dsUpdateSelUI);
+  const cb=document.querySelector('#dsListBody input[onclick*="'+id+'"]');
+  if(cb) cb.closest('tr').classList.toggle('reg-rowsel', on); }
+function dsToggleSelAll(on){ selAll(dsSel, window.__dsShown||[], on, renderDsList); }
+function dsClearSel(){ dsSel.clear(); renderDsList(); }
+function dsUpdateSelUI(){
+  selBar('dsSelBar', dsSel, {print:'dsBatchPrint()', del:'dsBatchDelete()', clear:'dsClearSel()'});
+  const shown=(window.__dsShown||[]), sel=shown.filter(id=>dsSel.has(id)).length;
+  const all=$('dsSelAll');
+  if(all){ all.checked = shown.length>0 && sel===shown.length; all.indeterminate = sel>0 && sel<shown.length; }
 }
 function loadDs(id){
   const d = db.documents.find(x=>x.id===id); if(!d) return;
@@ -9708,13 +9863,28 @@ function renderDocList(){
     .slice().reverse();
   $('docEmpty').classList.toggle('hidden', all.length>0);
   dfCount('doc', docs.length, all.length, !!q);
+  window.__docShown = docs.map(d=>d.id);
+  if(typeof cardsRender==='function') cardsRender('doc', docs);
   $('docListBody').innerHTML = docs.map(d=>
-    '<tr><td>'+fmtDate(d.date)+(d.by?'<br><span class="small muted">by '+esc(d.by)+'</span>':'')+'</td><td>'+esc(d.name)+'</td><td>'+esc(DOC_TITLES[d.type]||d.type)+'</td>'+
+    '<tr'+(docSel.has(d.id)?' class="reg-rowsel"':'')+'><td>'+selCheckbox(docSel, d.id, 'docToggleOne')+'</td>'+
+    '<td>'+fmtDate(d.date)+(d.by?'<br><span class="small muted">by '+esc(d.by)+'</span>':'')+'</td><td>'+esc(d.name)+'</td><td>'+esc(DOC_TITLES[d.type]||d.type)+'</td>'+
     '<td><button class="btn btn-ghost btn-sm" onclick="printSavedDoc(\''+d.id+'\')">🖨 Print</button> '+
     '<button class="btn btn-ghost btn-sm" onclick="printSavedDocPlain(\''+d.id+'\')" title="Full letterhead for blank paper / PDF">📄 PDF</button> '+
     '<button class="btn btn-ghost btn-sm" onclick="loadDoc(\''+d.id+'\')">Load</button> '+
     '<button class="btn btn-danger btn-sm" onclick="deleteDoc(\''+d.id+'\')">✕</button></td></tr>'
   ).join('');
+  docUpdateSelUI();
+}
+function docToggleOne(id,on){ selToggle(docSel, id, on, docUpdateSelUI);
+  const cb=document.querySelector('#docListBody input[onclick*="'+id+'"]');
+  if(cb) cb.closest('tr').classList.toggle('reg-rowsel', on); }
+function docToggleSelAll(on){ selAll(docSel, window.__docShown||[], on, renderDocList); }
+function docClearSel(){ docSel.clear(); renderDocList(); }
+function docUpdateSelUI(){
+  selBar('docSelBar', docSel, {print:'docBatchPrint()', del:'docBatchDelete()', clear:'docClearSel()'});
+  const shown=(window.__docShown||[]), sel=shown.filter(id=>docSel.has(id)).length;
+  const all=$('docSelAll');
+  if(all){ all.checked = shown.length>0 && sel===shown.length; all.indeterminate = sel>0 && sel<shown.length; }
 }
 function printSavedDoc(id){ const d = db.documents.find(x=>x.id===id); if(d) printDoc(d); }
 function loadDoc(id){
@@ -9836,6 +10006,9 @@ async function printDoc(d, forcePlain){
   const whenReady = (fn)=>{ if(document.fonts && document.fonts.ready && document.fonts.ready.then)
       document.fonts.ready.then(()=>setTimeout(fn,40)); else setTimeout(fn,60); };
   if(printPreviewMode){ printPreviewMode = false; whenReady(()=>{ layout(); showPrintPreview(); }); return; }
+  /* batch printing: build the sheets and hand them back. One dialog for the whole pile. */
+  if(typeof __printCollect!=='undefined' && __printCollect)
+    return await new Promise(function(res){ whenReady(function(){ layout(); res(); }); });
   showPrintTipOnce();
   whenReady(()=>{ if(!cancelled){ layout(); window.print(); } });
 }
@@ -10203,7 +10376,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.04-b46';
+const APP_BUILD = '2026.08.05-b49';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -11811,14 +11984,18 @@ function renderOpLog(){
   $('opCountLabel').textContent = rows.length+' of '+db.surgeries.length+' operations';
   dfCount('op', rows.length, db.surgeries.length, !!q);
   $('opEmpty').classList.toggle('hidden', db.surgeries.length>0);
+  window.__opShown = rows.map(o=>o.id);
+  if(typeof cardsRender==='function') cardsRender('op', rows);
   $('opListBody').innerHTML = rows.map(o=>
-    '<tr><td>'+fmtDate(o.date)+(o.by?'<br><span class="small muted">by '+esc(o.by)+'</span>':'')+'</td><td><b>'+esc(o.name)+'</b>'+(o.age?'<br><span class="small muted">'+esc(o.age)+' '+esc(o.sex||'')+'</span>':'')+'</td>'+
+    '<tr'+(opSel.has(o.id)?' class="reg-rowsel"':'')+'><td>'+selCheckbox(opSel, o.id, 'opToggleOne')+'</td>'+
+    '<td>'+fmtDate(o.date)+(o.by?'<br><span class="small muted">by '+esc(o.by)+'</span>':'')+'</td><td><b>'+esc(o.name)+'</b>'+(o.age?'<br><span class="small muted">'+esc(o.age)+' '+esc(o.sex||'')+'</span>':'')+'</td>'+
     '<td class="small">'+esc(o.diagnosis||'—')+'</td><td class="small">'+esc(o.procedure)+
     (o.complications && o.complications.toLowerCase()!=='none' ? '<br><span class="allergy-flag small">⚠ '+esc(o.complications)+'</span>':'')+'</td>'+
     '<td class="small">'+esc(o.implant||'—')+'</td><td class="small">'+esc(o.anesthesia||'—')+'</td>'+
     '<td><button class="btn btn-ghost btn-sm" onclick="editOp(\''+o.id+'\')">Edit</button> '+
     '<button class="btn btn-danger btn-sm" onclick="deleteOp(\''+o.id+'\')">✕</button></td></tr>'
   ).join('');
+  opUpdateSelUI();
   // stats
   const ym = localISO().slice(0,7), yr = localISO().slice(0,4);
   const counts = {};
@@ -12429,7 +12606,7 @@ function printVisit(v, p, forcePlain){
       else { pa.innerHTML = sheetHtml; res = rxPaginate(pa, box, paper, false); }
     }
     window.__lastPrintFits = (res.pages <= 1);
-    if(res.pages > 1 && !isPreview && !asked){
+    if(res.pages > 1 && !isPreview && !asked && !(typeof __printCollect!=='undefined' && __printCollect)){
       asked = true;
       const ok = confirm('This prescription needs '+res.pages+' sheets.\n\nPress OK to print anyway (load '+res.pages+' letterhead sheets in the printer),\nor Cancel to go back and shorten it.');
       if(!ok) cancelled = true;
@@ -12450,6 +12627,8 @@ function printVisit(v, p, forcePlain){
     whenReady(()=>{ if(!cancelled){ layout(); if(!cancelled) showPrintPreview(); } });
     return;
   }
+  if(typeof __printCollect!=='undefined' && __printCollect)
+    return new Promise(function(res){ whenReady(function(){ layout(); res(); }); });
   showPrintTipOnce();
   whenReady(()=>{ if(!cancelled){ layout(); if(!cancelled) window.print(); } });
 }
@@ -12881,31 +13060,78 @@ function regNoParts(no){
   if(m) return {year:m[1], count:+m[2], style:'year'};
   return null;
 }
-/* the next free slot in a year, whichever style the existing numbers are in */
+/* The next free slot in a year, counting ONLY numbers already in the current shape.
+   A leftover legacy number like 20260042 must not push this year's sequence to 0043 — the
+   whole point of converting is that the count comes out contiguous from 0001. The two styles
+   cannot collide anyway: one is eight digits, the other ten. */
 function regNextCountFor(year){
   let max=0;
   (db.registry||[]).forEach(function(r){
+    if(!regNoIsNew(r.regNo)) return;
     const p=regNoParts(r.regNo);
     if(p && p.year===String(year) && p.count>max) max=p.count;
   });
   return max+1;
 }
+/* A number is provisional whenever it was NOT built from a date of surgery — that is the whole
+   rule. Stamping the flags on load means an entry imported, or created before the rule existed,
+   still settles itself the first time a surgery date is typed. */
+function regNormaliseFlags(){
+  (db.registry||[]).forEach(function(r){
+    if(!r) return;
+    const hasSurg = regValidYmd(r.dateSurg);
+    r.regNoProv  = !hasSurg;
+    r.regNoUnset = !regNoBasis(r);
+  });
+}
+/* ---- what date a number is built from ----
+   The rule, in the doctor's words: the date of surgery. If that is not there yet, the date of
+   the visit. If neither, do not invent one — leave the number alone and put a warning on it,
+   because a number built from today's date is a number that will have to move later.        */
+function regNoBasis(r){
+  if(regValidYmd(r && r.dateSurg))    return {d:r.dateSurg,    src:'surgery'};
+  if(regValidYmd(r && r.firstVisit))  return {d:r.firstVisit,  src:'visit'};
+  if(regValidYmd(r && r.dateAdm))     return {d:r.dateAdm,     src:'admission'};
+  return null;
+}
+/* a number in the current shape: YYMMDD + a 4-digit count within that year, e.g. 2608050001 */
+function regNoIsNew(no){ return /^\d{10}$/.test(String(no||'')); }
+function regNoIsOld(r){
+  const no = String((r&&r.regNo)||'').trim();
+  return !!no && !regNoIsNew(no);
+}
+function regOldNumbered(){ return (db.registry||[]).filter(regNoIsOld); }
+
 /* give ONE case its number. Never touches any other case. */
 function regAssignNo(r){
-  const basis = regValidYmd(r.dateSurg) ? r.dateSurg : localISO();
-  const n = regNextCountFor(basis.slice(0,4));
-  r.regNo = regNoFromDate(basis, n);
-  r.regNoProv = !regValidYmd(r.dateSurg);
+  const b = regNoBasis(r);
+  if(!b){                       // no date to go on at all — say so rather than guess
+    r.regNoProv = true; r.regNoUnset = true;
+    if(!r.regNo) r.regNo = '';
+    return r.regNo;
+  }
+  const n = regNextCountFor(b.d.slice(0,4));
+  r.regNo = regNoFromDate(b.d, n);
+  r.regNoProv = (b.src !== 'surgery');   // settles once the surgery date arrives
+  r.regNoUnset = false;
   return r.regNo;
+}
+/* how many cases still have nothing the number could be built from */
+function regNoDateCount(){
+  return (db.registry||[]).filter(function(r){ return !regNoBasis(r); }).length;
 }
 /* a provisional number is corrected ONCE, the first time a surgery date is entered */
 function regSettleNo(r){
-  if(!r || !r.regNoProv) return false;
+  if(!r) return false;
   if(!regValidYmd(r.dateSurg)) return false;
+  /* Settle only a number this app marked provisional or unset. An old-style number is NOT
+     converted here: numbers must never move as a side effect of editing a case — that is what
+     the explicit "Convert old-style numbers" action is for. */
+  if(!(r.regNoProv || r.regNoUnset)) return false;
   const before=r.regNo;
   const n = regNextCountFor(r.dateSurg.slice(0,4));
   r.regNo = regNoFromDate(r.dateSurg, n);
-  r.regNoProv = false;
+  r.regNoProv = false; r.regNoUnset = false;
   return r.regNo!==before;
 }
 /* Re-number the whole registry from scratch: order every case by its surgery date,
@@ -12913,7 +13139,16 @@ function regSettleNo(r){
    "Renumber by surgery date" button — never automatically. */
 function regRenumberAll(){
   const arr = db.registry||[];
-  const items = arr.map(function(r,i){ return {r:r, d:regBasisDate(r), i:i}; });
+  /* A case with no surgery date, no visit date and no admission date is LEFT ALONE — it keeps
+     whatever number it has and carries a warning instead. Numbering it from today would only
+     move it again the moment a real date is typed. */
+  const items = [];
+  arr.forEach(function(r,i){
+    const b = regNoBasis(r);
+    if(!b){ r.regNoUnset = true; r.regNoProv = true; return; }
+    r.regNoUnset = false;
+    items.push({r:r, d:b.d, src:b.src, i:i});
+  });
   items.sort(function(a,b){ return a.d===b.d ? a.i-b.i : (a.d<b.d?-1:1); });
   const perYear={}; let changed=0;
   items.forEach(function(it){
@@ -12924,7 +13159,7 @@ function regRenumberAll(){
       if(it.r.regNo && !it.r.regNoOld && !/^\d{10}$/.test(String(it.r.regNo))) it.r.regNoOld=String(it.r.regNo);   // the very first original, kept for the restore tool
       it.r.regNoPrev=String(it.r.regNo||'');
       it.r.regNo=no;
-      it.r.regNoProv=!regHasSurgDate(it.r);
+      it.r.regNoProv=(it.src!=='surgery');
       if(typeof syncTouch==='function') syncTouch(it.r);
       changed++;
     }
@@ -13233,12 +13468,11 @@ function regRenderList(){
     const chk=regSel.has(r.id)?' checked':'';
     return '<tr'+(chk?' class="reg-rowsel"':'')+'>'+
     '<td><input type="checkbox" class="reg-rowcb" data-id="'+r.id+'"'+chk+' onclick="regToggleOne(\''+r.id+'\',this.checked)"></td>'+
-    '<td class="small"><b>'+esc(r.regNo||'—')+'</b>'+(regHasSurgDate(r)?'':' <span class="reg-prov" title="No date of surgery recorded. Numbers no longer move on their own — enter the date and this one case is corrected once.">&#9888;</span>')+(r.mrn?'<br><span class="muted">MR '+esc(r.mrn)+'</span>':'')+'</td>'+
+    '<td class="small"><b>'+esc(r.regNo||'—')+'</b>'+regNoWarn(r)+(r.mrn?'<br><span class="muted">MR '+esc(r.mrn)+'</span>':'')+'</td>'+
     '<td><b>'+esc(r.name||'—')+'</b>'+(r.age?'<br><span class="small muted">'+esc(r.age)+' '+esc(r.sex||'')+'</span>':'')+
        (r.patientId?' <span title="Linked to a patient record">🔗</span>':'')+'</td>'+
     '<td class="small">'+esc((r.diagnosis||'—').split('\n')[0])+(r.histSubtype?'<br><span class="muted">'+esc(r.histSubtype.split('\n')[0].slice(0,40))+'</span>':'')+'</td>'+
-    '<td class="small">'+esc(r.site||'—')+'</td>'+
-    '<td class="small">'+esc((r.grade||'').split(' ')[0]||'—')+'</td>'+
+    '<td class="small">'+regProcCell(r)+'</td>'+
     '<td class="small">'+(r.dateSurg?fmtDate(r.dateSurg):'—')+'</td>'+
     '<td>'+regBadges(r)+'</td>'+
     '<td><button class="btn btn-ghost btn-sm" onclick="regEdit(\''+r.id+'\')">Open</button> '+
@@ -13247,8 +13481,42 @@ function regRenderList(){
        '<button class="btn btn-ghost btn-sm" title="Printable summary (PDF)" onclick="regPrintEntry(\''+r.id+'\')">🖨</button> '+
        '<button class="btn btn-danger btn-sm" onclick="regDelete(\''+r.id+'\')">✕</button></td></tr>';
   }).join('');
+  if(typeof regRenderCards==='function') regRenderCards(rows);
   regUpdateSelUI(rows);
   if(typeof regUpdateFixBadge==='function') regUpdateFixBadge();
+}
+/* What was actually done, which is what the doctor scans the list for — not the site and grade,
+   which are already implied by the diagnosis. Free text first, then the coded surgery type, then
+   the reconstruction, so there is always something useful in the column. */
+function regProcCell(r){
+  const detail = String(r.surgDetails||'').split('\n')[0].trim();
+  const typ = regLabelFor('surgType', r.surgType);
+  const plan = regLabelFor('planType', r.planType);
+  const recon = regLabelFor('reconType', r.reconType);
+  const main = detail || typ || plan || '';
+  const sub  = detail ? [typ, recon].filter(Boolean).join(' \u00b7 ')
+                      : [plan===main?'':plan, recon].filter(Boolean).join(' \u00b7 ');
+  if(!main && !sub) return '<span class="muted">\u2014</span>';
+  return esc(main.slice(0,74))+(sub?'<br><span class="muted">'+esc(sub.slice(0,46))+'</span>':'');
+}
+/* turn a stored coded value back into the words the doctor picked */
+function regLabelFor(key, val){
+  if(val==null || val==='') return '';
+  let out='';
+  REG_SCHEMA.forEach(function(sec){ sec.subs.forEach(function(sub){ sub.fields.forEach(function(f){
+    if(f.k!==key || !f.o) return;
+    f.o.forEach(function(o){ if(String(o[0])===String(val)) out=o[1]; });
+  }); }); });
+  return out || String(val);
+}
+/* why a number carries a warning: no date to build it from, or built from the visit date and
+   still waiting for the surgery date to settle it */
+function regNoWarn(r){
+  if(!regNoBasis(r))
+    return ' <span class="reg-prov" title="No date of surgery, visit or admission on this case — its number cannot be worked out, so it has been left exactly as it is. Enter a date and it settles once.">&#9888;</span>';
+  if(!regHasSurgDate(r))
+    return ' <span class="reg-prov" title="Numbered from the first-visit date because there is no date of surgery yet. Numbers no longer move on their own — enter the surgery date and this one case is corrected once.">&#9888;</span>';
+  return '';
 }
 /* One tap from the list straight into this case's Drive folder — the doctor should not have
    to open the whole form just to look at the pictures. */
@@ -13285,7 +13553,9 @@ async function regOpenRecord(id){
 function regUpdateSelUI(rows){
   rows=rows||regFiltered();
   const n=regSel.size;
-  const bar=$('regSelBar'); if(bar){ bar.classList.toggle('hidden', n===0); $('regSelCount').textContent=n+' selected'; }
+  selBar('regSelBar', regSel, {print:'regBatchPrint()', del:'regBatchDelete()', clear:'regClearSel()',
+    extra:'<button class="btn btn-ghost btn-sm" onclick="regExportXlsx(true)">📊 Excel</button>'+
+          '<button class="btn btn-ghost btn-sm" onclick="regExportCsv(true)">📄 CSV</button>'});
   const scope=$('regExpScope'); if(scope) scope.textContent = n>0 ? (n+' selected') : 'All entries';
   const all=$('regSelAll');
   if(all){ const shown=rows.length; const selShown=rows.filter(r=>regSel.has(r.id)).length;
@@ -13311,11 +13581,57 @@ function regDateIssues(){
   });
   return out.sort(function(a,b){ return String(a.r.regNo||'').localeCompare(String(b.r.regNo||'')); });
 }
+/* Housekeeping controls appear only while there is housekeeping to do. Once every date is
+   sane and every number is in the current shape they disappear completely — the toolbar of a
+   tidy registry should be New entry, Import, Export and nothing else. */
 function regUpdateFixBadge(){
-  const b=$('regFixBtn'); if(!b) return;
+  const b=$('regFixBtn');
   const n=regDateIssues().length;
-  b.innerHTML = n ? ('🩹 Check dates <span class="reg-tag r2">'+n+'</span>') : '🩹 Check dates';
-  b.classList.toggle('btn-warnish', n>0);
+  const old=regOldNumbered().length;
+  if(b){
+    b.innerHTML = n ? ('🩹 Check dates <span class="reg-tag r2">'+n+'</span>') : '🩹 Check dates';
+    b.classList.toggle('btn-warnish', n>0);
+    b.classList.toggle('hidden', n===0);
+  }
+  const ob=$('regOldBtn');
+  if(ob){
+    ob.innerHTML = old ? ('🔁 Convert '+old+' old-style number'+(old>1?'s':'')) : '🔁 Convert old-style numbers';
+    ob.classList.toggle('hidden', old===0);
+  }
+  const nb=$('regNoBtn');
+  if(nb) nb.classList.toggle('btn-warnish', old>0);
+  const wrap=$('regFixWrap');
+  if(wrap) wrap.classList.toggle('hidden', (n===0 && old===0));
+}
+/* Bring legacy numbers (20260042 and the like) into the current shape, using the same rule as
+   everything else: surgery date, then visit date, and anything with neither is left alone. */
+function regConvertOld(){
+  if(!requireEdit()) return;
+  const list = regOldNumbered();
+  if(!list.length){ toast('No old-style numbers left'); return; }
+  const skip = list.filter(function(r){ return !regNoBasis(r); });
+  let msg = 'Convert '+list.length+' old-style number'+(list.length>1?'s':'')+' to the current format?\n\n'+
+    'Each one is rebuilt from its date of surgery, or its first-visit date if there is no surgery date yet.\n'+
+    'Example: 20260042  \u2192  '+regNoFromDate(localISO(), 1);
+  if(skip.length) msg += '\n\n\u26a0 '+skip.length+' case'+(skip.length>1?'s have':' has')+
+    ' no date at all — '+(skip.length>1?'they are':'it is')+' left exactly as '+(skip.length>1?'they are':'it is')+', with a warning.';
+  msg += '\n\nThe original numbers are kept, so this can be undone from "Restore original numbers".';
+  if(!confirm(msg)) return;
+  let changed=0;
+  list.forEach(function(r){
+    const b = regNoBasis(r);
+    if(!b){ r.regNoUnset=true; r.regNoProv=true; return; }
+    if(!r.regNoOld) r.regNoOld = String(r.regNo||'');
+    r.regNoPrev = String(r.regNo||'');
+    const n = regNextCountFor(b.d.slice(0,4));
+    r.regNo = regNoFromDate(b.d, n);
+    r.regNoProv = (b.src!=='surgery');
+    r.regNoUnset = false;
+    if(typeof syncTouch==='function') syncTouch(r);
+    changed++;
+  });
+  persist(); regRenderList(); regUpdateFixBadge();
+  toast(changed ? (changed+' number'+(changed>1?'s':'')+' converted'+(skip.length?(' \u00b7 '+skip.length+' left alone'):'')) : 'Nothing to convert');
 }
 function openRegDateFix(){
   const list=regDateIssues();
@@ -13632,8 +13948,11 @@ function regPrintEntry(id){
             esc((sec.icon?sec.icon+' ':'')+sec.name)+'</div>'+secHtml+'</div>';
     }
   });
-  if(!filled){ toast('This entry has no details filled in yet'); return; }
-  printContent('Tumour Registry — Case Summary', body);
+  if(!filled){
+    if(!(typeof __printCollect!=='undefined' && __printCollect)) toast('This entry has no details filled in yet');
+    return;      // an empty case is skipped, it does not stop the rest of a batch
+  }
+  return printContent('Tumour Registry — Case Summary', body);
 }
 
 function renderRegistry(){
@@ -15168,13 +15487,10 @@ function mNavSearch(v){
 }
 function mNavDecorate(){
   const nav = $('sideNav'); if(!nav) return;
-  let box = nav.parentElement.querySelector('.mnav-search');
-  if(!box){
-    box = document.createElement('div'); box.className='mnav-search';
-    box.innerHTML = '<input type="search" id="mNavQ" placeholder="Search the menu…" '+
-      'autocomplete="off" data-norail="1" oninput="mNavSearch(this.value)">';
-    nav.parentElement.insertBefore(box, nav);
-  }
+  /* No search box in the drawer: there are fifteen destinations, all visible, and the command
+     palette (\u2318K / the \ud83d\udd0d in the top bar) already searches everything including records. */
+  const old = nav.parentElement.querySelector('.mnav-search');
+  if(old) old.remove();
   nav.querySelectorAll('button[data-tab]').forEach(function(b){
     const t = b.dataset.tab;
     b.style.setProperty('--mt-ac', tabAc(t));
@@ -15210,6 +15526,468 @@ function mBarToggle(tab){
   else { if(cur.length >= 4) cur.shift(); cur.push(tab); }
   db.settings.mobBar = cur; persist();
   renderMBarPick(); renderMBar();
+}
+
+
+/* ==================== REGISTRY ON A PHONE: cards, grouped by month ====================
+   The desktop table has eight columns. Squeezed onto a 390 px screen you could see about a
+   third of one — to read the diagnosis you swiped right and the patient's name went off the
+   left edge. On a phone the same filtered rows are rendered as cards instead, gathered under
+   the month they were operated, with the heading sticking as you scroll.
+
+   It is the SAME `regFiltered()` rows the table uses, so the search box, the date filter and
+   the selection all keep working exactly as they do on a desktop.                          */
+const RC_MONTHS = ['January','February','March','April','May','June',
+                   'July','August','September','October','November','December'];
+function rcMonthLabel(ymd){
+  if(!regValidYmd(ymd)) return null;
+  return RC_MONTHS[parseInt(ymd.slice(5,7),10)-1] + ' ' + ymd.slice(0,4);
+}
+/* which date a case is filed under: the surgery, or the first visit if it has not happened yet */
+function rcGroupOf(r){
+  if(regValidYmd(r.dateSurg))   return {key:r.dateSurg.slice(0,7), lab:rcMonthLabel(r.dateSurg), d:r.dateSurg};
+  if(regValidYmd(r.firstVisit)) return {key:'zzy', lab:'Seen — surgery not done yet',
+                                        d:r.firstVisit, soft:true};
+  return {key:'zzz', lab:'No date yet', d:'', warn:true};
+}
+function rcAccent(r){
+  const nat=(r.nature||'').toLowerCase();
+  if(nat.indexOf('malignant')>=0) return '#e11d48';
+  if(nat.indexOf('benign')>=0)    return '#16a34a';
+  return '#94a3b8';
+}
+let regPicking = false;
+function regTogglePick(on){
+  regPicking = (on===undefined) ? !regPicking : !!on;
+  document.body.classList.toggle('reg-picking', regPicking);
+  if(!regPicking) regSel.clear();
+  regRenderList();
+}
+function regCardHTML(r){
+  const warn = regNoWarn(r);
+  const dxLines = String(r.diagnosis||'').split('\n');
+  const proc = regProcCell(r);
+  const dt = regValidYmd(r.dateSurg) ? fmtDate(r.dateSurg)
+           : (regValidYmd(r.firstVisit) ? ('seen ' + fmtDate(r.firstVisit)) : 'no date');
+  return '<div class="rc'+(regSel.has(r.id)?' on':'')+'" style="--rc-ac:'+rcAccent(r)+'" '+
+      'onclick="regCardTap(\''+r.id+'\', event)">'+
+    '<input type="checkbox" class="rc-cb"'+(regSel.has(r.id)?' checked':'')+
+      ' onclick="event.stopPropagation();regToggleOne(\''+r.id+'\',this.checked)">'+
+    '<div class="rc-h"><b>'+esc(r.name||'(no name)')+'</b>'+
+      '<span class="rc-no'+(warn?' warn':'')+'">'+esc(r.regNo||'—')+'</span></div>'+
+    '<div class="rc-dx">'+esc(dxLines[0]||'—')+
+      (r.histSubtype?'<br><span class="sub">'+esc(String(r.histSubtype).split('\n')[0].slice(0,52))+'</span>':'')+
+    '</div>'+
+    (proc.indexOf('—')===0 || proc.indexOf('>—<')>=0 ? '' :
+      '<div class="rc-op"><span class="i">🔪</span><span class="t">'+proc+'</span></div>')+
+    '<div class="rc-f">'+(regBadges(r).indexOf('—')>=0?'':regBadges(r))+
+      (r.mrn?'<span class="rc-mr">MR '+esc(r.mrn)+'</span>':'')+
+      '<span class="dt">'+esc(dt)+(warn?' ⚠':'')+'</span></div>'+
+  '</div>';
+}
+function regCardTap(id, ev){
+  if(regPicking){ regToggleOne(id, !regSel.has(id)); return; }
+  regEdit(id);
+}
+function regRenderCards(rows){
+  const host = $('regCards'); if(!host) return;
+  if(!rows.length){ host.innerHTML = ''; return; }
+  /* newest first, and the cases with nothing to file them under sit at the very top where
+     they will actually be seen and fixed */
+  const decorated = rows.map(function(r,i){ return {r:r, g:rcGroupOf(r), i:i}; });
+  const rank = function(g){ return g.warn ? 0 : (g.soft ? 1 : 2); };
+  decorated.sort(function(a,b){
+    const ra=rank(a.g), rb=rank(b.g);
+    if(ra !== rb) return ra - rb;                            // needs-attention buckets first
+    if(a.g.d !== b.g.d) return a.g.d < b.g.d ? 1 : -1;       // then newest first
+    return a.i - b.i;
+  });
+  const counts = {};
+  decorated.forEach(function(x){ counts[x.g.key] = (counts[x.g.key]||0) + 1; });
+  let html = '<div class="rc-bar"><span>'+rows.length+' case'+(rows.length===1?'':'s')+'</span>'+
+    '<button type="button" onclick="regTogglePick()">'+(regPicking?'Done':'Select')+'</button></div>';
+  let last = null;
+  decorated.forEach(function(x){
+    if(x.g.key !== last){
+      html += '<div class="rc-grp'+(x.g.warn||x.g.soft?' warn':'')+'"><span>'+esc(x.g.lab)+'</span>'+
+              '<span class="n">'+counts[x.g.key]+'</span></div>';
+      last = x.g.key;
+    }
+    html += regCardHTML(x.r);
+  });
+  host.innerHTML = html;
+}
+
+
+/* ==================== RECORD CARDS ====================
+   The same fix the registry got, made general. Every list in this app is a desktop table with
+   six to nine columns; on a phone that means swiping sideways and losing the patient's name as
+   soon as you do. Below 768 px each list renders the SAME filtered rows as cards instead —
+   grouped under a month, with the heading sticking as you scroll.
+
+   Because the cards are built from the rows the table already computed, the search box, the
+   date filter, the selection and the permissions all keep working with no second code path.
+
+   A definition is small on purpose:
+     host   – where the cards go            table – the table to hide beside them
+     sel    – the Set holding the selection toggle – the function that flips one
+     group  – row -> which bucket it files under
+     card   – row -> the four or five things worth showing
+     open   – what tapping it does                                                          */
+const CARDS = {};
+function cardsDef(key, cfg){ CARDS[key] = cfg; }
+
+/* the standard bucket: the month of a date, with the undated gathered at the top */
+function cardsMonth(ymd, opt){
+  opt = opt || {};
+  if(!regValidYmd(String(ymd||'').slice(0,10)))
+    return {key:'zzz', lab: opt.noneLab || 'No date', d:'', warn:true};
+  const d = String(ymd).slice(0,10);
+  return {key:d.slice(0,7), lab: RC_MONTHS[parseInt(d.slice(5,7),10)-1]+' '+d.slice(0,4), d:d};
+}
+function cardsEsc(v){ return esc(String(v==null?'':v)); }
+
+function cardsHTML(key, row){
+  const cfg = CARDS[key]; const c = cfg.card(row);
+  const picking = document.body.classList.contains(key+'-picking');
+  const sel = cfg.sel && cfg.sel.has(row.id);
+  return '<div class="rc'+(sel?' on':'')+'" style="--rc-ac:'+(c.ac||'#94a3b8')+'" '+
+      'onclick="cardsTap(\''+key+'\',\''+row.id+'\')">'+
+    (cfg.sel ? '<input type="checkbox" class="rc-cb"'+(sel?' checked':'')+
+      ' onclick="event.stopPropagation();'+cfg.toggle+'(\''+row.id+'\',this.checked)">' : '')+
+    '<div class="rc-h"><b>'+cardsEsc(c.title||'—')+'</b>'+
+      (c.code ? '<span class="rc-no'+(c.codeWarn?' warn':'')+'">'+cardsEsc(c.code)+'</span>' : '')+
+    '</div>'+
+    (c.primary ? '<div class="rc-dx">'+c.primary+
+      (c.primarySub?'<br><span class="sub">'+cardsEsc(c.primarySub)+'</span>':'')+'</div>' : '')+
+    (c.lines||[]).filter(function(l){ return l && l.t; }).map(function(l){
+      return '<div class="rc-op"><span class="i">'+(l.i||'·')+'</span><span class="t">'+
+             (l.raw ? l.t : cardsEsc(l.t))+'</span></div>'; }).join('')+
+    '<div class="rc-f">'+(c.chips||'')+
+      (c.meta?'<span class="rc-mr">'+cardsEsc(c.meta)+'</span>':'')+
+      '<span class="dt">'+cardsEsc(c.date||'')+(c.dateWarn?' ⚠':'')+'</span></div>'+
+  '</div>';
+}
+function cardsTap(key, id){
+  const cfg = CARDS[key]; if(!cfg) return;
+  if(cfg.sel && document.body.classList.contains(key+'-picking')){
+    window[cfg.toggle](id, !cfg.sel.has(id));
+    return;
+  }
+  if(cfg.open) cfg.open(id);
+}
+function cardsPick(key, on){
+  const cfg = CARDS[key]; if(!cfg) return;
+  const cls = key+'-picking';
+  const now = (on===undefined) ? !document.body.classList.contains(cls) : !!on;
+  document.body.classList.toggle(cls, now);
+  if(!now && cfg.sel) cfg.sel.clear();
+  if(cfg.rerender) cfg.rerender();
+}
+function cardsRender(key, rows){
+  const cfg = CARDS[key]; if(!cfg) return;
+  const host = $(cfg.host); if(!host) return;
+  if(!rows || !rows.length){ host.innerHTML = ''; return; }
+  const dec = rows.map(function(r,i){ return {r:r, g:cfg.group(r), i:i}; });
+  const rank = function(g){ return g.warn ? 0 : (g.soft ? 1 : 2); };
+  dec.sort(function(a,b){
+    const ra=rank(a.g), rb=rank(b.g);
+    if(ra !== rb) return ra - rb;                       // buckets needing attention first
+    if(cfg.keepOrder) return a.i - b.i;
+    if(a.g.d !== b.g.d) return a.g.d < b.g.d ? 1 : -1;  // then newest first
+    return a.i - b.i;
+  });
+  const counts = {};
+  dec.forEach(function(x){ counts[x.g.key] = (counts[x.g.key]||0)+1; });
+  const noun = (rows.length===1) ? (cfg.noun||'record') : (cfg.nouns || (cfg.noun||'record')+'s');
+  let html = '<div class="rc-bar"><span>'+rows.length+' '+noun+'</span>'+
+    (cfg.sel ? '<button type="button" onclick="cardsPick(\''+key+'\')">'+
+      (document.body.classList.contains(key+'-picking')?'Done':'Select')+'</button>' : '')+
+    '</div>';
+  let last = null;
+  dec.forEach(function(x){
+    if(x.g.key !== last){
+      html += '<div class="rc-grp'+(x.g.warn||x.g.soft?' warn':'')+'">'+
+              '<span>'+cardsEsc(x.g.lab)+'</span><span class="n">'+counts[x.g.key]+'</span></div>';
+      last = x.g.key;
+    }
+    html += cardsHTML(key, x.r);
+  });
+  host.innerHTML = html;
+}
+
+/* ---------------- the definitions ---------------- */
+function cardsInit(){
+  /* ---- patients: filed under when you last saw them ---- */
+  cardsDef('pat', {
+    host:'patCards', noun:'patient', sel:patSel, toggle:'patToggleOne',
+    open:function(id){ openPatient(id); },
+    rerender:function(){ renderPatientList(); },
+    group:function(p){
+      const d = lastVisitDate(p.id);
+      return d ? cardsMonth(d) : {key:'zzz', lab:'Never seen', d:'', warn:true};
+    },
+    card:function(p){
+      const vs = db.visits.filter(function(v){ return v.patientId===p.id; });
+      const dxRaw = (vs.slice().reverse().filter(function(v){ return (v.diagnosis||'').trim(); })[0]||{}).diagnosis||'';
+      const allergy = p.allergies && !isNoAllergy(p.allergies);
+      return {ac: allergy ? '#e11d48' : '#0284c7',
+        title:p.name, code:p.mrn,
+        primary: dxRaw ? esc(dxRaw.replace(/\s*\n\s*/g,'; ').slice(0,90)) : '<span class="sub">No diagnosis recorded</span>',
+        lines:[ {i:'👤', t:[p.age, p.sex, p.phone].filter(Boolean).join(' · ')} ],
+        chips: (allergy ? '<span class="reg-tag r2" title="'+esc(p.allergies)+'">⚠ Allergy</span> ' : '')+
+               '<span class="reg-tag ben">'+vs.length+' visit'+(vs.length===1?'':'s')+'</span>',
+        date: vs.length ? fmtDate(vs[vs.length-1].date) : 'never seen', dateWarn: !vs.length};
+    }
+  });
+  /* ---- discharge summaries ---- */
+  cardsDef('ds', {
+    host:'dsCards', noun:'summary', nouns:'summaries', sel:dsSel, toggle:'dsToggleOne',
+    open:function(id){ loadDs(id); },
+    rerender:function(){ renderDsList(); },
+    group:function(d){ return cardsMonth((d.dc||{}).discharge || d.date); },
+    card:function(d){
+      const dc = d.dc||{};
+      return {ac:'#0d9488', title:d.name, code:dsMrnOf(d)||'',
+        primary: esc(dc.diagnosis||'—'),
+        lines:[ {i:'🔪', t:(dc.proc||'').split('\n')[0]} ],
+        chips: (dsFindOp(d)?'<span class="reg-tag ben">In op log</span> ':'')+
+               (dc.medsArr && dc.medsArr.length ? '<span class="reg-tag r0">'+dc.medsArr.length+' meds</span>' : ''),
+        date: fmtDate(dc.discharge||d.date)};
+    }
+  });
+  /* ---- certificates & letters ---- */
+  cardsDef('doc', {
+    host:'docCards', noun:'document', sel:docSel, toggle:'docToggleOne',
+    open:function(id){ loadDoc(id); },
+    rerender:function(){ renderDocList(); },
+    group:function(d){ return cardsMonth(d.date); },
+    card:function(d){
+      return {ac:'#7c3aed', title:d.name, code:'',
+        primary: esc(DOC_TITLES[d.type]||d.type),
+        lines:[ {i:'📄', t:String(d.body||'').replace(/\s+/g,' ').slice(0,80)} ],
+        chips:'', meta: d.by?('by '+d.by):'', date: fmtDate(d.date)};
+    }
+  });
+  /* ---- the surgery logbook ---- */
+  cardsDef('op', {
+    host:'opCards', noun:'operation', sel:opSel, toggle:'opToggleOne',
+    open:function(id){ editOp(id); },
+    rerender:function(){ renderOpLog(); },
+    group:function(o){ return cardsMonth(o.date); },
+    card:function(o){
+      const comp = o.complications && o.complications.toLowerCase()!=='none';
+      return {ac: comp ? '#d97706' : '#16a34a', title:o.name, code:'',
+        primary: esc(o.procedure||'—'),
+        primarySub: o.diagnosis||'',
+        lines:[ {i:'🦴', t:[o.implant, o.anesthesia].filter(Boolean).join(' · ')} ],
+        chips: comp ? '<span class="reg-tag r2" title="'+esc(o.complications)+'">⚠ Complication</span>' : '',
+        meta: [o.age, o.sex].filter(Boolean).join(' '), date: fmtDate(o.date)};
+    }
+  });
+}
+/* ---- the op log gets a selection too, so batch delete works there as well ---- */
+const opSel = new Set();
+function opToggleOne(id,on){ selToggle(opSel, id, on, opUpdateSelUI);
+  const cb=document.querySelector('#opListBody input[onclick*="'+id+'"]');
+  if(cb) cb.closest('tr').classList.toggle('reg-rowsel', on);
+  const card=document.querySelector('#opCards .rc');
+  if(card) renderOpLog(); }
+function opToggleSelAll(on){ selAll(opSel, window.__opShown||[], on, renderOpLog); }
+function opClearSel(){ opSel.clear(); renderOpLog(); }
+function opUpdateSelUI(){
+  selBar('opSelBar', opSel, {del:'opBatchDelete()', clear:'opClearSel()'});
+  const shown=(window.__opShown||[]), sel=shown.filter(function(id){ return opSel.has(id); }).length;
+  const all=$('opSelAll');
+  if(all){ all.checked = shown.length>0 && sel===shown.length; all.indeterminate = sel>0 && sel<shown.length; }
+}
+function opBatchDelete(){
+  batchDelete([...opSel], {
+    coll:'surgeries', kind:'operation', one:'operation', many:'operations',
+    label:function(o){ return '  • ' + fmtDate(o.date) + ' — ' + (o.name||'') + ' — ' + (o.procedure||''); },
+    rerender:function(){ opSel.clear(); renderOpLog(); }
+  });
+}
+/* ---- patients get batch print (their latest prescription) as well as delete ---- */
+function patBatchPrint(){
+  const ids = [...patSel]; if(!ids.length) return;
+  const jobs = [];
+  ids.forEach(function(id){
+    const p = (db.patients||[]).filter(function(x){ return x.id===id; })[0];
+    if(!p) return;
+    const vs = (db.visits||[]).filter(function(v){ return v.patientId===id; });
+    if(!vs.length) return;
+    const v = vs[vs.length-1];
+    jobs.push(function(){ return printVisit(v, p); });
+  });
+  if(!jobs.length){ toast('⚠ None of those patients has a prescription yet'); return; }
+  return batchPrint(jobs, 'prescriptions');
+}
+function patUpdateSelUI2(){
+  selBar('patSelBar', patSel, {print:'patBatchPrint()', del:'deleteSelectedPatients()', clear:'patClearSel()'});
+}
+
+
+/* ==================== BATCH ACTIONS ====================
+   Selecting a handful of records and doing one thing to all of them. Two verbs matter:
+
+   PRINT — and the only honest way to print several records is ONE print job. Calling
+   window.print() in a loop opens one dialog per record, and the browser cancels the rest the
+   moment you dismiss one. So every record is laid out into #printArea in turn, its finished
+   sheets are collected, and the whole pile is printed once. `__printCollect` is the flag that
+   tells printVisit / printDoc to build and hand back rather than open the dialog.
+
+   DELETE — one confirmation naming what is about to go, one activity entry, one Undo. Deleting
+   forty records must not mean forty confirmations or forty things to undo.                  */
+let __printCollect = false;
+
+function batchWaitFonts(){
+  return new Promise(function(res){
+    if(document.fonts && document.fonts.ready && document.fonts.ready.then)
+      document.fonts.ready.then(function(){ setTimeout(res, 30); });
+    else setTimeout(res, 50);
+  });
+}
+/* jobs: an array of () => Promise that each lay one record out into #printArea */
+async function batchPrint(jobs, what){
+  const pa = $('printArea'); if(!pa || !jobs.length) return;
+  if(jobs.length === 1){ __printCollect = false; await jobs[0](); return; }
+  const keep = [];
+  __printCollect = true;
+  toast('Laying out ' + jobs.length + ' ' + (what||'records') + '…');
+  try{
+    for(let i=0; i<jobs.length; i++){
+      pa.innerHTML = '';
+      try{ await jobs[i](); }catch(e){ continue; }
+      await batchWaitFonts();
+      if(pa.innerHTML.trim()) keep.push(pa.innerHTML);
+    }
+  } finally { __printCollect = false; }
+  if(!keep.length){ pa.innerHTML=''; toast('⚠ Nothing could be laid out'); return; }
+  pa.innerHTML = keep.join('');
+  /* every record must start on a fresh sheet: the last page of each one carries the break,
+     and the very last page of all carries none, or the printer spits out a blank sheet */
+  const pages = pa.querySelectorAll('.rx-sheetpage, .rx-page, .rx-sheet');
+  Array.prototype.forEach.call(pages, function(pg, i){
+    pg.style.breakAfter = (i < pages.length-1) ? 'page' : 'auto';
+    pg.style.pageBreakAfter = (i < pages.length-1) ? 'always' : 'auto';
+  });
+  if(typeof showPrintTipOnce === 'function') showPrintTipOnce();
+  setTimeout(function(){ window.print(); }, 60);
+}
+/* one confirmation, one undo, however many records */
+function batchDelete(ids, opt){
+  if(!requireEdit || !requireEdit()) return false;
+  const coll = opt.coll, kind = opt.kind || coll;
+  const list = (db[coll]||[]).filter(function(x){ return ids.indexOf(x.id) >= 0; });
+  if(!list.length) return false;
+  const names = list.slice(0,6).map(opt.label).filter(Boolean);
+  let msg = 'Delete ' + list.length + ' ' + (list.length===1 ? opt.one : opt.many) + '?\n\n' +
+            names.join('\n') + (list.length > names.length ? ('\n…and ' + (list.length-names.length) + ' more') : '');
+  if(opt.warn) msg += '\n\n' + opt.warn;
+  msg += '\n\nYou can undo this from 🔔 Notifications.';
+  if(!confirm(msg)) return false;
+
+  /* undoPack already takes a LIST, so forty deletions collapse into one Undo button that puts
+     all forty back — no bespoke machinery needed */
+  const pack = undoPack(list.map(function(x){ return undoItem(coll, x, null); }));
+  const idSet = {}; ids.forEach(function(i){ idSet[i]=1; });
+  db[coll] = (db[coll]||[]).filter(function(x){ return !idSet[x.id]; });
+  if(typeof opt.after === 'function') opt.after(list);
+  logActivity('delete', kind, list.length + ' ' + (list.length===1?opt.one:opt.many), pack);
+  persist();
+  if(typeof opt.rerender === 'function') opt.rerender();
+  toast(list.length + ' ' + (list.length===1?opt.one:opt.many) + ' deleted');
+  return true;
+}
+
+/* ---- registry ---- */
+function regBatchPrint(){
+  const ids = [...regSel];
+  if(!ids.length) return;
+  const rows = (db.registry||[]).filter(function(r){ return ids.indexOf(r.id)>=0; });
+  return batchPrint(rows.map(function(r){ return function(){ return regPrintEntry(r.id); }; }), 'registry cases');
+}
+function regBatchDelete(){
+  const ok = batchDelete([...regSel], {
+    coll:'registry', kind:'registry', one:'registry entry', many:'registry entries',
+    label:function(r){ return '  • ' + (r.regNo? r.regNo+' — ':'') + (r.name||'(no name)'); },
+    warn:'The linked patient records are kept.',
+    rerender:function(){ regSel.clear(); regRenderList(); regRenderKpis(); regRenderAnalytics(); }
+  });
+  if(ok) regSel.clear();
+}
+/* ---- discharge summaries & documents (both live in db.documents) ---- */
+const dsSel = new Set(), docSel = new Set();
+function dsBatchPrint(){
+  const ids = [...dsSel]; if(!ids.length) return;
+  const docs = (db.documents||[]).filter(function(d){ return ids.indexOf(d.id)>=0; });
+  return batchPrint(docs.map(function(d){ return function(){ return printDoc(d); }; }), 'discharge summaries');
+}
+function dsBatchDelete(){
+  batchDelete([...dsSel], {
+    coll:'documents', kind:'discharge', one:'discharge summary', many:'discharge summaries',
+    label:function(d){ return '  • ' + fmtDate(d.date) + ' — ' + (d.name||''); },
+    rerender:function(){ dsSel.clear(); renderDsList(); }
+  });
+}
+function docBatchPrint(){
+  const ids = [...docSel]; if(!ids.length) return;
+  const docs = (db.documents||[]).filter(function(d){ return ids.indexOf(d.id)>=0; });
+  return batchPrint(docs.map(function(d){ return function(){ return printDoc(d); }; }), 'documents');
+}
+function docBatchDelete(){
+  batchDelete([...docSel], {
+    coll:'documents', kind:'document', one:'document', many:'documents',
+    label:function(d){ return '  • ' + fmtDate(d.date) + ' — ' + (DOC_TITLES[d.type]||d.type) + ' — ' + (d.name||''); },
+    rerender:function(){ docSel.clear(); renderDocList(); }
+  });
+}
+/* ---- prescriptions, from inside a patient's record ---- */
+const visitSel = new Set();
+function visitBatchPrint(){
+  const ids = [...visitSel]; if(!ids.length) return;
+  const vs = (db.visits||[]).filter(function(v){ return ids.indexOf(v.id)>=0; })
+              .sort(function(a,b){ return String(a.date).localeCompare(String(b.date)); });
+  return batchPrint(vs.map(function(v){
+    const p = (db.patients||[]).filter(function(x){ return x.id===v.patientId; })[0] || {};
+    return function(){ return printVisit(v, p); };
+  }), 'prescriptions');
+}
+function visitBatchDelete(){
+  batchDelete([...visitSel], {
+    coll:'visits', kind:'visit', one:'prescription', many:'prescriptions',
+    label:function(v){ const p=(db.patients||[]).filter(function(x){ return x.id===v.patientId; })[0]||{};
+                       return '  • ' + fmtDate(v.date) + ' — ' + (p.name||''); },
+    rerender:function(){ visitSel.clear();
+      if(typeof currentPatientId!=='undefined' && currentPatientId) openPatient(currentPatientId);
+      if(typeof renderPatientList==='function') renderPatientList();
+      if(typeof renderHome==='function') renderHome(); }
+  });
+}
+/* ---- a selection bar any list can use ---- */
+function selBar(hostId, set, cfg){
+  const bar = $(hostId); if(!bar) return;
+  const n = set.size;
+  bar.classList.toggle('hidden', n===0);
+  if(!n) return;
+  bar.innerHTML = '<span><b>'+n+'</b> selected</span>'+
+    (cfg.print ? '<button class="btn btn-primary btn-sm" onclick="'+cfg.print+'">🖨 Print '+n+'</button>' : '')+
+    (cfg.extra || '')+
+    (cfg.del ? '<button class="btn btn-danger btn-sm" onclick="'+cfg.del+'">🗑 Delete '+n+'</button>' : '')+
+    '<button class="btn btn-ghost btn-sm" onclick="'+cfg.clear+'">Clear</button>';
+}
+function selToggle(set, id, on, rerender){
+  if(on) set.add(id); else set.delete(id);
+  rerender();
+}
+function selAll(set, ids, on, rerender){
+  ids.forEach(function(i){ if(on) set.add(i); else set.delete(i); });
+  rerender();
+}
+function selCheckbox(set, id, fn){
+  return '<input type="checkbox" class="sel-cb"'+(set.has(id)?' checked':'')+
+         ' onclick="event.stopPropagation();'+fn+'(\''+id+'\',this.checked)">';
 }
 
 
@@ -16062,6 +16840,9 @@ function printContent(titleText, bodyHtml){
   $('printArea').innerHTML='<div class="rx-sheet'+(pad?' pad':'')+'">'+(pad?'':buildPlainHeader())+inner+
     '<div class="rx-foot" style="margin-top:9mm"><div class="sig"><div class="line"></div>'+esc(s.docName||'')+'</div></div></div>';
   applyPageGeom(pad,18);
+  /* during a batch, hand the sheet back rather than opening a dialog per record */
+  if(typeof __printCollect!=='undefined' && __printCollect)
+    return new Promise(function(res){ setTimeout(res, 60); });
   setTimeout(()=>window.print(),60);
 }
 
@@ -16864,12 +17645,13 @@ function logAccess(u, action){
 async function syncPushAccess(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     const rows=(db.accesslog||[]).slice(-60).map(a=>({id:String(a.id), kind:'accesslog', payload:a, updated_at:a.at||new Date().toISOString()}));
-    if(rows.length) await c.from('records').upsert(rows);
+    await syncUpsert(c, rows, 'accesslog');
   }catch(e){}
 }
 async function syncPullAccess(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     const {data,error}=await c.from('records').select('id,payload').eq('kind','accesslog'); if(error) return;
+    syncNoteCloud(data);
     db.accesslog=db.accesslog||[]; const have=new Set(db.accesslog.map(a=>String(a.id)));
     const cutoff=db.settings.accessClearedAt||'';   // don't re-add sign-ins the user already cleared
     (data||[]).forEach(r=>{ if(cutoff && String((r.payload&&r.payload.at)||'')<=cutoff) return; if(!have.has(String(r.id))){ db.accesslog.push(r.payload); have.add(String(r.id)); } });
@@ -16973,18 +17755,19 @@ function logActivity(action, kind, label, undo){
   if(db.activity.length>800) db.activity=db.activity.slice(-800);
   undoPrune();
   persist();
-  if(typeof syncPushActivity==='function' && navigator.onLine){ clearTimeout(window.__actPush); window.__actPush=setTimeout(()=>syncPushActivity().catch(()=>{}),1500); }
+  if(typeof syncPushActivity==='function' && navigator.onLine){ clearTimeout(window.__actPush); window.__actPush=setTimeout(()=>syncPushActivity().catch(()=>{}), 20000); }
   if(typeof renderNotif==='function') renderNotif();
 }
 async function syncPushActivity(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     const rows=(db.activity||[]).slice(-60).map(a=>({id:String(a.id), kind:'activity', payload:a, updated_at:a.at||new Date().toISOString()}));
-    if(rows.length) await c.from('records').upsert(rows);
+    await syncUpsert(c, rows, 'activity');
   }catch(e){}
 }
 async function syncPullActivity(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     const {data,error}=await c.from('records').select('id,payload').eq('kind','activity'); if(error) return;
+    syncNoteCloud(data);
     db.activity=db.activity||[]; const byId={}; db.activity.forEach(a=>byId[String(a.id)]=a);
     const cutoff = db.settings.activityClearedAt||'';   // don't re-add activity the user already cleared
     (data||[]).forEach(r=>{ if(cutoff && String((r.payload&&r.payload.at)||'')<=cutoff) return; const ex=byId[String(r.id)]; if(!ex){ const p=Object.assign({},r.payload); if(p.read===undefined) p.read=false; db.activity.push(p); byId[String(r.id)]=p; } });
@@ -16995,13 +17778,19 @@ async function syncPullActivity(){
 /* ---- pinned / favourite medicines (and templates): one shared list, newest edit wins across devices ---- */
 async function syncPushFavs(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    const payload={ids:(db.settings.favMeds||[]), tpls:(db.settings.favTpls||[]), defQrId:db.settings.defQrId||'', at:db.settings.favMedsAt||new Date().toISOString()};
-    await c.from('records').upsert([{id:'favmeds', kind:'favmeds', payload, updated_at:payload.at}]);
+    /* The payload must be STABLE when nothing has changed. It used to fall back to
+       new Date() when favMedsAt was unset, so the row differed on every sync and was written
+       every single time — one more steady drip into the realtime quota. */
+    const payload={ids:(db.settings.favMeds||[]), tpls:(db.settings.favTpls||[]),
+                   defQrId:db.settings.defQrId||'', at:db.settings.favMedsAt||''};
+    await syncUpsert(c, [{id:'favmeds', kind:'favmeds', payload,
+                          updated_at: payload.at || new Date().toISOString()}], 'favs');
   }catch(e){}
 }
 async function syncPullFavs(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     const {data,error}=await c.from('records').select('id,payload').eq('kind','favmeds').limit(1); if(error) return;
+    syncNoteCloud(data);
     const row=(data||[])[0]; if(!row||!row.payload) return;
     const cloudAt=row.payload.at||''; const localAt=db.settings.favMedsAt||'';
     if(cloudAt && cloudAt>localAt){   // cloud list is newer → adopt it
@@ -17032,14 +17821,16 @@ async function syncPushPending(){
       }
       rows.push({id:String(p.id), kind:'pending', payload:p, updated_at:(p.resolvedAt||p.at||new Date().toISOString())});
     });
-    if(rows.length) await c.from('records').upsert(rows);
+    await syncUpsert(c, rows, 'pending');
     for(const id of stale){ try{ await c.from('records').delete().eq('id', id); }catch(e){} }
+    if(stale.length){ syncForget(stale); syncCountWrites(stale.length); }
     if(stale.length){ const drop=new Set(stale); db.pendingChanges=(db.pendingChanges||[]).filter(p=>!drop.has(String(p.id))); }
   }catch(e){}
 }
 async function syncPullPending(){
   try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     const {data,error}=await c.from('records').select('id,payload').eq('kind','pending'); if(error) return;
+    syncNoteCloud(data);
     db.pendingChanges=db.pendingChanges||[]; const byId={}; db.pendingChanges.forEach(p=>byId[String(p.id)]=p);
     (data||[]).forEach(r=>{
       const remote=r.payload; if(!remote) return;
@@ -17106,7 +17897,15 @@ function computeSyncPlan(local, cloud, state, isAdmin, decisions){
     });
     const arr=Object.values(merged);
     newLocal[k]=arr;
-    arr.forEach(rec=>pushRows.push({id:String(rec.id), kind:k, payload:rec, updated_at:state.now}));
+    /* Push only what the cloud does not already hold, byte for byte. This one line was the
+       whole realtime-quota problem: every sync used to re-upload every record with a fresh
+       updated_at, so each one was a genuine write, each write broadcast to every connected
+       device, and receiving a broadcast scheduled another sync that did it all again. */
+    arr.forEach(function(rec){
+      const cur = cloudNorm[k][String(rec.id)];
+      if(cur && syncHash(cur) === syncHash(rec)) return;
+      pushRows.push({id:String(rec.id), kind:k, payload:rec, updated_at:state.now});
+    });
     newKnown[k]=arr.map(x=>String(x.id));
     newSupp[k]=[...nextSupp];
   });
@@ -17149,6 +17948,266 @@ function askDeleteApprovals(list){
     m.querySelector('#daConfirm').onclick=()=>{ const dec={}; list.forEach((d,i)=>{ const sel=m.querySelector('input[name=da'+i+']:checked'); dec[d.key]=sel?sel.value:'keep'; }); m.classList.add('hidden'); resolve(dec); };
   });
 }
+/* ==================== REALTIME BUDGET ====================
+   Supabase counts a realtime message for every client that RECEIVES one — a single row write
+   with three devices connected is four messages, not one. The free plan allows 2,000,000 a
+   month. This clinic burned 2.79 million with three devices and nine users, which is absurd
+   for the amount of real change involved, so something was clearly amplifying.
+
+   It was: every sync re-uploaded EVERY record, changed or not, with a fresh updated_at that
+   guaranteed a real write. Three feedback effects stacked on top of each other:
+
+     1. a sync pushed the whole database — hundreds of rows — once a minute, per device;
+     2. each of those writes broadcast to every other connected device;
+     3. receiving a broadcast scheduled another sync, which pushed the whole database again.
+
+   Two devices left open were enough to keep that going indefinitely. The fixes below attack
+   it at the source rather than by throttling: a row is pushed only when it actually differs
+   from what the cloud already holds, and a device ignores the echo of its own writes.       */
+
+/* ---- a cheap content hash, so a row is never pushed twice ---- */
+function syncHash(o){
+  let s; try{ s = JSON.stringify(o); }catch(e){ return 'x'; }
+  let h = 5381;
+  for(let i=0; i<s.length; i++) h = (((h*33) ^ s.charCodeAt(i)) >>> 0);
+  return h.toString(36) + ':' + s.length;
+}
+function syncSent(){ const c = syncCfg(); if(!c.sent) c.sent = {}; return c.sent; }
+function syncSentPrune(){
+  const sent = syncSent(); const keys = Object.keys(sent);
+  if(keys.length <= 4000) return;
+  keys.slice(0, keys.length-3000).forEach(function(k){ delete sent[k]; });
+}
+/* rows this device wrote recently — so its own echo does not trigger another sync */
+const syncSelfWrote = {};
+function syncNoteWrites(ids){
+  const now = Date.now();
+  ids.forEach(function(id){ syncSelfWrote[String(id)] = now; });
+  Object.keys(syncSelfWrote).forEach(function(k){
+    if(now - syncSelfWrote[k] > 120000) delete syncSelfWrote[k];
+  });
+}
+/* Deliberately short. Straight after a large first sync every id in the database is one we
+   just wrote, and a window that is too wide would make us ignore a colleague editing one of
+   them. Forty-five seconds kills the echo loop; the two-minute poll catches anything missed. */
+function syncIsOwnEcho(id){
+  const t = syncSelfWrote[String(id)];
+  return !!t && (Date.now() - t) < 45000;
+}
+/* ---- the meter, so the doctor can see what this actually costs ---- */
+function syncStats(){
+  const c = syncCfg();
+  if(!c.stats) c.stats = {day:'', writes:0, recv:0, days:{}};
+  const today = localISO();
+  if(c.stats.day !== today){
+    if(c.stats.day){ c.stats.days = c.stats.days||{}; c.stats.days[c.stats.day] = {w:c.stats.writes, r:c.stats.recv}; }
+    const keep = Object.keys(c.stats.days||{}).sort().slice(-30);
+    const trimmed = {}; keep.forEach(function(k){ trimmed[k] = c.stats.days[k]; });
+    c.stats = {day:today, writes:0, recv:0, days:trimmed};
+  }
+  return c.stats;
+}
+function syncCountWrites(n){ const s = syncStats(); s.writes += n; }
+function syncCountRecv(n){ const s = syncStats(); s.recv += n; }
+/* how many realtime messages a write costs: one per OTHER connected device, plus our own echo */
+function syncPeers(){ return Math.max(1, parseInt(syncCfg().peers||3, 10)); }
+function syncMsgEstimate(){
+  const s = syncStats();
+  const days = Object.assign({}, s.days||{}); days[s.day] = {w:s.writes, r:s.recv};
+  const keys = Object.keys(days).sort().slice(-7);
+  if(!keys.length) return {perDay:0, perMonth:0, days:0};
+  let w = 0, r = 0;
+  keys.forEach(function(k){ w += (days[k].w||0); r += (days[k].r||0); });
+  const perDay = (w * syncPeers() + r) / keys.length;
+  return {perDay: Math.round(perDay), perMonth: Math.round(perDay*30), days: keys.length};
+}
+
+/* ---- the one door every write goes through ----
+   Nothing reaches Supabase without passing the hash check first. */
+async function syncUpsert(c, rows, label){
+  if(!rows || !rows.length) return 0;
+  const sent = syncSent();
+  const fresh = [];
+  rows.forEach(function(r){
+    const h = syncHash(r.payload);
+    if(sent['h:'+r.id] === h) return;          // byte-identical to what we last sent
+    fresh.push({row:r, h:h});
+  });
+  if(!fresh.length) return 0;
+  for(let i=0; i<fresh.length; i+=400){
+    const chunk = fresh.slice(i, i+400).map(function(x){ return x.row; });
+    const e = await c.from('records').upsert(chunk);
+    if(e.error) throw e.error;
+  }
+  fresh.forEach(function(x){ sent['h:'+x.row.id] = x.h; });
+  syncSentPrune();
+  syncNoteWrites(fresh.map(function(x){ return x.row.id; }));
+  syncCountWrites(fresh.length);
+  return fresh.length;
+}
+/* Every pull teaches the map what the cloud ACTUALLY holds.
+   Without this the map only remembered what this device last sent, so if another device
+   overwrote a row we would never re-assert our version — an approval could be pushed once,
+   overwritten by a stale copy, and then never corrected. The guard has to mean "the cloud
+   already has this", not "we sent this once". */
+function syncNoteCloud(rows){
+  const sent = syncSent();
+  (rows||[]).forEach(function(r){
+    if(!r || r.id==null) return;
+    const payload = (r.payload !== undefined) ? r.payload : r;
+    sent['h:'+r.id] = syncHash(payload);
+  });
+  syncSentPrune();
+}
+/* a deleted row must forget its hash, or re-creating it later would be skipped */
+function syncForget(ids){
+  const sent = syncSent();
+  (ids||[]).forEach(function(id){ delete sent['h:'+id]; });
+}
+
+/* ---- sync modes ----
+   live   – subscribe to realtime; instant, and now costs one message per real change
+   poll   – no subscription at all; costs zero realtime messages
+   manual – only when the doctor presses Sync                                                */
+function syncMode(){
+  const c = syncCfg();
+  if(c.mode) return c.mode;
+  return c.auto ? 'live' : 'manual';
+}
+function syncSetMode(m){
+  const c = syncCfg();
+  c.mode = (m==='live'||m==='poll'||m==='manual') ? m : 'poll';
+  c.auto = (c.mode !== 'manual');
+  persist();
+  stopAutoSync();
+  if(c.mode !== 'manual') startAutoSync();
+  if(typeof renderSync==='function') renderSync();
+  if(typeof renderSyncBudget==='function') renderSyncBudget();
+  toast(c.mode==='live' ? 'Instant updates on'
+      : c.mode==='poll' ? 'Checking every few minutes — no realtime messages used'
+      : 'Manual sync only');
+}
+/* Realtime is a safety net once pushes are honest, so the poll can be far slower than the
+   old sixty seconds — and it stops completely while the app is in the background, which is
+   where a phone used to sit burning through the quota all day. */
+function syncPollMs(){
+  if(document.hidden) return 0;
+  return syncMode()==='live' ? 300000 : 120000;
+}
+
+
+/* ---- the settings panel for all of this ---- */
+const SYNC_MODES = [
+  {k:'live',   t:'Instant',        s:'Devices update each other the moment something changes'},
+  {k:'poll',   t:'Every 2 minutes', s:'No realtime messages at all — costs nothing against the quota'},
+  {k:'manual', t:'Only when I press Sync', s:'Nothing happens in the background'}
+];
+function renderSyncModePick(){
+  const host = $('syncModePick'); if(!host) return;
+  const cur = syncMode();
+  host.innerHTML = SYNC_MODES.map(function(m){
+    return '<button type="button" class="chip'+(cur===m.k?' on':'')+'" title="'+esc(m.s)+'" '+
+      'onclick="syncSetMode(\''+m.k+'\')">'+esc(m.t)+'</button>';
+  }).join('');
+}
+function renderSyncBudget(){
+  const host = $('syncBudget'); if(!host) return;
+  renderSyncModePick();
+  const est = syncMsgEstimate();
+  const s = syncStats();
+  const LIMIT = 2000000;
+  const pct = Math.min(100, Math.round(est.perMonth / LIMIT * 100));
+  const over = est.perMonth > LIMIT;
+  const mode = syncMode();
+  const bar = '<div style="height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:9px 0 7px">'+
+    '<div style="height:100%;width:'+Math.max(1,pct)+'%;border-radius:99px;background:'+
+    (over?'#dc2626':(pct>70?'#d97706':'var(--green,#16a34a)'))+'"></div></div>';
+  host.innerHTML =
+    '<div class="cf-drive'+(over?' warn':' on')+'" style="display:block">'+
+      '<b style="color:var(--ink)">Realtime messages — free plan allows 2,000,000 a month</b>'+
+      bar+
+      '<div style="line-height:1.8">'+
+        'At the last '+(est.days||0)+' day'+(est.days===1?'':'s')+' of use: about <b>'+
+        est.perDay.toLocaleString()+'</b> a day, <b>'+est.perMonth.toLocaleString()+'</b> a month'+
+        (mode==='live' ? ' ('+pct+'% of the allowance).' : ' — you are on <b>'+
+          (mode==='poll'?'Every 2 minutes':'Manual')+'</b>, which sends none.')+
+        '<br><span class="muted">Today: '+s.writes.toLocaleString()+' change'+(s.writes===1?'':'s')+
+        ' uploaded, '+s.recv.toLocaleString()+' update'+(s.recv===1?'':'s')+' received.</span>'+
+      '</div>'+
+      (over ? '<div style="margin-top:8px;color:#b45309"><b>⚠ Over the allowance at this rate.</b> '+
+              'Switch to <b>Every 2 minutes</b> above — records still sync, they just arrive within '+
+              'a couple of minutes instead of instantly, and it costs nothing.</div>' : '')+
+    '</div>'+
+    '<div class="field" style="margin-top:11px"><label>Devices that stay connected '+
+      '<span class="muted" style="font-weight:400">(used to work the estimate out)</span></label>'+
+      '<input type="number" id="syncPeers" min="1" max="20" value="'+syncPeers()+'" '+
+      'data-norail="1" style="max-width:110px" onchange="syncCfg().peers=Math.max(1,parseInt(this.value,10)||1);persist();renderSyncBudget()"></div>';
+}
+function syncResetMeter(){
+  const c = syncCfg();
+  c.stats = {day:localISO(), writes:0, recv:0, days:{}};
+  persist(); renderSyncBudget();
+  toast('Meter reset');
+}
+function syncExplain(){
+  alert(
+    'What Supabase counts\n\n'+
+    'A "realtime message" is counted every time a connected device RECEIVES an update — not\n'+
+    'once per change. One record saved, with three devices connected, is three or four messages.\n\n'+
+    'What was going wrong\n\n'+
+    'Every sync used to re-upload EVERY record, changed or not, once a minute per device. Each\n'+
+    'of those writes was broadcast to every other device, and receiving a broadcast started\n'+
+    'another sync, which uploaded everything again. Two devices left open kept it going by\n'+
+    'themselves — which is how 2.79 million messages happened in a fortnight.\n\n'+
+    'What it does now\n\n'+
+    '• A record is uploaded only when it genuinely differs from the cloud copy.\n'+
+    '• A device ignores the echo of its own writes, so the loop cannot start.\n'+
+    '• The background check stops completely while the app is in the background.\n'+
+    '• On "Every 2 minutes" no realtime connection is opened at all — zero messages.\n\n'+
+    'A normal clinic day of thirty or forty saved records now costs a few hundred messages\n'+
+    'instead of hundreds of thousands.'
+  );
+}
+
+
+/* A one-time, plain-language notice. The doctor got an email from Supabase; he should get an
+   answer from the app rather than have to work out what changed. */
+function syncNoticeClose(el){ const m=el.closest('.nav-modal'); if(m) m.remove(); }
+function syncNoticeMaybe(){
+  try{
+    const c = syncCfg();
+    if(!c.noticeDue) return;
+    if(!(c.url && c.anonKey)) { c.noticeDue = false; persist(); return; }
+    c.noticeDue = false; persist();
+    setTimeout(function(){
+      const m = document.createElement('div');
+      m.className = 'nav-modal'; m.id = 'syncNoticeModal';
+      m.innerHTML = '<div class="nav-modal-card" style="max-width:560px">'+
+        '<div class="nav-modal-head"><b>📡 Sync has been made much lighter</b></div>'+
+        '<div class="nav-modal-body">'+
+          '<p class="small">Supabase warned that this clinic went over its free allowance for '+
+          '<b>realtime messages</b>. The cause was a fault in this app, not in how you use it: '+
+          'every background sync re-uploaded <b>every</b> record — changed or not — once a minute '+
+          'per device, and each upload woke the other devices into doing the same. Two devices '+
+          'left open kept it going by themselves.</p>'+
+          '<p class="small">That is fixed. A record is now uploaded only when it has actually '+
+          'changed, and a device ignores the echo of its own writes.</p>'+
+          '<p class="small">As a precaution while your grace period runs, devices now check for '+
+          'each other&rsquo;s changes <b>every couple of minutes</b> instead of instantly. Nothing is '+
+          'lost — it just arrives a minute or two later. There is a live meter in '+
+          '<b>Settings \\u2192 Cloud sync</b>; once it shows the usage is small you can switch '+
+          'back to <b>Instant</b> there.</p>'+
+          '<div class="btn-bar mt">'+
+            '<button class="btn btn-green" onclick="syncNoticeClose(this)">Understood</button>'+
+            '<button class="btn btn-ghost" onclick="syncNoticeClose(this);showTab(\'sync\')">Open the meter</button>'+
+          '</div>'+
+        '</div></div>';
+      document.body.appendChild(m);
+    }, 2500);
+  }catch(e){}
+}
+
+
 let __lastSyncAt=0;
 async function syncNow(loud, force){
   // background syncs are throttled so they don't fire constantly; manual/forced ones always run
@@ -17158,6 +18217,7 @@ async function syncNow(loud, force){
   try{
     const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) throw new Error('Sign in first');
     const res=await c.from('records').select('id,kind,payload'); if(res.error) throw res.error; const cloud=res.data||[];
+    syncNoteCloud(cloud);          // the map now reflects the cloud, not just our own history
     const local={}; SYNC_COLLS.forEach(k=>local[k]=db[k]||[]);
     const isAdmin=!currentUser || currentUser.role==='admin';
     const state={knownIds:syncCfg().knownIds||{}, suppressed:syncCfg().suppressed||{}, now:new Date().toISOString(), userName:(currentUser&&currentUser.name)||syncCfg().email||''};
@@ -17171,7 +18231,8 @@ async function syncNow(loud, force){
     reconcileUsers(); refreshCurrentUser();   // apply any access changes immediately, before later steps
     const delIds=[...new Set(plan.deleteRowIds)];
     for(const id of delIds){ await c.from('records').delete().eq('id', id); }
-    for(let i=0;i<plan.pushRows.length;i+=400){ const pe=await c.from('records').upsert(plan.pushRows.slice(i,i+400)); if(pe.error) throw pe.error; }
+    if(delIds.length){ syncForget(delIds); syncCountWrites(delIds.length); }
+    await syncUpsert(c, plan.pushRows, 'records');
     syncCfg().knownIds=plan.newState.knownIds; syncCfg().suppressed=plan.newState.suppressed; syncCfg().lastSync=state.now; syncCfg().lastError=''; persist();
     await syncPushAccess(); await syncPullAccess();
     await syncPushActivity(); await syncPullActivity();
@@ -17193,18 +18254,41 @@ async function startAutoSync(){
     const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     stopAutoSync();
     // realtime: when another device changes something, refresh — but throttled so it isn't constant
-    syncRealtimeChan=c.channel('rxclinic-records').on('postgres_changes',{event:'*',schema:'public',table:'records'},()=>{ if(window.__syncDebounce) clearTimeout(window.__syncDebounce); window.__syncDebounce=setTimeout(()=>{ if(navigator.onLine) syncNow(false,false); }, 6000); }).subscribe();
-    // steady background poll: about once a minute
-    syncTimer=setInterval(()=>{ if(navigator.onLine) syncNow(false,false); }, 60000);
+    if(syncMode()==='live'){
+      syncRealtimeChan=c.channel('rxclinic-records')
+        .on('postgres_changes',{event:'*',schema:'public',table:'records'},function(msg){
+          syncCountRecv(1);
+          /* Our own write comes straight back to us. Acting on it used to start another
+             sync, which pushed again, which came back again — the loop that burned the
+             month's quota in a fortnight. */
+          const id = (msg && ((msg.new && msg.new.id) || (msg.old && msg.old.id))) || '';
+          if(id && syncIsOwnEcho(id)) return;
+          if(window.__syncDebounce) clearTimeout(window.__syncDebounce);
+          window.__syncDebounce=setTimeout(function(){ if(navigator.onLine) syncNow(false,false); }, 6000);
+        }).subscribe();
+    }
+    syncSchedulePoll();
     syncCfg().auto=true; persist();
     if(navigator.onLine){ setTimeout(()=>{ try{ syncNow(false,true); }catch(e){} }, 400); }   // one fresh pull right after connecting
   }catch(e){ /* stays offline */ }
 }
 function stopAutoSync(){ if(syncTimer){ clearInterval(syncTimer); syncTimer=null; } if(syncRealtimeChan){ try{sb.removeChannel(syncRealtimeChan);}catch(_){ } syncRealtimeChan=null; } }
+/* The poll stops dead while the app is in the background. A phone left open in a pocket used
+   to keep syncing all day; now it does nothing until you look at it. */
+function syncSchedulePoll(){
+  if(syncTimer){ clearInterval(syncTimer); syncTimer=null; }
+  if(syncMode()==='manual') return;
+  const ms = syncPollMs();
+  if(!ms) return;
+  syncTimer = setInterval(function(){ if(navigator.onLine && !document.hidden) syncNow(false,false); }, ms);
+}
 /* Phones pause background timers & drop the websocket — so sync whenever the app returns
    to the foreground or the connection comes back. */
 function kickSyncIfNeeded(){ try{ const c=syncCfg(); if(currentUser && c.url && c.anonKey && navigator.onLine){ if(!syncTimer) startAutoSync(); else syncNow(false,false); } if(typeof renderHomeSync==='function') renderHomeSync(); }catch(e){} }
-document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) kickSyncIfNeeded(); });
+document.addEventListener('visibilitychange', ()=>{
+  if(typeof syncSchedulePoll==='function') try{ syncSchedulePoll(); }catch(e){}
+  if(!document.hidden) kickSyncIfNeeded();
+});
 window.addEventListener('online', kickSyncIfNeeded);
 window.addEventListener('offline', ()=>{ if(typeof renderHomeSync==='function') renderHomeSync(); });
 function syncSaveCfg(){ const c=syncCfg(); c.url=$('syncUrl').value.trim(); c.anonKey=$('syncKey').value.trim(); sb=null; persist(); toast('Sync settings saved'); renderSync(); }
@@ -17221,7 +18305,9 @@ create policy "clinic access" on records
   for all to authenticated using (true) with check (true);
 alter publication supabase_realtime add table records;`;
 function renderSync(){
-  const c=syncCfg(); const host=$('syncStatus'); if(!host) return;
+  const c=syncCfg(); const host=$('syncStatus');
+  if(typeof renderSyncBudget==='function') try{ renderSyncBudget(); }catch(e){}
+  if(!host) return;
   if($('syncUrl') && !$('syncUrl').value) $('syncUrl').value=c.url||'';
   if($('syncKey') && !$('syncKey').value) $('syncKey').value=c.anonKey||'';
   if($('syncAuto')) $('syncAuto').checked=!!c.auto;
@@ -17272,6 +18358,8 @@ _initStep(()=>{ if(typeof renderNvChips==='function') renderNvChips(); if(typeof
 try{ initAuth(); }
 catch(e){ try{ console.error('initAuth failed:', e); var ls=document.getElementById('lockScreen'); if(ls) ls.classList.remove('hidden'); }catch(_){ } }
 _initStep(initAutoBackup);
+_initStep(()=>{ if(typeof cardsInit==='function') cardsInit(); });
+_initStep(()=>{ if(typeof syncNoticeMaybe==='function') syncNoticeMaybe(); });
 _initStep(()=>{ if(typeof renderNotif==='function') renderNotif(); });
 /* app finished starting up — from here, a stray click-time error must NOT show the "startup problem" bar */
 try{ window.__appReady = true; var _beb=document.getElementById('bootErrBar'); if(_beb) _beb.style.display='none'; }catch(e){}
