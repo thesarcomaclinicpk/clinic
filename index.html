@@ -3143,7 +3143,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div id="regForm"></div>
       <div class="btn-bar mt">
         <button class="btn btn-green" onclick="regSave()">Save registry entry</button>
+        <button class="btn btn-primary" onclick="regReferFromForm()">📨 Referral letter</button>
+        <button class="btn btn-ghost" onclick="regPrintCurrent()">🖨 Print this case</button>
         <button class="btn btn-ghost" onclick="regCloseForm()">Cancel</button>
+        <span style="flex:1"></span>
+        <button class="btn btn-danger hidden" id="regDeleteBtn" onclick="regDeleteCurrent()">🗑 Delete this entry</button>
       </div>
     </div>
   </div>
@@ -4865,6 +4869,7 @@ function stampDirtyRecords(quiet){
 }
 function syncRehash(){ __recFp=null; stampDirtyRecords(true); }
 function persist(){
+  if(typeof tombWatch==='function') tombWatch();
   if(!storageOK) return;
   try{ stampDirtyRecords(false); }catch(e){}
   try{ localStorage.setItem(DB_KEY, JSON.stringify(db)); }catch(e){ toast('⚠ Could not save — storage full or blocked'); }
@@ -5237,7 +5242,9 @@ function importData(ev){
       }
       if(!d.settings || !Array.isArray(d.meds)) throw new Error('bad');
       if(!confirm('Replace ALL current data with this backup?\n('+(d.patients||[]).length+' patients, '+(d.visits||[]).length+' visits, '+d.meds.length+' medicines)')) return;
-      db = d; migrateDB(); persist(); loadSettingsForm(); renderPatientList(); renderMedList(); renderDataStats();
+      db = d; migrateDB();
+      if(typeof tombPause==='function'){ tombPause(); tombResume(); }   // relearn, do not "delete"
+      persist(); loadSettingsForm(); renderPatientList(); renderMedList(); renderDataStats();
       toast('Backup restored');
       initAuth(true);
     }catch(e){ alert('This file is not a valid backup.'); }
@@ -10376,7 +10383,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.05-b49';
+const APP_BUILD = '2026.08.05-b50';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -10713,7 +10720,7 @@ function initAuth(forceLock){
       try{ showTab(firstAllowedTab()); }catch(e){}
       if(typeof renderNotif==='function') renderNotif();
       // reopened from a saved session (common on phones) → resume cloud sync so access & data stay current
-      try{ const c=syncCfg(); if(c.url && c.anonKey && navigator.onLine && typeof startAutoSync==='function') startAutoSync(); }catch(e){}
+      try{ const c=syncCfg(); if(c.url && c.anonKey && navigator.onLine && syncMode()!=='manual' && typeof startAutoSync==='function') startAutoSync(); }catch(e){}
       return; }
   }
   currentUser = null; applyPerms(); showLock();
@@ -12797,7 +12804,7 @@ function testPrint(){
 
 
 /* ===== Registry data (generated) ===== */
-const REG_SCHEMA = [{"name": "Demographics", "icon": "🧑", "subs": [{"name": "Identification", "fields": [{"k": "regNo", "lab": "Registry Number", "t": "text"}, {"k": "mrn", "lab": "MR Number", "t": "text"}, {"k": "team", "lab": "Team", "t": "text"}, {"k": "name", "lab": "Name", "t": "text"}, {"k": "cnic", "lab": "CNIC", "t": "text"}, {"k": "age", "lab": "Age", "t": "text"}, {"k": "sex", "lab": "Sex", "t": "sel", "o": [["1", "Male"], ["2", "Female"]]}, {"k": "city", "lab": "City", "t": "text"}, {"k": "province", "lab": "Province", "t": "psel", "o": [["Punjab", "Punjab"], ["Sindh", "Sindh"], ["KPK", "KPK"], ["Balochistan", "Balochistan"], ["Gilgit-Baltistan", "Gilgit-Baltistan"], ["AJK", "AJK"], ["Islamabad (ICT)", "Islamabad (ICT)"]]}, {"k": "contact", "lab": "Contact Number", "t": "text"}, {"k": "firstVisit", "lab": "First Visit", "t": "date"}]}, {"name": "History & status", "fields": [{"k": "prevCancer", "lab": "Previous Hx of Cancer", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "familyCancer", "lab": "Family Hx of Cancer", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "asa", "lab": "ASA Physical Status Class", "t": "sel", "o": [["1", "I — healthy, no systemic disease"], ["2", "II — mild systemic disease"], ["3", "III — severe systemic disease, limiting"], ["4", "IV — severe, constant threat to life"], ["5", "V — moribund, not expected to survive 24h"], ["6", "VI — brain-dead organ donor"]]}, {"k": "dateAdm", "lab": "Date of Admission", "t": "date"}, {"k": "prevTx", "lab": "Previous tx at presentation", "t": "sel", "o": [["1", "Nil", "No prior treatment"], ["2", "Proper biopsy", "Adequate diagnostic biopsy done"], ["3", "Unplanned excision", "'Whoops' excision without oncological planning"], ["4", "Planned resection", "Oncologically planned resection already done"]]}]}, {"name": "Biopsy & tumour", "fields": [{"k": "biopsyInst", "lab": "Biopsy Institute", "t": "sel", "o": [["1", "GTTH"], ["2", "Other"]]}, {"k": "biopsyType", "lab": "Biopsy Type", "t": "sel", "o": [["1", "Core Needle"], ["2", "Incisional"], ["3", "Excisional"], ["4", "Curettage"], ["5", "FNAC"]]}, {"k": "primaryTissue", "lab": "Primary Tissue of Origin", "t": "sel", "o": [["1", "Bone"], ["2", "Soft tissue"], ["3", "Skin"], ["4", "Neural tissue"]]}, {"k": "site", "lab": "Site", "t": "sel", "o": [["1a", "Bone — clavicle"], ["1b", "Bone — scapula"], ["1c", "Bone — humerus"], ["1d", "Bone — radius"], ["1e", "Bone — ulna"], ["1f", "Bone — hand"], ["1g", "Bone — spine"], ["1h", "Bone — pelvis"], ["1i", "Bone — femur"], ["1j", "Bone — tibia"], ["1k", "Bone — fibula"], ["1l", "Bone — foot"], ["1m", "Bone — multiple"], ["1n", "Bone — patella"], ["1o", "Bone — others"], ["2a", "Soft tissue — trunk"], ["2b", "Soft tissue — arm"], ["2c", "Soft tissue — forearm"], ["2d", "Soft tissue — hand"], ["2e", "Soft tissue — thigh"], ["2f", "Soft tissue — leg"], ["2g", "Soft tissue — foot"], ["2h", "Soft tissue — joint"], ["2i", "Soft tissue — multiple"], ["2j", "Soft tissue — other"], ["3a", "Spine — extradural"], ["3b", "Spine — intradural extramedullary"], ["3c", "Spine — intradural intramedullary"], ["4", "Brain"]]}, {"k": "nature", "lab": "Nature", "t": "sel", "o": [["1", "Benign latent + active", "Benign, non-aggressive (Enneking stage 1–2)"], ["2", "Benign aggressive", "Locally aggressive benign (Enneking stage 3)"], ["3", "Malignant low grade", "Low-grade malignancy"], ["4", "Malignant high grade", "High-grade malignancy"]]}, {"k": "tumorType", "lab": "Tumor Type", "t": "sel", "o": [["1", "Primary", "First presentation, not previously treated"], ["2", "Recurrent", "Returned after prior treatment"], ["3", "Residual", "Tumour left behind after incomplete excision"], ["4", "Metastatic", "Spread from a primary elsewhere"]]}, {"k": "diagnosis", "lab": "Diagnosis", "t": "ta"}, {"k": "histSubtype", "lab": "Histological Subtype", "t": "ta"}, {"k": "grade", "lab": "Grade (FNCLCC)", "t": "sel", "o": [["1", "G1 — low grade", "Well differentiated; low mitoses, little/no necrosis — least aggressive"], ["2", "G2 — intermediate grade", "Intermediate differentiation & mitotic activity"], ["3", "G3 — high grade", "Poorly differentiated; high mitoses & necrosis — most aggressive"]]}, {"k": "stage", "lab": "Stage (AJCC 8th)", "t": "sel", "o": [["1", "Stage IA", "G1, T1 (≤5 cm), N0, M0 — low grade, small"], ["2", "Stage IB", "G1, T2–T4 (>5 cm), N0, M0 — low grade, larger"], ["3", "Stage II", "G2–G3, T1 (≤5 cm), N0, M0 — high grade, small"], ["4", "Stage IIIA", "G2–G3, T2 (>5–10 cm), N0, M0 — high grade"], ["5", "Stage IIIB", "G2–G3, T3–T4 (>10 cm), N0, M0 — high grade, large"], ["6", "Stage IV", "Any N1 (nodal) or M1 (distant metastasis)"]]}, {"k": "sins", "lab": "SINS Score (if applicable)", "t": "text"}, {"k": "margin", "lab": "Margin Status", "t": "sel", "o": [["0", "R0", "No residual tumour — margins microscopically clear"], ["1", "R1", "Microscopic residual tumour at the margin"], ["2", "R2", "Macroscopic (gross) residual tumour"]]}, {"k": "necrosis", "lab": "Necrosis", "t": "sel", "o": [["0", "<10%", "Best response to neo-adjuvant therapy"], ["1", "<50%", ""], ["2", ">50%", ""], ["3", ">90%", "Near-complete response (>90% necrosis)"]]}]}, {"name": "Radiology", "fields": [{"k": "xray", "lab": "X-Ray (Lodwick)", "t": "sel", "o": [["0", "Normal-looking", "No aggressive features"], ["1a", "Geographic IA", "Geographic lucency with sclerotic rim — least aggressive"], ["1b", "Geographic IB", "Geographic, well-defined margin, no sclerotic rim"], ["1c", "Geographic IC", "Geographic with ill-defined margin"], ["2", "Moth-eaten (II)", "Multiple small lucencies — more aggressive"], ["3", "Permeative (III)", "Ill-defined permeative spread — most aggressive"], ["4", "Sclerotic lesion", "Bone-forming / blastic lesion"], ["5", "Pathological fracture", "Fracture through the lesion"]]}, {"k": "mri", "lab": "MRI Key Findings", "t": "ta"}, {"k": "otherRad", "lab": "Other significant finding on radiology", "t": "ta"}]}]}, {"name": "Treatment", "icon": "🔬", "subs": [{"name": "MDT & surgery", "fields": [{"k": "dateMdt", "lab": "Date of MDT", "t": "date"}, {"k": "mdtDecision", "lab": "MDT Decision / Discussion", "t": "ta"}, {"k": "dateSurg", "lab": "Date of surgery", "t": "date"}, {"k": "intent", "lab": "Treatment Intent", "t": "sel", "o": [["1", "Curative"], ["2", "Palliative"]]}, {"k": "limbPres", "lab": "Limb preservation", "t": "sel", "o": [["1", "Limb sparing"], ["2", "Amputation"], ["3", "Other"]]}, {"k": "surgType", "lab": "Surgery type", "t": "sel", "o": [["1", "Intralesional / debulking", "Plane passes through the tumour itself"], ["2", "Marginal", "Through the reactive zone / pseudocapsule"], ["3", "Wide resection", "Cuff of normal tissue, intracompartmental"], ["4", "Radical", "Entire compartment removed"], ["5", "Others", ""]]}, {"k": "planType", "lab": "Surgical Plan type", "t": "sel", "o": [["1", "Single-stage"], ["2", "Planned two-stage (1st done)"], ["3", "Planned two-stage (2nd done)"], ["4", "Unplanned staged"], ["5", "Unknown"]]}, {"k": "surgDetails", "lab": "Surgery details", "t": "ta"}, {"k": "surgeon", "lab": "Surgeon Initials", "t": "text"}, {"k": "frozen", "lab": "Frozen Section", "t": "sel", "o": [["0", "Not done", ""], ["1", "Done — negative", "Intra-op frozen section: margin clear"], ["2", "Done — positive", "Intra-op frozen section: tumour at margin"]]}, {"k": "reconType", "lab": "Reconstruction type", "t": "sel", "o": [["0", "None"], ["1", "Primary"], ["2", "Revision"]]}, {"k": "implantCo", "lab": "Implant Company", "t": "sel", "o": [["0", "No implant"], ["1", "AK Chinese"], ["2", "Implantcast"], ["3", "Locally manufactured"], ["4", "Other"]]}]}, {"name": "Bone reconstruction", "fields": [{"k": "br_autograft", "lab": "Bone recon — Autograft", "t": "sel", "o": [["0", "None"], ["1", "Non-structural"], ["2", "Non-vascular structural"], ["3", "Vascular structural"], ["4", "Recycled"]]}, {"k": "br_recycled", "lab": "Bone recon — Recycled autograft", "t": "sel", "o": [["0", "None"], ["1", "Liquid nitrogen"], ["2", "Autoclaving"], ["3", "Radiation"], ["4", "Pasteurization"]]}, {"k": "br_interface", "lab": "Bone recon — Prosthetic-bone interface", "t": "sel", "o": [["0", "None"], ["1", "Non-vascular bone graft"], ["2", "Vascularized bone graft"]]}, {"k": "br_allograft", "lab": "Bone recon — Allograft", "t": "sel", "o": [["0", "None"], ["1", "Non-structural"], ["2", "Structural"]]}, {"k": "br_boneSub", "lab": "Bone recon — Bone substitute", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_intFix", "lab": "Bone recon — Internal fixation", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_endoprosth", "lab": "Bone recon — Endoprosthesis", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_cement", "lab": "Bone recon — Structural cement", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_distraction", "lab": "Bone recon — Distraction osteogenesis", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}]}, {"name": "Soft-tissue reconstruction", "fields": [{"k": "st_recon", "lab": "Soft-tissue recon", "t": "sel", "o": [["0", "None"], ["1", "STSG"], ["2", "FTSG"], ["3", "Local flap"], ["4", "Regional flap"], ["5", "Free flap"], ["6", "Vascular recon"], ["7", "Nerve graft"], ["8", "Delayed recon planned"]]}, {"k": "st_attach", "lab": "Soft-tissue — Attachment medium", "t": "sel", "o": [["0", "None"], ["1", "Attachment tube (Trivera)"], ["2", "Synthetic mesh"], ["3", "Biological mesh"], ["4", "Mersilene tape"]]}, {"k": "st_npt", "lab": "Soft-tissue — NPT (VAC)", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "bloodLoss", "lab": "Intra-operative Blood loss (ml)", "t": "num"}]}, {"name": "Neo-adjuvant therapy", "fields": [{"k": "neo_rt", "lab": "Neo-adjuvant — RT", "t": "sel", "o": [["0", "None"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]]}, {"k": "neo_rtDose", "lab": "Neo-adjuvant — RT dose / fractions", "t": "text"}, {"k": "neo_sys", "lab": "Neo-adjuvant — Systemic therapy", "t": "sel", "o": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]]}, {"k": "neo_cycles", "lab": "Neo-adjuvant — No. of cycles", "t": "text"}, {"k": "neo_regimen", "lab": "Neo-adjuvant — Regimen", "t": "sel", "o": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]]}, {"k": "neo_dateDone", "lab": "Neo-adjuvant — Date of completion", "t": "date"}]}, {"name": "Adjuvant therapy", "fields": [{"k": "adj_rt", "lab": "Adjuvant — RT", "t": "sel", "o": [["0", "Nil"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]]}, {"k": "adj_rtDose", "lab": "Adjuvant — RT dose / fractions", "t": "text"}, {"k": "adj_sys", "lab": "Adjuvant — Systemic therapy", "t": "sel", "o": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]]}, {"k": "adj_cycles", "lab": "Adjuvant — No. of cycles", "t": "text"}, {"k": "adj_regimen", "lab": "Adjuvant — Regimen", "t": "sel", "o": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]]}, {"k": "adj_dateDone", "lab": "Adjuvant — Date of completion", "t": "date"}]}, {"name": "Early complications", "fields": [{"k": "ec_nerve", "lab": "Early Cx — Nerve injury", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "ec_vascular", "lab": "Early Cx — Vascular injury", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "ec_fracture", "lab": "Early Cx — Intra-op fracture", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "ec_wound", "lab": "Early Cx — Wound", "t": "sel", "o": [["0", "No"], ["1", "Dehiscence"], ["2", "Necrosis"], ["3", "Hematoma / seroma"]]}, {"k": "ec_flap", "lab": "Early Cx — Flap", "t": "sel", "o": [["0", "No"], ["1", "Minimal necrosis"], ["2", "Significant necrosis — reoperation"]]}, {"k": "ec_systemic", "lab": "Early Cx — Systemic", "t": "sel", "o": [["0", "None"], ["1", "DVT / PE"], ["2", "Sepsis"], ["3", "Pneumonia"], ["4", "Cardiac event"], ["5", "Renal complication"]]}, {"k": "ec_dural", "lab": "Early Cx — Dural leak", "t": "sel", "o": [["0", "None"], ["1", "Early"], ["2", "Late (pseudomeningocele)"]]}, {"k": "ec_details", "lab": "Early Cx — Morbidity details", "t": "ta"}]}, {"name": "Late complications & further surgery", "fields": [{"k": "lc_infection", "lab": "Late Cx — Infection", "t": "sel", "o": [["0", "None"], ["1", "Superficial"], ["2", "Deep"], ["3", "Prosthetic"]]}, {"k": "lc_tumor", "lab": "Late Cx — Tumor", "t": "sel", "o": [["0", "None"], ["1", "Involved margin"], ["2", "Local recurrence"], ["3", "Metastasis"], ["4", "Local recurrence + metastasis"]]}, {"k": "lc_recurDur", "lab": "Late Cx — Recurrence duration from surgery", "t": "text"}, {"k": "lc_boneImplant", "lab": "Late Cx — Bone / Implant", "t": "sel", "o": [["0", "None"], ["1", "Non-union"], ["2", "Fracture"], ["3", "Loosening"]]}, {"k": "lc_endo", "lab": "Late Cx — Endoprosthesis", "t": "sel", "o": [["0", "None"], ["1", "Loosening"], ["2", "Wear"], ["3", "Peri-prosthetic fracture"], ["4", "Dislocation"]]}, {"k": "addSurgCx", "lab": "Additional surgery for complication", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "addSurgSame", "lab": "Additional surgery for same disease", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "addSurgDetails", "lab": "Additional surgery details", "t": "ta"}]}]}, {"name": "Functional status", "icon": "🦵", "subs": [{"name": "Neurology & musculoskeletal", "fields": [{"k": "preNeuro", "lab": "Pre-op Neurology (MRC)", "t": "sel", "o": [["0", "0 — No contraction"], ["1", "1 — Flicker"], ["2", "2 — Not against gravity"], ["3", "3 — Against gravity"], ["4", "4 — Against resistance, weaker"], ["5", "5 — Normal strength"]]}, {"k": "postNeuro", "lab": "Post-op Neurology", "t": "sel", "o": [["1", "Normal"], ["2", "Improved"], ["3", "Same"], ["4", "Worsened"], ["5", "New deficit"]]}, {"k": "neuroDetails", "lab": "Specific details of Neurology", "t": "ta"}, {"k": "preMsk", "lab": "Pre-op MSK", "t": "sel", "o": [["1", "Full weight bearing"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"]]}, {"k": "postMsk", "lab": "Post-op MSK", "t": "sel", "o": [["1", "Back to normal function"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"], ["6", "Other"]]}, {"k": "mstsUL", "lab": "MSTS Score — Upper Limb (/30)", "t": "text"}, {"k": "mstsLL", "lab": "MSTS Score — Lower Limb (/30)", "t": "text"}]}]}, {"name": "Outcomes", "icon": "📊", "subs": [{"name": "Function scores", "fields": [{"k": "out_mstsUL", "lab": "MSTS Upper Limb (/30)", "t": "num"}, {"k": "out_mstsLL", "lab": "MSTS Lower Limb (/30)", "t": "num"}, {"k": "out_mstsPct", "lab": "MSTS as %", "t": "text"}, {"k": "out_mstsDate", "lab": "MSTS assessed on", "t": "date"}, {"k": "out_tess", "lab": "TESS score (/100)", "t": "num"}, {"k": "out_tessDate", "lab": "TESS assessed on", "t": "date"}, {"k": "out_promisPF", "lab": "PROMIS Physical Function (T-score)", "t": "num"}, {"k": "out_promisPI", "lab": "PROMIS Pain Interference (T-score)", "t": "num"}, {"k": "out_promisDate", "lab": "PROMIS assessed on", "t": "date"}, {"k": "out_eq5dProfile", "lab": "EQ-5D-5L profile (5 digits, e.g. 21232)", "t": "text"}, {"k": "out_eq5dIndex", "lab": "EQ-5D-5L index value (0–1)", "t": "text"}, {"k": "out_eq5dVas", "lab": "EQ-5D VAS today (0–100)", "t": "num"}, {"k": "out_eq5dDate", "lab": "EQ-5D assessed on", "t": "date"}]}, {"name": "Pain & movement", "fields": [{"k": "out_painRest", "lab": "Pain at rest (VAS 0–10)", "t": "num"}, {"k": "out_painMove", "lab": "Pain on movement (VAS 0–10)", "t": "num"}, {"k": "out_painWorst", "lab": "Worst pain in the last week (0–10)", "t": "num"}, {"k": "out_analgesia", "lab": "Analgesia in use", "t": "sel", "o": [["0", "None"], ["1", "Simple / NSAID"], ["2", "Weak opioid"], ["3", "Strong opioid"], ["4", "Neuropathic agent"]]}, {"k": "out_rom", "lab": "ROM — operated joint", "t": "ta"}, {"k": "out_romOther", "lab": "ROM — other joints, limb length", "t": "ta"}, {"k": "out_gait", "lab": "Walking aid at last review", "t": "sel", "o": [["0", "None"], ["1", "Stick"], ["2", "One crutch"], ["3", "Two crutches"], ["4", "Walker"], ["5", "Wheelchair"]]}]}, {"name": "Complications", "fields": [{"k": "out_cdGrade", "lab": "Highest Clavien-Dindo grade", "t": "sel", "o": [["0", "None", "No complication at all"], ["1", "I — no treatment needed", "Any deviation from the normal course needing no drug, surgical, endoscopic or radiological treatment (antiemetics, antipyretics, analgesics, physiotherapy and bedside wound opening are allowed)"], ["2", "II — drugs, transfusion, TPN", "Needing drug treatment beyond grade I, including blood transfusion and total parenteral nutrition"], ["3a", "IIIa — intervention, no general anaesthetic", "Needing surgical, endoscopic or radiological intervention under local anaesthesia or sedation"], ["3b", "IIIb — intervention under general anaesthetic", "Needing intervention under general anaesthesia"], ["4a", "IVa — single-organ failure", "Life-threatening, needing intensive care; single-organ dysfunction including dialysis"], ["4b", "IVb — multi-organ failure", "Life-threatening, needing intensive care; multi-organ dysfunction"], ["5", "V — death", "Death of the patient"]]}, {"k": "out_cdWhat", "lab": "What happened", "t": "ta"}, {"k": "out_cdDate", "lab": "Date of the complication", "t": "date"}, {"k": "out_cci", "lab": "Comprehensive Complication Index (0–100)", "t": "num"}, {"k": "out_cdTiming", "lab": "Timing", "t": "sel", "o": [["1", "Intra-operative"], ["2", "Early (≤30 days)"], ["3", "Late (>30 days)"]]}]}, {"name": "Revision surgery", "fields": [{"k": "out_revDone", "lab": "Any revision surgery", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "out_revDate", "lab": "Date of the first revision", "t": "date"}, {"k": "out_revReason", "lab": "Reason for revision", "t": "sel", "o": [["1", "Infection"], ["2", "Aseptic loosening"], ["3", "Implant failure or breakage"], ["4", "Peri-prosthetic fracture"], ["5", "Local recurrence"], ["6", "Non-union"], ["7", "Soft-tissue failure / instability"], ["8", "Leg-length problem"], ["9", "Other"]]}, {"k": "out_revType", "lab": "What was done at revision", "t": "ta"}, {"k": "out_revCount", "lab": "Number of revisions so far", "t": "num"}, {"k": "out_implantStatus", "lab": "Reconstruction at last review", "t": "sel", "o": [["1", "In situ and working"], ["2", "In situ but failing"], ["0", "Removed"], ["3", "Converted to amputation"], ["4", "Not applicable"]]}]}, {"name": "Follow-up status", "fields": [{"k": "out_lastFu", "lab": "Date of last follow-up", "t": "date"}, {"k": "out_status", "lab": "Status at last follow-up", "t": "sel", "o": [["1", "NED — no evidence of disease"], ["2", "AWD — alive with disease"], ["3", "DOD — died of disease"], ["4", "DOC — died of another cause"], ["5", "Lost to follow-up"]]}, {"k": "out_recurDate", "lab": "Date of recurrence, if any", "t": "date"}, {"k": "out_metsDate", "lab": "Date metastasis found, if any", "t": "date"}, {"k": "out_deathDate", "lab": "Date of death, if any", "t": "date"}, {"k": "out_notes", "lab": "Outcome notes", "t": "ta"}]}]}];
+const REG_SCHEMA = [{"name": "Demographics", "icon": "🧑", "subs": [{"name": "Identification", "fields": [{"k": "regNo", "lab": "Registry Number", "t": "text"}, {"k": "mrn", "lab": "MR Number", "t": "text"}, {"k": "team", "lab": "Team", "t": "text"}, {"k": "name", "lab": "Name", "t": "text"}, {"k": "cnic", "lab": "CNIC", "t": "text"}, {"k": "age", "lab": "Age", "t": "text"}, {"k": "sex", "lab": "Sex", "t": "sel", "o": [["1", "Male"], ["2", "Female"]]}, {"k": "city", "lab": "City", "t": "text"}, {"k": "province", "lab": "Province", "t": "psel", "o": [["Punjab", "Punjab"], ["Sindh", "Sindh"], ["KPK", "KPK"], ["Balochistan", "Balochistan"], ["Gilgit-Baltistan", "Gilgit-Baltistan"], ["AJK", "AJK"], ["Islamabad (ICT)", "Islamabad (ICT)"]]}, {"k": "contact", "lab": "Contact Number", "t": "text"}, {"k": "firstVisit", "lab": "First Visit", "t": "date"}]}, {"name": "History & status", "fields": [{"k": "prevCancer", "lab": "Previous Hx of Cancer", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "familyCancer", "lab": "Family Hx of Cancer", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "asa", "lab": "ASA Physical Status Class", "t": "sel", "o": [["1", "I — healthy, no systemic disease"], ["2", "II — mild systemic disease"], ["3", "III — severe systemic disease, limiting"], ["4", "IV — severe, constant threat to life"], ["5", "V — moribund, not expected to survive 24h"], ["6", "VI — brain-dead organ donor"]]}, {"k": "dateAdm", "lab": "Date of Admission", "t": "date"}, {"k": "prevTx", "lab": "Previous tx at presentation", "t": "sel", "o": [["1", "Nil", "No prior treatment"], ["2", "Proper biopsy", "Adequate diagnostic biopsy done"], ["3", "Unplanned excision", "'Whoops' excision without oncological planning"], ["4", "Planned resection", "Oncologically planned resection already done"]]}]}, {"name": "Biopsy & tumour", "fields": [{"k": "biopsyInst", "lab": "Biopsy Institute", "t": "sel", "o": [["1", "GTTH"], ["2", "Other"]]}, {"k": "biopsyType", "lab": "Biopsy Type", "t": "sel", "o": [["1", "Core Needle"], ["2", "Incisional"], ["3", "Excisional"], ["4", "Curettage"], ["5", "FNAC"]]}, {"k": "primaryTissue", "lab": "Primary Tissue of Origin", "t": "sel", "o": [["1", "Bone"], ["2", "Soft tissue"], ["3", "Skin"], ["4", "Neural tissue"]]}, {"k": "site", "lab": "Site", "t": "sel", "o": [["1a", "Bone — clavicle"], ["1b", "Bone — scapula"], ["1c", "Bone — humerus"], ["1d", "Bone — radius"], ["1e", "Bone — ulna"], ["1f", "Bone — hand"], ["1g", "Bone — spine"], ["1h", "Bone — pelvis"], ["1i", "Bone — femur"], ["1j", "Bone — tibia"], ["1k", "Bone — fibula"], ["1l", "Bone — foot"], ["1m", "Bone — multiple"], ["1n", "Bone — patella"], ["1o", "Bone — others"], ["2a", "Soft tissue — trunk"], ["2b", "Soft tissue — arm"], ["2c", "Soft tissue — forearm"], ["2d", "Soft tissue — hand"], ["2e", "Soft tissue — thigh"], ["2f", "Soft tissue — leg"], ["2g", "Soft tissue — foot"], ["2h", "Soft tissue — joint"], ["2i", "Soft tissue — multiple"], ["2j", "Soft tissue — other"], ["3a", "Spine — extradural"], ["3b", "Spine — intradural extramedullary"], ["3c", "Spine — intradural intramedullary"], ["4", "Brain"]]}, {"k": "nature", "lab": "Nature", "t": "sel", "o": [["1", "Benign latent + active", "Benign, non-aggressive (Enneking stage 1–2)"], ["2", "Benign aggressive", "Locally aggressive benign (Enneking stage 3)"], ["3", "Malignant low grade", "Low-grade malignancy"], ["4", "Malignant high grade", "High-grade malignancy"]]}, {"k": "tumorType", "lab": "Tumor Type", "t": "sel", "o": [["1", "Primary", "First presentation, not previously treated"], ["2", "Recurrent", "Returned after prior treatment"], ["3", "Residual", "Tumour left behind after incomplete excision"], ["4", "Metastatic", "Spread from a primary elsewhere"]]}, {"k": "diagnosis", "lab": "Diagnosis", "t": "ta"}, {"k": "histSubtype", "lab": "Histological Subtype", "t": "ta"}, {"k": "grade", "lab": "Grade (FNCLCC)", "t": "sel", "o": [["1", "G1 — low grade", "Well differentiated; low mitoses, little/no necrosis — least aggressive"], ["2", "G2 — intermediate grade", "Intermediate differentiation & mitotic activity"], ["3", "G3 — high grade", "Poorly differentiated; high mitoses & necrosis — most aggressive"]]}, {"k": "stage", "lab": "Stage (AJCC 8th)", "t": "sel", "o": [["1", "Stage IA", "G1, T1 (≤5 cm), N0, M0 — low grade, small"], ["2", "Stage IB", "G1, T2–T4 (>5 cm), N0, M0 — low grade, larger"], ["3", "Stage II", "G2–G3, T1 (≤5 cm), N0, M0 — high grade, small"], ["4", "Stage IIIA", "G2–G3, T2 (>5–10 cm), N0, M0 — high grade"], ["5", "Stage IIIB", "G2–G3, T3–T4 (>10 cm), N0, M0 — high grade, large"], ["6", "Stage IV", "Any N1 (nodal) or M1 (distant metastasis)"]]}, {"k": "sins", "lab": "SINS Score (if applicable)", "t": "text"}, {"k": "margin", "lab": "Margin Status", "t": "sel", "o": [["0", "R0", "No residual tumour — margins microscopically clear"], ["1", "R1", "Microscopic residual tumour at the margin"], ["2", "R2", "Macroscopic (gross) residual tumour"]]}, {"k": "necrosis", "lab": "Necrosis", "t": "sel", "o": [["0", "<10%", "Best response to neo-adjuvant therapy"], ["1", "<50%", ""], ["2", ">50%", ""], ["3", ">90%", "Near-complete response (>90% necrosis)"]]}]}, {"name": "Radiology", "fields": [{"k": "xray", "lab": "X-Ray (Lodwick)", "t": "sel", "o": [["0", "Normal-looking", "No aggressive features"], ["1a", "Geographic IA", "Geographic lucency with sclerotic rim — least aggressive"], ["1b", "Geographic IB", "Geographic, well-defined margin, no sclerotic rim"], ["1c", "Geographic IC", "Geographic with ill-defined margin"], ["2", "Moth-eaten (II)", "Multiple small lucencies — more aggressive"], ["3", "Permeative (III)", "Ill-defined permeative spread — most aggressive"], ["4", "Sclerotic lesion", "Bone-forming / blastic lesion"], ["5", "Pathological fracture", "Fracture through the lesion"]]}, {"k": "xrayDesc", "lab": "X-Ray description (what the film shows)", "t": "ta"}, {"k": "mri", "lab": "MRI Key Findings", "t": "ta"}, {"k": "otherRad", "lab": "Other significant finding on radiology", "t": "ta"}]}]}, {"name": "Treatment", "icon": "🔬", "subs": [{"name": "MDT & surgery", "fields": [{"k": "dateMdt", "lab": "Date of MDT", "t": "date"}, {"k": "mdtDecision", "lab": "MDT Decision / Discussion", "t": "ta"}, {"k": "dateSurg", "lab": "Date of surgery", "t": "date"}, {"k": "intent", "lab": "Treatment Intent", "t": "sel", "o": [["1", "Curative"], ["2", "Palliative"]]}, {"k": "limbPres", "lab": "Limb preservation", "t": "sel", "o": [["1", "Limb sparing"], ["2", "Amputation"], ["3", "Other"]]}, {"k": "surgType", "lab": "Surgery type", "t": "sel", "o": [["1", "Intralesional / debulking", "Plane passes through the tumour itself"], ["2", "Marginal", "Through the reactive zone / pseudocapsule"], ["3", "Wide resection", "Cuff of normal tissue, intracompartmental"], ["4", "Radical", "Entire compartment removed"], ["5", "Others", ""]]}, {"k": "planType", "lab": "Surgical Plan type", "t": "sel", "o": [["1", "Single-stage"], ["2", "Planned two-stage (1st done)"], ["3", "Planned two-stage (2nd done)"], ["4", "Unplanned staged"], ["5", "Unknown"]]}, {"k": "surgDetails", "lab": "Surgery details", "t": "ta"}, {"k": "surgeon", "lab": "Surgeon Initials", "t": "text"}, {"k": "frozen", "lab": "Frozen Section", "t": "sel", "o": [["0", "Not done", ""], ["1", "Done — negative", "Intra-op frozen section: margin clear"], ["2", "Done — positive", "Intra-op frozen section: tumour at margin"]]}, {"k": "reconType", "lab": "Reconstruction type", "t": "sel", "o": [["0", "None"], ["1", "Primary"], ["2", "Revision"]]}, {"k": "implantCo", "lab": "Implant Company", "t": "sel", "o": [["0", "No implant"], ["1", "AK Chinese"], ["2", "Implantcast"], ["3", "Locally manufactured"], ["4", "Other"]]}]}, {"name": "Bone reconstruction", "fields": [{"k": "br_autograft", "lab": "Bone recon — Autograft", "t": "sel", "o": [["0", "None"], ["1", "Non-structural"], ["2", "Non-vascular structural"], ["3", "Vascular structural"], ["4", "Recycled"]]}, {"k": "br_recycled", "lab": "Bone recon — Recycled autograft", "t": "sel", "o": [["0", "None"], ["1", "Liquid nitrogen"], ["2", "Autoclaving"], ["3", "Radiation"], ["4", "Pasteurization"]]}, {"k": "br_interface", "lab": "Bone recon — Prosthetic-bone interface", "t": "sel", "o": [["0", "None"], ["1", "Non-vascular bone graft"], ["2", "Vascularized bone graft"]]}, {"k": "br_allograft", "lab": "Bone recon — Allograft", "t": "sel", "o": [["0", "None"], ["1", "Non-structural"], ["2", "Structural"]]}, {"k": "br_boneSub", "lab": "Bone recon — Bone substitute", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_intFix", "lab": "Bone recon — Internal fixation", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_endoprosth", "lab": "Bone recon — Endoprosthesis", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_cement", "lab": "Bone recon — Structural cement", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_distraction", "lab": "Bone recon — Distraction osteogenesis", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}]}, {"name": "Soft-tissue reconstruction", "fields": [{"k": "st_recon", "lab": "Soft-tissue recon", "t": "sel", "o": [["0", "None"], ["1", "STSG"], ["2", "FTSG"], ["3", "Local flap"], ["4", "Regional flap"], ["5", "Free flap"], ["6", "Vascular recon"], ["7", "Nerve graft"], ["8", "Delayed recon planned"]]}, {"k": "st_attach", "lab": "Soft-tissue — Attachment medium", "t": "sel", "o": [["0", "None"], ["1", "Attachment tube (Trivera)"], ["2", "Synthetic mesh"], ["3", "Biological mesh"], ["4", "Mersilene tape"]]}, {"k": "st_npt", "lab": "Soft-tissue — NPT (VAC)", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "bloodLoss", "lab": "Intra-operative Blood loss (ml)", "t": "num"}]}, {"name": "Neo-adjuvant therapy", "fields": [{"k": "neo_rt", "lab": "Neo-adjuvant — RT", "t": "sel", "o": [["0", "None"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]]}, {"k": "neo_rtDose", "lab": "Neo-adjuvant — RT dose / fractions", "t": "text"}, {"k": "neo_sys", "lab": "Neo-adjuvant — Systemic therapy", "t": "sel", "o": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]]}, {"k": "neo_cycles", "lab": "Neo-adjuvant — No. of cycles", "t": "text"}, {"k": "neo_regimen", "lab": "Neo-adjuvant — Regimen", "t": "sel", "o": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]]}, {"k": "neo_dateDone", "lab": "Neo-adjuvant — Date of completion", "t": "date"}]}, {"name": "Adjuvant therapy", "fields": [{"k": "adj_rt", "lab": "Adjuvant — RT", "t": "sel", "o": [["0", "Nil"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]]}, {"k": "adj_rtDose", "lab": "Adjuvant — RT dose / fractions", "t": "text"}, {"k": "adj_sys", "lab": "Adjuvant — Systemic therapy", "t": "sel", "o": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]]}, {"k": "adj_cycles", "lab": "Adjuvant — No. of cycles", "t": "text"}, {"k": "adj_regimen", "lab": "Adjuvant — Regimen", "t": "sel", "o": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]]}, {"k": "adj_dateDone", "lab": "Adjuvant — Date of completion", "t": "date"}]}, {"name": "Early complications", "fields": [{"k": "ec_nerve", "lab": "Early Cx — Nerve injury", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "ec_vascular", "lab": "Early Cx — Vascular injury", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "ec_fracture", "lab": "Early Cx — Intra-op fracture", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "ec_wound", "lab": "Early Cx — Wound", "t": "sel", "o": [["0", "No"], ["1", "Dehiscence"], ["2", "Necrosis"], ["3", "Hematoma / seroma"]]}, {"k": "ec_flap", "lab": "Early Cx — Flap", "t": "sel", "o": [["0", "No"], ["1", "Minimal necrosis"], ["2", "Significant necrosis — reoperation"]]}, {"k": "ec_systemic", "lab": "Early Cx — Systemic", "t": "sel", "o": [["0", "None"], ["1", "DVT / PE"], ["2", "Sepsis"], ["3", "Pneumonia"], ["4", "Cardiac event"], ["5", "Renal complication"]]}, {"k": "ec_dural", "lab": "Early Cx — Dural leak", "t": "sel", "o": [["0", "None"], ["1", "Early"], ["2", "Late (pseudomeningocele)"]]}, {"k": "ec_details", "lab": "Early Cx — Morbidity details", "t": "ta"}]}, {"name": "Late complications & further surgery", "fields": [{"k": "lc_infection", "lab": "Late Cx — Infection", "t": "sel", "o": [["0", "None"], ["1", "Superficial"], ["2", "Deep"], ["3", "Prosthetic"]]}, {"k": "lc_tumor", "lab": "Late Cx — Tumor", "t": "sel", "o": [["0", "None"], ["1", "Involved margin"], ["2", "Local recurrence"], ["3", "Metastasis"], ["4", "Local recurrence + metastasis"]]}, {"k": "lc_recurDur", "lab": "Late Cx — Recurrence duration from surgery", "t": "text"}, {"k": "lc_boneImplant", "lab": "Late Cx — Bone / Implant", "t": "sel", "o": [["0", "None"], ["1", "Non-union"], ["2", "Fracture"], ["3", "Loosening"]]}, {"k": "lc_endo", "lab": "Late Cx — Endoprosthesis", "t": "sel", "o": [["0", "None"], ["1", "Loosening"], ["2", "Wear"], ["3", "Peri-prosthetic fracture"], ["4", "Dislocation"]]}, {"k": "addSurgCx", "lab": "Additional surgery for complication", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "addSurgSame", "lab": "Additional surgery for same disease", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "addSurgDetails", "lab": "Additional surgery details", "t": "ta"}]}]}, {"name": "Functional status", "icon": "🦵", "subs": [{"name": "Neurology & musculoskeletal", "fields": [{"k": "preNeuro", "lab": "Pre-op Neurology (MRC)", "t": "sel", "o": [["0", "0 — No contraction"], ["1", "1 — Flicker"], ["2", "2 — Not against gravity"], ["3", "3 — Against gravity"], ["4", "4 — Against resistance, weaker"], ["5", "5 — Normal strength"]]}, {"k": "postNeuro", "lab": "Post-op Neurology", "t": "sel", "o": [["1", "Normal"], ["2", "Improved"], ["3", "Same"], ["4", "Worsened"], ["5", "New deficit"]]}, {"k": "neuroDetails", "lab": "Specific details of Neurology", "t": "ta"}, {"k": "preMsk", "lab": "Pre-op MSK", "t": "sel", "o": [["1", "Full weight bearing"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"]]}, {"k": "postMsk", "lab": "Post-op MSK", "t": "sel", "o": [["1", "Back to normal function"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"], ["6", "Other"]]}, {"k": "mstsUL", "lab": "MSTS Score — Upper Limb (/30)", "t": "text"}, {"k": "mstsLL", "lab": "MSTS Score — Lower Limb (/30)", "t": "text"}]}]}, {"name": "Outcomes", "icon": "📊", "subs": [{"name": "Function scores", "fields": [{"k": "out_mstsUL", "lab": "MSTS Upper Limb (/30)", "t": "num"}, {"k": "out_mstsLL", "lab": "MSTS Lower Limb (/30)", "t": "num"}, {"k": "out_mstsPct", "lab": "MSTS as %", "t": "text"}, {"k": "out_mstsDate", "lab": "MSTS assessed on", "t": "date"}, {"k": "out_tess", "lab": "TESS score (/100)", "t": "num"}, {"k": "out_tessDate", "lab": "TESS assessed on", "t": "date"}, {"k": "out_promisPF", "lab": "PROMIS Physical Function (T-score)", "t": "num"}, {"k": "out_promisPI", "lab": "PROMIS Pain Interference (T-score)", "t": "num"}, {"k": "out_promisDate", "lab": "PROMIS assessed on", "t": "date"}, {"k": "out_eq5dProfile", "lab": "EQ-5D-5L profile (5 digits, e.g. 21232)", "t": "text"}, {"k": "out_eq5dIndex", "lab": "EQ-5D-5L index value (0–1)", "t": "text"}, {"k": "out_eq5dVas", "lab": "EQ-5D VAS today (0–100)", "t": "num"}, {"k": "out_eq5dDate", "lab": "EQ-5D assessed on", "t": "date"}]}, {"name": "Pain & movement", "fields": [{"k": "out_painRest", "lab": "Pain at rest (VAS 0–10)", "t": "num"}, {"k": "out_painMove", "lab": "Pain on movement (VAS 0–10)", "t": "num"}, {"k": "out_painWorst", "lab": "Worst pain in the last week (0–10)", "t": "num"}, {"k": "out_analgesia", "lab": "Analgesia in use", "t": "sel", "o": [["0", "None"], ["1", "Simple / NSAID"], ["2", "Weak opioid"], ["3", "Strong opioid"], ["4", "Neuropathic agent"]]}, {"k": "out_rom", "lab": "ROM — operated joint", "t": "ta"}, {"k": "out_romOther", "lab": "ROM — other joints, limb length", "t": "ta"}, {"k": "out_gait", "lab": "Walking aid at last review", "t": "sel", "o": [["0", "None"], ["1", "Stick"], ["2", "One crutch"], ["3", "Two crutches"], ["4", "Walker"], ["5", "Wheelchair"]]}]}, {"name": "Complications", "fields": [{"k": "out_cdGrade", "lab": "Highest Clavien-Dindo grade", "t": "sel", "o": [["0", "None", "No complication at all"], ["1", "I — no treatment needed", "Any deviation from the normal course needing no drug, surgical, endoscopic or radiological treatment (antiemetics, antipyretics, analgesics, physiotherapy and bedside wound opening are allowed)"], ["2", "II — drugs, transfusion, TPN", "Needing drug treatment beyond grade I, including blood transfusion and total parenteral nutrition"], ["3a", "IIIa — intervention, no general anaesthetic", "Needing surgical, endoscopic or radiological intervention under local anaesthesia or sedation"], ["3b", "IIIb — intervention under general anaesthetic", "Needing intervention under general anaesthesia"], ["4a", "IVa — single-organ failure", "Life-threatening, needing intensive care; single-organ dysfunction including dialysis"], ["4b", "IVb — multi-organ failure", "Life-threatening, needing intensive care; multi-organ dysfunction"], ["5", "V — death", "Death of the patient"]]}, {"k": "out_cdWhat", "lab": "What happened", "t": "ta"}, {"k": "out_cdDate", "lab": "Date of the complication", "t": "date"}, {"k": "out_cci", "lab": "Comprehensive Complication Index (0–100)", "t": "num"}, {"k": "out_cdTiming", "lab": "Timing", "t": "sel", "o": [["1", "Intra-operative"], ["2", "Early (≤30 days)"], ["3", "Late (>30 days)"]]}]}, {"name": "Revision surgery", "fields": [{"k": "out_revDone", "lab": "Any revision surgery", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "out_revDate", "lab": "Date of the first revision", "t": "date"}, {"k": "out_revReason", "lab": "Reason for revision", "t": "sel", "o": [["1", "Infection"], ["2", "Aseptic loosening"], ["3", "Implant failure or breakage"], ["4", "Peri-prosthetic fracture"], ["5", "Local recurrence"], ["6", "Non-union"], ["7", "Soft-tissue failure / instability"], ["8", "Leg-length problem"], ["9", "Other"]]}, {"k": "out_revType", "lab": "What was done at revision", "t": "ta"}, {"k": "out_revCount", "lab": "Number of revisions so far", "t": "num"}, {"k": "out_implantStatus", "lab": "Reconstruction at last review", "t": "sel", "o": [["1", "In situ and working"], ["2", "In situ but failing"], ["0", "Removed"], ["3", "Converted to amputation"], ["4", "Not applicable"]]}]}, {"name": "Follow-up status", "fields": [{"k": "out_lastFu", "lab": "Date of last follow-up", "t": "date"}, {"k": "out_status", "lab": "Status at last follow-up", "t": "sel", "o": [["1", "NED — no evidence of disease"], ["2", "AWD — alive with disease"], ["3", "DOD — died of disease"], ["4", "DOC — died of another cause"], ["5", "Lost to follow-up"]]}, {"k": "out_recurDate", "lab": "Date of recurrence, if any", "t": "date"}, {"k": "out_metsDate", "lab": "Date metastasis found, if any", "t": "date"}, {"k": "out_deathDate", "lab": "Date of death, if any", "t": "date"}, {"k": "out_notes", "lab": "Outcome notes", "t": "ta"}]}]}];
 const REG_CODES = {"sex": [["1", "Male"], ["2", "Female"]], "prevCancer": [["0", "No"], ["1", "Yes"]], "familyCancer": [["0", "No"], ["1", "Yes"]], "asa": [["1", "I — healthy, no systemic disease"], ["2", "II — mild systemic disease"], ["3", "III — severe systemic disease, limiting"], ["4", "IV — severe, constant threat to life"], ["5", "V — moribund, not expected to survive 24h"], ["6", "VI — brain-dead organ donor"]], "prevTx": [["1", "Nil", "No prior treatment"], ["2", "Proper biopsy", "Adequate diagnostic biopsy done"], ["3", "Unplanned excision", "'Whoops' excision without oncological planning"], ["4", "Planned resection", "Oncologically planned resection already done"]], "biopsyInst": [["1", "GTTH"], ["2", "Other"]], "biopsyType": [["1", "Core Needle"], ["2", "Incisional"], ["3", "Excisional"], ["4", "Curettage"], ["5", "FNAC"]], "primaryTissue": [["1", "Bone"], ["2", "Soft tissue"], ["3", "Skin"], ["4", "Neural tissue"]], "site": [["1a", "Bone — clavicle"], ["1b", "Bone — scapula"], ["1c", "Bone — humerus"], ["1d", "Bone — radius"], ["1e", "Bone — ulna"], ["1f", "Bone — hand"], ["1g", "Bone — spine"], ["1h", "Bone — pelvis"], ["1i", "Bone — femur"], ["1j", "Bone — tibia"], ["1k", "Bone — fibula"], ["1l", "Bone — foot"], ["1m", "Bone — multiple"], ["1n", "Bone — patella"], ["1o", "Bone — others"], ["2a", "Soft tissue — trunk"], ["2b", "Soft tissue — arm"], ["2c", "Soft tissue — forearm"], ["2d", "Soft tissue — hand"], ["2e", "Soft tissue — thigh"], ["2f", "Soft tissue — leg"], ["2g", "Soft tissue — foot"], ["2h", "Soft tissue — joint"], ["2i", "Soft tissue — multiple"], ["2j", "Soft tissue — other"], ["3a", "Spine — extradural"], ["3b", "Spine — intradural extramedullary"], ["3c", "Spine — intradural intramedullary"], ["4", "Brain"]], "nature": [["1", "Benign latent + active", "Benign, non-aggressive (Enneking stage 1–2)"], ["2", "Benign aggressive", "Locally aggressive benign (Enneking stage 3)"], ["3", "Malignant low grade", "Low-grade malignancy"], ["4", "Malignant high grade", "High-grade malignancy"]], "tumorType": [["1", "Primary", "First presentation, not previously treated"], ["2", "Recurrent", "Returned after prior treatment"], ["3", "Residual", "Tumour left behind after incomplete excision"], ["4", "Metastatic", "Spread from a primary elsewhere"]], "grade": [["1", "G1 — low grade", "Well differentiated; low mitoses, little/no necrosis — least aggressive"], ["2", "G2 — intermediate grade", "Intermediate differentiation & mitotic activity"], ["3", "G3 — high grade", "Poorly differentiated; high mitoses & necrosis — most aggressive"]], "stage": [["1", "Stage IA", "G1, T1 (≤5 cm), N0, M0 — low grade, small"], ["2", "Stage IB", "G1, T2–T4 (>5 cm), N0, M0 — low grade, larger"], ["3", "Stage II", "G2–G3, T1 (≤5 cm), N0, M0 — high grade, small"], ["4", "Stage IIIA", "G2–G3, T2 (>5–10 cm), N0, M0 — high grade"], ["5", "Stage IIIB", "G2–G3, T3–T4 (>10 cm), N0, M0 — high grade, large"], ["6", "Stage IV", "Any N1 (nodal) or M1 (distant metastasis)"]], "margin": [["0", "R0", "No residual tumour — margins microscopically clear"], ["1", "R1", "Microscopic residual tumour at the margin"], ["2", "R2", "Macroscopic (gross) residual tumour"]], "necrosis": [["0", "<10%", "Best response to neo-adjuvant therapy"], ["1", "<50%", ""], ["2", ">50%", ""], ["3", ">90%", "Near-complete response (>90% necrosis)"]], "xray": [["0", "Normal-looking", "No aggressive features"], ["1a", "Geographic IA", "Geographic lucency with sclerotic rim — least aggressive"], ["1b", "Geographic IB", "Geographic, well-defined margin, no sclerotic rim"], ["1c", "Geographic IC", "Geographic with ill-defined margin"], ["2", "Moth-eaten (II)", "Multiple small lucencies — more aggressive"], ["3", "Permeative (III)", "Ill-defined permeative spread — most aggressive"], ["4", "Sclerotic lesion", "Bone-forming / blastic lesion"], ["5", "Pathological fracture", "Fracture through the lesion"]], "intent": [["1", "Curative"], ["2", "Palliative"]], "limbPres": [["1", "Limb sparing"], ["2", "Amputation"], ["3", "Other"]], "surgType": [["1", "Intralesional / debulking", "Plane passes through the tumour itself"], ["2", "Marginal", "Through the reactive zone / pseudocapsule"], ["3", "Wide resection", "Cuff of normal tissue, intracompartmental"], ["4", "Radical", "Entire compartment removed"], ["5", "Others", ""]], "planType": [["1", "Single-stage"], ["2", "Planned two-stage (1st done)"], ["3", "Planned two-stage (2nd done)"], ["4", "Unplanned staged"], ["5", "Unknown"]], "frozen": [["0", "Not done", ""], ["1", "Done — negative", "Intra-op frozen section: margin clear"], ["2", "Done — positive", "Intra-op frozen section: tumour at margin"]], "reconType": [["0", "None"], ["1", "Primary"], ["2", "Revision"]], "implantCo": [["0", "No implant"], ["1", "AK Chinese"], ["2", "Implantcast"], ["3", "Locally manufactured"], ["4", "Other"]], "br_autograft": [["0", "None"], ["1", "Non-structural"], ["2", "Non-vascular structural"], ["3", "Vascular structural"], ["4", "Recycled"]], "br_recycled": [["0", "None"], ["1", "Liquid nitrogen"], ["2", "Autoclaving"], ["3", "Radiation"], ["4", "Pasteurization"]], "br_interface": [["0", "None"], ["1", "Non-vascular bone graft"], ["2", "Vascularized bone graft"]], "br_allograft": [["0", "None"], ["1", "Non-structural"], ["2", "Structural"]], "br_boneSub": [["0", "No"], ["1", "Yes"]], "br_intFix": [["0", "No"], ["1", "Yes"]], "br_endoprosth": [["0", "No"], ["1", "Yes"]], "br_cement": [["0", "No"], ["1", "Yes"]], "br_distraction": [["0", "No"], ["1", "Yes"]], "st_recon": [["0", "None"], ["1", "STSG"], ["2", "FTSG"], ["3", "Local flap"], ["4", "Regional flap"], ["5", "Free flap"], ["6", "Vascular recon"], ["7", "Nerve graft"], ["8", "Delayed recon planned"]], "st_attach": [["0", "None"], ["1", "Attachment tube (Trivera)"], ["2", "Synthetic mesh"], ["3", "Biological mesh"], ["4", "Mersilene tape"]], "st_npt": [["0", "No"], ["1", "Yes"]], "neo_rt": [["0", "None"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]], "neo_sys": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]], "neo_regimen": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]], "adj_rt": [["0", "Nil"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]], "adj_sys": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]], "adj_regimen": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]], "ec_nerve": [["0", "No"], ["1", "Yes"]], "ec_vascular": [["0", "No"], ["1", "Yes"]], "ec_fracture": [["0", "No"], ["1", "Yes"]], "ec_wound": [["0", "No"], ["1", "Dehiscence"], ["2", "Necrosis"], ["3", "Hematoma / seroma"]], "ec_flap": [["0", "No"], ["1", "Minimal necrosis"], ["2", "Significant necrosis — reoperation"]], "ec_systemic": [["0", "None"], ["1", "DVT / PE"], ["2", "Sepsis"], ["3", "Pneumonia"], ["4", "Cardiac event"], ["5", "Renal complication"]], "ec_dural": [["0", "None"], ["1", "Early"], ["2", "Late (pseudomeningocele)"]], "lc_infection": [["0", "None"], ["1", "Superficial"], ["2", "Deep"], ["3", "Prosthetic"]], "lc_tumor": [["0", "None"], ["1", "Involved margin"], ["2", "Local recurrence"], ["3", "Metastasis"], ["4", "Local recurrence + metastasis"]], "lc_boneImplant": [["0", "None"], ["1", "Non-union"], ["2", "Fracture"], ["3", "Loosening"]], "lc_endo": [["0", "None"], ["1", "Loosening"], ["2", "Wear"], ["3", "Peri-prosthetic fracture"], ["4", "Dislocation"]], "addSurgCx": [["0", "No"], ["1", "Yes"]], "addSurgSame": [["0", "No"], ["1", "Yes"]], "preNeuro": [["0", "0 — No contraction"], ["1", "1 — Flicker"], ["2", "2 — Not against gravity"], ["3", "3 — Against gravity"], ["4", "4 — Against resistance, weaker"], ["5", "5 — Normal strength"]], "postNeuro": [["1", "Normal"], ["2", "Improved"], ["3", "Same"], ["4", "Worsened"], ["5", "New deficit"]], "preMsk": [["1", "Full weight bearing"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"]], "postMsk": [["1", "Back to normal function"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"], ["6", "Other"]], "out_analgesia": [["0", "None"], ["1", "Simple / NSAID"], ["2", "Weak opioid"], ["3", "Strong opioid"], ["4", "Neuropathic agent"]], "out_gait": [["0", "None"], ["1", "Stick"], ["2", "One crutch"], ["3", "Two crutches"], ["4", "Walker"], ["5", "Wheelchair"]], "out_cdGrade": [["0", "None", "No complication at all"], ["1", "I — no treatment needed", "Any deviation from the normal course needing no drug, surgical, endoscopic or radiological treatment (antiemetics, antipyretics, analgesics, physiotherapy and bedside wound opening are allowed)"], ["2", "II — drugs, transfusion, TPN", "Needing drug treatment beyond grade I, including blood transfusion and total parenteral nutrition"], ["3a", "IIIa — intervention, no general anaesthetic", "Needing surgical, endoscopic or radiological intervention under local anaesthesia or sedation"], ["3b", "IIIb — intervention under general anaesthetic", "Needing intervention under general anaesthesia"], ["4a", "IVa — single-organ failure", "Life-threatening, needing intensive care; single-organ dysfunction including dialysis"], ["4b", "IVb — multi-organ failure", "Life-threatening, needing intensive care; multi-organ dysfunction"], ["5", "V — death", "Death of the patient"]], "out_cdTiming": [["1", "Intra-operative"], ["2", "Early (≤30 days)"], ["3", "Late (>30 days)"]], "out_revDone": [["0", "No"], ["1", "Yes"]], "out_revReason": [["1", "Infection"], ["2", "Aseptic loosening"], ["3", "Implant failure or breakage"], ["4", "Peri-prosthetic fracture"], ["5", "Local recurrence"], ["6", "Non-union"], ["7", "Soft-tissue failure / instability"], ["8", "Leg-length problem"], ["9", "Other"]], "out_implantStatus": [["1", "In situ and working"], ["2", "In situ but failing"], ["0", "Removed"], ["3", "Converted to amputation"], ["4", "Not applicable"]], "out_status": [["1", "NED — no evidence of disease"], ["2", "AWD — alive with disease"], ["3", "DOD — died of disease"], ["4", "DOC — died of another cause"], ["5", "Lost to follow-up"]]};
 const REG_COLMAP = {"1": "regNo", "2": "mrn", "3": "team", "4": "name", "5": "cnic", "6": "age", "7": "sex", "8": "city", "9": "province", "10": "contact", "11": "firstVisit", "12": "prevCancer", "13": "familyCancer", "14": "asa", "15": "dateAdm", "16": "prevTx", "17": "biopsyInst", "18": "biopsyType", "19": "primaryTissue", "20": "site", "21": "nature", "22": "tumorType", "23": "diagnosis", "24": "histSubtype", "25": "grade", "26": "stage", "27": "sins", "28": "margin", "29": "necrosis", "30": "xray", "31": "mri", "32": "otherRad", "33": "dateMdt", "34": "mdtDecision", "35": "dateSurg", "36": "intent", "37": "limbPres", "38": "surgType", "39": "planType", "40": "surgDetails", "41": "surgeon", "42": "frozen", "43": "reconType", "44": "implantCo", "45": "br_autograft", "46": "br_recycled", "47": "br_interface", "48": "br_allograft", "49": "br_boneSub", "50": "br_intFix", "51": "br_endoprosth", "52": "br_cement", "53": "br_distraction", "54": "st_recon", "55": "st_attach", "56": "st_npt", "57": "bloodLoss", "58": "neo_rt", "59": "neo_rtDose", "60": "neo_sys", "61": "neo_cycles", "62": "neo_regimen", "63": "neo_dateDone", "64": "adj_rt", "65": "adj_rtDose", "66": "adj_sys", "67": "adj_cycles", "68": "adj_regimen", "69": "adj_dateDone", "70": "ec_nerve", "71": "ec_vascular", "72": "ec_fracture", "73": "ec_wound", "74": "ec_flap", "75": "ec_systemic", "76": "ec_dural", "77": "ec_details", "78": "lc_infection", "79": "lc_tumor", "80": "lc_recurDur", "81": "lc_boneImplant", "82": "lc_endo", "83": "addSurgCx", "84": "addSurgSame", "85": "addSurgDetails", "86": "preNeuro", "87": "postNeuro", "88": "neuroDetails", "89": "preMsk", "90": "postMsk", "91": "mstsUL", "92": "mstsLL"};
 const REG_COLCOUNT = 96;
@@ -13276,6 +13283,7 @@ function regNew(){
   regSet('regNo', window.__regSuggested);
   regSet('firstVisit', localISO());
   $('regFormTitle').textContent='New registry entry';
+  if(typeof regFormDeleteBtn==='function') regFormDeleteBtn();
   regUpdateLinkLine();
   $('regFormWrap').classList.add('show');
   scrShow('reg','form'); regApplyMode();
@@ -13289,6 +13297,7 @@ function regEdit(id){
   regFillForm(r);
   cfStart(r); cfRender();
   $('regFormTitle').textContent='Edit registry entry — '+(r.name||r.regNo||'');
+  if(typeof regFormDeleteBtn==='function') regFormDeleteBtn();
   regUpdateLinkLine();
   $('regFormWrap').classList.add('show');
   scrShow('reg','form'); regApplyMode();
@@ -13347,7 +13356,12 @@ function regSave(){
     db.registry.push(saved);
     logActivity('add','registry',(saved.regNo?saved.regNo+' — ':'')+(saved.name||''), undoOne('registry', null, saved));
   }
+  /* A number belongs to a position in the year, not to a patient: enter a case today that was
+     operated in April and it takes April's slot, with everything after it shifting down. */
+  let moved = 0;
+  if(typeof regAutoRenumber==='function'){ try{ moved = regAutoRenumber(); }catch(e){} }
   persist(); regCloseForm(); regRenderList(); regRenderKpis(); regRenderAnalytics();
+  if(moved) toast(moved+' number'+(moved>1?'s':'')+' shifted to keep the year in date order');
   if(typeof gdRunQueue==='function') setTimeout(gdRunQueue, 400);
   const extra = window.__regSettledMsg; window.__regSettledMsg='';
   toast(extra ? ('Registry entry saved — '+extra)
@@ -13477,6 +13491,7 @@ function regRenderList(){
     '<td>'+regBadges(r)+'</td>'+
     '<td><button class="btn btn-ghost btn-sm" onclick="regEdit(\''+r.id+'\')">Open</button> '+
        regRecordBtn(r)+
+       '<button class="btn btn-ghost btn-sm" title="Draft a referral to medical or radiation oncology" onclick="openRegReferral(\''+r.id+'\')">📨</button> '+
        '<button class="btn btn-ghost btn-sm" title="Bring this case to the MDT board" onclick="mdtFromRegistry(\''+r.id+'\')">🧑\u200d⚕️ MDT</button> '+
        '<button class="btn btn-ghost btn-sm" title="Printable summary (PDF)" onclick="regPrintEntry(\''+r.id+'\')">🖨</button> '+
        '<button class="btn btn-danger btn-sm" onclick="regDelete(\''+r.id+'\')">✕</button></td></tr>';
@@ -13911,15 +13926,17 @@ function regPrintEntry(id){
   const r=(db.registry||[]).find(x=>x.id===id);
   if(!r){ toast('Entry not found'); return; }
   const dateSet=new Set(typeof REG_DATE_KEYS!=='undefined'?REG_DATE_KEYS:[]);
+  /* a printed summary is read by other people: codes have to come out as words */
   const fmt=(k,v)=>{ v=String(v==null?'':v).trim(); if(!v) return '';
     if(dateSet.has(k)){ const d=new Date(v); if(!isNaN(d)) return fmtDate(v); }
+    if(typeof regLabelFor==='function'){ const lab=regLabelFor(k,v); if(lab) return lab; }
     return v; };
   let body='';
   // header line: name / reg / MR / age-sex
   const hdr=[];
   if(r.name) hdr.push('<b>'+esc(r.name)+'</b>');
   const sub=[];
-  if(r.age||r.sex) sub.push(esc([r.age,r.sex].filter(Boolean).join(' ')));
+  if(r.age||r.sex) sub.push(esc([r.age, fmt('sex', r.sex)].filter(Boolean).join(' · ')));
   if(r.regNo) sub.push('Reg&nbsp;'+esc(r.regNo));
   if(r.mrn) sub.push('MR&nbsp;'+esc(r.mrn));
   body+='<div style="margin:0 0 8px">'+hdr.join(' ')+(sub.length?' <span style="color:#555">— '+sub.join(' · ')+'</span>':'')+'</div>';
@@ -13931,6 +13948,8 @@ function regPrintEntry(id){
       (sub.fields||[]).forEach(f=>{
         // skip identity fields already shown in the header
         if(['name','regNo','mrn','age','sex'].includes(f.k)) return;
+        // the CNIC is kept, never printed, unless the per-print switch is on for this one
+        if(f.k==='cnic' && !(typeof cnicPrintOn!=='undefined' && cnicPrintOn)) return;
         const val=fmt(f.k, r[f.k]);
         if(!val) return;
         filled++;
@@ -13952,7 +13971,7 @@ function regPrintEntry(id){
     if(!(typeof __printCollect!=='undefined' && __printCollect)) toast('This entry has no details filled in yet');
     return;      // an empty case is skipped, it does not stop the rest of a batch
   }
-  return printContent('Tumour Registry — Case Summary', body);
+  return printContent('Tumour Registry — Case Summary', body, true);   // plain A4, no pre-printed area
 }
 
 function renderRegistry(){
@@ -16834,8 +16853,12 @@ function draftAfter(fnName, key, when){
 /* ==================== EXTRAS: colours · shortcuts · voice · favourites · QR · leaflets · recalls ==================== */
 
 /* ---------- generic letterhead print ---------- */
-function printContent(titleText, bodyHtml){
-  const s=db.settings, pad=(s.printMode||'pad')==='pad';
+/* `plain` forces a full A4 sheet with the clinic's own printed header, ignoring the
+   pre-printed pad settings. A registry case summary and a referral are filed and posted, not
+   handed to a patient on letterhead paper, so they must never be laid out around a pre-printed
+   window that the sheet does not actually have. */
+function printContent(titleText, bodyHtml, plain){
+  const s=db.settings, pad=!plain && (s.printMode||'pad')==='pad';
   const inner='<div class="doc-title" style="margin-top:0">'+esc(titleText||'')+'</div>'+bodyHtml;
   $('printArea').innerHTML='<div class="rx-sheet'+(pad?' pad':'')+'">'+(pad?'':buildPlainHeader())+inner+
     '<div class="rx-foot" style="margin-top:9mm"><div class="sig"><div class="line"></div>'+esc(s.docName||'')+'</div></div></div>';
@@ -17576,7 +17599,7 @@ async function syncSignIn(){
   try{ const c=await syncClient(); const email=$('syncEmail').value.trim(), pw=$('syncPw').value;
     const {error}=await c.auth.signInWithPassword({email, password:pw}); if(error) throw error;
     syncCfg().email=email; persist(); toast('Signed in to cloud'); renderSync();
-    if(syncCfg().auto) startAutoSync();
+    if(syncMode()!=='manual') startAutoSync();
   }catch(e){ toast('⚠ '+(e.message||'Sign-in failed')); }
 }
 async function syncSignOut(){ try{ if(sb) await sb.auth.signOut(); }catch(_){ } stopAutoSync(); toast('Signed out of cloud'); renderSync(); }
@@ -17729,7 +17752,7 @@ function undoActivity(id, quick){
   });
   try{ if(typeof refreshAllViews==='function') refreshAllViews(); }catch(e){}
   if(typeof syncPushActivity==='function' && navigator.onLine){ clearTimeout(window.__actPush); window.__actPush=setTimeout(()=>syncPushActivity().catch(()=>{}),800); }
-  try{ const sc=syncCfg(); if(sc.url && sc.anonKey && navigator.onLine && typeof syncNow==='function'){ setTimeout(()=>{ try{ syncNow(false,true); }catch(e){} }, 1200); } }catch(e){}
+  try{ const sc=syncCfg(); if(sc.url && sc.anonKey && navigator.onLine && syncMode()!=='manual' && typeof syncNow==='function'){ setTimeout(()=>{ try{ syncNow(false,true); }catch(e){} }, 1200); } }catch(e){}
   if(typeof renderNotif==='function') renderNotif();
   toast('\u21a9 Undone \u2014 '+(a.label||'change reversed'));
 }
@@ -17847,8 +17870,10 @@ async function syncDeletePendingRow(id){ try{ const c=await syncClient(); const 
 async function syncPull(replace){
   const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) throw new Error('Sign in first');
   const {data,error}=await c.from('records').select('id,kind,payload'); if(error) throw error;
+  if(typeof tombPause==='function') tombPause();
   if(replace){ SYNC_COLLS.forEach(k=>{ if(data.some(r=>r.kind===k)) db[k]=[]; }); }
   data.forEach(r=>applyRemoteRecord(r.kind, r.id, r.payload));
+  if(typeof tombResume==='function') tombResume();
   reconcileUsers(); refreshCurrentUser();
   syncCfg().lastSync=new Date().toISOString(); if(typeof syncSnapshotKnown==='function') syncSnapshotKnown(); persist(); refreshAllViews(); renderSync();
 }
@@ -17862,6 +17887,9 @@ function computeSyncPlan(local, cloud, state, isAdmin, decisions){
     else if(SYNC_COLLS.includes(r.kind)){ cloudNorm[r.kind][String(r.id)]=r.payload; }
   });
   const known=state.knownIds||{}, supp=state.suppressed||{};
+  /* Deletions recorded at the moment they happened, independent of knownIds. This is what
+     stops a deleted record coming back when knownIds is stale for any reason. */
+  const localTombs = state.tombs || {};
   const newLocal={}, pushRows=[], deleteRowIds=[], newKnown={}, newSupp={}, pendingForAdmin=[];
   const newTombKeys=new Set();
   SYNC_COLLS.forEach(k=>{
@@ -17869,6 +17897,10 @@ function computeSyncPlan(local, cloud, state, isAdmin, decisions){
     const localById={}; localArr.forEach(x=>{ if(x&&x.id!=null) localById[String(x.id)]=x; });
     const localIds=new Set(Object.keys(localById));
     const knownSet=new Set((known[k]||[]).map(String));
+    Object.keys(localTombs).forEach(function(tk){
+      if(tk.indexOf(k+'|')!==0) return;
+      knownSet.add(tk.slice(k.length+1));      // we know we deleted it, whatever knownIds says
+    });
     const suppSet=new Set((supp[k]||[]).map(String));
     const cloudIds=new Set(Object.keys(cloudNorm[k]));
     const nextSupp=new Set();
@@ -17948,6 +17980,356 @@ function askDeleteApprovals(list){
     m.querySelector('#daConfirm').onclick=()=>{ const dec={}; list.forEach((d,i)=>{ const sel=m.querySelector('input[name=da'+i+']:checked'); dec[d.key]=sel?sel.value:'keep'; }); m.classList.add('hidden'); resolve(dec); };
   });
 }
+/* ==================== DELETIONS THAT STICK ====================
+   A deletion used to be inferred at sync time: "this id is in knownIds, is not local any more,
+   but is still in the cloud — so it was deleted here." That works only if knownIds is intact.
+   Anything that leaves it stale — a sync that failed halfway, a restore from backup, an erase,
+   a device that deleted a record it had never successfully pushed — and the deletion becomes
+   invisible, so the next sync merges the cloud copy straight back in. That is how deleted
+   registry entries kept reappearing.
+
+   So deletions are now recorded the moment they happen, by watching what disappears from the
+   collections on every save. It does not matter which button did the deleting, whether it was
+   one record or forty, or whether a sync ever ran: if a record was here and is not any more,
+   this device knows it deleted it and will say so at the next sync.                        */
+const TOMB_KEEP_DAYS = 400;
+function tombStore(){ const c = syncCfg(); if(!c.tombs) c.tombs = {}; return c.tombs; }
+function tombKey(coll, id){ return coll + '|' + String(id); }
+function tombAdd(coll, id){
+  const t = tombStore();
+  t[tombKey(coll, id)] = new Date().toISOString();
+}
+function tombHas(coll, id){ return !!tombStore()[tombKey(coll, id)]; }
+function tombDrop(coll, id){ delete tombStore()[tombKey(coll, id)]; }
+function tombPrune(){
+  const t = tombStore(), cut = new Date(Date.now() - TOMB_KEEP_DAYS*864e5).toISOString();
+  Object.keys(t).forEach(function(k){ if(t[k] < cut) delete t[k]; });
+}
+/* The mirror of what this device holds, kept up to date on every save. Comparing it to the
+   live collections is what turns "a record vanished" into a recorded deletion. */
+function tombMirror(){ const c = syncCfg(); if(!c.seenIds) c.seenIds = {}; return c.seenIds; }
+/* Records also disappear for reasons that are NOT a deletion: a sync merge applying another
+   device's tombstone, a restore from backup, an import. Recording those as local deletions
+   would delete them for everybody — so the watcher is suspended around those operations and
+   only re-learns what is there. */
+let tombPaused = 0;
+function tombPause(){ tombPaused++; }
+function tombResume(){ tombPaused = Math.max(0, tombPaused-1); if(!tombPaused) tombWatch(true); }
+function tombWatch(relearnOnly){
+  try{
+    if(typeof SYNC_COLLS === 'undefined') return;
+    const quiet = relearnOnly || tombPaused > 0;
+    const mirror = tombMirror();
+    SYNC_COLLS.forEach(function(k){
+      const now = {};
+      (db[k]||[]).forEach(function(x){ if(x && x.id != null) now[String(x.id)] = 1; });
+      const was = mirror[k];
+      if(!quiet && Array.isArray(was)){
+        was.forEach(function(id){ if(!now[id]) tombAdd(k, id); });   // it was here, it is not now
+      }
+      Object.keys(now).forEach(function(id){ if(tombHas(k, id)) tombDrop(k, id); }); // re-created
+      mirror[k] = Object.keys(now);
+    });
+  }catch(e){}
+}
+
+/* ==================== NUMBERS FOLLOW THE DATES ====================
+   The doctor's rule: a number belongs to a POSITION IN THE YEAR, not to a patient. Enter a
+   case today that was operated in April and it takes April's slot; everything after it shifts
+   down. Numbers are not a patient identifier — the MR number is. */
+function regOrderBroken(){
+  const items = [];
+  (db.registry||[]).forEach(function(r){
+    const b = regNoBasis(r); if(!b) return;
+    const p = regNoParts(r.regNo);
+    if(!p || !regNoIsNew(r.regNo)) return;
+    items.push({d:b.d, n:p.count, y:b.d.slice(0,4)});
+  });
+  const byYear = {};
+  items.forEach(function(x){ (byYear[x.y] = byYear[x.y]||[]).push(x); });
+  let broken = false;
+  Object.keys(byYear).forEach(function(y){
+    const a = byYear[y].slice().sort(function(p,q){ return p.d.localeCompare(q.d); });
+    for(let i=1;i<a.length;i++){ if(a[i].n < a[i-1].n) broken = true; }
+  });
+  return broken;
+}
+/* Called after a save. Renumbers only when the order has actually been broken, so an ordinary
+   edit never disturbs anything. */
+function regAutoRenumber(){
+  if(db.settings.regAutoRenumber === false) return 0;
+  if(!regOrderBroken()) return 0;
+  const n = regRenumberAll();
+  if(n) persist();
+  return n;
+}
+
+function regReferFromForm(){
+  if(typeof regEditingId==='undefined' || !regEditingId){ toast('Save the entry first, then draft the referral'); return; }
+  openRegReferral(regEditingId);
+}
+function regPrintCurrent(){
+  if(typeof regEditingId==='undefined' || !regEditingId){ toast('Save the entry first'); return; }
+  regPrintEntry(regEditingId);
+}
+/* ==================== DELETE, FROM INSIDE THE OPEN FORM ==================== */
+function regDeleteCurrent(){
+  if(typeof regEditingId === 'undefined' || !regEditingId){
+    toast('This entry has not been saved yet — just close it'); return;
+  }
+  const id = regEditingId;
+  const r = (db.registry||[]).filter(function(x){ return x.id===id; })[0];
+  if(!r) return;
+  if(!requireEdit()) return;
+  if(!confirm('Delete this registry entry?\n\n  ' + (r.regNo? r.regNo+' — ':'') + (r.name||'(no name)') +
+              '\n\nThe linked patient record is kept, and you can undo this from 🔔 Notifications.')) return;
+  const snap = undoSnap(r);
+  db.registry = (db.registry||[]).filter(function(x){ return x.id!==id; });
+  logActivity('delete','registry',(r.regNo?r.regNo+' — ':'')+(r.name||''), undoOne('registry', snap, null));
+  persist();
+  regCloseForm();
+  regRenderList(); regRenderKpis(); regRenderAnalytics();
+  toast('Registry entry deleted');
+}
+function regFormDeleteBtn(){
+  const b = $('regDeleteBtn'); if(!b) return;
+  const on = (typeof regEditingId !== 'undefined') && !!regEditingId;
+  b.classList.toggle('hidden', !on);
+}
+
+/* ==================== REFERRAL LETTER FROM A CASE ====================
+   The registry already holds everything an oncologist asks for; typing it out again by hand is
+   what actually stops referrals going out on the day. This reads the case and drafts the
+   letter — the doctor edits it, prints it, and it is filed in Documents.                    */
+const REF_KINDS = [
+  {k:'med-adj',  who:'medical',   when:'adjuvant',     t:'Medical oncology · Adjuvant'},
+  {k:'med-neo',  who:'medical',   when:'neo-adjuvant', t:'Medical oncology · Neo-adjuvant'},
+  {k:'rad-adj',  who:'radiation', when:'adjuvant',     t:'Radiation oncology · Adjuvant'},
+  {k:'rad-neo',  who:'radiation', when:'neo-adjuvant', t:'Radiation oncology · Neo-adjuvant'}
+];
+let regRefId = null, regRefKind = 'med-adj';
+function regRefVal(r, key){
+  const v = r[key];
+  if(v == null || v === '') return '';
+  const lab = (typeof regLabelFor==='function') ? regLabelFor(key, v) : '';
+  return lab || String(v);
+}
+function regRefVal0(r, key){          /* a select whose "0" means none / no / nil is not news */
+  const v = r[key];
+  if(v == null || v === '' || String(v) === '0') return '';
+  return regRefVal(r, key);
+}
+function regRefLine(L, lab, val){ if(val) L.push('  ' + (lab+'                ').slice(0, 14) + ': ' + val); }
+function regReferral(r, kindKey){
+  const kind = REF_KINDS.filter(function(x){ return x.k===kindKey; })[0] || REF_KINDS[0];
+  const s = db.settings || {};
+  const L = [];
+  const sex = regRefVal(r,'sex');
+  const who = kind.who === 'medical' ? 'Medical Oncologist' : 'Radiation Oncologist';
+  const modality = kind.who === 'medical' ? 'chemotherapy' : 'radiotherapy';
+  const flat = function(v){ return String(v==null?'':v).replace(/\s*\n\s*/g, '; ').trim(); };
+
+  L.push('Dear Colleague ('+who+'),');
+  L.push('');
+  L.push('Thank you for seeing '+(r.name||'this patient')+
+         [ r.age && (', '+r.age), sex && (', '+sex) ].filter(Boolean).join('')+
+         ', whom I am referring for consideration of '+kind.when+' '+modality+'.');
+  L.push('');
+
+  /* Identity: enough for the oncologist to file and to ring the family. Never the CNIC. */
+  L.push('PATIENT');
+  regRefLine(L, 'Name', r.name || '—');
+  regRefLine(L, 'Age / Sex', [r.age, sex].filter(Boolean).join(' / '));
+  regRefLine(L, 'MR number', r.mrn);
+  regRefLine(L, 'Registry no', r.regNo);
+  regRefLine(L, 'Contact', r.contact);
+  L.push('');
+
+  L.push('DIAGNOSIS');
+  L.push('  ' + (flat(r.diagnosis) || 'Not recorded'));
+  const dx = [];
+  if(r.histSubtype)          dx.push('Histology: ' + flat(r.histSubtype));
+  if(regRefVal0(r,'grade'))  dx.push('Grade: '   + regRefVal(r,'grade'));
+  if(regRefVal0(r,'site'))   dx.push('Site: '    + regRefVal(r,'site'));
+  if(regRefVal0(r,'stage'))  dx.push('Stage: '   + regRefVal(r,'stage'));
+  if(regRefVal0(r,'nature')) dx.push('Nature: '  + regRefVal(r,'nature'));
+  if(regRefVal0(r,'primaryTissue')) dx.push('Tissue of origin: ' + regRefVal(r,'primaryTissue'));
+  dx.forEach(function(x){ L.push('  ' + x); });
+  const bx = [];
+  if(regRefVal0(r,'biopsyType')) bx.push(regRefVal(r,'biopsyType'));
+  if(regRefVal0(r,'biopsyInst')) bx.push('at ' + regRefVal(r,'biopsyInst'));
+  if(bx.length) L.push('  Biopsy: ' + bx.join(' '));
+  L.push('');
+
+  if(r.xrayDesc || regRefVal0(r,'xray') || r.mri || r.otherRad){
+    L.push('IMAGING');
+    regRefLine(L, 'Radiographs', flat(r.xrayDesc) || regRefVal0(r,'xray'));
+    regRefLine(L, 'MRI', flat(r.mri));
+    regRefLine(L, 'Other', flat(r.otherRad));
+    L.push('');
+  }
+
+  if(kind.when === 'adjuvant'){
+    L.push('SURGERY PERFORMED');
+    regRefLine(L, 'Date', r.dateSurg ? fmtDate(r.dateSurg) : '');
+    L.push('  ' + ('Procedure     ').slice(0,14) + ': ' +
+           (flat(r.surgDetails) || regRefVal0(r,'surgType') || 'Not recorded'));
+    regRefLine(L, 'Resection', regRefVal0(r,'surgType'));
+    regRefLine(L, 'Limb', regRefVal0(r,'limbPres'));
+    regRefLine(L, 'Intent', regRefVal0(r,'intent'));
+    regRefLine(L, 'Reconstruction', regRefVal0(r,'reconType'));
+    regRefLine(L, 'Implant', regRefVal0(r,'implantCo'));
+    L.push('');
+    const hp = [];
+    if(regRefVal0(r,'margin'))   hp.push(['Margins', regRefVal(r,'margin')]);
+    if(regRefVal0(r,'necrosis')) hp.push(['Necrosis', regRefVal(r,'necrosis')]);
+    if(regRefVal0(r,'frozen'))   hp.push(['Frozen section', regRefVal(r,'frozen')]);
+    if(hp.length){
+      L.push('HISTOPATHOLOGY');
+      hp.forEach(function(x){ regRefLine(L, x[0], x[1]); });
+      L.push('');
+    }
+  } else {
+    L.push('PLANNED SURGERY');
+    L.push('  ' + (flat(r.surgDetails) || regRefVal0(r,'planType') ||
+                   'To be decided after your opinion'));
+    if(r.dateSurg) regRefLine(L, 'Provisional', fmtDate(r.dateSurg));
+    L.push('');
+  }
+
+  /* What has already been given, so nothing is duplicated or missed. */
+  const tx = [];
+  if(regRefVal0(r,'neo_sys'))     tx.push(['Neo-adj systemic', regRefVal(r,'neo_sys') +
+      (regRefVal0(r,'neo_regimen') ? ' (' + regRefVal(r,'neo_regimen') + ')' : '') +
+      (r.neo_cycles ? ', ' + r.neo_cycles + ' cycles' : '')]);
+  if(regRefVal0(r,'neo_rt'))      tx.push(['Neo-adj RT', regRefVal(r,'neo_rt') +
+      (r.neo_rtDose ? ', ' + r.neo_rtDose : '')]);
+  if(r.neo_dateDone)              tx.push(['Neo-adj ended', fmtDate(r.neo_dateDone)]);
+  if(regRefVal0(r,'adj_sys'))     tx.push(['Adjuvant systemic', regRefVal(r,'adj_sys') +
+      (regRefVal0(r,'adj_regimen') ? ' (' + regRefVal(r,'adj_regimen') + ')' : '') +
+      (r.adj_cycles ? ', ' + r.adj_cycles + ' cycles' : '')]);
+  if(regRefVal0(r,'adj_rt'))      tx.push(['Adjuvant RT', regRefVal(r,'adj_rt') +
+      (r.adj_rtDose ? ', ' + r.adj_rtDose : '')]);
+  if(r.adj_dateDone)              tx.push(['Adjuvant ended', fmtDate(r.adj_dateDone)]);
+  if(tx.length){
+    L.push('TREATMENT SO FAR');
+    tx.forEach(function(x){ regRefLine(L, x[0], x[1]); });
+    L.push('');
+  }
+
+  if(r.mdtDecision){
+    L.push('MDT DECISION' + (r.dateMdt ? ' (' + fmtDate(r.dateMdt) + ')' : ''));
+    L.push('  ' + flat(r.mdtDecision));
+    L.push('');
+  }
+
+  const hxLines = [];
+  if(regRefVal0(r,'asa'))       hxLines.push('ASA ' + regRefVal(r,'asa'));
+  if(r.prevCancer === '1')      hxLines.push('previous malignancy');
+  if(r.familyCancer === '1')    hxLines.push('family history of malignancy');
+  if(regRefVal0(r,'prevTx'))    hxLines.push('previous treatment: ' + regRefVal(r,'prevTx'));
+  if(regRefVal0(r,'lc_tumor'))  hxLines.push(regRefVal(r,'lc_tumor').toLowerCase());
+  if(hxLines.length){
+    L.push('RELEVANT HISTORY');
+    L.push('  ' + hxLines.join('; '));
+    L.push('');
+  }
+
+  L.push('I would be grateful for your assessment and for '+kind.when+' '+modality+
+         ' if you feel it is appropriate. The full record, including imaging, is available on request.');
+  L.push('');
+  L.push('With thanks and kind regards,');
+  return L.join('\n') + regRefSignOff();
+}
+/* The portable copy (WhatsApp, e-mail, Documents) needs the doctor's details spelled out.
+   The printed sheet already carries them in the letterhead and again over the signature
+   line, so the print strips exactly this block back off — and only if it is untouched. */
+function regRefSignOff(){
+  const s = db.settings || {};
+  const L = ['', s.docName || ''];
+  if(s.quals) L.push(s.quals);
+  if(s.clinicName) L.push(s.clinicName);
+  if(s.phone) L.push(s.phone);
+  return '\n' + L.join('\n');
+}
+function openRegReferral(id){
+  const r = (db.registry||[]).filter(function(x){ return x.id===id; })[0];
+  if(!r){ toast('Entry not found'); return; }
+  regRefId = id;
+  let m = $('regRefModal');
+  if(!m){
+    m = document.createElement('div'); m.id='regRefModal'; m.className='nav-modal';
+    document.body.appendChild(m);
+    m.addEventListener('click', function(e){ if(e.target===m) closeRegReferral(); });
+  }
+  m.classList.remove('hidden');
+  m.innerHTML = '<div class="nav-modal-card" style="max-width:760px">'+
+    '<div class="nav-modal-head"><b>📨 Referral letter — '+esc(r.name||'')+'</b>'+
+      '<button class="btn btn-ghost btn-sm" onclick="closeRegReferral()">✕ Close</button></div>'+
+    '<div class="nav-modal-body">'+
+      '<p class="muted small" style="margin-top:0">Drafted from the registry entry. Edit anything you like before printing — nothing here is fixed.</p>'+
+      '<div class="mb-pick" id="regRefKinds"></div>'+
+      '<div class="field" style="margin-top:12px"><label>The letter</label>'+
+        '<textarea id="regRefBody" class="ta-s" data-norail="1" rows="18" '+
+        'style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;line-height:1.55"></textarea></div>'+
+      '<div class="btn-bar mt">'+
+        '<button class="btn btn-green" onclick="regRefPrint()">🖨 Print</button>'+
+        '<button class="btn btn-primary" onclick="regRefSave()">💾 Save to Documents</button>'+
+        '<button class="btn btn-ghost" onclick="regRefReset()">↺ Redraft from the case</button>'+
+        '<button class="btn btn-ghost" onclick="regRefCopy()">📋 Copy</button>'+
+      '</div>'+
+    '</div></div>';
+  regRefRenderKinds();
+  regRefReset();
+}
+function closeRegReferral(){ const m=$('regRefModal'); if(m) m.classList.add('hidden'); }
+function regRefRenderKinds(){
+  const host = $('regRefKinds'); if(!host) return;
+  host.innerHTML = REF_KINDS.map(function(k){
+    return '<button type="button" class="chip'+(regRefKind===k.k?' on':'')+'" '+
+      'onclick="regRefPick(\''+k.k+'\')">'+esc(k.t)+'</button>';
+  }).join('');
+}
+function regRefPick(k){ regRefKind = k; regRefRenderKinds(); regRefReset(); }
+function regRefReset(){
+  const r = (db.registry||[]).filter(function(x){ return x.id===regRefId; })[0];
+  const ta = $('regRefBody');
+  if(r && ta) ta.value = regReferral(r, regRefKind);
+}
+function regRefTitle(){
+  const k = REF_KINDS.filter(function(x){ return x.k===regRefKind; })[0] || REF_KINDS[0];
+  return 'Referral — ' + (k.who==='medical' ? 'Medical Oncology' : 'Radiation Oncology') +
+         ' (' + k.when + ')';
+}
+function regRefPrint(){
+  const ta = $('regRefBody'); if(!ta) return;
+  let text = ta.value;
+  const tail = regRefSignOff();
+  if(tail.trim() && text.endsWith(tail)) text = text.slice(0, -tail.length);
+  return printContent(regRefTitle(),
+    '<div style="white-space:pre-wrap;font-size:11.8px;line-height:1.42">'+esc(text)+'</div>', true);
+}
+function regRefCopy(){
+  const ta = $('regRefBody'); if(!ta) return;
+  try{ navigator.clipboard.writeText(ta.value); toast('Copied'); }
+  catch(e){ ta.select(); document.execCommand('copy'); toast('Copied'); }
+}
+function regRefSave(){
+  const ta = $('regRefBody'); if(!ta) return;
+  const r = (db.registry||[]).filter(function(x){ return x.id===regRefId; })[0] || {};
+  const doc = syncTouch({id:uid('doc'), type:'referral', name:r.name||'',
+    age:r.age||'', sex:regRefVal(r,'sex'), patientId:r.patientId||null,
+    date:new Date().toISOString(), title:regRefTitle(), body:ta.value,
+    by:(typeof byTag==='function'?byTag():'')});
+  db.documents = db.documents||[];
+  db.documents.push(doc);
+  logActivity('add','document', regRefTitle()+' — '+(r.name||''), undoOne('documents', null, doc));
+  persist();
+  if(typeof renderDocList==='function') renderDocList();
+  toast('Saved to Documents');
+}
+
+
 /* ==================== REALTIME BUDGET ====================
    Supabase counts a realtime message for every client that RECEIVES one — a single row write
    with three devices connected is four messages, not one. The free plan allows 2,000,000 a
@@ -18220,10 +18602,14 @@ async function syncNow(loud, force){
     syncNoteCloud(cloud);          // the map now reflects the cloud, not just our own history
     const local={}; SYNC_COLLS.forEach(k=>local[k]=db[k]||[]);
     const isAdmin=!currentUser || currentUser.role==='admin';
-    const state={knownIds:syncCfg().knownIds||{}, suppressed:syncCfg().suppressed||{}, now:new Date().toISOString(), userName:(currentUser&&currentUser.name)||syncCfg().email||''};
+    const state={knownIds:syncCfg().knownIds||{}, suppressed:syncCfg().suppressed||{},
+                 tombs:(typeof tombStore==='function'? tombStore() : {}),
+                 now:new Date().toISOString(), userName:(currentUser&&currentUser.name)||syncCfg().email||''};
     let plan=computeSyncPlan(local, cloud, state, isAdmin, {});
     if(isAdmin && plan.pendingForAdmin.length){ const decisions=await askDeleteApprovals(plan.pendingForAdmin); plan=computeSyncPlan(local, cloud, state, isAdmin, decisions); }
+    if(typeof tombPause==='function') tombPause();
     SYNC_COLLS.forEach(k=>{ db[k]=plan.newLocal[k]; });
+    if(typeof tombResume==='function') tombResume();
     if(typeof syncRehash==='function') syncRehash();   // pulled copies are not local edits
     if(typeof reconcileMrnSeq==='function') reconcileMrnSeq(); // never hand out an MR number another device already used
     if(typeof phraseBankInvalidate==='function') phraseBankInvalidate();
@@ -18249,7 +18635,13 @@ async function syncNow(loud, force){
   finally{ document.body.classList.remove('syncing'); }
 }
 function refreshAllViews(){ const t=activeTabName(); if(t && typeof showTab==='function') showTab(t, true); }
+/* Manual means MANUAL. Every automatic path goes through here or kickSyncIfNeeded, so the
+   check belongs in both — previously kickSyncIfNeeded called startAutoSync on every
+   visibilitychange (syncTimer is never set in manual mode, so the "already running?" test
+   always failed), and startAutoSync force-synced 400 ms later. The doctor saw the app sync
+   every time he looked at it despite having chosen manual. */
 async function startAutoSync(){
+  if(syncMode()==='manual'){ stopAutoSync(); return; }
   try{
     const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
     stopAutoSync();
@@ -18284,7 +18676,11 @@ function syncSchedulePoll(){
 }
 /* Phones pause background timers & drop the websocket — so sync whenever the app returns
    to the foreground or the connection comes back. */
-function kickSyncIfNeeded(){ try{ const c=syncCfg(); if(currentUser && c.url && c.anonKey && navigator.onLine){ if(!syncTimer) startAutoSync(); else syncNow(false,false); } if(typeof renderHomeSync==='function') renderHomeSync(); }catch(e){} }
+function kickSyncIfNeeded(){ try{
+  const c=syncCfg();
+  if(syncMode()==='manual'){ if(typeof renderHomeSync==='function') renderHomeSync(); return; }
+  if(currentUser && c.url && c.anonKey && navigator.onLine){ if(!syncTimer) startAutoSync(); else syncNow(false,false); }
+  if(typeof renderHomeSync==='function') renderHomeSync(); }catch(e){} }
 document.addEventListener('visibilitychange', ()=>{
   if(typeof syncSchedulePoll==='function') try{ syncSchedulePoll(); }catch(e){}
   if(!document.hidden) kickSyncIfNeeded();
@@ -18292,7 +18688,7 @@ document.addEventListener('visibilitychange', ()=>{
 window.addEventListener('online', kickSyncIfNeeded);
 window.addEventListener('offline', ()=>{ if(typeof renderHomeSync==='function') renderHomeSync(); });
 function syncSaveCfg(){ const c=syncCfg(); c.url=$('syncUrl').value.trim(); c.anonKey=$('syncKey').value.trim(); sb=null; persist(); toast('Sync settings saved'); renderSync(); }
-function syncToggleAuto(on){ syncCfg().auto=on; persist(); if(on) startAutoSync(); else stopAutoSync(); }
+function syncToggleAuto(on){ syncSetMode(on ? 'poll' : 'manual'); }
 const SYNC_SQL=`-- Run this once in Supabase → SQL Editor → New query → Run
 create table if not exists records (
   id text primary key,
@@ -18471,7 +18867,7 @@ try{
                         free:'anything else, one per line'});
 }catch(e){}
 try{ if(typeof dsFavRender==='function') dsFavRender(); if(typeof dsRefreshTplSelect==='function') dsRefreshTplSelect(); }catch(e){}
-if(db.settings.sync && db.settings.sync.auto && db.settings.sync.url){ setTimeout(()=>{ try{ startAutoSync(); }catch(e){} }, 1500); }
+if(db.settings.sync && db.settings.sync.url && syncMode()!=='manual'){ setTimeout(()=>{ try{ startAutoSync(); }catch(e){} }, 1500); }
 if(db.qrcodes && !db.qrcodes.length){ db.qrcodes=qrSeed(); persist(); }
 if(db.leaflets && !db.leaflets.length){ db.leaflets=leafSeed(); persist(); }
 if(typeof pwaUpdateInstallBtn==='function') pwaUpdateInstallBtn();
