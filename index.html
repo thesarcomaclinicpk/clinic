@@ -2029,6 +2029,144 @@ html[data-theme="dark"] .ne-group{background:#0f2530}
 }
 @media(max-width:768px) and (display-mode:standalone){ main{padding-top:66px} }
 
+/* ---- MDT presenter: a dark, projector-friendly full screen ---- */
+.mdt-pres{position:fixed;inset:0;z-index:9000;background:#0b1220;color:#e8eef6;display:flex;flex-direction:column}
+.mdt-pres.hidden{display:none}
+body.presenting{overflow:hidden}
+.mp-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;background:#111c2e;border-bottom:1px solid #1e2c44;flex:none}
+.mp-crumb{font-size:19px}
+.mp-dim{color:#93a4bb;font-size:15px;font-weight:400}
+.mp-pill{background:#1e3a5f;color:#cfe4f5;border-radius:999px;padding:2px 9px;font-size:12px;margin-left:6px;vertical-align:middle}
+.mp-pos{color:#93a4bb;font-size:13px;white-space:nowrap}
+.mp-tabs{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.mp-t{background:transparent;border:1px solid #26364f;color:#a9bcd4;border-radius:8px;padding:5px 11px;font-size:13px;cursor:pointer}
+.mp-t.on{background:#0e7490;border-color:#0e7490;color:#fff}
+.mp-x{background:transparent;border:0;color:#93a4bb;font-size:22px;cursor:pointer;padding:0 4px}
+.mp-body{flex:1 1 auto;overflow:auto;padding:22px 26px}
+.mp-cols{display:flex;gap:22px;align-items:flex-start;height:100%}
+.mp-imgs{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:14px;align-content:flex-start}
+.mp-fig{margin:0;background:#111c2e;border:1px solid #1e2c44;border-radius:10px;padding:8px;max-width:min(46%,620px)}
+.mp-fig img{display:block;max-width:100%;max-height:66vh;border-radius:6px;background:#000}
+.mp-fig img.mp-miss{opacity:.5}
+.mp-fig figcaption{color:#8fa3bd;font-size:12px;margin-top:6px}
+.mp-side{flex:0 0 330px;max-width:330px}
+.mp-txt{font-size:19px;line-height:1.5}
+.mp-b{margin-bottom:20px}
+.mp-lab{color:#7f95b1;font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.mp-v{white-space:normal}
+.mp-none{color:#7f95b1;font-size:17px;padding:40px 0}
+.mp-nofiles{color:#7f95b1;font-size:15px;margin-top:18px;padding:10px 14px;border:1px dashed #26364f;border-radius:8px;display:inline-block}
+.mp-dec{max-width:900px;font-size:19px;line-height:1.5}
+.mp-ta{width:100%;min-height:210px;background:#0f1a2c;color:#e8eef6;border:1px solid #2a3d59;border-radius:10px;padding:14px;font-size:19px;line-height:1.5}
+.mp-saved{color:#4ade80;font-size:11px;text-transform:none;letter-spacing:0;margin-left:8px}
+.mp-foot{flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;background:#111c2e;border-top:1px solid #1e2c44}
+.mp-nav{background:#182a44;border:1px solid #26364f;color:#dce8f6;border-radius:9px;padding:9px 18px;font-size:15px;cursor:pointer}
+.mp-hint{color:#6f86a3;font-size:12px}
+.warn-txt{color:#b45309}
+@media (max-width:900px){ .mp-cols{flex-direction:column} .mp-side{flex:1 1 auto;max-width:none} .mp-fig{max-width:100%} }
+/* ---- choosing what to present ---- */
+.mdt-pick{position:fixed;inset:0;z-index:9100;background:rgba(15,23,42,.55);display:flex;
+          align-items:center;justify-content:center;padding:20px}
+.mdt-pick.hidden{display:none}
+.mk-card{background:var(--card,#fff);border-radius:14px;width:min(640px,100%);max-height:86vh;
+         display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.mk-h{flex:none;font-size:16px;font-weight:600;padding:14px 16px;border-bottom:1px solid var(--line,#e2e8f0)}
+.mk-x{float:right;background:transparent;border:0;font-size:18px;cursor:pointer;color:#64748b}
+.mk-mtg{flex:none;display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 6px}
+.mk-tools{flex:none;display:flex;align-items:center;gap:8px;padding:4px 16px 8px}
+.mk-tools .muted{margin-left:auto}
+.mk-list{flex:1 1 auto;overflow:auto;padding:0 10px 8px}
+.mk-i{display:flex;gap:10px;align-items:flex-start;padding:8px 8px;border-radius:8px;cursor:pointer}
+.mk-i:hover{background:rgba(14,116,144,.06)}
+.mk-i.on{background:rgba(14,116,144,.10)}
+.mk-i input{margin-top:3px}
+.mk-b{flex:1 1 auto;min-width:0}
+.mk-s{display:block;font-size:11.5px;color:#64748b}
+.mk-foot{flex:none;display:flex;justify-content:flex-end;gap:8px;padding:12px 16px;border-top:1px solid var(--line,#e2e8f0)}
+/* ---- attaching from the MDT board ---- */
+.mdt-att{border:1px solid var(--line,#e2e8f0);border-radius:10px;padding:10px 12px;margin-bottom:14px}
+.ma-h{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:#64748b;margin-bottom:8px}
+.ma-c{background:#0e7490;color:#fff;border-radius:999px;padding:0 7px;margin-left:5px}
+.ma-rec{float:right;text-transform:none;letter-spacing:0;color:#94a3b8}
+.ma-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.ma-bar select{max-width:210px}
+.ma-none{color:#64748b;font-size:12.5px;line-height:1.5}
+.ma-sec{margin-top:10px}
+.ma-st{font-size:12px;color:#475569;font-weight:600;margin-bottom:5px}
+.ma-st span{background:#e2e8f0;border-radius:999px;padding:0 6px;font-weight:400}
+.ma-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(92px,1fr))}
+.ma-it{position:relative;border:1px solid var(--line,#e2e8f0);border-radius:8px;overflow:hidden;background:var(--card2,#f8fafc)}
+.ma-it img{display:block;width:100%;height:66px;object-fit:cover;background:#000}
+.ma-doc{height:66px;display:flex;align-items:center;justify-content:center;font-size:26px}
+.ma-n{font-size:10px;padding:3px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#475569}
+.ma-x{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:6px;
+      width:18px;height:18px;font-size:11px;cursor:pointer;line-height:1}
+.ma-up{position:absolute;top:2px;left:3px;font-size:12px;opacity:.85}
+/* ---- presenter: one image per screen, with a strip and a contact sheet ---- */
+.mp-one{display:flex;flex-direction:column;height:100%;gap:10px}
+.mp-stage{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:0}
+.mp-big{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;background:#000}
+.mp-big.mp-miss{opacity:.45}
+.mp-cap{flex:none;color:#a9bcd4;font-size:14px;text-align:center}
+.mp-note{display:block;color:#7f95b1;font-size:13px;margin-top:3px}
+.mp-strip{flex:none;display:flex;gap:8px;overflow-x:auto;padding:4px 2px}
+.mp-th{height:62px;width:auto;border-radius:6px;border:2px solid transparent;cursor:pointer;background:#000;flex:0 0 auto}
+.mp-th.on{border-color:#0e7490}
+.mp-th:hover{border-color:#38a3bd}
+.mp-sheet{height:100%;display:flex;flex-direction:column;gap:10px}
+.mp-grid{flex:1 1 auto;overflow:auto;display:grid;gap:12px;
+         grid-template-columns:repeat(auto-fill,minmax(210px,1fr));align-content:start}
+.mp-gf{margin:0;background:#111c2e;border:1px solid #1e2c44;border-radius:8px;padding:6px;cursor:pointer}
+.mp-gf:hover{border-color:#0e7490}
+.mp-gf img{display:block;width:100%;height:150px;object-fit:contain;background:#000;border-radius:4px}
+.mp-gf figcaption{color:#8fa3bd;font-size:11px;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-n{background:#26364f;border-radius:999px;padding:0 6px;font-size:11px;margin-left:3px}
+.mp-t.on .mp-n{background:rgba(255,255,255,.25)}
+.mp-slide{background:#182a44;border-radius:6px;padding:2px 8px;margin-right:10px;color:#a9bcd4}
+.mp-reports{max-width:900px}
+.mp-doc{display:flex;align-items:center;gap:12px;background:#111c2e;border:1px solid #1e2c44;
+        border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.md-ic{font-size:26px}
+.md-b{flex:1 1 auto;min-width:0}
+.md-n{font-size:17px}
+.md-s{color:#7f95b1;font-size:12.5px}
+.md-o{background:#182a44;border:1px solid #26364f;color:#dce8f6;border-radius:8px;padding:7px 14px;
+      font-size:14px;text-decoration:none;white-space:nowrap}
+.md-o.md-off{background:transparent;border-color:transparent;color:#6f86a3;font-size:12.5px}
+/* ---- one case, many discussions ---- */
+.mdt-thr{display:inline-block;background:#0e7490;color:#fff;border-radius:999px;padding:1px 7px;font-size:10.5px;margin-top:3px}
+.mdt-tl{border:1px solid var(--line,#e2e8f0);border-radius:10px;padding:10px 12px;margin-bottom:14px;background:var(--card2,#f8fafc)}
+.tl-h{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:#64748b;margin-bottom:8px}
+.tl-i{display:flex;gap:10px;padding:7px 6px;border-radius:8px;cursor:pointer}
+.tl-i:hover{background:rgba(14,116,144,.07)}
+.tl-i.on{background:rgba(14,116,144,.12)}
+.tl-n{flex:0 0 22px;height:22px;border-radius:999px;background:#0e7490;color:#fff;font-size:11.5px;
+      display:flex;align-items:center;justify-content:center}
+.tl-b{flex:1 1 auto;min-width:0}
+.tl-w{font-size:12px;color:#475569;font-weight:600}
+.tl-cur{background:#0e7490;color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:400}
+.tl-dx{font-size:13px}
+.tl-d{font-size:12.5px;color:#475569;white-space:pre-wrap}
+.mdt-tl.tl-dark{background:#111c2e;border-color:#1e2c44}
+.tl-dark .tl-h{color:#7f95b1;font-size:13px}
+.tl-dark .tl-i{cursor:default}
+.tl-dark .tl-i.on{background:rgba(14,116,144,.28)}
+.tl-dark .tl-n{width:30px;height:30px;flex-basis:30px;font-size:15px}
+.tl-dark .tl-w{color:#a9bcd4;font-size:15px}
+.tl-dark .tl-dx{font-size:19px;color:#e8eef6}
+.tl-dark .tl-d{color:#cbd8e8;font-size:17px}
+.mp-hist{max-width:1000px}
+.mp-again{display:inline-block;background:#1e3a5f;color:#cfe4f5;border-radius:999px;padding:3px 12px;font-size:14px;margin-bottom:16px}
+.mdt-sheet{width:100%;border-collapse:collapse;font-size:9.5px;table-layout:fixed}
+.mdt-sheet th,.mdt-sheet td{border:1px solid #bbb;padding:3px 4px;vertical-align:top;word-wrap:break-word}
+.mdt-sheet th{background:#e2e8f0;font-weight:700;text-align:left;font-size:9px;text-transform:uppercase}
+.mdt-sheet tr.ms-sep td{background:#f1f5f9;font-size:10px}
+.mdt-sheet td:nth-child(1){width:4%}.mdt-sheet td:nth-child(2){width:4%}
+.mdt-sheet td:nth-child(3){width:7%}.mdt-sheet td:nth-child(4){width:7%}
+.mdt-sheet td:nth-child(5){width:11%}.mdt-sheet td:nth-child(6){width:14%}
+.mdt-sheet td:nth-child(7){width:18%}.mdt-sheet td:nth-child(8){width:18%}
+.mdt-sheet td:nth-child(9){width:12%}.mdt-sheet td:nth-child(10){width:9%}
+@media print{ .mdt-sheet{font-size:8.5px} .mdt-sheet tr{break-inside:avoid} }
 </style>
 <script>
 /* Early safety net: if anything throws while the app is starting up, never leave a
@@ -3166,11 +3304,19 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <button class="btn btn-green" onclick="mdtNew()">＋ Submit a case</button>
         <button class="btn btn-primary btn-sm" onclick="mtgNew()">🗓 New MDT meeting</button>
         <button class="btn btn-ghost btn-sm" onclick="mdtShowMeetings()">📋 Meetings &amp; minutes</button>
+        <label class="btn btn-ghost btn-sm" style="cursor:pointer" title="Bring in an existing MDT spreadsheet">⤒ Import sheet
+          <input type="file" id="mdtImpFile" accept=".xlsx,.xlsm" hidden onchange="mdtImportPick(this.files[0])"></label>
+        <button class="btn btn-ghost btn-sm" onclick="mdtExportXlsx()" title="Compile exactly what is listed below into the MDT spreadsheet">⤓ Compile Excel</button>
+        <button class="btn btn-ghost btn-sm" onclick="mdtCompilePrint()" title="The same sheet as an A4 printout / PDF">🖨 Compile PDF</button>
+        <button class="btn btn-primary btn-sm" onclick="mdtPresPick()" title="Choose a meeting and its cases, then present full-screen">▶ Present…</button>
+        <button class="btn btn-ghost btn-sm hidden" id="mdtPrepBtn" onclick="mdtPrepare()"></button>
         <span style="flex:1"></span>
         <input type="text" id="mdtSearch" placeholder="Search patient, diagnosis, decision…" autocomplete="off" style="max-width:320px" oninput="mdtRenderList()">
       </div>
       <div class="chiprow" id="mdtStageChips" style="margin-bottom:10px"></div>
       <div class="dfbar" id="mdtDf"></div>
+      <div class="small muted" id="mdtCountLine" style="margin:2px 0 0"></div>
+      <div class="small muted" id="mdtPresReady" style="margin:2px 0 8px"></div>
       <table class="list">
         <thead><tr>
           <th style="width:96px">Submitted</th><th>Patient</th><th>Diagnosis / site</th>
@@ -3202,14 +3348,24 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
           <div class="btn-bar" style="margin-bottom:10px">
             <select id="mdtRegSel" data-norail="1" style="max-width:340px"><option value="">🧬 Link a tumour-registry case…</option></select>
             <button class="btn btn-ghost btn-sm" onclick="mdtLinkRegistry()">Link</button>
+            <button class="btn btn-ghost btn-sm hidden" id="mdtRegOpenBtn" onclick="mdtOpenRegistry()" title="Open the linked tumour-registry entry">↗ Open registry entry</button>
+            <button class="btn btn-ghost btn-sm" id="mdtRegMakeBtn" onclick="mdtToRegistry()" title="Start a tumour-registry entry from this case">→ Add to registry</button>
             <span class="muted small" id="mdtRegNote"></span>
           </div>
+          <div id="mdtTimeline"></div>
+          <div id="mdtAttach"></div>
           <div class="grid g4">
             <div class="field" style="grid-column:span 2"><label>Patient name <span class="req">*</span></label><input type="text" id="mdtName"></div>
             <div class="field"><label>MR #</label><input type="text" id="mdtMrn"></div>
             <div class="field"><label>Age / Sex</label><input type="text" id="mdtAgeSex" placeholder="e.g. 34 y / Male"></div>
             <div class="field" style="grid-column:span 2"><label>Working diagnosis</label><input type="text" id="mdtDx" placeholder="e.g. Osteosarcoma distal femur"></div>
             <div class="field"><label>Site</label><input type="text" id="mdtSite" placeholder="e.g. Right distal femur"></div>
+            <div class="field"><label>Team</label>
+              <input type="text" id="mdtTeam" list="mdtTeamList" placeholder="e.g. A" autocomplete="off">
+              <datalist id="mdtTeamList"><option value="A"></option><option value="B"></option><option value="C"></option><option value="D"></option><option value="E"></option></datalist></div>
+            <div class="field"><label>Status</label>
+              <select id="mdtStatus"><option value="">—</option><option value="Pre-op">Pre-op</option><option value="Post-op">Post-op</option><option value="Surveillance">Surveillance</option></select></div>
+            <div class="field"><label>Contact details</label><input type="text" id="mdtContact" placeholder="e.g. 0300 1234567"></div>
             <div class="field"><label>Urgency</label>
               <select id="mdtUrgency"><option value="routine">Routine</option><option value="urgent">Urgent — discuss at the next meeting</option></select></div>
             <div class="field"><label>Submitted on</label><input type="date" id="mdtDate"></div>
@@ -3217,6 +3373,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
           </div>
           <div class="field mt"><label>Why is it being brought to the MDT? <span class="req">*</span></label>
             <textarea class="ta-s" id="mdtReason" placeholder="e.g. Biopsy-proven high-grade osteosarcoma — for neo-adjuvant chemotherapy plan and limb-salvage feasibility"></textarea></div>
+          <div class="field mt"><label>Key findings <span class="muted small" style="font-weight:400">(the summary that goes on the MDT sheet)</span>
+              <button type="button" class="btn btn-ghost btn-sm" style="float:right;margin-top:-4px" onclick="mdtComposeFindings()" title="Build this from the imaging and pathology already entered">↻ Compose</button></label>
+            <textarea class="ta-s" id="mdtKeyFind" style="min-height:96px" placeholder="e.g. • Medial thigh mass 10x8 cm
+• MRI — sciatic nerve abutted
+• Core biopsy: spindle cell sarcoma"></textarea></div>
         </div>
 
         <div class="card fr-pane" data-rk="imaging">
@@ -3264,6 +3425,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
             <textarea class="ta-s" id="mdtPresent" placeholder="e.g. Orthopaedic oncology, medical oncology, radiology, pathology"></textarea></div>
           <div class="field mt"><label>Decision <span class="muted small" style="font-weight:400">(this is what gets minuted)</span></label>
             <textarea id="mdtDecision" style="min-height:130px" placeholder="e.g. Neo-adjuvant MAP × 2 cycles, restage with MRI and CT chest, then limb-salvage resection with endoprosthetic reconstruction"></textarea></div>
+          <div class="field mt"><label>Post-MDT note <span class="muted small" style="font-weight:400">(what actually happens next)</span></label>
+            <textarea class="ta-s" id="mdtPostNote" placeholder="e.g. Incisional biopsy
+• Follow SPEP and skeletal survey"></textarea></div>
         </div>
 
         <div class="card fr-pane" data-rk="actions">
@@ -4518,7 +4682,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 41;
+const SEED_VERSION = 42;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -4828,6 +4992,26 @@ function migrateDB(){
     });
     if(back) try{ db.settings.regRestoredCount=back; }catch(e){}
   })();
+  /* v42 — MDT cases gained team / status / key findings / post-MDT note / contact.
+     Optional fields, so nothing is rewritten; we only back-fill what can be known
+     for certain from a record this case is already linked to. */
+  if((db.seedVersion||1) < 42){
+    (db.mdt||[]).forEach(function(c){
+      if(c.team===undefined) c.team='';
+      if(c.status===undefined) c.status='';
+      if(c.keyFindings===undefined) c.keyFindings='';
+      if(c.postMdtNote===undefined) c.postMdtNote='';
+      if(c.contact===undefined) c.contact='';
+      if(!c.team || !c.contact){
+        const r=(db.registry||[]).filter(function(x){ return x.id===c.registryId; })[0];
+        if(r){ if(!c.team && r.team) c.team=r.team; if(!c.contact && r.contact) c.contact=r.contact; }
+      }
+      if(!c.contact && c.patientId){
+        const pt=(db.patients||[]).filter(function(x){ return x.id===c.patientId; })[0];
+        if(pt && pt.phone) c.contact=pt.phone;
+      }
+    });
+  }
   db.seedVersion = SEED_VERSION;
   persist();
 }
@@ -6090,32 +6274,1059 @@ function mdtRenderList(){
       '<div class="mdt-k" style="--k-c:#4f46e5" onclick="mdtShowMeetings()"><div class="kv">'+acts+'</div><div class="kl">Actions still open</div></div>';
   }
   const q = (($('mdtSearch')||{}).value||'').trim().toLowerCase();
-  const rows = all
-    .filter(function(c){
-      if(q) return [c.name,c.mrn,c.diagnosis,c.site,c.reason,(c.decision||{}).text].join(' ').toLowerCase().indexOf(q)>=0;
-      if(mdtStageFilter!=='all' && c.stage!==mdtStageFilter) return false;
-      return (typeof dfMatch==='function') ? dfMatch('mdt', c.date) : true;
-    })
-    .sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); });
+  const rows = mdtFiltered();
+  const threads = mdtThreadRows(rows);
   if(typeof dfCount==='function') dfCount('mdt', rows.length, all.length, !!q);
+  const cl=$('mdtCountLine');
+  if(cl) cl.textContent = threads.length===rows.length ? ''
+    : (threads.length+' patient'+(threads.length===1?'':'s')+' \u00b7 '+rows.length+' discussions');
+  if(typeof mdtPresPaintReady==='function') mdtPresPaintReady();
   const e=$('mdtEmpty'); if(e) e.classList.toggle('hidden', all.length>0);
   const body=$('mdtListBody'); if(!body) return;
-  body.innerHTML = rows.map(function(c){
-    return '<tr><td>'+esc(fmtDate(c.date))+(c.urgency==='urgent'?'<br><span class="mdt-urg">URGENT</span>':'')+'</td>'+
+  body.innerHTML = threads.map(function(t){
+    const c=t.latest, seen=t.all.length, full=mdtThreadOf(c).length;
+    return '<tr><td>'+esc(fmtDate(c.date))+(c.urgency==='urgent'?'<br><span class="mdt-urg">URGENT</span>':'')+
+      (full>1?'<br><span class="mdt-thr" title="Discussed '+full+' times">\u21bb '+full+'\u00d7</span>':'')+
+      (seen>1&&seen!==full?'<br><span class="small muted">'+seen+' in range</span>':'')+'</td>'+
       '<td><b>'+esc(c.name||'—')+'</b>'+(c.mrn?'<br><span class="small muted">'+esc(c.mrn)+'</span>':'')+
-        (c.ageSex?'<br><span class="small muted">'+esc(c.ageSex)+'</span>':'')+'</td>'+
+        (c.ageSex?'<br><span class="small muted">'+esc(c.ageSex)+'</span>':'')+
+        ((c.team||c.status)?'<br><span class="small muted">'+esc([c.team?'Team '+c.team:'',c.status].filter(Boolean).join(' \u00b7 '))+'</span>':'')+
+        (c.registryId?' <span class="reg-tag r0" title="In the tumour registry">REG</span>':'')+'</td>'+
       '<td class="small">'+esc(c.diagnosis||'—')+(c.site?'<br><span class="muted">'+esc(c.site)+'</span>':'')+'</td>'+
       '<td>'+mdtChip(c.stage)+'</td>'+
       '<td class="small">'+esc(mdtNextStep(c))+'</td>'+
       '<td><button class="btn btn-ghost btn-sm" onclick="mdtEdit(\''+c.id+'\')">Open</button> '+
+          '<button class="btn btn-ghost btn-sm" onclick="mdtPresFrom(\''+c.id+'\')" title="Present from this case">\u25b6</button> '+
           '<button class="btn btn-ghost btn-sm" onclick="mdtAdvanceById(\''+c.id+'\')" title="Move to the next stage">→</button></td></tr>';
   }).join('');
 }
 function mdtFilter(k){ mdtStageFilter=k; mdtShowList(); }
 
+/* ===== ATTACHING PICTURES AND REPORTS FROM THE BOARD =====
+   Files are filed on the patient's REGISTRY entry, not on the board case — one home
+   per patient, so a case discussed five times does not scatter its films across five
+   records. This just puts the door on the MDT form as well, and writes straight
+   through to the record: a photo must never be lost because a form was closed. */
+function mdtAttachRec(){
+  const id=(($('mdtRegSel')||{}).value)||'';
+  return (db.registry||[]).filter(function(r){ return r.id===id; })[0] || null;
+}
+async function mdtAttachAdd(fileList){
+  if(!requireEdit()) return;
+  const rec=mdtAttachRec();
+  if(!rec){
+    toast('\u26a0 Link this case to a registry entry first \u2014 that is where the files are kept');
+    return;
+  }
+  const files=Array.prototype.slice.call(fileList||[]); if(!files.length) return;
+  const stage=(($('mdtAttStage')||{}).value)||'preop';
+  const cf=cfOf(rec); const bucket=cf[stage]; bucket.items=bucket.items||[];
+  let added=0;
+  for(const f of files){
+    const id=uid('cfi');
+    const isImg=/^image\//.test(f.type||'') || /\.(jpe?g|png|webp|heic|heif|gif|bmp)$/i.test(f.name||'');
+    try{
+      if(isImg){
+        const r=await compressImage(f);
+        await imgPut(id, {full:r.full, thumb:r.thumb, name:f.name||'', addedAt:new Date().toISOString()});
+        await origPut(id, f);
+        bucket.items.push({id, kind:'img', name:f.name||'image.jpg', mime:f.type||'image/jpeg',
+          bytes:r.bytes, origBytes:r.origBytes, w:r.w, h:r.h, grey:r.grey,
+          addedAt:new Date().toISOString(), by:byTag(), up:'pending'});
+      } else {
+        await origPut(id, f);
+        bucket.items.push({id, kind:'file', name:f.name||'document', mime:f.type||'',
+          bytes:f.size||0, origBytes:f.size||0,
+          addedAt:new Date().toISOString(), by:byTag(), up:'pending'});
+      }
+      added++;
+    }catch(e){ toast('\u26a0 Could not read '+(f.name||'file')); }
+  }
+  if(added){ syncTouch(rec); persist(); }
+  mdtAttachRender();
+  toast(added+' file'+(added===1?'':'s')+' added to '+(rec.name||'the case'));
+  if(typeof gdRunQueue==='function') setTimeout(gdRunQueue, 400);
+}
+function mdtAttachRemove(stage, id){
+  const rec=mdtAttachRec(); if(!rec) return;
+  const b=cfOf(rec)[stage]; if(!b) return;
+  const it=(b.items||[]).filter(function(x){ return x.id===id; })[0];
+  if(!it || !confirm('Remove '+(it.name||'this file')+'?')) return;
+  b.items=(b.items||[]).filter(function(x){ return x.id!==id; });
+  if(typeof imgDel==='function') imgDel(id);
+  syncTouch(rec); persist(); mdtAttachRender();
+}
+function mdtAttachRender(){
+  const host=$('mdtAttach'); if(!host) return;
+  const rec=mdtAttachRec();
+  if(!rec){
+    host.innerHTML='<div class="mdt-att"><div class="ma-h">Pictures &amp; reports</div>'+
+      '<div class="ma-none">Link this case to a tumour-registry entry above, or use '+
+      '<b>\u2192 Add to registry</b> \u2014 films and reports are filed on the patient\'s registry '+
+      'record so they stay in one place across every MDT.</div></div>';
+    return;
+  }
+  const cf=cfOf(rec);
+  let total=0;
+  const secs=CF_STAGES.map(function(s){
+    const items=(cf[s.k]||{}).items||[]; total+=items.length;
+    if(!items.length) return '';
+    return '<div class="ma-sec"><div class="ma-st">'+s.ic+' '+esc(s.t)+' <span>'+items.length+'</span></div>'+
+      '<div class="ma-grid">'+items.map(function(it){
+        return '<div class="ma-it" title="'+esc(it.name||'')+'">'+
+          (it.kind==='img'
+            ? '<img data-img="'+esc(it.id)+'" alt="">'
+            : '<div class="ma-doc">'+(/pdf/i.test(it.mime||it.name||'')?'\ud83d\udcd5':'\ud83d\udcc4')+'</div>')+
+          '<button class="ma-x" onclick="mdtAttachRemove(\''+s.k+'\',\''+it.id+'\')" title="Remove">\u2715</button>'+
+          '<div class="ma-n">'+esc(it.name||'')+'</div>'+
+          (it.up!=='done'?'<span class="ma-up" title="Waiting for Google Drive">\u2601</span>':'')+
+        '</div>';
+      }).join('')+'</div></div>';
+  }).join('');
+  host.innerHTML='<div class="mdt-att">'+
+    '<div class="ma-h">Pictures &amp; reports <span class="ma-c">'+total+'</span>'+
+      '<span class="ma-rec">filed on '+esc(rec.regNo||rec.name||'the registry entry')+'</span></div>'+
+    '<div class="ma-bar">'+
+      '<select id="mdtAttStage" data-norail="1">'+CF_STAGES.map(function(s){
+        return '<option value="'+s.k+'">'+s.ic+' '+esc(s.t)+'</option>'; }).join('')+'</select>'+
+      '<label class="btn btn-ghost btn-sm" style="cursor:pointer">\u2795 Add files'+
+        '<input type="file" id="mdtAttFile" multiple accept="image/*,.pdf,.doc,.docx" hidden '+
+        'onchange="mdtAttachAdd(this.files); this.value=\'\'"></label>'+
+      '<span class="muted small">X-rays, MRI, CT, PET-CT, path slides, referrals, blood reports\u2026</span>'+
+    '</div>'+ (secs || '<div class="ma-none">Nothing attached yet.</div>') +'</div>';
+  Array.prototype.slice.call(host.querySelectorAll('img[data-img]')).forEach(function(el){
+    imgGet(el.getAttribute('data-img')).then(function(r){
+      el.src=(r && (r.thumb||r.full)) || CF_ELSEWHERE;
+    }).catch(function(){ el.src=CF_ELSEWHERE; });
+  });
+}
+/* the run of discussions, drawn inside the open record and in the presenter */
+function mdtTimelineHTML(c, opts){
+  const o=opts||{};
+  const t=mdtThreadOf(c); if(t.length<2 && !o.always) return '';
+  const nos=mdtMeetingNo();
+  return '<div class="mdt-tl'+(o.dark?' tl-dark':'')+'">'+
+    '<div class="tl-h">'+t.length+' discussion'+(t.length===1?'':'s')+' of this case</div>'+
+    t.map(function(x,i){
+      const mid=(x.decision||{}).meetingId||'';
+      const when=[nos[mid]||'', x.date?fmtDate(x.date):''].filter(Boolean).join(' \u00b7 ');
+      const cur=x.id===c.id;
+      const dec=((x.decision||{}).text||x.postMdtNote||'').trim();
+      return '<div class="tl-i'+(cur?' on':'')+'"'+
+        (o.dark?'':' onclick="mdtEdit(\''+x.id+'\')" title="Open this discussion"')+'>'+
+        '<span class="tl-n">'+(i+1)+'</span>'+
+        '<div class="tl-b"><div class="tl-w">'+esc(when||'no date')+
+          (cur?' <span class="tl-cur">this one</span>':'')+'</div>'+
+          (x.diagnosis?'<div class="tl-dx">'+esc(x.diagnosis)+'</div>':'')+
+          (dec?'<div class="tl-d">'+esc(dec)+'</div>':'<div class="tl-d muted">no decision recorded</div>')+
+        '</div></div>';
+    }).join('')+'</div>';
+}
+function mdtPaintTimeline(){
+  const host=$('mdtTimeline'); if(!host) return;
+  const c = mdtEditId ? mdtCases().filter(function(x){ return x.id===mdtEditId; })[0] : null;
+  host.innerHTML = c ? mdtTimelineHTML(c) : '';
+}
+/* ===== COMPILING THE MDT SHEET =====
+   One rule holds this together: the compiled file is EXACTLY what the board is
+   showing. Same search box, same stage chips, same date window. So "filter, then
+   compile" needs no second dialog and can never disagree with what is on screen. */
+/* ===== ONE PATIENT, MANY DISCUSSIONS =====
+   A case that comes back to the MDT is ONE case with a history, not three records.
+   Each appearance is still stored separately — the diagnosis, findings and decision
+   genuinely differ between meetings, and the doctor's spreadsheet is one row per
+   appearance — but they are threaded, so the board lists the patient once and both
+   the form and the presenter show the whole run. */
+function mdtThreadKeyOf(c){
+  if(c && c.threadId) return c.threadId;
+  const mrn=String((c&&c.mrn)||'').replace(/[^0-9a-z]/gi,'');
+  if(mrn) return 'mrn:'+mrn.toLowerCase();
+  const nm=String((c&&c.name)||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  return nm ? 'nm:'+nm : 'id:'+((c&&c.id)||'');
+}
+function mdtThreadSort(a,b){
+  const ad=String(a.date||''), bd=String(b.date||'');
+  if(ad!==bd) return ad.localeCompare(bd);
+  return (a.sheetNo||0)-(b.sheetNo||0);
+}
+/* every discussion of the same case, oldest first */
+function mdtThreadOf(c){
+  if(!c) return [];
+  const k=mdtThreadKeyOf(c);
+  return mdtCases().filter(function(x){ return mdtThreadKeyOf(x)===k; }).sort(mdtThreadSort);
+}
+function mdtThreadPos(c){
+  const t=mdtThreadOf(c);
+  return {n:t.length, i:t.findIndex(function(x){ return x.id===c.id; })+1, list:t};
+}
+/* group a set of discussions into threads, keeping the newest of each */
+function mdtThreadRows(rows){
+  const by={}, order=[];
+  (rows||[]).forEach(function(c){
+    const k=mdtThreadKeyOf(c);
+    if(!by[k]){ by[k]={key:k, all:[]}; order.push(by[k]); }
+    by[k].all.push(c);
+  });
+  order.forEach(function(t){
+    t.all.sort(mdtThreadSort);
+    t.latest=t.all[t.all.length-1];
+  });
+  order.sort(function(a,b){ return String(b.latest.date||'').localeCompare(String(a.latest.date||'')); });
+  return order;
+}
+function mdtFiltered(){
+  const q = (($('mdtSearch')||{}).value||'').trim().toLowerCase();
+  return mdtCases().filter(function(c){
+      /* a typed search always ignores the window — same rule as every other list */
+      if(q) return [c.name,c.mrn,c.diagnosis,c.site,c.reason,c.team,c.status,c.keyFindings,
+                    c.postMdtNote,(c.decision||{}).text].join(' ').toLowerCase().indexOf(q)>=0;
+      if(mdtStageFilter!=='all' && c.stage!==mdtStageFilter) return false;
+      return (typeof dfMatch==='function') ? dfMatch('mdt', c.date) : true;
+    }).sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); });
+}
+/* MDM numbers are assigned across ALL meetings in date order, so a meeting keeps
+   the same number whatever range you compile. */
+function mdtMeetingNo(){
+  const map={}, taken={}; const all=mdtMeetings().slice();
+  /* A meeting imported from the sheet KEEPS the number it had there — the number
+     belongs to the meeting, not to its position in a list, exactly as registry
+     numbers do. Only meetings with no number of their own are numbered here. */
+  all.forEach(function(m){ if(m.no){ map[m.id]='MDM '+m.no; taken[m.no]=1; } });
+  let next=1;
+  all.filter(function(m){ return !m.no; })
+     .sort(function(a,b){
+        const ad=String(a.date||''), bd=String(b.date||'');
+        if(ad && bd) return ad.localeCompare(bd);
+        if(ad) return -1; if(bd) return 1;     /* undated meetings sort LAST, not first */
+        return String(a.createdAt||'').localeCompare(String(b.createdAt||''));
+     })
+     .forEach(function(m){ while(taken[next]) next++; map[m.id]='MDM '+next; taken[next]=1; });
+  return map;
+}
+/* group the filtered cases under their meeting, oldest meeting first */
+function mdtCompileGroups(rows){
+  const nos=mdtMeetingNo(), byId={};
+  mdtMeetings().forEach(function(m){ byId[m.id]=m; });
+  const groups=[], seen={};
+  (rows||mdtFiltered()).forEach(function(c){
+    const mid=(c.decision||{}).meetingId||'';
+    const key=mid||'__none';
+    if(!seen[key]){
+      const m=byId[mid];
+      seen[key]={ id:key, label: mid&&nos[mid] ? nos[mid] : 'Not yet scheduled',
+                  date: m ? m.date : '', chair: m ? (m.chair||'') : '', cases:[] };
+      groups.push(seen[key]);
+    }
+    seen[key].cases.push(c);
+  });
+  /* Dated meetings run in date order. A meeting with no date yet cannot be placed by
+     date, so it falls back to its MDM number — otherwise every undated meeting compares
+     equal and their order is whatever the filter happened to produce. */
+  const numOf=function(g){ const m=String(g.label||'').match(/(\d+)/); return m?+m[1]:9999; };
+  groups.sort(function(a,b){
+    if(a.id==='__none') return 1; if(b.id==='__none') return -1;
+    const ad=String(a.date||''), bd=String(b.date||'');
+    if(ad && bd && ad!==bd) return ad.localeCompare(bd);
+    if(ad && !bd) return -1;
+    if(!ad && bd) return 1;
+    return numOf(a)-numOf(b);
+  });
+  /* inside a meeting, a case keeps the serial number it had on the sheet */
+  groups.forEach(function(g){ g.cases.sort(function(a,b){
+    const an=a.sheetNo||0, bn=b.sheetNo||0;
+    if(an&&bn&&an!==bn) return an-bn;
+    if(an&&!bn) return -1; if(!an&&bn) return 1;
+    return String(a.date||'').localeCompare(String(b.date||'')) || String(a.name||'').localeCompare(String(b.name||''));
+  }); });
+  return groups;
+}
+const MDT_COL_W=[9,7,12,11,22,30,42,42,34,18];
+const MDT_SHEET_COLS=['SERIAL #','TEAM','MR #','STATUS','NAME','DIAGNOSIS','KEY FINDINGS',
+                      'DISCUSSION','POST-MDT NOTE','CONTACT DETAILS'];
+function mdtSheetTitle(){
+  const s=db.settings||{};
+  return (s.mdtSheetTitle||'MSK ONCOLOGY, DEPARTMENT OF ORTHOPAEDICS — MDT MEETING').toUpperCase();
+}
+/* the sheet as a plain matrix: title, header, then per meeting a separator row
+   (date + MDM n) followed by its cases numbered from 1 */
+function mdtSheetMatrix(rows){
+  const groups=mdtCompileGroups(rows);
+  const out=[[mdtSheetTitle()].concat(new Array(MDT_SHEET_COLS.length-1).fill('')), MDT_SHEET_COLS.slice()];
+  const meta=[{t:'title'},{t:'head'}];
+  groups.forEach(function(g){
+    out.push([g.date? fmtDate(g.date) : '', g.label].concat(new Array(MDT_SHEET_COLS.length-2).fill('')));
+    meta.push({t:'sep'});
+    g.cases.forEach(function(c,i){
+      /* DISCUSSION = the points brought to the meeting; POST-MDT NOTE = what was
+         agreed. A decision typed in the presenter is the agreement, so it fills the
+         post-MDT column when nothing has been written there by hand. */
+      out.push([String(i+1), c.team||'', c.mrn||'', c.status||'', c.name||'',
+                [c.diagnosis,c.site].filter(Boolean).join('\n'),
+                c.keyFindings||'', c.reason||'',
+                c.postMdtNote||(c.decision||{}).text||'', c.contact||'']);
+      meta.push({t:'case'});
+    });
+  });
+  return {rows:out, meta:meta, groups:groups};
+}
+
+/* ---- Excel. Built by hand (no library) on the same zip writer the registry uses,
+        but with a real styles part so the sheet is readable by the consultants it
+        gets sent to: bold header, wrapped cells, frozen header, column widths. ---- */
+function mdtXlsxStyles(){
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+  '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+
+  '<fonts count="4">'+
+    '<font><sz val="11"/><name val="Calibri"/></font>'+
+    '<font><b/><sz val="13"/><name val="Calibri"/></font>'+
+    '<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>'+
+    '<font><b/><sz val="11"/><name val="Calibri"/></font>'+
+  '</fonts>'+
+  '<fills count="4">'+
+    '<fill><patternFill patternType="none"/></fill>'+
+    '<fill><patternFill patternType="gray125"/></fill>'+
+    '<fill><patternFill patternType="solid"><fgColor rgb="FF0E7490"/><bgColor indexed="64"/></patternFill></fill>'+
+    '<fill><patternFill patternType="solid"><fgColor rgb="FFE2E8F0"/><bgColor indexed="64"/></patternFill></fill>'+
+  '</fills>'+
+  '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>'+
+    '<border><left style="thin"><color rgb="FFBBBBBB"/></left><right style="thin"><color rgb="FFBBBBBB"/></right>'+
+    '<top style="thin"><color rgb="FFBBBBBB"/></top><bottom style="thin"><color rgb="FFBBBBBB"/></bottom><diagonal/></border></borders>'+
+  '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'+
+  '<cellXfs count="5">'+
+    '<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'+
+    '<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>'+
+    '<xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1">'+
+      '<alignment horizontal="center" vertical="center" wrapText="1"/></xf>'+
+    '<xf numFmtId="0" fontId="3" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+    '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1">'+
+      '<alignment vertical="top" wrapText="1"/></xf>'+
+  '</cellXfs>'+
+  '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'+
+  '</styleSheet>';
+}
+function mdtBuildXlsx(rows){
+  const m = mdtSheetMatrix(rows);
+  const STYLE={title:1, head:2, sep:3, case:4};
+  let sheet='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+
+    '<sheetViews><sheetView workbookViewId="0" tabSelected="1">'+
+      '<pane ySplit="2" topLeftCell="A3" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'+
+    '<sheetFormatPr defaultRowHeight="15"/><cols>'+
+    MDT_COL_W.map(function(w,i){ return '<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>'; }).join('')+
+    '</cols><sheetData>';
+  m.rows.forEach(function(row,ri){
+    const s=STYLE[m.meta[ri].t]||0;
+    sheet+='<row r="'+(ri+1)+'"'+(m.meta[ri].t==='head'?' ht="28" customHeight="1"':'')+'>';
+    row.forEach(function(val,ci){
+      sheet+='<c r="'+regColLetter(ci+1)+(ri+1)+'" s="'+s+'" t="inlineStr"><is><t xml:space="preserve">'+
+             regXmlEsc(val)+'</t></is></c>';
+    });
+    sheet+='</row>';
+  });
+  sheet+='</sheetData><mergeCells count="1"><mergeCell ref="A1:'+regColLetter(MDT_SHEET_COLS.length)+'1"/></mergeCells></worksheet>';
+  const ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'+
+    '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'+
+    '<Default Extension="xml" ContentType="application/xml"/>'+
+    '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+
+    '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+
+    '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>';
+  const rels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+    '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+  const wb='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'+
+    '<sheets><sheet name="MDT" sheetId="1" r:id="rId1"/></sheets></workbook>';
+  const wbrels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+    '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'+
+    '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
+  return regZip([
+    {name:'[Content_Types].xml', data:regUtf8(ct)},
+    {name:'_rels/.rels',         data:regUtf8(rels)},
+    {name:'xl/workbook.xml',     data:regUtf8(wb)},
+    {name:'xl/_rels/workbook.xml.rels', data:regUtf8(wbrels)},
+    {name:'xl/styles.xml',       data:regUtf8(mdtXlsxStyles())},
+    {name:'xl/worksheets/sheet1.xml', data:regUtf8(sheet)}
+  ]);
+}
+/* ===== PRESENTING THE MDT =====
+   The order is the compiled sheet's order, so what is on the auditorium screen and
+   what is on the circulated spreadsheet are the same list in the same sequence.
+   Pictures come from the case's registry entry (that is where case files live), which
+   is why the two-way link matters: a board case with no registryId has no pictures. */
+const MDT_PRES_PANELS=[
+  {k:'case',    t:'The case',      ic:'\ud83e\uddec'},
+  {k:'history', t:'Previous MDTs', ic:'\u21bb', thread:true},
+  {k:'imaging', t:'Imaging',       ic:'\ud83e\ude7b', stages:['preop','plan','postop']},
+  {k:'path',    t:'Pathology',     ic:'\ud83d\udd2c', stages:['path']},
+  {k:'clinical',t:'Clinical / theatre', ic:'\ud83d\udcf7', stages:['intraop']},
+  {k:'decision',t:'Decision',      ic:'\u2696\ufe0f'}
+];
+let mdtPresList=[], mdtPresI=0, mdtPresP=0, mdtPresSaveT=null, mdtPresGrid=false;
+
+/* ---- what kind of picture is this? ----
+   A radiology section is not one thing: plain films, MRI, CT, PET-CT and bone scans
+   all live in it and want to be shown apart. An explicit it.mod always wins; failing
+   that the file name is read, and failing that the stage decides. */
+const MDT_MODS=[
+  {k:'PET-CT',    re:/\bpet\b|pet-?ct/i},
+  {k:'CT',        re:/\bct\b|cect|hrct|\bcect\b/i},
+  {k:'MRI',       re:/\bmri\b|\bmr\b|stir|t1|t2/i},
+  {k:'Bone scan', re:/bone\s*scan|scinti|\bmdp\b/i},
+  {k:'Ultrasound',re:/ultraso|\bus\b|doppler|sono/i},
+  {k:'X-ray',     re:/x-?ray|\bxr\b|radiograph|\bap\b|lateral/i},
+  {k:'Angiogram', re:/angio/i}
+];
+const MDT_STAGE_MOD={preop:'Imaging', plan:'Planning', intraop:'Theatre',
+                     postop:'Post-op imaging', path:'Pathology', fu:'Follow-up'};
+function mdtModOf(it){
+  if(it && it.mod) return it.mod;
+  const nm=String((it&&it.name)||'');
+  for(const m of MDT_MODS){ if(m.re.test(nm)) return m.k; }
+  return MDT_STAGE_MOD[(it&&it.stage)||''] || 'Imaging';
+}
+/* Every screen of a case, in order. An image gets a screen of its own — a dozen films
+   cannot share one, and shrinking them to fit is the opposite of what a meeting needs. */
+function mdtSlides(c){
+  const out=[];
+  out.push({k:'case', g:'case', gt:'The case', ic:'\ud83e\uddec'});
+  if(mdtThreadOf(c).length>1) out.push({k:'history', g:'history', gt:'Previous MDTs', ic:'\u21bb'});
+  const all=mdtPresItems(c);
+  const imgs=all.filter(function(it){ return it.kind==='img'; });
+  const groups=[];
+  imgs.forEach(function(it){
+    const g=mdtModOf(it);
+    let e=groups.filter(function(x){ return x.g===g; })[0];
+    if(!e){ e={g:g, items:[]}; groups.push(e); }
+    e.items.push(it);
+  });
+  const rank=function(g){ const i=['X-ray','MRI','CT','PET-CT','Bone scan','Ultrasound','Angiogram',
+    'Imaging','Planning','Theatre','Post-op imaging','Pathology','Follow-up'].indexOf(g); return i<0?99:i; };
+  groups.sort(function(a,b){ return rank(a.g)-rank(b.g); });
+  groups.forEach(function(e){
+    e.items.forEach(function(it,i){
+      out.push({k:'img', it:it, g:e.g, gt:e.g, ic:'\ud83e\ude7b', gi:i+1, gn:e.items.length});
+    });
+  });
+  const docs=all.filter(function(it){ return it.kind!=='img'; });
+  if(docs.length) out.push({k:'reports', g:'reports', gt:'Reports', ic:'\ud83d\udcc4', docs:docs});
+  out.push({k:'decision', g:'decision', gt:'Decision', ic:'\u2696\ufe0f'});
+  return out;
+}
+/* the tab strip: one entry per group, with how many screens are inside it */
+function mdtPresGroups(c){
+  const gs=[], by={};
+  mdtSlides(c).forEach(function(s,i){
+    if(!by[s.g]){ by[s.g]={g:s.g, t:s.gt, ic:s.ic, first:i, n:0}; gs.push(by[s.g]); }
+    by[s.g].n++;
+  });
+  return gs;
+}
+/* the groups ARE the panels now — mdtPresPanels is defined once, below */
+
+/* the flat running order: every filtered case, in sheet order, with its meeting label */
+function mdtPresOrder(){
+  const out=[];
+  mdtCompileGroups(mdtFiltered()).forEach(function(g){
+    g.cases.forEach(function(c,i){ out.push({c:c, group:g.label, gdate:g.date, no:i+1}); });
+  });
+  return out;
+}
+/* the registry entry behind a board case, if it has one */
+function mdtPresRec(c){
+  return (db.registry||[]).filter(function(r){ return r.id===c.registryId; })[0] || null;
+}
+/* every attachment for a case, tagged with the stage it sits in */
+function mdtPresItems(c, stages){
+  const rec=mdtPresRec(c); if(!rec || !rec.cf) return [];
+  const out=[];
+  CF_STAGES.forEach(function(s){
+    if(stages && stages.indexOf(s.k)<0) return;
+    ((rec.cf[s.k]||{}).items||[]).forEach(function(it){ out.push(Object.assign({}, it, {stage:s.k, stageT:s.t})); });
+  });
+  if(!stages || stages.indexOf('preop')>=0){
+    (rec.cf.fu||[]).forEach(function(f){
+      (f.items||[]).forEach(function(it){ out.push(Object.assign({}, it, {stage:'fu', stageT:'Follow-up '+(f.label||'')})); });
+    });
+  }
+  return out;
+}
+/* how ready this device is to present the compiled list, without any network */
+async function mdtPresReady(){
+  const order=mdtPresOrder();
+  let total=0, here=0, inDrive=0, noReg=0;
+  /* two board cases can point at the SAME registry entry — a case discussed twice.
+     Count each physical picture once, or the fetch count is overstated. */
+  const seen={};
+  for(const o of order){
+    if(!o.c.registryId){ noReg++; continue; }
+    for(const it of mdtPresItems(o.c)){
+      if(it.kind!=='img' || seen[it.id]) continue;
+      seen[it.id]=1; total++;
+      const local = await imgGet(it.id).catch(function(){ return null; });
+      if(local && (local.thumb||local.full)) here++;
+      else if(it.drive && it.drive.id) inDrive++;
+    }
+  }
+  return {cases:order.length, total:total, here:here, inDrive:inDrive, missing:total-here, noReg:noReg};
+}
+/* ---- fetching the pictures onto THIS device ----
+   The record already carries every attachment's Drive id, so a second device knows
+   exactly what to ask for. Each original is fetched once, compressed with the app's
+   own compressor and stored in the ordinary image store — after which this device is
+   not "like" the uploading device, it IS one, and the meeting needs no network. */
+async function gdFetchBlob(fileId){
+  const r = await fetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(fileId)+'?alt=media',
+    {headers:{Authorization:'Bearer '+gdToken}});
+  if(r.status===401){ gdToken=null; throw new Error('auth'); }
+  if(!r.ok) throw new Error('Drive '+r.status);
+  return await r.blob();
+}
+let mdtPrepRunning=false;
+async function mdtPrepare(){
+  if(mdtPrepRunning){ toast('Already fetching…'); return; }
+  const st=await mdtPresReady();
+  if(!st.total){ toast('No pictures attached to these cases'); return; }
+  if(!st.missing){ toast('All '+st.here+' pictures are already on this device'); return; }
+  if(!gdConfigured() || !gdSecureOrigin()){
+    toast('\u26a0 '+gdReason()); return;
+  }
+  if(!confirm('Fetch '+st.missing+' picture'+(st.missing===1?'':'s')+' from Google Drive onto this device?\n\n'+
+              'Do this on wi-fi before the meeting. Afterwards the presentation needs no network at all.')) return;
+  if(!await gdEnsure()){ toast('\u26a0 '+gdReason()); return; }
+  mdtPrepRunning=true;
+  let got=0, failed=0;
+  const done={};
+  try{
+    for(const o of mdtPresOrder()){
+      if(!o.c.registryId) continue;
+      for(const it of mdtPresItems(o.c)){
+        if(it.kind!=='img' || !it.drive || !it.drive.id || done[it.id]) continue;
+        done[it.id]=1;
+        const local=await imgGet(it.id).catch(function(){ return null; });
+        if(local && (local.thumb||local.full)) continue;
+        try{
+          const blob=await gdFetchBlob(it.drive.id);
+          const r=await compressImage(blob);
+          await imgPut(it.id, {full:r.full, thumb:r.thumb, name:it.name||'', addedAt:new Date().toISOString()});
+          got++;
+          toast('Fetched '+got+' of '+st.missing+'\u2026');
+        }catch(e){
+          if(String(e.message)==='auth'){ toast('\u26a0 Google sign-in expired — press Prepare again'); break; }
+          failed++;
+        }
+      }
+    }
+  } finally { mdtPrepRunning=false; }
+  toast(got+' picture'+(got===1?'':'s')+' now on this device'+(failed?' \u00b7 '+failed+' could not be fetched':''));
+  mdtPresPaintReady();
+}
+async function mdtPresPaintReady(){
+  const el=$('mdtPresReady'); if(!el) return;
+  const st=await mdtPresReady();
+  const bits=[st.cases+' case'+(st.cases===1?'':'s')];
+  if(st.total) bits.push(st.here+' of '+st.total+' pictures on this device');
+  else bits.push('no pictures attached');
+  if(st.noReg) bits.push(st.noReg+' not linked to a registry entry');
+  el.textContent = bits.join(' \u00b7 ');
+  el.classList.toggle('warn-txt', st.missing>0 || st.noReg>0);
+  const btn=$('mdtPrepBtn');
+  if(btn) btn.classList.toggle('hidden', st.missing===0);
+  if(btn) btn.textContent='\u2b07 Fetch '+st.missing+' picture'+(st.missing===1?'':'s');
+}
+/* ---- the presenter itself ---- */
+function mdtPresEl(){
+  let el=$('mdtPres');
+  if(!el){
+    el=document.createElement('div'); el.id='mdtPres'; el.className='mdt-pres hidden';
+    el.innerHTML='<div class="mp-bar"><span class="mp-crumb" id="mpCrumb"></span>'+
+      '<span style="flex:1"></span>'+
+      '<span class="mp-tabs" id="mpTabs"></span>'+
+      '<span style="flex:1"></span>'+
+      '<span class="mp-pos" id="mpPos"></span>'+
+      '<button class="mp-x" onclick="mdtPresClose()" title="Close (Esc)">\u2715</button></div>'+
+      '<div class="mp-body" id="mpBody"></div>'+
+      '<div class="mp-foot"><button class="mp-nav" onclick="mdtPresStep(-1)">\u2039 Back</button>'+
+      '<span class="mp-hint"><span class="mp-slide" id="mpSlidePos"></span>'+
+        '\u2190 \u2192 move \u00b7 \u2191 \u2193 change case \u00b7 G all images \u00b7 Esc close</span>'+
+      '<button class="mp-nav" onclick="mdtPresStep(1)">Next \u203a</button></div>';
+    document.body.appendChild(el);
+  }
+  return el;
+}
+/* ===== CHOOSING WHAT TO PRESENT =====
+   Pressing Present used to start at the first case the filter happened to produce,
+   which for a year's board is the oldest one. You now say which meeting, and which
+   of its cases, before anything opens. */
+let mdtPickMtg='', mdtPickSet=null;
+function mdtPresPickEl(){
+  let el=$('mdtPickWrap');
+  if(!el){
+    el=document.createElement('div'); el.id='mdtPickWrap'; el.className='mdt-pick hidden';
+    el.innerHTML='<div class="mk-card"><div class="mk-h">Present\u2026'+
+      '<button class="mk-x" onclick="mdtPresPickClose()">\u2715</button></div>'+
+      '<div class="mk-mtg" id="mkMtg"></div>'+
+      '<div class="mk-tools"><button class="btn btn-ghost btn-sm" onclick="mdtPickAll(true)">Select all</button>'+
+        '<button class="btn btn-ghost btn-sm" onclick="mdtPickAll(false)">None</button>'+
+        '<span class="muted small" id="mkCount"></span></div>'+
+      '<div class="mk-list" id="mkList"></div>'+
+      '<div class="mk-foot"><button class="btn btn-ghost" onclick="mdtPresPickClose()">Cancel</button>'+
+        '<button class="btn btn-primary" id="mkGo" onclick="mdtPickStart()">\u25b6 Present</button></div></div>';
+    document.body.appendChild(el);
+  }
+  return el;
+}
+function mdtPresPickClose(){ const el=$('mdtPickWrap'); if(el) el.classList.add('hidden'); }
+function mdtPresPick(){
+  const order=mdtPresOrder();
+  if(!order.length){ toast('Nothing to present \u2014 widen the date range or clear the search'); return; }
+  /* default to the most recent meeting in view, not the oldest */
+  const groups=[]; order.forEach(function(o){ if(groups.indexOf(o.group)<0) groups.push(o.group); });
+  const dated=mdtCompileGroups(mdtFiltered());
+  mdtPickMtg = dated.length ? dated[dated.length-1].label : 'all';
+  mdtPickSet = null;
+  mdtPresPickEl().classList.remove('hidden');
+  mdtPickRender(true, true);
+}
+function mdtPickRender(reselect, scrollToPick){
+  const order=mdtPresOrder();
+  const groups=[]; order.forEach(function(o){
+    if(!groups.filter(function(g){ return g.label===o.group; }).length)
+      groups.push({label:o.group, date:o.gdate, n:0});
+    groups.filter(function(g){ return g.label===o.group; })[0].n++;
+  });
+  if(reselect || !mdtPickSet){
+    mdtPickSet={};
+    order.forEach(function(o){ if(mdtPickMtg==='all' || o.group===mdtPickMtg) mdtPickSet[o.c.id]=1; });
+  }
+  const mk=$('mkMtg');
+  mk.innerHTML='<button type="button" class="chip'+(mdtPickMtg==='all'?' on':'')+'" onclick="mdtPickMeeting(\'all\')">'+
+      'Everything in view ('+order.length+')</button>'+
+    groups.map(function(g){
+      return '<button type="button" class="chip'+(mdtPickMtg===g.label?' on':'')+'" '+
+        'onclick="mdtPickMeeting('+JSON.stringify(g.label).replace(/"/g,'&quot;')+')">'+
+        esc(g.label)+(g.date?' \u00b7 '+fmtDate(g.date):'')+' ('+g.n+')</button>';
+    }).join('');
+  $('mkList').innerHTML=order.map(function(o){
+    const c=o.c, on=!!mdtPickSet[c.id];
+    return '<label class="mk-i'+(on?' on':'')+'">'+
+      '<input type="checkbox" '+(on?'checked ':'')+'onchange="mdtPickToggle(\''+c.id+'\')">'+
+      '<span class="mk-b"><b>'+esc(c.name||'\u2014')+'</b>'+
+        (c.mrn?' <span class="muted small">'+esc(c.mrn)+'</span>':'')+
+        '<span class="mk-s">'+esc(o.group)+' \u00b7 case '+o.no+
+        (c.diagnosis?' \u00b7 '+esc(c.diagnosis):'')+'</span></span></label>';
+  }).join('');
+  mdtPickCount();
+  /* open on what is actually selected — landing on unticked cases from an older
+     meeting reads as though nothing is chosen */
+  if(scrollToPick){
+    const host=$('mkList'), first=host.querySelector('.mk-i.on');
+    if(first) host.scrollTop = Math.max(0, first.offsetTop - host.offsetTop - 6);
+    else host.scrollTop = 0;
+  }
+}
+function mdtPickMeeting(label){ mdtPickMtg=label; mdtPickRender(true, true); }
+function mdtPickToggle(id){
+  mdtPickSet=mdtPickSet||{};
+  if(mdtPickSet[id]) delete mdtPickSet[id]; else mdtPickSet[id]=1;
+  mdtPickRender(false);
+}
+function mdtPickAll(on){
+  mdtPickSet={};
+  if(on) mdtPresOrder().forEach(function(o){ mdtPickSet[o.c.id]=1; });
+  mdtPickRender(false);
+}
+function mdtPickCount(){
+  const n=Object.keys(mdtPickSet||{}).length;
+  const el=$('mkCount'); if(el) el.textContent=n+' case'+(n===1?'':'s')+' selected';
+  const go=$('mkGo'); if(go){ go.disabled=!n; go.textContent='\u25b6 Present '+n+' case'+(n===1?'':'s'); }
+}
+function mdtPickStart(){
+  const ids=Object.keys(mdtPickSet||{});
+  if(!ids.length){ toast('Tick at least one case'); return; }
+  mdtPresPickClose();
+  mdtPresOpen(ids);
+}
+/* present everything in view, but start at this case */
+function mdtPresFrom(id){
+  const order=mdtPresOrder();
+  if(!order.length) return;
+  mdtPresOpen(null, id);
+}
+function mdtPresOpen(ids, startAt){
+  const only = ids && ids.length ? ids : null;
+  mdtPresList = mdtPresOrder().filter(function(o){ return !only || only.indexOf(o.c.id)>=0; });
+  if(!mdtPresList.length){ toast('Nothing to present — widen the date range or clear the search'); return; }
+  mdtPresI=0; mdtPresP=0; mdtPresGrid=false;
+  if(startAt){
+    const i=mdtPresList.findIndex(function(o){ return o.c.id===startAt; });
+    if(i>=0) mdtPresI=i;
+  }
+  mdtPresEl().classList.remove('hidden');
+  document.body.classList.add('presenting');
+  document.addEventListener('keydown', mdtPresKey, true);
+  mdtPresPaint();
+}
+function mdtPresClose(){
+  mdtPresFlush();
+  const el=$('mdtPres'); if(el) el.classList.add('hidden');
+  document.body.classList.remove('presenting');
+  document.removeEventListener('keydown', mdtPresKey, true);
+  if(typeof mdtRenderList==='function') mdtRenderList();
+}
+function mdtPresKey(e){
+  if($('mdtPres') && $('mdtPres').classList.contains('hidden')) return;
+  const inBox = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target||{}).tagName||'');
+  if(e.key==='Escape'){ e.preventDefault(); mdtPresClose(); return; }
+  if(inBox) return;                       // never steal keys from the decision box
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); mdtPresStep(1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); mdtPresStep(-1); }
+  else if(e.key==='ArrowDown'){ e.preventDefault(); mdtPresCase(1); }
+  else if(e.key==='ArrowUp'){ e.preventDefault(); mdtPresCase(-1); }
+  else if(e.key==='g'||e.key==='G'){ e.preventDefault(); mdtPresToggleGrid(); }
+}
+function mdtPresStep(d){
+  mdtPresFlush();
+  const nS=mdtSlides(mdtPresCurrent()).length;
+  let s=mdtPresP+d;
+  if(s<0){
+    if(mdtPresI===0){ s=0; }
+    else { mdtPresI--; s=mdtSlides(mdtPresCurrent()).length-1; }
+  } else if(s>=nS){
+    if(mdtPresI>=mdtPresList.length-1){ s=nS-1; } else { mdtPresI++; s=0; }
+  }
+  mdtPresP=s; mdtPresGrid=false; mdtPresPaint();
+}
+function mdtPresCase(d){
+  mdtPresFlush();
+  const i=Math.min(mdtPresList.length-1, Math.max(0, mdtPresI+d));
+  if(i===mdtPresI) return;
+  mdtPresI=i; mdtPresP=0; mdtPresGrid=false; mdtPresPaint();
+}
+function mdtPresGo(s){ mdtPresFlush(); mdtPresP=s; mdtPresGrid=false; mdtPresPaint(); }
+function mdtPresToggleGrid(){ mdtPresGrid=!mdtPresGrid; mdtPresPaint(); }
+/* the decision is typed live, in front of the room, and saved as it is typed */
+function mdtPresFlush(){
+  const ta=$('mpDecision'); if(!ta) return;
+  const cur=mdtPresList[mdtPresI]; if(!cur) return;
+  const c=mdtCases().filter(function(x){ return x.id===cur.c.id; })[0]; if(!c) return;
+  const txt=String(ta.value||'');
+  if(txt===String((c.decision||{}).text||'')) return;
+  c.decision=c.decision||{};
+  c.decision.text=txt;
+  if(txt.trim() && !c.decision.date) c.decision.date=localISO();
+  if(txt.trim() && c.stage!=='closed') c.stage='decided';
+  syncTouch(c); persist();
+  const tick=$('mpSaved'); if(tick){ tick.textContent='saved'; setTimeout(function(){ if(tick) tick.textContent=''; }, 1400); }
+}
+function mdtPresDecInput(){
+  clearTimeout(mdtPresSaveT);
+  mdtPresSaveT=setTimeout(mdtPresFlush, 900);
+}
+function mdtPresPanels(c){ return mdtPresGroups(c); }
+function mdtPresCurrent(){
+  const cur=mdtPresList[mdtPresI]; if(!cur) return null;
+  return mdtCases().filter(function(x){ return x.id===cur.c.id; })[0] || cur.c;
+}
+function mdtPresPaint(){
+  const cur=mdtPresList[mdtPresI]; if(!cur) return;
+  const c=mdtPresCurrent() || cur.c;
+  const slides=mdtSlides(c);
+  if(mdtPresP>=slides.length) mdtPresP=slides.length-1;
+  if(mdtPresP<0) mdtPresP=0;
+  const sl=slides[mdtPresP];
+  const groups=mdtPresGroups(c);
+  $('mpCrumb').innerHTML='<b>'+esc(c.name||'\u2014')+'</b>'+
+    (c.mrn?' <span class="mp-dim">'+esc(c.mrn)+'</span>':'')+
+    (c.team?' <span class="mp-pill">Team '+esc(c.team)+'</span>':'')+
+    (c.status?' <span class="mp-pill">'+esc(c.status)+'</span>':'');
+  $('mpPos').textContent = cur.group+' \u00b7 case '+cur.no+' \u00b7 '+(mdtPresI+1)+' of '+mdtPresList.length;
+  $('mpTabs').innerHTML = groups.map(function(g){
+    const on = g.g===sl.g;
+    return '<button class="mp-t'+(on?' on':'')+'" onclick="mdtPresGo('+g.first+')">'+g.ic+' '+esc(g.t)+
+           (g.n>1?' <span class="mp-n">'+g.n+'</span>':'')+'</button>';
+  }).join('');
+  const body=$('mpBody');
+  if(sl.k==='history'){
+    body.innerHTML='<div class="mp-hist">'+mdtTimelineHTML(c,{dark:true,always:true})+'</div>';
+  } else if(sl.k==='case'){
+    const pos=mdtThreadPos(c);
+    body.innerHTML='<div class="mp-cols"><div class="mp-txt">'+
+      (pos.n>1?'<div class="mp-again">\u21bb Discussion '+pos.i+' of '+pos.n+' for this patient</div>':'')+
+      mpBlock('Diagnosis', [c.diagnosis, c.site].filter(Boolean).join(' \u2014 '))+
+      mpBlock('Age / sex', c.ageSex)+
+      mpBlock('Why it is here', c.reason)+
+      mpBlock('Key findings', c.keyFindings)+
+      (mdtPresItems(c).length ? ''
+        : '<div class="mp-nofiles">No pictures or reports on file'+
+          (c.registryId?'':' \u2014 this case is not linked to a registry entry')+'</div>')+
+      '</div></div>';
+  } else if(sl.k==='reports'){
+    body.innerHTML='<div class="mp-reports">'+
+      '<div class="mp-lab">'+sl.docs.length+' report'+(sl.docs.length===1?'':'s')+' on file</div>'+
+      sl.docs.map(function(it){
+        const link=(it.drive&&it.drive.link)||'';
+        return '<div class="mp-doc">'+
+          '<span class="md-ic">'+(/pdf/i.test(it.mime||it.name||'')?'\ud83d\udcd5':'\ud83d\udcc4')+'</span>'+
+          '<div class="md-b"><div class="md-n">'+esc(it.name||'document')+'</div>'+
+          '<div class="md-s">'+esc(it.stageT||'')+(it.bytes?' \u00b7 '+fmtBytes(it.bytes):'')+'</div></div>'+
+          (link?'<a class="md-o" href="'+esc(link)+'" target="_blank" rel="noopener">Open</a>'
+               :'<span class="md-o md-off">on the uploading device</span>')+
+        '</div>';
+      }).join('')+'</div>';
+  } else if(sl.k==='decision'){
+    body.innerHTML='<div class="mp-dec">'+
+      mpBlock('Question for the meeting', c.reason)+
+      '<label class="mp-lab">Decision <span class="mp-saved" id="mpSaved"></span></label>'+
+      '<textarea id="mpDecision" class="mp-ta" placeholder="Type what the meeting agrees \u2014 it saves as you type" '+
+        'oninput="mdtPresDecInput()" onblur="mdtPresFlush()"></textarea>'+
+      mpBlock('Post-MDT note', c.postMdtNote)+'</div>';
+    $('mpDecision').value=(c.decision||{}).text||'';
+  } else if(sl.k==='img'){
+    const grp=slides.filter(function(x){ return x.k==='img' && x.g===sl.g; });
+    if(mdtPresGrid){
+      body.innerHTML='<div class="mp-sheet"><div class="mp-lab">'+esc(sl.gt)+' \u00b7 all '+grp.length+
+        ' \u00b7 press G for one at a time</div><div class="mp-grid" id="mpImgs">'+
+        grp.map(function(x){
+          return '<figure class="mp-gf" onclick="mdtPresGo('+slides.indexOf(x)+')">'+
+            '<img data-img="'+esc(x.it.id)+'" alt="">'+
+            '<figcaption>'+x.gi+'. '+esc(x.it.name||'')+'</figcaption></figure>';
+        }).join('')+'</div></div>';
+    } else {
+      const note = sl.g==='Pathology' ? (c.pathology||{}).findings : (c.imaging||{}).findings;
+      body.innerHTML='<div class="mp-one" id="mpImgs">'+
+        '<div class="mp-stage"><img class="mp-big" data-img="'+esc(sl.it.id)+'" alt=""></div>'+
+        '<div class="mp-cap"><b>'+esc(sl.gt)+' '+sl.gi+' of '+sl.gn+'</b>'+
+          (sl.it.name?' \u00b7 '+esc(sl.it.name):'')+
+          (sl.it.stageT?' \u00b7 '+esc(sl.it.stageT):'')+
+          (note?'<span class="mp-note">'+esc(String(note).split('\n')[0])+'</span>':'')+
+        '</div>'+
+        (grp.length>1 ? '<div class="mp-strip">'+grp.map(function(x){
+            return '<img class="mp-th'+(x===sl?' on':'')+'" data-img="'+esc(x.it.id)+'" '+
+                   'onclick="mdtPresGo('+slides.indexOf(x)+')" alt="" title="'+esc(x.it.name||'')+'">';
+          }).join('')+'</div>' : '')+
+      '</div>';
+    }
+    mpPaintImgs();
+  }
+  const f=$('mpSlidePos');
+  if(f) f.textContent=(mdtPresP+1)+' / '+slides.length;
+}
+function mpBlock(label, text){
+  if(!String(text||'').trim()) return '';
+  return '<div class="mp-b"><div class="mp-lab">'+esc(label)+'</div><div class="mp-v">'+
+    esc(String(text)).replace(/\n/g,'<br>')+'</div></div>';
+}
+function mpPaintImgs(){
+  Array.prototype.slice.call(document.querySelectorAll('#mpImgs img[data-img]')).forEach(function(el){
+    imgGet(el.getAttribute('data-img')).then(function(r){
+      el.src=(r && (r.full||r.thumb)) || CF_ELSEWHERE;
+      if(!r) el.classList.add('mp-miss');
+    }).catch(function(){ el.src=CF_ELSEWHERE; el.classList.add('mp-miss'); });
+  });
+}
+/* ===== IMPORTING AN EXISTING MDT SPREADSHEET =====
+   The doctor's own sheet, as it actually is: a title row, a header row, then for each
+   meeting a separator row (a date in column A, "MDM n" in column B) followed by its
+   cases numbered from 1. Everything else in the file — footer notes, stray text — is
+   ignored rather than guessed at. */
+const MDT_STATUS_MAP={preop:'Pre-op', postop:'Post-op', surveillance:'Surveillance', followup:'Surveillance'};
+function mdtNormStatus(v){
+  const k=String(v==null?'':v).toLowerCase().replace(/[^a-z]/g,'');
+  return MDT_STATUS_MAP[k]||'';
+}
+function mdtCleanNum(v){                       /* Excel hands back 1594253.0 and 1.0 */
+  const s=String(v==null?'':v).trim();
+  return /^\d+\.0+$/.test(s) ? s.replace(/\.0+$/,'') : s;
+}
+function mdtParseDate(v){
+  if(v==null || v==='') return '';
+  const s=String(v).trim();
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+  let m=s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})$/);       /* the doctor writes DD-MM-YYYY */
+  if(m) return m[3]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[1]).padStart(2,'0');
+  if(/^\d+(\.\d+)?$/.test(s)) return excelSerialToISO(parseFloat(s));
+  return '';
+}
+function mdtSwapDayMonth(iso){
+  const m=String(iso||'').match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return '';
+  if(+m[3]>12) return '';                       /* the day cannot be a month — no swap possible */
+  return m[1]+'-'+m[3]+'-'+m[2];
+}
+/* turn the sheet into {meetings, warnings} without touching db */
+function mdtParseSheet(rows){
+  const warn=[], meetings=[];
+  let started=false, cur=null;
+  (rows||[]).forEach(function(r){
+    const a=String((r[0]==null?'':r[0])).trim(), b=String((r[1]==null?'':r[1])).trim();
+    if(!started){ if(a.toLowerCase().indexOf('serial')===0) started=true; return; }
+    const mm=b.match(/^MDM\s*(\d+)/i);
+    if(mm){ cur={no:+mm[1], label:'MDM '+(+mm[1]), rawDate:r[0], date:mdtParseDate(r[0]), cases:[]}; meetings.push(cur); return; }
+    if(!cur || !/^\d+(\.\d+)?$/.test(a)) return;          /* footers and stray text are ignored */
+    const status=mdtNormStatus(r[3]), rawStatus=String(r[3]==null?'':r[3]).trim();
+    if(rawStatus && !status) warn.push('Row for "'+String(r[4]||'').trim()+'": status "'+rawStatus+'" not understood — left blank');
+    cur.cases.push({ serial:parseInt(a,10), team:String(r[1]==null?'':r[1]).trim(), mrn:mdtCleanNum(r[2]),
+      status:status, statusRaw:(rawStatus && !status)?rawStatus:'', name:String(r[4]==null?'':r[4]).trim(),
+      diagnosis:String(r[5]==null?'':r[5]).trim(), keyFindings:String(r[6]==null?'':r[6]).trim(),
+      discussion:String(r[7]==null?'':r[7]).trim(), post:String(r[8]==null?'':r[8]).trim(),
+      contact:String(r[9]==null?'':r[9]).trim() });
+  });
+  /* Excel reads 09-01-2025 as 1 Sep. If a meeting's date breaks the running order and
+     swapping day for month puts it back, take the swap and say so out loud. */
+  meetings.sort(function(a,b){ return a.no-b.no; });
+  for(let i=0;i<meetings.length;i++){
+    const m=meetings[i]; if(!m.date) continue;
+    const prev=meetings.slice(0,i).filter(function(x){ return x.date; }).pop();
+    const next=meetings.slice(i+1).filter(function(x){ return x.date; })[0];
+    const bad=(prev && m.date<prev.date) || (next && m.date>next.date);
+    if(!bad) continue;
+    const sw=mdtSwapDayMonth(m.date);
+    const good=sw && (!prev || sw>=prev.date) && (!next || sw<=next.date);
+    if(good){ warn.push(m.label+': date read as '+fmtDate(m.date)+' but that is out of order — using '+fmtDate(sw)); m.date=sw; }
+    else warn.push(m.label+': date '+fmtDate(m.date)+' is out of order — check it');
+  }
+  meetings.forEach(function(m){ if(!m.date) warn.push(m.label+': no date in the file — add it in Meetings'); });
+  return {meetings:meetings, warnings:warn};
+}
+function mdtImportIdFor(mNo, serial){ return 'mdtc_mdm'+mNo+'_'+serial; }
+function mdtImportMtgId(mNo){ return 'mtg_mdm'+mNo; }
+/* write the parsed sheet in. Existing ids are SKIPPED, never overwritten, so a second
+   run adds only what is new and can never clobber an edit made in the app. */
+function mdtImportApply(parsed){
+  const have={}; mdtCases().forEach(function(c){ have[c.id]=1; });
+  const haveM={}; mdtMeetings().forEach(function(m){ haveM[m.id]=1; });
+  const undo=[], addedC=[], addedM=[];
+  parsed.meetings.forEach(function(m){
+    const mid=mdtImportMtgId(m.no);
+    if(!haveM[mid]){
+      const mtg={id:mid, no:m.no, date:m.date||'', chair:'', title:m.label, cases:[], minutes:'',
+                 by:byTag(), imported:'GTTH sheet', createdAt:new Date().toISOString()};
+      syncTouch(mtg); db.mdtMeetings.push(mtg); addedM.push(mtg);
+      undo.push(undoItem('mdtMeetings', null, mtg));
+    }
+    m.cases.forEach(function(k){
+      const id=mdtImportIdFor(m.no, k.serial);
+      if(have[id]) return;
+      const c=Object.assign(mdtBlank(), {
+        id:id, date:m.date||localISO(), team:k.team, mrn:k.mrn, status:k.status, name:k.name,
+        diagnosis:k.diagnosis, keyFindings:k.keyFindings, postMdtNote:k.post, contact:k.contact,
+        reason:k.discussion, stage:(k.post||k.discussion)?'decided':'submitted',
+        by:byTag(), imported:'GTTH sheet', sheetNo:k.serial,
+        decision:{text:k.post||'', date:m.date||'', intent:'', present:'', meetingId:mdtImportMtgId(m.no)}
+      });
+      if(k.statusRaw) c.statusNote=k.statusRaw;      /* nothing from the file is thrown away */
+      syncTouch(c); db.mdt.push(c); addedC.push(c);
+      undo.push(undoItem('mdt', null, c));
+    });
+  });
+  addedM.forEach(function(mtg){
+    mtg.cases = addedC.filter(function(c){ return (c.decision||{}).meetingId===mtg.id; }).map(function(c){ return c.id; });
+  });
+  if(undo.length){
+    logActivity('add','MDT import', addedC.length+' case'+(addedC.length===1?'':'s')+' from a spreadsheet', undoPack(undo));
+    persist();
+  }
+  return {cases:addedC.length, meetings:addedM.length};
+}
+async function mdtImportXlsx(file){
+  if(typeof DecompressionStream==='undefined'){ toast('\u26a0 This browser can\'t open .xlsx — save it as CSV and import that'); return; }
+  let rows;
+  try{ rows = await mdtSheetRows(file); }
+  catch(e){ toast('\u26a0 Could not read that Excel file'); return; }
+  const parsed = mdtParseSheet(rows);
+  const totalC = parsed.meetings.reduce(function(a,m){ return a+m.cases.length; }, 0);
+  if(!totalC){ toast('\u26a0 No MDT cases found — the sheet needs a SERIAL # header row and MDM separator rows'); return; }
+  const have={}; mdtCases().forEach(function(c){ have[c.id]=1; });
+  let fresh=0;
+  parsed.meetings.forEach(function(m){ m.cases.forEach(function(k){ if(!have[mdtImportIdFor(m.no,k.serial)]) fresh++; }); });
+  const skip=totalC-fresh;
+  const msg='Found '+parsed.meetings.length+' meeting'+(parsed.meetings.length===1?'':'s')+
+    ' and '+totalC+' case'+(totalC===1?'':'s')+'.\n\n'+
+    'Will add: '+fresh+'\n'+(skip?('Already imported, will be left alone: '+skip+'\n'):'')+
+    (parsed.warnings.length?('\nWorth knowing:\n\u2022 '+parsed.warnings.slice(0,8).join('\n\u2022 ')+
+      (parsed.warnings.length>8?('\n\u2022 …and '+(parsed.warnings.length-8)+' more'):'')+'\n'):'')+
+    '\nImport now? (one Undo in \ud83d\udd14 Notifications reverses the whole thing)';
+  if(!fresh){ toast('Everything in that file is already on the board'); return; }
+  if(!confirm(msg)) return;
+  const r=mdtImportApply(parsed);
+  mdtShowList();
+  toast('Imported '+r.cases+' case'+(r.cases===1?'':'s')+' and '+r.meetings+' meeting'+(r.meetings===1?'':'s'));
+}
+/* read any .xlsx into a plain row matrix (same approach as the registry importer) */
+async function mdtSheetRows(file){
+  const buf=new Uint8Array(await file.arrayBuffer());
+  const files=await regUnzip(buf); const P=new DOMParser(); const dec=new TextDecoder();
+  let shared=[];
+  if(files['xl/sharedStrings.xml']){
+    const d=P.parseFromString(dec.decode(files['xl/sharedStrings.xml']),'application/xml');
+    shared=Array.prototype.slice.call(d.getElementsByTagName('si')).map(function(si){
+      return Array.prototype.slice.call(si.getElementsByTagName('t')).map(function(t){ return t.textContent; }).join('');
+    });
+  }
+  const sn=Object.keys(files).filter(function(x){ return /^xl\/worksheets\/sheet\d+\.xml$/.test(x); }).sort()[0];
+  if(!sn) throw new Error('no sheet');
+  const doc=P.parseFromString(dec.decode(files[sn]),'application/xml');
+  const rows=[];
+  Array.prototype.slice.call(doc.getElementsByTagName('row')).forEach(function(row){
+    const arr=[];
+    Array.prototype.slice.call(row.getElementsByTagName('c')).forEach(function(c){
+      const ref=(c.getAttribute('r')||'').replace(/[0-9]/g,'');
+      const col=ref?regColToIdx(ref):arr.length;
+      const t=c.getAttribute('t'); let val='';
+      if(t==='inlineStr'){ const is=c.getElementsByTagName('is')[0]; val=is?is.textContent:''; }
+      else { const v=c.getElementsByTagName('v')[0]; const raw=v?v.textContent:'';
+             val = (t==='s') ? (shared[+raw]||'') : raw; }
+      arr[col]=val;
+    });
+    rows.push(arr);
+  });
+  return rows;
+}
+function mdtImportPick(f){ if(f) mdtImportXlsx(f); const el=$('mdtImpFile'); if(el) el.value=''; }
+function mdtExportXlsx(){
+  const rows=mdtFiltered();
+  if(!rows.length){ toast('Nothing to compile — widen the date range or clear the search'); return; }
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([mdtBuildXlsx(rows)],
+    {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+  a.download='MDT-'+localISO()+'.xlsx'; a.click(); URL.revokeObjectURL(a.href);
+  toast('Compiled '+rows.length+' case'+(rows.length===1?'':'s')+' to Excel');
+}
+/* ---- the same sheet as an A4 printout / PDF, on the practice letterhead ---- */
+function mdtCompileHtml(rows){
+  const m=mdtSheetMatrix(rows);
+  let h='<table class="mdt-sheet"><thead><tr>'+
+    MDT_SHEET_COLS.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('')+'</tr></thead><tbody>';
+  m.rows.forEach(function(row,ri){
+    const t=m.meta[ri].t;
+    if(t==='title'||t==='head') return;
+    if(t==='sep'){
+      h+='<tr class="ms-sep"><td colspan="'+MDT_SHEET_COLS.length+'"><b>'+esc(row[1])+'</b>'+
+         (row[0]?' &nbsp;·&nbsp; '+esc(row[0]):'')+'</td></tr>'; return;
+    }
+    h+='<tr>'+row.map(function(v){ return '<td>'+esc(String(v||'')).replace(/\n/g,'<br>')+'</td>'; }).join('')+'</tr>';
+  });
+  return h+'</tbody></table>';
+}
+function mdtCompilePrint(){
+  const rows=mdtFiltered();
+  if(!rows.length){ toast('Nothing to compile — widen the date range or clear the search'); return; }
+  printContent(mdtSheetTitle(), mdtCompileHtml(rows), true);
+  /* ten columns do not fit portrait. Append the rotation to the page style that
+     printContent has just written, and take it off again afterwards so no other
+     print path inherits it. */
+  const st=pageStyleEl(); const keep=st.textContent;
+  st.textContent = keep + '\n@page{size:A4 landscape}';
+  const restore=function(){ st.textContent=keep; window.removeEventListener('afterprint',restore); };
+  window.addEventListener('afterprint', restore);
+  setTimeout(function(){ if(st.textContent!==keep) restore(); }, 60000);
+}
+
 function mdtBlank(){
   return {id:uid('mdtc'), date:localISO(), stage:'submitted', urgency:'routine',
           name:'', mrn:'', ageSex:'', diagnosis:'', site:'', reason:'', by:byTag(),
+          team:'', status:'', keyFindings:'', postMdtNote:'', contact:'',
           patientId:null, registryId:'',
           imaging:{status:'pending',by:'',date:'',modality:'',findings:''},
           pathology:{status:'pending',by:'',date:'',specimen:'',grade:'',findings:''},
@@ -6143,6 +7354,8 @@ function mdtFill(c){
   g('mdtName',c.name); g('mdtMrn',c.mrn); g('mdtAgeSex',c.ageSex);
   g('mdtDx',c.diagnosis); g('mdtSite',c.site); g('mdtUrgency',c.urgency||'routine');
   g('mdtDate',c.date||localISO()); g('mdtBy',c.by||byTag()); g('mdtReason',c.reason);
+  g('mdtTeam',c.team); g('mdtStatus',c.status); g('mdtContact',c.contact);
+  g('mdtKeyFind',c.keyFindings); g('mdtPostNote',c.postMdtNote);
   g('mdtStage',c.stage||'submitted');
   const im=c.imaging||{}, pa=c.pathology||{}, de=c.decision||{};
   g('mdtImgStatus',im.status||'pending'); g('mdtImgBy',im.by); g('mdtImgDate',im.date);
@@ -6154,6 +7367,8 @@ function mdtFill(c){
   mtgSelFill(de.meetingId||'');
   mdtActFill(c.actions||[]);
   mdtStageNote();
+  if(typeof mdtPaintTimeline==='function') mdtPaintTimeline();
+  if(typeof mdtAttachRender==='function') mdtAttachRender();
   if(typeof hxPaint==='function'){ hxPaint('mdtImgMod'); hxPaint('mdtPresent'); }
   if(typeof railTicks==='function' && RAILS['mdt']) railTicks('mdt');
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
@@ -6165,6 +7380,8 @@ function mdtCollect(){
     date:v('mdtDate')||localISO(), stage:v('mdtStage')||'submitted', urgency:v('mdtUrgency')||'routine',
     name:v('mdtName'), mrn:v('mdtMrn'), ageSex:v('mdtAgeSex'),
     diagnosis:v('mdtDx'), site:v('mdtSite'), reason:v('mdtReason'), by:v('mdtBy'),
+    team:v('mdtTeam'), status:v('mdtStatus'), contact:v('mdtContact'),
+    keyFindings:v('mdtKeyFind'), postMdtNote:v('mdtPostNote'),
     patientId: mdtPatientId||null, registryId: (($('mdtRegSel')||{}).value)||base.registryId||'',
     imaging:{status:v('mdtImgStatus'), by:v('mdtImgBy'), date:v('mdtImgDate'),
              modality: (typeof tbGet==='function'? tbGet('mdtImgMod') : v('mdtImgMod')), findings:v('mdtImgFind')},
@@ -6277,17 +7494,93 @@ function mdtRegSelFill(sel){
   el.value = sel||'';
   const note=$('mdtRegNote');
   if(note) note.textContent = sel ? 'Linked to a registry case' : '';
+  mdtRegBtns(sel);
+  if(typeof mdtAttachRender==='function') mdtAttachRender();
+}
+/* the link is two-way: show "open it" when there is one, "add it" when there isn't */
+function mdtRegBtns(regId){
+  const has = !!(regId && (db.registry||[]).some(function(r){ return r.id===regId; }));
+  const o=$('mdtRegOpenBtn'), m=$('mdtRegMakeBtn');
+  if(o) o.classList.toggle('hidden', !has);
+  if(m) m.classList.toggle('hidden', has);
+}
+function mdtRegistryIdOf(c){ return (c && c.registryId) || ''; }
+/* every MDT case that points at this registry entry (newest first) */
+function mdtForRegistry(regId){
+  return mdtCases().filter(function(c){ return c.registryId===regId; })
+                   .sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); });
+}
+/* MDT case -> the registry entry it is linked to */
+function mdtOpenRegistry(){
+  const id = (($('mdtRegSel')||{}).value)||'';
+  const r = (db.registry||[]).filter(function(x){ return x.id===id; })[0];
+  if(!r){ toast('No registry entry is linked to this case yet'); return; }
+  showTab('registry'); regEdit(r.id);
+}
+/* registry entry -> its MDT case (or a new one if there isn't one) */
+function mdtOpenForRegistry(regId){
+  const cs = mdtForRegistry(regId);
+  if(!cs.length){ mdtFromRegistry(regId); return; }
+  showTab('mdt'); mdtEdit(cs[0].id);
+}
+/* MDT case -> start a registry entry, carrying across what maps cleanly.
+   It opens the registry form pre-filled rather than saving behind your back, so
+   registry numbering, validation and the undo entry all work exactly as normal. */
+function mdtToRegistry(){
+  if(!requireEdit()) return;
+  const c = mdtCollect();
+  if(!c.name){ toast('⚠ The patient name is needed first'); return; }
+  const existing = (($('mdtRegSel')||{}).value)||'';
+  if(existing && (db.registry||[]).some(function(r){ return r.id===existing; })){
+    toast('This case is already in the registry — opening it'); mdtOpenRegistry(); return;
+  }
+  if(!mdtEditId){ toast('⚠ Save the MDT case first, then add it to the registry'); return; }
+  const parts = String(c.ageSex||'').split('/');
+  const age = (parts[0]||'').trim();
+  const sexTxt = (parts[1]||'').trim().toLowerCase();
+  const sex = sexTxt.indexOf('f')===0 ? '2' : (sexTxt.indexOf('m')===0 ? '1' : '');
+  showTab('registry'); regNew();
+  const put=function(k,v){ if(v) regSet(k,v); };
+  put('name', c.name); put('mrn', c.mrn); put('team', c.team); put('contact', c.contact);
+  put('age', age); put('sex', sex);
+  put('diagnosis', c.diagnosis);
+  put('dateMdt', (c.decision||{}).date || c.date);
+  put('mdtDecision', (c.decision||{}).text);
+  window.__regFromMdt = mdtEditId;
+  if(typeof regSyncNoPreview==='function') regSyncNoPreview();
+  if(typeof railTicksAll==='function') railTicksAll();
+  toast('Registry entry started from the MDT case — check the details and save');
+}
+/* build the MDT-sheet summary out of what has already been typed */
+function mdtComposeFindings(){
+  const el=$('mdtKeyFind'); if(!el) return;
+  const v=function(id){ const e=$(id); return e ? String(e.value||'').trim() : ''; };
+  const bits=[];
+  const site=v('mdtSite'), dx=v('mdtDx');
+  if(site||dx) bits.push([dx,site].filter(Boolean).join(' — '));
+  const mod=v('mdtImgMod'), imf=v('mdtImgFind');
+  if(imf) bits.push((mod? mod+': ' : '')+imf);
+  const spec=v('mdtPathSpec'), grade=v('mdtPathGrade'), paf=v('mdtPathFind');
+  if(paf||grade) bits.push([spec,paf,grade].filter(Boolean).join(' — '));
+  if(!bits.length){ toast('Nothing to compose from yet — fill in imaging or pathology first'); return; }
+  const text = bits.map(function(b){ return '\u2022 '+b; }).join('\n');
+  if(el.value.trim() && !confirm('Replace what is already in Key findings?')) return;
+  el.value = text;
+  el.dispatchEvent(new Event('input',{bubbles:true}));
+  toast('Key findings composed — edit freely');
 }
 function mdtLinkRegistry(){
   const id = (($('mdtRegSel')||{}).value)||'';
   if(!id){ toast('Choose a registry case first'); return; }
   const r = (db.registry||[]).filter(function(x){ return x.id===id; })[0]; if(!r) return;
   const set=function(id2,v){ const e=$(id2); if(e && v && !e.value.trim()) e.value=v; };
-  set('mdtName', r.name); set('mdtMrn', r.mrn);
+  set('mdtName', r.name); set('mdtMrn', r.mrn); set('mdtTeam', r.team); set('mdtContact', r.contact);
   set('mdtAgeSex', [r.age, (typeof regLabel==='function'? regLabel('sex', r.sex) : r.sex)].filter(Boolean).join(' / '));
   set('mdtDx', r.diagnosis || r.histSubtype);
   set('mdtSite', (typeof regLabel==='function'? regLabel('site', r.site) : r.site));
   if(r.patientId) mdtPatientId = r.patientId;
+  mdtRegBtns(r.id);
+  if(typeof mdtAttachRender==='function') mdtAttachRender();
   const note=$('mdtRegNote'); if(note) note.textContent='Linked — details copied across';
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
   toast('Registry case linked');
@@ -6298,7 +7591,7 @@ function mdtFromRegistry(regId){
   showTab('mdt');
   mdtNew();
   const set=function(id,v){ const e=$(id); if(e) e.value=v||''; };
-  set('mdtName', r.name); set('mdtMrn', r.mrn);
+  set('mdtName', r.name); set('mdtMrn', r.mrn); set('mdtTeam', r.team); set('mdtContact', r.contact);
   set('mdtAgeSex', [r.age, (typeof regLabel==='function'? regLabel('sex', r.sex) : r.sex)].filter(Boolean).join(' / '));
   set('mdtDx', r.diagnosis || r.histSubtype);
   set('mdtSite', (typeof regLabel==='function'? regLabel('site', r.site) : r.site));
@@ -10383,7 +11676,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.05-b50';
+const APP_BUILD = '2026.08.07-b58';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -12804,7 +14097,7 @@ function testPrint(){
 
 
 /* ===== Registry data (generated) ===== */
-const REG_SCHEMA = [{"name": "Demographics", "icon": "🧑", "subs": [{"name": "Identification", "fields": [{"k": "regNo", "lab": "Registry Number", "t": "text"}, {"k": "mrn", "lab": "MR Number", "t": "text"}, {"k": "team", "lab": "Team", "t": "text"}, {"k": "name", "lab": "Name", "t": "text"}, {"k": "cnic", "lab": "CNIC", "t": "text"}, {"k": "age", "lab": "Age", "t": "text"}, {"k": "sex", "lab": "Sex", "t": "sel", "o": [["1", "Male"], ["2", "Female"]]}, {"k": "city", "lab": "City", "t": "text"}, {"k": "province", "lab": "Province", "t": "psel", "o": [["Punjab", "Punjab"], ["Sindh", "Sindh"], ["KPK", "KPK"], ["Balochistan", "Balochistan"], ["Gilgit-Baltistan", "Gilgit-Baltistan"], ["AJK", "AJK"], ["Islamabad (ICT)", "Islamabad (ICT)"]]}, {"k": "contact", "lab": "Contact Number", "t": "text"}, {"k": "firstVisit", "lab": "First Visit", "t": "date"}]}, {"name": "History & status", "fields": [{"k": "prevCancer", "lab": "Previous Hx of Cancer", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "familyCancer", "lab": "Family Hx of Cancer", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "asa", "lab": "ASA Physical Status Class", "t": "sel", "o": [["1", "I — healthy, no systemic disease"], ["2", "II — mild systemic disease"], ["3", "III — severe systemic disease, limiting"], ["4", "IV — severe, constant threat to life"], ["5", "V — moribund, not expected to survive 24h"], ["6", "VI — brain-dead organ donor"]]}, {"k": "dateAdm", "lab": "Date of Admission", "t": "date"}, {"k": "prevTx", "lab": "Previous tx at presentation", "t": "sel", "o": [["1", "Nil", "No prior treatment"], ["2", "Proper biopsy", "Adequate diagnostic biopsy done"], ["3", "Unplanned excision", "'Whoops' excision without oncological planning"], ["4", "Planned resection", "Oncologically planned resection already done"]]}]}, {"name": "Biopsy & tumour", "fields": [{"k": "biopsyInst", "lab": "Biopsy Institute", "t": "sel", "o": [["1", "GTTH"], ["2", "Other"]]}, {"k": "biopsyType", "lab": "Biopsy Type", "t": "sel", "o": [["1", "Core Needle"], ["2", "Incisional"], ["3", "Excisional"], ["4", "Curettage"], ["5", "FNAC"]]}, {"k": "primaryTissue", "lab": "Primary Tissue of Origin", "t": "sel", "o": [["1", "Bone"], ["2", "Soft tissue"], ["3", "Skin"], ["4", "Neural tissue"]]}, {"k": "site", "lab": "Site", "t": "sel", "o": [["1a", "Bone — clavicle"], ["1b", "Bone — scapula"], ["1c", "Bone — humerus"], ["1d", "Bone — radius"], ["1e", "Bone — ulna"], ["1f", "Bone — hand"], ["1g", "Bone — spine"], ["1h", "Bone — pelvis"], ["1i", "Bone — femur"], ["1j", "Bone — tibia"], ["1k", "Bone — fibula"], ["1l", "Bone — foot"], ["1m", "Bone — multiple"], ["1n", "Bone — patella"], ["1o", "Bone — others"], ["2a", "Soft tissue — trunk"], ["2b", "Soft tissue — arm"], ["2c", "Soft tissue — forearm"], ["2d", "Soft tissue — hand"], ["2e", "Soft tissue — thigh"], ["2f", "Soft tissue — leg"], ["2g", "Soft tissue — foot"], ["2h", "Soft tissue — joint"], ["2i", "Soft tissue — multiple"], ["2j", "Soft tissue — other"], ["3a", "Spine — extradural"], ["3b", "Spine — intradural extramedullary"], ["3c", "Spine — intradural intramedullary"], ["4", "Brain"]]}, {"k": "nature", "lab": "Nature", "t": "sel", "o": [["1", "Benign latent + active", "Benign, non-aggressive (Enneking stage 1–2)"], ["2", "Benign aggressive", "Locally aggressive benign (Enneking stage 3)"], ["3", "Malignant low grade", "Low-grade malignancy"], ["4", "Malignant high grade", "High-grade malignancy"]]}, {"k": "tumorType", "lab": "Tumor Type", "t": "sel", "o": [["1", "Primary", "First presentation, not previously treated"], ["2", "Recurrent", "Returned after prior treatment"], ["3", "Residual", "Tumour left behind after incomplete excision"], ["4", "Metastatic", "Spread from a primary elsewhere"]]}, {"k": "diagnosis", "lab": "Diagnosis", "t": "ta"}, {"k": "histSubtype", "lab": "Histological Subtype", "t": "ta"}, {"k": "grade", "lab": "Grade (FNCLCC)", "t": "sel", "o": [["1", "G1 — low grade", "Well differentiated; low mitoses, little/no necrosis — least aggressive"], ["2", "G2 — intermediate grade", "Intermediate differentiation & mitotic activity"], ["3", "G3 — high grade", "Poorly differentiated; high mitoses & necrosis — most aggressive"]]}, {"k": "stage", "lab": "Stage (AJCC 8th)", "t": "sel", "o": [["1", "Stage IA", "G1, T1 (≤5 cm), N0, M0 — low grade, small"], ["2", "Stage IB", "G1, T2–T4 (>5 cm), N0, M0 — low grade, larger"], ["3", "Stage II", "G2–G3, T1 (≤5 cm), N0, M0 — high grade, small"], ["4", "Stage IIIA", "G2–G3, T2 (>5–10 cm), N0, M0 — high grade"], ["5", "Stage IIIB", "G2–G3, T3–T4 (>10 cm), N0, M0 — high grade, large"], ["6", "Stage IV", "Any N1 (nodal) or M1 (distant metastasis)"]]}, {"k": "sins", "lab": "SINS Score (if applicable)", "t": "text"}, {"k": "margin", "lab": "Margin Status", "t": "sel", "o": [["0", "R0", "No residual tumour — margins microscopically clear"], ["1", "R1", "Microscopic residual tumour at the margin"], ["2", "R2", "Macroscopic (gross) residual tumour"]]}, {"k": "necrosis", "lab": "Necrosis", "t": "sel", "o": [["0", "<10%", "Best response to neo-adjuvant therapy"], ["1", "<50%", ""], ["2", ">50%", ""], ["3", ">90%", "Near-complete response (>90% necrosis)"]]}]}, {"name": "Radiology", "fields": [{"k": "xray", "lab": "X-Ray (Lodwick)", "t": "sel", "o": [["0", "Normal-looking", "No aggressive features"], ["1a", "Geographic IA", "Geographic lucency with sclerotic rim — least aggressive"], ["1b", "Geographic IB", "Geographic, well-defined margin, no sclerotic rim"], ["1c", "Geographic IC", "Geographic with ill-defined margin"], ["2", "Moth-eaten (II)", "Multiple small lucencies — more aggressive"], ["3", "Permeative (III)", "Ill-defined permeative spread — most aggressive"], ["4", "Sclerotic lesion", "Bone-forming / blastic lesion"], ["5", "Pathological fracture", "Fracture through the lesion"]]}, {"k": "xrayDesc", "lab": "X-Ray description (what the film shows)", "t": "ta"}, {"k": "mri", "lab": "MRI Key Findings", "t": "ta"}, {"k": "otherRad", "lab": "Other significant finding on radiology", "t": "ta"}]}]}, {"name": "Treatment", "icon": "🔬", "subs": [{"name": "MDT & surgery", "fields": [{"k": "dateMdt", "lab": "Date of MDT", "t": "date"}, {"k": "mdtDecision", "lab": "MDT Decision / Discussion", "t": "ta"}, {"k": "dateSurg", "lab": "Date of surgery", "t": "date"}, {"k": "intent", "lab": "Treatment Intent", "t": "sel", "o": [["1", "Curative"], ["2", "Palliative"]]}, {"k": "limbPres", "lab": "Limb preservation", "t": "sel", "o": [["1", "Limb sparing"], ["2", "Amputation"], ["3", "Other"]]}, {"k": "surgType", "lab": "Surgery type", "t": "sel", "o": [["1", "Intralesional / debulking", "Plane passes through the tumour itself"], ["2", "Marginal", "Through the reactive zone / pseudocapsule"], ["3", "Wide resection", "Cuff of normal tissue, intracompartmental"], ["4", "Radical", "Entire compartment removed"], ["5", "Others", ""]]}, {"k": "planType", "lab": "Surgical Plan type", "t": "sel", "o": [["1", "Single-stage"], ["2", "Planned two-stage (1st done)"], ["3", "Planned two-stage (2nd done)"], ["4", "Unplanned staged"], ["5", "Unknown"]]}, {"k": "surgDetails", "lab": "Surgery details", "t": "ta"}, {"k": "surgeon", "lab": "Surgeon Initials", "t": "text"}, {"k": "frozen", "lab": "Frozen Section", "t": "sel", "o": [["0", "Not done", ""], ["1", "Done — negative", "Intra-op frozen section: margin clear"], ["2", "Done — positive", "Intra-op frozen section: tumour at margin"]]}, {"k": "reconType", "lab": "Reconstruction type", "t": "sel", "o": [["0", "None"], ["1", "Primary"], ["2", "Revision"]]}, {"k": "implantCo", "lab": "Implant Company", "t": "sel", "o": [["0", "No implant"], ["1", "AK Chinese"], ["2", "Implantcast"], ["3", "Locally manufactured"], ["4", "Other"]]}]}, {"name": "Bone reconstruction", "fields": [{"k": "br_autograft", "lab": "Bone recon — Autograft", "t": "sel", "o": [["0", "None"], ["1", "Non-structural"], ["2", "Non-vascular structural"], ["3", "Vascular structural"], ["4", "Recycled"]]}, {"k": "br_recycled", "lab": "Bone recon — Recycled autograft", "t": "sel", "o": [["0", "None"], ["1", "Liquid nitrogen"], ["2", "Autoclaving"], ["3", "Radiation"], ["4", "Pasteurization"]]}, {"k": "br_interface", "lab": "Bone recon — Prosthetic-bone interface", "t": "sel", "o": [["0", "None"], ["1", "Non-vascular bone graft"], ["2", "Vascularized bone graft"]]}, {"k": "br_allograft", "lab": "Bone recon — Allograft", "t": "sel", "o": [["0", "None"], ["1", "Non-structural"], ["2", "Structural"]]}, {"k": "br_boneSub", "lab": "Bone recon — Bone substitute", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_intFix", "lab": "Bone recon — Internal fixation", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_endoprosth", "lab": "Bone recon — Endoprosthesis", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_cement", "lab": "Bone recon — Structural cement", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "br_distraction", "lab": "Bone recon — Distraction osteogenesis", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}]}, {"name": "Soft-tissue reconstruction", "fields": [{"k": "st_recon", "lab": "Soft-tissue recon", "t": "sel", "o": [["0", "None"], ["1", "STSG"], ["2", "FTSG"], ["3", "Local flap"], ["4", "Regional flap"], ["5", "Free flap"], ["6", "Vascular recon"], ["7", "Nerve graft"], ["8", "Delayed recon planned"]]}, {"k": "st_attach", "lab": "Soft-tissue — Attachment medium", "t": "sel", "o": [["0", "None"], ["1", "Attachment tube (Trivera)"], ["2", "Synthetic mesh"], ["3", "Biological mesh"], ["4", "Mersilene tape"]]}, {"k": "st_npt", "lab": "Soft-tissue — NPT (VAC)", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "bloodLoss", "lab": "Intra-operative Blood loss (ml)", "t": "num"}]}, {"name": "Neo-adjuvant therapy", "fields": [{"k": "neo_rt", "lab": "Neo-adjuvant — RT", "t": "sel", "o": [["0", "None"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]]}, {"k": "neo_rtDose", "lab": "Neo-adjuvant — RT dose / fractions", "t": "text"}, {"k": "neo_sys", "lab": "Neo-adjuvant — Systemic therapy", "t": "sel", "o": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]]}, {"k": "neo_cycles", "lab": "Neo-adjuvant — No. of cycles", "t": "text"}, {"k": "neo_regimen", "lab": "Neo-adjuvant — Regimen", "t": "sel", "o": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]]}, {"k": "neo_dateDone", "lab": "Neo-adjuvant — Date of completion", "t": "date"}]}, {"name": "Adjuvant therapy", "fields": [{"k": "adj_rt", "lab": "Adjuvant — RT", "t": "sel", "o": [["0", "Nil"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]]}, {"k": "adj_rtDose", "lab": "Adjuvant — RT dose / fractions", "t": "text"}, {"k": "adj_sys", "lab": "Adjuvant — Systemic therapy", "t": "sel", "o": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]]}, {"k": "adj_cycles", "lab": "Adjuvant — No. of cycles", "t": "text"}, {"k": "adj_regimen", "lab": "Adjuvant — Regimen", "t": "sel", "o": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]]}, {"k": "adj_dateDone", "lab": "Adjuvant — Date of completion", "t": "date"}]}, {"name": "Early complications", "fields": [{"k": "ec_nerve", "lab": "Early Cx — Nerve injury", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "ec_vascular", "lab": "Early Cx — Vascular injury", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "ec_fracture", "lab": "Early Cx — Intra-op fracture", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "ec_wound", "lab": "Early Cx — Wound", "t": "sel", "o": [["0", "No"], ["1", "Dehiscence"], ["2", "Necrosis"], ["3", "Hematoma / seroma"]]}, {"k": "ec_flap", "lab": "Early Cx — Flap", "t": "sel", "o": [["0", "No"], ["1", "Minimal necrosis"], ["2", "Significant necrosis — reoperation"]]}, {"k": "ec_systemic", "lab": "Early Cx — Systemic", "t": "sel", "o": [["0", "None"], ["1", "DVT / PE"], ["2", "Sepsis"], ["3", "Pneumonia"], ["4", "Cardiac event"], ["5", "Renal complication"]]}, {"k": "ec_dural", "lab": "Early Cx — Dural leak", "t": "sel", "o": [["0", "None"], ["1", "Early"], ["2", "Late (pseudomeningocele)"]]}, {"k": "ec_details", "lab": "Early Cx — Morbidity details", "t": "ta"}]}, {"name": "Late complications & further surgery", "fields": [{"k": "lc_infection", "lab": "Late Cx — Infection", "t": "sel", "o": [["0", "None"], ["1", "Superficial"], ["2", "Deep"], ["3", "Prosthetic"]]}, {"k": "lc_tumor", "lab": "Late Cx — Tumor", "t": "sel", "o": [["0", "None"], ["1", "Involved margin"], ["2", "Local recurrence"], ["3", "Metastasis"], ["4", "Local recurrence + metastasis"]]}, {"k": "lc_recurDur", "lab": "Late Cx — Recurrence duration from surgery", "t": "text"}, {"k": "lc_boneImplant", "lab": "Late Cx — Bone / Implant", "t": "sel", "o": [["0", "None"], ["1", "Non-union"], ["2", "Fracture"], ["3", "Loosening"]]}, {"k": "lc_endo", "lab": "Late Cx — Endoprosthesis", "t": "sel", "o": [["0", "None"], ["1", "Loosening"], ["2", "Wear"], ["3", "Peri-prosthetic fracture"], ["4", "Dislocation"]]}, {"k": "addSurgCx", "lab": "Additional surgery for complication", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "addSurgSame", "lab": "Additional surgery for same disease", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "addSurgDetails", "lab": "Additional surgery details", "t": "ta"}]}]}, {"name": "Functional status", "icon": "🦵", "subs": [{"name": "Neurology & musculoskeletal", "fields": [{"k": "preNeuro", "lab": "Pre-op Neurology (MRC)", "t": "sel", "o": [["0", "0 — No contraction"], ["1", "1 — Flicker"], ["2", "2 — Not against gravity"], ["3", "3 — Against gravity"], ["4", "4 — Against resistance, weaker"], ["5", "5 — Normal strength"]]}, {"k": "postNeuro", "lab": "Post-op Neurology", "t": "sel", "o": [["1", "Normal"], ["2", "Improved"], ["3", "Same"], ["4", "Worsened"], ["5", "New deficit"]]}, {"k": "neuroDetails", "lab": "Specific details of Neurology", "t": "ta"}, {"k": "preMsk", "lab": "Pre-op MSK", "t": "sel", "o": [["1", "Full weight bearing"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"]]}, {"k": "postMsk", "lab": "Post-op MSK", "t": "sel", "o": [["1", "Back to normal function"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"], ["6", "Other"]]}, {"k": "mstsUL", "lab": "MSTS Score — Upper Limb (/30)", "t": "text"}, {"k": "mstsLL", "lab": "MSTS Score — Lower Limb (/30)", "t": "text"}]}]}, {"name": "Outcomes", "icon": "📊", "subs": [{"name": "Function scores", "fields": [{"k": "out_mstsUL", "lab": "MSTS Upper Limb (/30)", "t": "num"}, {"k": "out_mstsLL", "lab": "MSTS Lower Limb (/30)", "t": "num"}, {"k": "out_mstsPct", "lab": "MSTS as %", "t": "text"}, {"k": "out_mstsDate", "lab": "MSTS assessed on", "t": "date"}, {"k": "out_tess", "lab": "TESS score (/100)", "t": "num"}, {"k": "out_tessDate", "lab": "TESS assessed on", "t": "date"}, {"k": "out_promisPF", "lab": "PROMIS Physical Function (T-score)", "t": "num"}, {"k": "out_promisPI", "lab": "PROMIS Pain Interference (T-score)", "t": "num"}, {"k": "out_promisDate", "lab": "PROMIS assessed on", "t": "date"}, {"k": "out_eq5dProfile", "lab": "EQ-5D-5L profile (5 digits, e.g. 21232)", "t": "text"}, {"k": "out_eq5dIndex", "lab": "EQ-5D-5L index value (0–1)", "t": "text"}, {"k": "out_eq5dVas", "lab": "EQ-5D VAS today (0–100)", "t": "num"}, {"k": "out_eq5dDate", "lab": "EQ-5D assessed on", "t": "date"}]}, {"name": "Pain & movement", "fields": [{"k": "out_painRest", "lab": "Pain at rest (VAS 0–10)", "t": "num"}, {"k": "out_painMove", "lab": "Pain on movement (VAS 0–10)", "t": "num"}, {"k": "out_painWorst", "lab": "Worst pain in the last week (0–10)", "t": "num"}, {"k": "out_analgesia", "lab": "Analgesia in use", "t": "sel", "o": [["0", "None"], ["1", "Simple / NSAID"], ["2", "Weak opioid"], ["3", "Strong opioid"], ["4", "Neuropathic agent"]]}, {"k": "out_rom", "lab": "ROM — operated joint", "t": "ta"}, {"k": "out_romOther", "lab": "ROM — other joints, limb length", "t": "ta"}, {"k": "out_gait", "lab": "Walking aid at last review", "t": "sel", "o": [["0", "None"], ["1", "Stick"], ["2", "One crutch"], ["3", "Two crutches"], ["4", "Walker"], ["5", "Wheelchair"]]}]}, {"name": "Complications", "fields": [{"k": "out_cdGrade", "lab": "Highest Clavien-Dindo grade", "t": "sel", "o": [["0", "None", "No complication at all"], ["1", "I — no treatment needed", "Any deviation from the normal course needing no drug, surgical, endoscopic or radiological treatment (antiemetics, antipyretics, analgesics, physiotherapy and bedside wound opening are allowed)"], ["2", "II — drugs, transfusion, TPN", "Needing drug treatment beyond grade I, including blood transfusion and total parenteral nutrition"], ["3a", "IIIa — intervention, no general anaesthetic", "Needing surgical, endoscopic or radiological intervention under local anaesthesia or sedation"], ["3b", "IIIb — intervention under general anaesthetic", "Needing intervention under general anaesthesia"], ["4a", "IVa — single-organ failure", "Life-threatening, needing intensive care; single-organ dysfunction including dialysis"], ["4b", "IVb — multi-organ failure", "Life-threatening, needing intensive care; multi-organ dysfunction"], ["5", "V — death", "Death of the patient"]]}, {"k": "out_cdWhat", "lab": "What happened", "t": "ta"}, {"k": "out_cdDate", "lab": "Date of the complication", "t": "date"}, {"k": "out_cci", "lab": "Comprehensive Complication Index (0–100)", "t": "num"}, {"k": "out_cdTiming", "lab": "Timing", "t": "sel", "o": [["1", "Intra-operative"], ["2", "Early (≤30 days)"], ["3", "Late (>30 days)"]]}]}, {"name": "Revision surgery", "fields": [{"k": "out_revDone", "lab": "Any revision surgery", "t": "sel", "o": [["0", "No"], ["1", "Yes"]]}, {"k": "out_revDate", "lab": "Date of the first revision", "t": "date"}, {"k": "out_revReason", "lab": "Reason for revision", "t": "sel", "o": [["1", "Infection"], ["2", "Aseptic loosening"], ["3", "Implant failure or breakage"], ["4", "Peri-prosthetic fracture"], ["5", "Local recurrence"], ["6", "Non-union"], ["7", "Soft-tissue failure / instability"], ["8", "Leg-length problem"], ["9", "Other"]]}, {"k": "out_revType", "lab": "What was done at revision", "t": "ta"}, {"k": "out_revCount", "lab": "Number of revisions so far", "t": "num"}, {"k": "out_implantStatus", "lab": "Reconstruction at last review", "t": "sel", "o": [["1", "In situ and working"], ["2", "In situ but failing"], ["0", "Removed"], ["3", "Converted to amputation"], ["4", "Not applicable"]]}]}, {"name": "Follow-up status", "fields": [{"k": "out_lastFu", "lab": "Date of last follow-up", "t": "date"}, {"k": "out_status", "lab": "Status at last follow-up", "t": "sel", "o": [["1", "NED — no evidence of disease"], ["2", "AWD — alive with disease"], ["3", "DOD — died of disease"], ["4", "DOC — died of another cause"], ["5", "Lost to follow-up"]]}, {"k": "out_recurDate", "lab": "Date of recurrence, if any", "t": "date"}, {"k": "out_metsDate", "lab": "Date metastasis found, if any", "t": "date"}, {"k": "out_deathDate", "lab": "Date of death, if any", "t": "date"}, {"k": "out_notes", "lab": "Outcome notes", "t": "ta"}]}]}];
+const REG_SCHEMA = [{"name":"Demographics","icon":"🧑","subs":[{"name":"Identification","fields":[{"k":"regNo","lab":"Registry Number","t":"text"},{"k":"mrn","lab":"MR Number","t":"text"},{"k":"team","lab":"Team","t":"text"},{"k":"name","lab":"Name","t":"text"},{"k":"cnic","lab":"CNIC","t":"text"},{"k":"age","lab":"Age","t":"text"},{"k":"sex","lab":"Sex","t":"sel","o":[["1","Male"],["2","Female"]]},{"k":"city","lab":"City","t":"text"},{"k":"province","lab":"Province","t":"psel","o":[["Punjab","Punjab"],["Sindh","Sindh"],["KPK","KPK"],["Balochistan","Balochistan"],["Gilgit-Baltistan","Gilgit-Baltistan"],["AJK","AJK"],["Islamabad (ICT)","Islamabad (ICT)"]]},{"k":"contact","lab":"Contact Number","t":"text"},{"k":"firstVisit","lab":"First Visit","t":"date"}]},{"name":"History & status","fields":[{"k":"prevCancer","lab":"Previous Hx of Cancer","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"familyCancer","lab":"Family Hx of Cancer","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"asa","lab":"ASA Physical Status Class","t":"sel","o":[["1","I — healthy, no systemic disease"],["2","II — mild systemic disease"],["3","III — severe systemic disease, limiting"],["4","IV — severe, constant threat to life"],["5","V — moribund, not expected to survive 24h"],["6","VI — brain-dead organ donor"]]},{"k":"dateAdm","lab":"Date of Admission","t":"date"},{"k":"prevTx","lab":"Previous tx at presentation","t":"sel","o":[["1","Nil","No prior treatment"],["2","Proper biopsy","Adequate diagnostic biopsy done"],["3","Unplanned excision","'Whoops' excision without oncological planning"],["4","Planned resection","Oncologically planned resection already done"]]}]},{"name":"Biopsy & tumour","fields":[{"k":"biopsyInst","lab":"Biopsy Institute","t":"sel","o":[["1","GTTH"],["2","Other"]]},{"k":"biopsyType","lab":"Biopsy Type","t":"sel","o":[["1","Core Needle"],["2","Incisional"],["3","Excisional"],["4","Curettage"],["5","FNAC"]]},{"k":"primaryTissue","lab":"Primary Tissue of Origin","t":"sel","o":[["1","Bone"],["2","Soft tissue"],["3","Skin"],["4","Neural tissue"]]},{"k":"site","lab":"Site","t":"sel","o":[["1a","Bone — clavicle"],["1b","Bone — scapula"],["1c","Bone — humerus"],["1d","Bone — radius"],["1e","Bone — ulna"],["1f","Bone — hand"],["1g","Bone — spine"],["1h","Bone — pelvis"],["1i","Bone — femur"],["1j","Bone — tibia"],["1k","Bone — fibula"],["1l","Bone — foot"],["1m","Bone — multiple"],["1n","Bone — patella"],["1o","Bone — others"],["2a","Soft tissue — trunk"],["2b","Soft tissue — arm"],["2c","Soft tissue — forearm"],["2d","Soft tissue — hand"],["2e","Soft tissue — thigh"],["2f","Soft tissue — leg"],["2g","Soft tissue — foot"],["2h","Soft tissue — joint"],["2i","Soft tissue — multiple"],["2j","Soft tissue — other"],["3a","Spine — extradural"],["3b","Spine — intradural extramedullary"],["3c","Spine — intradural intramedullary"],["4","Brain"]]},{"k":"nature","lab":"Nature","t":"sel","o":[["1","Benign latent + active","Benign, non-aggressive (Enneking stage 1–2)"],["2","Benign aggressive","Locally aggressive benign (Enneking stage 3)"],["3","Malignant low grade","Low-grade malignancy"],["4","Malignant high grade","High-grade malignancy"]]},{"k":"tumorType","lab":"Tumor Type","t":"sel","o":[["1","Primary","First presentation, not previously treated"],["2","Recurrent","Returned after prior treatment"],["3","Residual","Tumour left behind after incomplete excision"],["4","Metastatic","Spread from a primary elsewhere"]]},{"k":"diagnosis","lab":"Diagnosis","t":"ta"},{"k":"histSubtype","lab":"Histological Subtype","t":"ta"},{"k":"grade","lab":"Grade (FNCLCC)","t":"sel","o":[["1","G1 — low grade","Well differentiated; low mitoses, little/no necrosis — least aggressive"],["2","G2 — intermediate grade","Intermediate differentiation & mitotic activity"],["3","G3 — high grade","Poorly differentiated; high mitoses & necrosis — most aggressive"]]},{"k":"stage","lab":"Stage (AJCC 8th)","t":"sel","o":[["1","Stage IA","G1, T1 (≤5 cm), N0, M0 — low grade, small"],["2","Stage IB","G1, T2–T4 (>5 cm), N0, M0 — low grade, larger"],["3","Stage II","G2–G3, T1 (≤5 cm), N0, M0 — high grade, small"],["4","Stage IIIA","G2–G3, T2 (>5–10 cm), N0, M0 — high grade"],["5","Stage IIIB","G2–G3, T3–T4 (>10 cm), N0, M0 — high grade, large"],["6","Stage IV","Any N1 (nodal) or M1 (distant metastasis)"]]},{"k":"sins","lab":"SINS Score (if applicable)","t":"text"},{"k":"margin","lab":"Margin Status","t":"sel","o":[["0","R0","No residual tumour — margins microscopically clear"],["1","R1","Microscopic residual tumour at the margin"],["2","R2","Macroscopic (gross) residual tumour"]]},{"k":"necrosis","lab":"Necrosis","t":"sel","o":[["0","<10%","Best response to neo-adjuvant therapy"],["1","<50%",""],["2",">50%",""],["3",">90%","Near-complete response (>90% necrosis)"]]}]},{"name":"Radiology","fields":[{"k":"xray","lab":"X-Ray (Lodwick)","t":"sel","o":[["0","Normal-looking","No aggressive features"],["1a","Geographic IA","Geographic lucency with sclerotic rim — least aggressive"],["1b","Geographic IB","Geographic, well-defined margin, no sclerotic rim"],["1c","Geographic IC","Geographic with ill-defined margin"],["2","Moth-eaten (II)","Multiple small lucencies — more aggressive"],["3","Permeative (III)","Ill-defined permeative spread — most aggressive"],["4","Sclerotic lesion","Bone-forming / blastic lesion"],["5","Pathological fracture","Fracture through the lesion"]]},{"k":"xrayDesc","lab":"X-Ray description (what the film shows)","t":"ta"},{"k":"mri","lab":"MRI Key Findings","t":"ta"},{"k":"otherRad","lab":"Other significant finding on radiology","t":"ta"}]}]},{"name":"Treatment","icon":"🔬","subs":[{"name":"MDT & surgery","fields":[{"k":"dateMdt","lab":"Date of MDT","t":"date"},{"k":"mdtDecision","lab":"MDT Decision / Discussion","t":"ta"},{"k":"dateSurg","lab":"Date of surgery","t":"date"},{"k":"intent","lab":"Treatment Intent","t":"sel","o":[["1","Curative"],["2","Palliative"]]},{"k":"limbPres","lab":"Limb preservation","t":"sel","o":[["1","Limb sparing"],["2","Amputation"],["3","Other"]]},{"k":"surgType","lab":"Surgery type","t":"sel","o":[["1","Intralesional / debulking","Plane passes through the tumour itself"],["2","Marginal","Through the reactive zone / pseudocapsule"],["3","Wide resection","Cuff of normal tissue, intracompartmental"],["4","Radical","Entire compartment removed"],["5","Others",""]]},{"k":"planType","lab":"Surgical Plan type","t":"sel","o":[["1","Single-stage"],["2","Planned two-stage (1st done)"],["3","Planned two-stage (2nd done)"],["4","Unplanned staged"],["5","Unknown"]]},{"k":"surgDetails","lab":"Surgery details","t":"ta"},{"k":"surgeon","lab":"Surgeon Initials","t":"text"},{"k":"frozen","lab":"Frozen Section","t":"sel","o":[["0","Not done",""],["1","Done — negative","Intra-op frozen section: margin clear"],["2","Done — positive","Intra-op frozen section: tumour at margin"]]},{"k":"reconType","lab":"Reconstruction type","t":"sel","o":[["0","None"],["1","Primary"],["2","Revision"]]},{"k":"implantCo","lab":"Implant Company","t":"sel","o":[["0","No implant"],["1","AK Chinese"],["2","Implantcast"],["3","Locally manufactured"],["4","Other"]]},{"k":"bloodLoss","lab":"Intra-operative Blood loss (ml)","t":"num"}]},{"name":"Bone reconstruction","fields":[{"k":"br_autograft","lab":"Bone recon — Autograft","t":"sel","o":[["0","None"],["1","Non-structural"],["2","Non-vascular structural"],["3","Vascular structural"],["4","Recycled"]]},{"k":"br_recycled","lab":"Bone recon — Recycled autograft","t":"sel","o":[["0","None"],["1","Liquid nitrogen"],["2","Autoclaving"],["3","Radiation"],["4","Pasteurization"]]},{"k":"br_interface","lab":"Bone recon — Prosthetic-bone interface","t":"sel","o":[["0","None"],["1","Non-vascular bone graft"],["2","Vascularized bone graft"]]},{"k":"br_allograft","lab":"Bone recon — Allograft","t":"sel","o":[["0","None"],["1","Non-structural"],["2","Structural"]]},{"k":"br_boneSub","lab":"Bone recon — Bone substitute","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"br_intFix","lab":"Bone recon — Internal fixation","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"br_endoprosth","lab":"Bone recon — Endoprosthesis","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"br_cement","lab":"Bone recon — Structural cement","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"br_distraction","lab":"Bone recon — Distraction osteogenesis","t":"sel","o":[["0","No"],["1","Yes"]]}]},{"name":"Soft-tissue reconstruction","fields":[{"k":"st_recon","lab":"Soft-tissue recon","t":"sel","o":[["0","None"],["1","STSG"],["2","FTSG"],["3","Local flap"],["4","Regional flap"],["5","Free flap"],["6","Vascular recon"],["7","Nerve graft"],["8","Delayed recon planned"]]},{"k":"st_attach","lab":"Soft-tissue — Attachment medium","t":"sel","o":[["0","None"],["1","Attachment tube (Trivera)"],["2","Synthetic mesh"],["3","Biological mesh"],["4","Mersilene tape"]]},{"k":"st_npt","lab":"Soft-tissue — NPT (VAC)","t":"sel","o":[["0","No"],["1","Yes"]]}]},{"name":"Neo-adjuvant therapy","fields":[{"k":"neo_rt","lab":"Neo-adjuvant — RT","t":"sel","o":[["0","None"],["1","EBRT"],["2","IMRT"],["3","Brachytherapy"]]},{"k":"neo_rtDose","lab":"Neo-adjuvant — RT dose / fractions","t":"text"},{"k":"neo_sys","lab":"Neo-adjuvant — Systemic therapy","t":"sel","o":[["0","No"],["1","Chemotherapy"],["2","Chemo + immuno / targeted"],["3","Denosumab / bisphosphonate"]]},{"k":"neo_cycles","lab":"Neo-adjuvant — No. of cycles","t":"text"},{"k":"neo_regimen","lab":"Neo-adjuvant — Regimen","t":"sel","o":[["0","None"],["1","MAP"],["2","VAC/IE"],["3","CHOP"],["3b","VIDE"],["4","CVD"],["5","Immunotherapy"],["6","Targeted therapy"],["7","Other"]]},{"k":"neo_dateDone","lab":"Neo-adjuvant — Date of completion","t":"date"}]},{"name":"Adjuvant therapy","fields":[{"k":"adj_rt","lab":"Adjuvant — RT","t":"sel","o":[["0","Nil"],["1","EBRT"],["2","IMRT"],["3","Brachytherapy"]]},{"k":"adj_rtDose","lab":"Adjuvant — RT dose / fractions","t":"text"},{"k":"adj_sys","lab":"Adjuvant — Systemic therapy","t":"sel","o":[["0","No"],["1","Chemotherapy"],["2","Chemo + immuno / targeted"],["3","Denosumab / bisphosphonate"]]},{"k":"adj_cycles","lab":"Adjuvant — No. of cycles","t":"text"},{"k":"adj_regimen","lab":"Adjuvant — Regimen","t":"sel","o":[["0","None"],["1","MAP"],["2","VAC/IE"],["3","CHOP"],["3b","VIDE"],["4","CVD"],["5","Immunotherapy"],["6","Targeted therapy"],["7","Other"]]},{"k":"adj_dateDone","lab":"Adjuvant — Date of completion","t":"date"}]},{"name":"Early complications","fields":[{"k":"ec_nerve","lab":"Early Cx — Nerve injury","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"ec_vascular","lab":"Early Cx — Vascular injury","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"ec_fracture","lab":"Early Cx — Intra-op fracture","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"ec_wound","lab":"Early Cx — Wound","t":"sel","o":[["0","No"],["1","Dehiscence"],["2","Necrosis"],["3","Hematoma / seroma"]]},{"k":"ec_flap","lab":"Early Cx — Flap","t":"sel","o":[["0","No"],["1","Minimal necrosis"],["2","Significant necrosis — reoperation"]]},{"k":"ec_systemic","lab":"Early Cx — Systemic","t":"sel","o":[["0","None"],["1","DVT / PE"],["2","Sepsis"],["3","Pneumonia"],["4","Cardiac event"],["5","Renal complication"]]},{"k":"ec_dural","lab":"Early Cx — Dural leak","t":"sel","o":[["0","None"],["1","Early"],["2","Late (pseudomeningocele)"]]},{"k":"ec_details","lab":"Early Cx — Morbidity details","t":"ta"}]},{"name":"Late complications & further surgery","fields":[{"k":"lc_infection","lab":"Late Cx — Infection","t":"sel","o":[["0","None"],["1","Superficial"],["2","Deep"],["3","Prosthetic"]]},{"k":"lc_tumor","lab":"Late Cx — Tumor","t":"sel","o":[["0","None"],["1","Involved margin"],["2","Local recurrence"],["3","Metastasis"],["4","Local recurrence + metastasis"]]},{"k":"lc_recurDur","lab":"Late Cx — Recurrence duration from surgery","t":"text"},{"k":"lc_boneImplant","lab":"Late Cx — Bone / Implant","t":"sel","o":[["0","None"],["1","Non-union"],["2","Fracture"],["3","Loosening"]]},{"k":"lc_endo","lab":"Late Cx — Endoprosthesis","t":"sel","o":[["0","None"],["1","Loosening"],["2","Wear"],["3","Peri-prosthetic fracture"],["4","Dislocation"]]},{"k":"addSurgCx","lab":"Additional surgery for complication","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"addSurgSame","lab":"Additional surgery for same disease","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"addSurgDetails","lab":"Additional surgery details","t":"ta"}]}]},{"name":"Functional status","icon":"🦵","subs":[{"name":"Neurology & musculoskeletal","fields":[{"k":"preNeuro","lab":"Pre-op Neurology (MRC)","t":"sel","o":[["0","0 — No contraction"],["1","1 — Flicker"],["2","2 — Not against gravity"],["3","3 — Against gravity"],["4","4 — Against resistance, weaker"],["5","5 — Normal strength"]]},{"k":"postNeuro","lab":"Post-op Neurology","t":"sel","o":[["1","Normal"],["2","Improved"],["3","Same"],["4","Worsened"],["5","New deficit"]]},{"k":"neuroDetails","lab":"Specific details of Neurology","t":"ta"},{"k":"preMsk","lab":"Pre-op MSK","t":"sel","o":[["1","Full weight bearing"],["2","Ambulant without support"],["3","Ambulant with prosthesis"],["4","Ambulant with support"],["5","Chair / bed bound"]]},{"k":"postMsk","lab":"Post-op MSK","t":"sel","o":[["1","Back to normal function"],["2","Ambulant without support"],["3","Ambulant with prosthesis"],["4","Ambulant with support"],["5","Chair / bed bound"],["6","Other"]]},{"k":"mstsUL","lab":"MSTS Score — Upper Limb (/30)","t":"text"},{"k":"mstsLL","lab":"MSTS Score — Lower Limb (/30)","t":"text"}]}]},{"name":"Outcomes","icon":"📊","subs":[{"name":"Function scores","fields":[{"k":"out_mstsUL","lab":"MSTS Upper Limb (/30)","t":"num"},{"k":"out_mstsLL","lab":"MSTS Lower Limb (/30)","t":"num"},{"k":"out_mstsPct","lab":"MSTS as %","t":"text"},{"k":"out_mstsDate","lab":"MSTS assessed on","t":"date"},{"k":"out_tess","lab":"TESS score (/100)","t":"num"},{"k":"out_tessDate","lab":"TESS assessed on","t":"date"},{"k":"out_promisPF","lab":"PROMIS Physical Function (T-score)","t":"num"},{"k":"out_promisPI","lab":"PROMIS Pain Interference (T-score)","t":"num"},{"k":"out_promisDate","lab":"PROMIS assessed on","t":"date"},{"k":"out_eq5dProfile","lab":"EQ-5D-5L profile (5 digits, e.g. 21232)","t":"text"},{"k":"out_eq5dIndex","lab":"EQ-5D-5L index value (0–1)","t":"text"},{"k":"out_eq5dVas","lab":"EQ-5D VAS today (0–100)","t":"num"},{"k":"out_eq5dDate","lab":"EQ-5D assessed on","t":"date"}]},{"name":"Pain & movement","fields":[{"k":"out_painRest","lab":"Pain at rest (VAS 0–10)","t":"num"},{"k":"out_painMove","lab":"Pain on movement (VAS 0–10)","t":"num"},{"k":"out_painWorst","lab":"Worst pain in the last week (0–10)","t":"num"},{"k":"out_analgesia","lab":"Analgesia in use","t":"sel","o":[["0","None"],["1","Simple / NSAID"],["2","Weak opioid"],["3","Strong opioid"],["4","Neuropathic agent"]]},{"k":"out_rom","lab":"ROM — operated joint","t":"ta"},{"k":"out_romOther","lab":"ROM — other joints, limb length","t":"ta"},{"k":"out_gait","lab":"Walking aid at last review","t":"sel","o":[["0","None"],["1","Stick"],["2","One crutch"],["3","Two crutches"],["4","Walker"],["5","Wheelchair"]]}]},{"name":"Complications","fields":[{"k":"out_cdGrade","lab":"Highest Clavien-Dindo grade","t":"sel","o":[["0","None","No complication at all"],["1","I — no treatment needed","Any deviation from the normal course needing no drug, surgical, endoscopic or radiological treatment (antiemetics, antipyretics, analgesics, physiotherapy and bedside wound opening are allowed)"],["2","II — drugs, transfusion, TPN","Needing drug treatment beyond grade I, including blood transfusion and total parenteral nutrition"],["3a","IIIa — intervention, no general anaesthetic","Needing surgical, endoscopic or radiological intervention under local anaesthesia or sedation"],["3b","IIIb — intervention under general anaesthetic","Needing intervention under general anaesthesia"],["4a","IVa — single-organ failure","Life-threatening, needing intensive care; single-organ dysfunction including dialysis"],["4b","IVb — multi-organ failure","Life-threatening, needing intensive care; multi-organ dysfunction"],["5","V — death","Death of the patient"]]},{"k":"out_cdWhat","lab":"What happened","t":"ta"},{"k":"out_cdDate","lab":"Date of the complication","t":"date"},{"k":"out_cci","lab":"Comprehensive Complication Index (0–100)","t":"num"},{"k":"out_cdTiming","lab":"Timing","t":"sel","o":[["1","Intra-operative"],["2","Early (≤30 days)"],["3","Late (>30 days)"]]}]},{"name":"Revision surgery","fields":[{"k":"out_revDone","lab":"Any revision surgery","t":"sel","o":[["0","No"],["1","Yes"]]},{"k":"out_revDate","lab":"Date of the first revision","t":"date"},{"k":"out_revReason","lab":"Reason for revision","t":"sel","o":[["1","Infection"],["2","Aseptic loosening"],["3","Implant failure or breakage"],["4","Peri-prosthetic fracture"],["5","Local recurrence"],["6","Non-union"],["7","Soft-tissue failure / instability"],["8","Leg-length problem"],["9","Other"]]},{"k":"out_revType","lab":"What was done at revision","t":"ta"},{"k":"out_revCount","lab":"Number of revisions so far","t":"num"},{"k":"out_implantStatus","lab":"Reconstruction at last review","t":"sel","o":[["1","In situ and working"],["2","In situ but failing"],["0","Removed"],["3","Converted to amputation"],["4","Not applicable"]]}]},{"name":"Follow-up status","fields":[{"k":"out_lastFu","lab":"Date of last follow-up","t":"date"},{"k":"out_status","lab":"Status at last follow-up","t":"sel","o":[["1","NED — no evidence of disease"],["2","AWD — alive with disease"],["3","DOD — died of disease"],["4","DOC — died of another cause"],["5","Lost to follow-up"]]},{"k":"out_recurDate","lab":"Date of recurrence, if any","t":"date"},{"k":"out_metsDate","lab":"Date metastasis found, if any","t":"date"},{"k":"out_deathDate","lab":"Date of death, if any","t":"date"},{"k":"out_notes","lab":"Outcome notes","t":"ta"}]}]}];
 const REG_CODES = {"sex": [["1", "Male"], ["2", "Female"]], "prevCancer": [["0", "No"], ["1", "Yes"]], "familyCancer": [["0", "No"], ["1", "Yes"]], "asa": [["1", "I — healthy, no systemic disease"], ["2", "II — mild systemic disease"], ["3", "III — severe systemic disease, limiting"], ["4", "IV — severe, constant threat to life"], ["5", "V — moribund, not expected to survive 24h"], ["6", "VI — brain-dead organ donor"]], "prevTx": [["1", "Nil", "No prior treatment"], ["2", "Proper biopsy", "Adequate diagnostic biopsy done"], ["3", "Unplanned excision", "'Whoops' excision without oncological planning"], ["4", "Planned resection", "Oncologically planned resection already done"]], "biopsyInst": [["1", "GTTH"], ["2", "Other"]], "biopsyType": [["1", "Core Needle"], ["2", "Incisional"], ["3", "Excisional"], ["4", "Curettage"], ["5", "FNAC"]], "primaryTissue": [["1", "Bone"], ["2", "Soft tissue"], ["3", "Skin"], ["4", "Neural tissue"]], "site": [["1a", "Bone — clavicle"], ["1b", "Bone — scapula"], ["1c", "Bone — humerus"], ["1d", "Bone — radius"], ["1e", "Bone — ulna"], ["1f", "Bone — hand"], ["1g", "Bone — spine"], ["1h", "Bone — pelvis"], ["1i", "Bone — femur"], ["1j", "Bone — tibia"], ["1k", "Bone — fibula"], ["1l", "Bone — foot"], ["1m", "Bone — multiple"], ["1n", "Bone — patella"], ["1o", "Bone — others"], ["2a", "Soft tissue — trunk"], ["2b", "Soft tissue — arm"], ["2c", "Soft tissue — forearm"], ["2d", "Soft tissue — hand"], ["2e", "Soft tissue — thigh"], ["2f", "Soft tissue — leg"], ["2g", "Soft tissue — foot"], ["2h", "Soft tissue — joint"], ["2i", "Soft tissue — multiple"], ["2j", "Soft tissue — other"], ["3a", "Spine — extradural"], ["3b", "Spine — intradural extramedullary"], ["3c", "Spine — intradural intramedullary"], ["4", "Brain"]], "nature": [["1", "Benign latent + active", "Benign, non-aggressive (Enneking stage 1–2)"], ["2", "Benign aggressive", "Locally aggressive benign (Enneking stage 3)"], ["3", "Malignant low grade", "Low-grade malignancy"], ["4", "Malignant high grade", "High-grade malignancy"]], "tumorType": [["1", "Primary", "First presentation, not previously treated"], ["2", "Recurrent", "Returned after prior treatment"], ["3", "Residual", "Tumour left behind after incomplete excision"], ["4", "Metastatic", "Spread from a primary elsewhere"]], "grade": [["1", "G1 — low grade", "Well differentiated; low mitoses, little/no necrosis — least aggressive"], ["2", "G2 — intermediate grade", "Intermediate differentiation & mitotic activity"], ["3", "G3 — high grade", "Poorly differentiated; high mitoses & necrosis — most aggressive"]], "stage": [["1", "Stage IA", "G1, T1 (≤5 cm), N0, M0 — low grade, small"], ["2", "Stage IB", "G1, T2–T4 (>5 cm), N0, M0 — low grade, larger"], ["3", "Stage II", "G2–G3, T1 (≤5 cm), N0, M0 — high grade, small"], ["4", "Stage IIIA", "G2–G3, T2 (>5–10 cm), N0, M0 — high grade"], ["5", "Stage IIIB", "G2–G3, T3–T4 (>10 cm), N0, M0 — high grade, large"], ["6", "Stage IV", "Any N1 (nodal) or M1 (distant metastasis)"]], "margin": [["0", "R0", "No residual tumour — margins microscopically clear"], ["1", "R1", "Microscopic residual tumour at the margin"], ["2", "R2", "Macroscopic (gross) residual tumour"]], "necrosis": [["0", "<10%", "Best response to neo-adjuvant therapy"], ["1", "<50%", ""], ["2", ">50%", ""], ["3", ">90%", "Near-complete response (>90% necrosis)"]], "xray": [["0", "Normal-looking", "No aggressive features"], ["1a", "Geographic IA", "Geographic lucency with sclerotic rim — least aggressive"], ["1b", "Geographic IB", "Geographic, well-defined margin, no sclerotic rim"], ["1c", "Geographic IC", "Geographic with ill-defined margin"], ["2", "Moth-eaten (II)", "Multiple small lucencies — more aggressive"], ["3", "Permeative (III)", "Ill-defined permeative spread — most aggressive"], ["4", "Sclerotic lesion", "Bone-forming / blastic lesion"], ["5", "Pathological fracture", "Fracture through the lesion"]], "intent": [["1", "Curative"], ["2", "Palliative"]], "limbPres": [["1", "Limb sparing"], ["2", "Amputation"], ["3", "Other"]], "surgType": [["1", "Intralesional / debulking", "Plane passes through the tumour itself"], ["2", "Marginal", "Through the reactive zone / pseudocapsule"], ["3", "Wide resection", "Cuff of normal tissue, intracompartmental"], ["4", "Radical", "Entire compartment removed"], ["5", "Others", ""]], "planType": [["1", "Single-stage"], ["2", "Planned two-stage (1st done)"], ["3", "Planned two-stage (2nd done)"], ["4", "Unplanned staged"], ["5", "Unknown"]], "frozen": [["0", "Not done", ""], ["1", "Done — negative", "Intra-op frozen section: margin clear"], ["2", "Done — positive", "Intra-op frozen section: tumour at margin"]], "reconType": [["0", "None"], ["1", "Primary"], ["2", "Revision"]], "implantCo": [["0", "No implant"], ["1", "AK Chinese"], ["2", "Implantcast"], ["3", "Locally manufactured"], ["4", "Other"]], "br_autograft": [["0", "None"], ["1", "Non-structural"], ["2", "Non-vascular structural"], ["3", "Vascular structural"], ["4", "Recycled"]], "br_recycled": [["0", "None"], ["1", "Liquid nitrogen"], ["2", "Autoclaving"], ["3", "Radiation"], ["4", "Pasteurization"]], "br_interface": [["0", "None"], ["1", "Non-vascular bone graft"], ["2", "Vascularized bone graft"]], "br_allograft": [["0", "None"], ["1", "Non-structural"], ["2", "Structural"]], "br_boneSub": [["0", "No"], ["1", "Yes"]], "br_intFix": [["0", "No"], ["1", "Yes"]], "br_endoprosth": [["0", "No"], ["1", "Yes"]], "br_cement": [["0", "No"], ["1", "Yes"]], "br_distraction": [["0", "No"], ["1", "Yes"]], "st_recon": [["0", "None"], ["1", "STSG"], ["2", "FTSG"], ["3", "Local flap"], ["4", "Regional flap"], ["5", "Free flap"], ["6", "Vascular recon"], ["7", "Nerve graft"], ["8", "Delayed recon planned"]], "st_attach": [["0", "None"], ["1", "Attachment tube (Trivera)"], ["2", "Synthetic mesh"], ["3", "Biological mesh"], ["4", "Mersilene tape"]], "st_npt": [["0", "No"], ["1", "Yes"]], "neo_rt": [["0", "None"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]], "neo_sys": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]], "neo_regimen": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]], "adj_rt": [["0", "Nil"], ["1", "EBRT"], ["2", "IMRT"], ["3", "Brachytherapy"]], "adj_sys": [["0", "No"], ["1", "Chemotherapy"], ["2", "Chemo + immuno / targeted"], ["3", "Denosumab / bisphosphonate"]], "adj_regimen": [["0", "None"], ["1", "MAP"], ["2", "VAC/IE"], ["3", "CHOP"], ["3b", "VIDE"], ["4", "CVD"], ["5", "Immunotherapy"], ["6", "Targeted therapy"], ["7", "Other"]], "ec_nerve": [["0", "No"], ["1", "Yes"]], "ec_vascular": [["0", "No"], ["1", "Yes"]], "ec_fracture": [["0", "No"], ["1", "Yes"]], "ec_wound": [["0", "No"], ["1", "Dehiscence"], ["2", "Necrosis"], ["3", "Hematoma / seroma"]], "ec_flap": [["0", "No"], ["1", "Minimal necrosis"], ["2", "Significant necrosis — reoperation"]], "ec_systemic": [["0", "None"], ["1", "DVT / PE"], ["2", "Sepsis"], ["3", "Pneumonia"], ["4", "Cardiac event"], ["5", "Renal complication"]], "ec_dural": [["0", "None"], ["1", "Early"], ["2", "Late (pseudomeningocele)"]], "lc_infection": [["0", "None"], ["1", "Superficial"], ["2", "Deep"], ["3", "Prosthetic"]], "lc_tumor": [["0", "None"], ["1", "Involved margin"], ["2", "Local recurrence"], ["3", "Metastasis"], ["4", "Local recurrence + metastasis"]], "lc_boneImplant": [["0", "None"], ["1", "Non-union"], ["2", "Fracture"], ["3", "Loosening"]], "lc_endo": [["0", "None"], ["1", "Loosening"], ["2", "Wear"], ["3", "Peri-prosthetic fracture"], ["4", "Dislocation"]], "addSurgCx": [["0", "No"], ["1", "Yes"]], "addSurgSame": [["0", "No"], ["1", "Yes"]], "preNeuro": [["0", "0 — No contraction"], ["1", "1 — Flicker"], ["2", "2 — Not against gravity"], ["3", "3 — Against gravity"], ["4", "4 — Against resistance, weaker"], ["5", "5 — Normal strength"]], "postNeuro": [["1", "Normal"], ["2", "Improved"], ["3", "Same"], ["4", "Worsened"], ["5", "New deficit"]], "preMsk": [["1", "Full weight bearing"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"]], "postMsk": [["1", "Back to normal function"], ["2", "Ambulant without support"], ["3", "Ambulant with prosthesis"], ["4", "Ambulant with support"], ["5", "Chair / bed bound"], ["6", "Other"]], "out_analgesia": [["0", "None"], ["1", "Simple / NSAID"], ["2", "Weak opioid"], ["3", "Strong opioid"], ["4", "Neuropathic agent"]], "out_gait": [["0", "None"], ["1", "Stick"], ["2", "One crutch"], ["3", "Two crutches"], ["4", "Walker"], ["5", "Wheelchair"]], "out_cdGrade": [["0", "None", "No complication at all"], ["1", "I — no treatment needed", "Any deviation from the normal course needing no drug, surgical, endoscopic or radiological treatment (antiemetics, antipyretics, analgesics, physiotherapy and bedside wound opening are allowed)"], ["2", "II — drugs, transfusion, TPN", "Needing drug treatment beyond grade I, including blood transfusion and total parenteral nutrition"], ["3a", "IIIa — intervention, no general anaesthetic", "Needing surgical, endoscopic or radiological intervention under local anaesthesia or sedation"], ["3b", "IIIb — intervention under general anaesthetic", "Needing intervention under general anaesthesia"], ["4a", "IVa — single-organ failure", "Life-threatening, needing intensive care; single-organ dysfunction including dialysis"], ["4b", "IVb — multi-organ failure", "Life-threatening, needing intensive care; multi-organ dysfunction"], ["5", "V — death", "Death of the patient"]], "out_cdTiming": [["1", "Intra-operative"], ["2", "Early (≤30 days)"], ["3", "Late (>30 days)"]], "out_revDone": [["0", "No"], ["1", "Yes"]], "out_revReason": [["1", "Infection"], ["2", "Aseptic loosening"], ["3", "Implant failure or breakage"], ["4", "Peri-prosthetic fracture"], ["5", "Local recurrence"], ["6", "Non-union"], ["7", "Soft-tissue failure / instability"], ["8", "Leg-length problem"], ["9", "Other"]], "out_implantStatus": [["1", "In situ and working"], ["2", "In situ but failing"], ["0", "Removed"], ["3", "Converted to amputation"], ["4", "Not applicable"]], "out_status": [["1", "NED — no evidence of disease"], ["2", "AWD — alive with disease"], ["3", "DOD — died of disease"], ["4", "DOC — died of another cause"], ["5", "Lost to follow-up"]]};
 const REG_COLMAP = {"1": "regNo", "2": "mrn", "3": "team", "4": "name", "5": "cnic", "6": "age", "7": "sex", "8": "city", "9": "province", "10": "contact", "11": "firstVisit", "12": "prevCancer", "13": "familyCancer", "14": "asa", "15": "dateAdm", "16": "prevTx", "17": "biopsyInst", "18": "biopsyType", "19": "primaryTissue", "20": "site", "21": "nature", "22": "tumorType", "23": "diagnosis", "24": "histSubtype", "25": "grade", "26": "stage", "27": "sins", "28": "margin", "29": "necrosis", "30": "xray", "31": "mri", "32": "otherRad", "33": "dateMdt", "34": "mdtDecision", "35": "dateSurg", "36": "intent", "37": "limbPres", "38": "surgType", "39": "planType", "40": "surgDetails", "41": "surgeon", "42": "frozen", "43": "reconType", "44": "implantCo", "45": "br_autograft", "46": "br_recycled", "47": "br_interface", "48": "br_allograft", "49": "br_boneSub", "50": "br_intFix", "51": "br_endoprosth", "52": "br_cement", "53": "br_distraction", "54": "st_recon", "55": "st_attach", "56": "st_npt", "57": "bloodLoss", "58": "neo_rt", "59": "neo_rtDose", "60": "neo_sys", "61": "neo_cycles", "62": "neo_regimen", "63": "neo_dateDone", "64": "adj_rt", "65": "adj_rtDose", "66": "adj_sys", "67": "adj_cycles", "68": "adj_regimen", "69": "adj_dateDone", "70": "ec_nerve", "71": "ec_vascular", "72": "ec_fracture", "73": "ec_wound", "74": "ec_flap", "75": "ec_systemic", "76": "ec_dural", "77": "ec_details", "78": "lc_infection", "79": "lc_tumor", "80": "lc_recurDur", "81": "lc_boneImplant", "82": "lc_endo", "83": "addSurgCx", "84": "addSurgSame", "85": "addSurgDetails", "86": "preNeuro", "87": "postNeuro", "88": "neuroDetails", "89": "preMsk", "90": "postMsk", "91": "mstsUL", "92": "mstsLL"};
 const REG_COLCOUNT = 96;
@@ -13360,6 +14653,12 @@ function regSave(){
      operated in April and it takes April's slot, with everything after it shifting down. */
   let moved = 0;
   if(typeof regAutoRenumber==='function'){ try{ moved = regAutoRenumber(); }catch(e){} }
+  /* came here from the MDT board -> point the two records at each other */
+  const fromMdt = window.__regFromMdt; window.__regFromMdt = '';
+  if(fromMdt){
+    const c=(db.mdt||[]).filter(function(x){ return x.id===fromMdt; })[0];
+    if(c && !c.registryId){ c.registryId = saved.id; syncTouch(c); }
+  }
   persist(); regCloseForm(); regRenderList(); regRenderKpis(); regRenderAnalytics();
   if(moved) toast(moved+' number'+(moved>1?'s':'')+' shifted to keep the year in date order');
   if(typeof gdRunQueue==='function') setTimeout(gdRunQueue, 400);
@@ -13492,7 +14791,7 @@ function regRenderList(){
     '<td><button class="btn btn-ghost btn-sm" onclick="regEdit(\''+r.id+'\')">Open</button> '+
        regRecordBtn(r)+
        '<button class="btn btn-ghost btn-sm" title="Draft a referral to medical or radiation oncology" onclick="openRegReferral(\''+r.id+'\')">📨</button> '+
-       '<button class="btn btn-ghost btn-sm" title="Bring this case to the MDT board" onclick="mdtFromRegistry(\''+r.id+'\')">🧑\u200d⚕️ MDT</button> '+
+       '<button class="btn btn-ghost btn-sm" title="'+(mdtForRegistry(r.id).length?'Open this case on the MDT board':'Bring this case to the MDT board')+'" onclick="mdtOpenForRegistry(\''+r.id+'\')">🧑\u200d⚕️ MDT'+(mdtForRegistry(r.id).length?' \u21b1':'')+'</button> '+
        '<button class="btn btn-ghost btn-sm" title="Printable summary (PDF)" onclick="regPrintEntry(\''+r.id+'\')">🖨</button> '+
        '<button class="btn btn-danger btn-sm" onclick="regDelete(\''+r.id+'\')">✕</button></td></tr>';
   }).join('');
@@ -13824,11 +15123,47 @@ function regImportRows(rows){
 }
 function regImportCsv(file){ if(!file) return; const rd=new FileReader(); rd.onload=()=>{ try{ regImportRows(regParseCsv(String(rd.result))); }catch(e){ toast('⚠ Could not read CSV'); } const f=$('regImpFile'); if(f) f.value=''; }; rd.readAsText(file); }
 async function regInflateRaw(bytes){ const ds=new DecompressionStream('deflate-raw'); const s=new Response(new Blob([bytes]).stream().pipeThrough(ds)); const ab=await s.arrayBuffer(); return new Uint8Array(ab); }
-async function regUnzip(buf){ const files={}; const dv=new DataView(buf.buffer, buf.byteOffset, buf.byteLength); let o=0;
+/* Read a zip through its CENTRAL DIRECTORY, not by walking local headers.
+   Excel (and anything that streams a zip) sets the "data descriptor" flag, bit 3 of
+   the general-purpose field: the local header then carries compressed size 0 and the
+   real size sits AFTER the data. Walking local headers reads 0 bytes for every entry
+   and the file silently imports as empty. The central directory always has the true
+   sizes, so it is the only reliable place to read them from. */
+async function regUnzip(buf){
+  const files={}; const dv=new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+  const dec=new TextDecoder();
+  // end-of-central-directory: scan back from the end (the comment is at most 64 KB)
+  let eo=-1; const back=Math.max(0, buf.length-66000);
+  for(let i=buf.length-22;i>=back;i--){
+    if(buf[i]===0x50&&buf[i+1]===0x4B&&buf[i+2]===0x05&&buf[i+3]===0x06){ eo=i; break; }
+  }
+  if(eo>=0){
+    let n=dv.getUint16(eo+10,true), o=dv.getUint32(eo+16,true);
+    for(let k=0;k<n && o+46<=buf.length;k++){
+      if(!(buf[o]===0x50&&buf[o+1]===0x4B&&buf[o+2]===0x01&&buf[o+3]===0x02)) break;
+      const method=dv.getUint16(o+10,true);
+      const comp=dv.getUint32(o+20,true);
+      const nlen=dv.getUint16(o+28,true), elen=dv.getUint16(o+30,true), clen=dv.getUint16(o+32,true);
+      const lo=dv.getUint32(o+42,true);
+      const name=dec.decode(buf.subarray(o+46,o+46+nlen));
+      const lnlen=dv.getUint16(lo+26,true), lelen=dv.getUint16(lo+28,true);
+      const ds=lo+30+lnlen+lelen;
+      const data=buf.subarray(ds, ds+comp);
+      try{ files[name]= method===0? data : await regInflateRaw(data); }catch(e){ files[name]=new Uint8Array(0); }
+      o += 46+nlen+elen+clen;
+    }
+    if(Object.keys(files).length) return files;
+  }
+  // fallback: no usable central directory, walk the local headers
+  let o=0;
   while(o+30<=buf.length && buf[o]===0x50&&buf[o+1]===0x4B&&buf[o+2]===0x03&&buf[o+3]===0x04){
-    const method=dv.getUint16(o+8,true); const comp=dv.getUint32(o+18,true); const nlen=dv.getUint16(o+26,true); const elen=dv.getUint16(o+28,true);
-    const name=new TextDecoder().decode(buf.subarray(o+30,o+30+nlen)); const ds2=o+30+nlen+elen; const data=buf.subarray(ds2, ds2+comp);
-    try{ files[name]= method===0? data : await regInflateRaw(data); }catch(e){ files[name]=new Uint8Array(0); } o=ds2+comp; }
+    const method=dv.getUint16(o+8,true); const comp=dv.getUint32(o+18,true);
+    const nlen=dv.getUint16(o+26,true); const elen=dv.getUint16(o+28,true);
+    const name=dec.decode(buf.subarray(o+30,o+30+nlen)); const ds2=o+30+nlen+elen;
+    const data=buf.subarray(ds2, ds2+comp);
+    try{ files[name]= method===0? data : await regInflateRaw(data); }catch(e){ files[name]=new Uint8Array(0); }
+    o=ds2+comp;
+  }
   return files; }
 function regColToIdx(s){ let n=0; for(let i=0;i<s.length;i++) n=n*26+(s.charCodeAt(i)-64); return n-1; }
 async function regImportXlsx(file){
