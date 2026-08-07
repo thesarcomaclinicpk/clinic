@@ -2064,6 +2064,29 @@ body.presenting{overflow:hidden}
 .mp-hint{color:#6f86a3;font-size:12px}
 .warn-txt{color:#b45309}
 @media (max-width:900px){ .mp-cols{flex-direction:column} .mp-side{flex:1 1 auto;max-width:none} .mp-fig{max-width:100%} }
+.reg-tag.files{background:#e0e7ff;color:#3730a3}
+html.dark .reg-tag.files{background:#312e81;color:#c7d2fe}
+/* ---- MDT audit ---- */
+.done-chip{display:inline-block;background:#d1fae5;color:#065f46;border-radius:999px;padding:1px 8px;
+           font-size:11px;margin:1px 2px 1px 0}
+html.dark .done-chip{background:#064e3b;color:#a7f3d0}
+.ov-txt{color:#b91c1c;font-weight:600}
+.an-2col{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+/* ---- agreed but not done, and readiness ---- */
+.ac-badge{background:#b91c1c;color:#fff;border-radius:999px;padding:2px 10px;font-size:11.5px;margin-left:auto}
+tr.ac-over td{background:rgba(185,28,28,.06)}
+tr.ac-nodate td{background:rgba(217,119,6,.06)}
+.gap-chip{display:inline-block;background:#fef3c7;color:#92400e;border-radius:999px;padding:1px 8px;
+          font-size:11px;margin:1px 2px 1px 0;white-space:nowrap}
+html.dark .gap-chip{background:#78350f;color:#fde68a}
+.ag-h{font-size:13px;margin:14px 0 6px;padding-bottom:3px;border-bottom:1px solid #999}
+.ag-c{margin-bottom:11px;padding-bottom:9px;border-bottom:1px dotted #ccc}
+.ag-t{font-size:12.5px}
+.ag-d{font-size:12px;margin-top:2px}
+.ag-k{font-size:11.5px;color:#333;margin-top:3px}
+.ag-q{font-size:11.5px;margin-top:4px}
+.ag-g{font-size:10.5px;color:#92400e;margin-top:4px}
+@media print{ .ag-c{break-inside:avoid} }
 /* ---- choosing what to present ---- */
 .mdt-pick{position:fixed;inset:0;z-index:9100;background:rgba(15,23,42,.55);display:flex;
           align-items:center;justify-content:center;padding:20px}
@@ -3237,6 +3260,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <input type="text" id="regSearch" placeholder="Search any field — e.g. osteosarcoma, femur, R0…" autocomplete="off" spellcheck="false" style="max-width:340px" oninput="regRenderList()">
     </div>
     <div class="dfbar" id="regDf"></div>
+    <div class="chiprow" id="regPurposeChips" style="margin:2px 0 8px"></div>
     <div class="reg-selbar hidden" id="regSelBar"></div>
     <div class="reg-cards" id="regCards"></div>
     <table class="list reg-table">
@@ -3265,6 +3289,10 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   <div id="regFormScreen" class="scr hidden">
   <div class="scr-bar"><button class="btn btn-ghost" onclick="regCloseForm()">← Back to list</button><span id="regFormCrumb">New registry entry</span>
     <span style="flex:1"></span>
+    <div class="seg" id="regPurposeSeg" style="margin:0 10px 0 0" title="A folder kept only for films and reports is not a registry case">
+      <button class="seg-btn" data-v="case" onclick="regSetPurpose('case')">Registry case</button>
+      <button class="seg-btn" data-v="files" onclick="regSetPurpose('files')">Records only</button></div>
+    <span class="muted small" id="regPurposeNote" style="max-width:280px"></span>
     <div class="seg" style="margin:0"><button class="seg-btn" id="regModeRail" onclick="regSetMode('rail')">Sidebar</button><button class="seg-btn" id="regModeFull" onclick="regSetMode('full')">Full form</button></div>
     <button class="btn btn-green" onclick="regSave()">💾 Save</button></div>
   <div class="reg-formwrap" id="regFormWrap">
@@ -3299,15 +3327,19 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   <!-- ---------- LIST ---------- -->
   <div id="mdtListScreen" class="scr">
     <div class="mdt-kpis" id="mdtKpis"></div>
+    <div id="mdtActionsCard" class="hidden"></div>
+    <div id="mdtReadyCard" class="hidden"></div>
     <div class="card">
       <div class="reg-toolbar">
         <button class="btn btn-green" onclick="mdtNew()">＋ Submit a case</button>
         <button class="btn btn-primary btn-sm" onclick="mtgNew()">🗓 New MDT meeting</button>
         <button class="btn btn-ghost btn-sm" onclick="mdtShowMeetings()">📋 Meetings &amp; minutes</button>
+        <button class="btn btn-ghost btn-sm" onclick="mdtShowStats()" title="Was it carried out, and the numbers behind the board">📊 Audit &amp; numbers</button>
         <label class="btn btn-ghost btn-sm" style="cursor:pointer" title="Bring in an existing MDT spreadsheet">⤒ Import sheet
           <input type="file" id="mdtImpFile" accept=".xlsx,.xlsm" hidden onchange="mdtImportPick(this.files[0])"></label>
         <button class="btn btn-ghost btn-sm" onclick="mdtExportXlsx()" title="Compile exactly what is listed below into the MDT spreadsheet">⤓ Compile Excel</button>
         <button class="btn btn-ghost btn-sm" onclick="mdtCompilePrint()" title="The same sheet as an A4 printout / PDF">🖨 Compile PDF</button>
+        <button class="btn btn-ghost btn-sm" onclick="mdtAgendaPrint()" title="The pack to send the team before the meeting">📋 Agenda</button>
         <button class="btn btn-primary btn-sm" onclick="mdtPresPick()" title="Choose a meeting and its cases, then present full-screen">▶ Present…</button>
         <button class="btn btn-ghost btn-sm hidden" id="mdtPrepBtn" onclick="mdtPrepare()"></button>
         <span style="flex:1"></span>
@@ -3329,6 +3361,12 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   </div>
 
   <!-- ---------- CASE FORM ---------- -->
+  <div id="mdtStatsScreen" class="scr hidden">
+    <div class="scr-bar"><button class="btn btn-ghost btn-sm" onclick="mdtShowList()">← Back to the board</button>
+      <span>MDT audit &amp; numbers</span></div>
+    <div id="mdtStatsBody"></div>
+  </div>
+
   <div id="mdtFormScreen" class="scr hidden">
     <div class="scr-bar"><button class="btn btn-ghost" onclick="mdtShowList()">← Back to the board</button>
       <span id="mdtFormCrumb">New MDT case</span>
@@ -3677,7 +3715,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   <div class="card">
     <h2>3 · Sync</h2>
     <div class="btn-bar">
-      <button class="btn btn-primary" onclick="syncNow()">↻ Sync now</button>
+      <button class="btn btn-primary" onclick="syncNow(true,true)">↻ Sync now</button>
+      <button class="btn btn-ghost" onclick="syncCompare()" title="Compare this device against the cloud, collection by collection">🔍 Check what is missing</button>
+      <button class="btn btn-ghost" onclick="if(confirm('Read everything from the cloud again?\n\nNothing is deleted — this only refreshes what this device knows.')) syncFullResync(true)" title="Read the whole log again and rebuild">⟳ Full resync</button>
       <button class="btn btn-ghost" onclick="syncPush().then(()=>toast('Uploaded')).catch(e=>toast('⚠ '+e.message))" title="Send this device's data up">⬆ Upload all</button>
       <button class="btn btn-ghost" onclick="if(confirm('Download cloud data and merge into this device?')) syncPull(false).then(()=>toast('Downloaded')).catch(e=>toast('⚠ '+e.message))" title="Bring cloud data down">⬇ Download all</button>
     </div>
@@ -4682,7 +4722,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 42;
+const SEED_VERSION = 43;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -4699,6 +4739,8 @@ function freshDB(){
     patients:[], visits:[], templates: seedTemplates(), noteTemplates:[], documents:[], surgeries:[], expenses:[],
     users:[], queue:[], appts:[], videos:[], registry:[], inventory:[], qrcodes:[], leaflets:[], recalls:[],
     chips:[], ixRules:[], mdt:[], mdtMeetings:[],
+    activity:[], accesslog:[], pendingChanges:[],
+    prefs:[{id:'favs', favMeds:[], favTpls:[], updatedAt:''}],
     instrPresets: seedInstrPresets(),
     seq:{mrn:1, med:SEED_MEDS.length+1, mrnDay:null}, seedVersion: SEED_VERSION
   };
@@ -5011,6 +5053,40 @@ function migrateDB(){
         if(pt && pt.phone) c.contact=pt.phone;
       }
     });
+  }
+  /* v43 — one sync engine for everything.
+     The four side-channels became ordinary collections, favourites became an
+     ordinary record, and the old guessing state (knownIds / suppressed / sent /
+     seenIds / tombs) is dropped. The first sync after this reads the whole log
+     once and rebuilds from it, so nothing is lost by throwing that state away. */
+  if((db.seedVersion||1) < 43){
+    db.activity = db.activity || [];
+    db.accesslog = db.accesslog || [];
+    db.pendingChanges = db.pendingChanges || [];
+    db.prefs = db.prefs || [];
+    if(!db.prefs.filter(function(x){ return x && x.id==='favs'; }).length){
+      db.prefs.push({id:'favs', favMeds:((db.settings||{}).favMeds||[]).slice(),
+                     favTpls:((db.settings||{}).favTpls||[]).slice(),
+                     updatedAt:new Date().toISOString()});
+    }
+    /* records with no stamp can never win a merge — give the ones this device holds
+       a stamp now, before the new engine starts comparing them */
+    const t0=new Date().toISOString();
+    SYNC_COLLS.forEach(function(k){ (db[k]||[]).forEach(function(r){
+      if(r && r.id!=null && !r.updatedAt) r.updatedAt=t0; }); });
+    /* carry any pending deletions across from the old tombstone store */
+    const c=db.settings && db.settings.sync;
+    if(c){
+      const old=c.tombs||{};
+      c.gone=c.gone||{};
+      Object.keys(old).forEach(function(key){
+        const p=key.split('|'); if(p.length<2) return;
+        const at=(typeof old[key]==='string')?old[key]:new Date().toISOString();
+        if(!c.gone[key]) c.gone[key]={k:p[0], id:p.slice(1).join('|'), at:at, by:''};
+      });
+      delete c.tombs; delete c.knownIds; delete c.suppressed; delete c.sent; delete c.seenIds;
+      c.cur='';                                   // force one full read on the next sync
+    }
   }
   db.seedVersion = SEED_VERSION;
   persist();
@@ -6233,15 +6309,15 @@ function mdtNextStep(c){
 /* ---------- screens ---------- */
 let mdtEditId = null, mdtPatientId = null, mdtStageFilter = 'all';
 let mtgEditId = null;
-function mdtShowList(){ ['mdtFormScreen','mdtMtgScreen','mtgFormScreen'].forEach(function(id){ const e=$(id); if(e) e.classList.add('hidden'); });
+function mdtShowList(){ ['mdtFormScreen','mdtMtgScreen','mtgFormScreen','mdtStatsScreen'].forEach(function(id){ const e=$(id); if(e) e.classList.add('hidden'); });
   const l=$('mdtListScreen'); if(l) l.classList.remove('hidden'); mdtRenderList(); window.scrollTo({top:0,behavior:'smooth'}); }
-function mdtShowForm(){ ['mdtListScreen','mdtMtgScreen','mtgFormScreen'].forEach(function(id){ const e=$(id); if(e) e.classList.add('hidden'); });
+function mdtShowForm(){ ['mdtListScreen','mdtMtgScreen','mtgFormScreen','mdtStatsScreen'].forEach(function(id){ const e=$(id); if(e) e.classList.add('hidden'); });
   const f=$('mdtFormScreen'); if(f) f.classList.remove('hidden');
   if(RAILS['mdt']) railApply('mdt');
   window.scrollTo({top:0,behavior:'smooth'}); }
-function mdtShowMeetings(){ ['mdtListScreen','mdtFormScreen','mtgFormScreen'].forEach(function(id){ const e=$(id); if(e) e.classList.add('hidden'); });
+function mdtShowMeetings(){ ['mdtListScreen','mdtFormScreen','mtgFormScreen','mdtStatsScreen'].forEach(function(id){ const e=$(id); if(e) e.classList.add('hidden'); });
   const m=$('mdtMtgScreen'); if(m) m.classList.remove('hidden'); mtgRenderList(); window.scrollTo({top:0,behavior:'smooth'}); }
-function mtgShowForm(){ ['mdtListScreen','mdtFormScreen','mdtMtgScreen'].forEach(function(id){ const e=$(id); if(e) e.classList.add('hidden'); });
+function mtgShowForm(){ ['mdtListScreen','mdtFormScreen','mdtMtgScreen','mdtStatsScreen'].forEach(function(id){ const e=$(id); if(e) e.classList.add('hidden'); });
   const f=$('mtgFormScreen'); if(f) f.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); }
 
 function renderMdt(){
@@ -6271,7 +6347,10 @@ function mdtRenderList(){
       '<div class="mdt-k" style="--k-c:#0d9488" onclick="mdtFilter(\'all\')"><div class="kv">'+open.length+'</div><div class="kl">Open cases</div></div>'+
       '<div class="mdt-k" style="--k-c:#dc2626" onclick="mdtFilter(\'all\')"><div class="kv">'+urgent+'</div><div class="kl">Marked urgent</div></div>'+
       '<div class="mdt-k" style="--k-c:#d97706" onclick="mdtFilter(\'ready\')"><div class="kv">'+ready+'</div><div class="kl">Ready for the MDT</div></div>'+
-      '<div class="mdt-k" style="--k-c:#4f46e5" onclick="mdtShowMeetings()"><div class="kv">'+acts+'</div><div class="kl">Actions still open</div></div>';
+      '<div class="mdt-k" style="--k-c:#4f46e5" onclick="mdtShowMeetings()"><div class="kv">'+acts+'</div><div class="kl">Actions still open</div></div>'+
+      (function(){ const o=(typeof mdtActionsOverdue==='function')?mdtActionsOverdue().length:0;
+        return o ? '<div class="mdt-k" style="--k-c:#b91c1c" onclick="document.getElementById(\'mdtActionsCard\').scrollIntoView({behavior:\'smooth\'})">'+
+          '<div class="kv">'+o+'</div><div class="kl">Overdue actions</div></div>' : ''; })();
   }
   const q = (($('mdtSearch')||{}).value||'').trim().toLowerCase();
   const rows = mdtFiltered();
@@ -6281,6 +6360,8 @@ function mdtRenderList(){
   if(cl) cl.textContent = threads.length===rows.length ? ''
     : (threads.length+' patient'+(threads.length===1?'':'s')+' \u00b7 '+rows.length+' discussions');
   if(typeof mdtPresPaintReady==='function') mdtPresPaintReady();
+  if(typeof renderMdtActions==='function') renderMdtActions();
+  if(typeof renderMdtReady==='function') renderMdtReady();
   const e=$('mdtEmpty'); if(e) e.classList.toggle('hidden', all.length>0);
   const body=$('mdtListBody'); if(!body) return;
   body.innerHTML = threads.map(function(t){
@@ -6302,6 +6383,315 @@ function mdtRenderList(){
 }
 function mdtFilter(k){ mdtStageFilter=k; mdtShowList(); }
 
+/* ===== MDT ANALYTICS =====
+   Computed from the records on the device, never pre-aggregated, so the numbers cannot
+   drift. It answers the questions a unit gets asked at audit: how many cases, how long
+   they wait for a decision, how often a case has to come back, and where they stall. */
+function mdtMedian(xs){
+  const a=xs.filter(function(x){ return x!=null && !isNaN(x); }).sort(function(p,q){ return p-q; });
+  if(!a.length) return null;
+  return a.length%2 ? a[(a.length-1)/2] : Math.round((a[a.length/2-1]+a[a.length/2])/2);
+}
+function mdtStats(){
+  const cases=mdtCases();
+  const nos=mdtMeetingNo();
+  /* cases per meeting, oldest first */
+  const perMeeting=mdtMeetings().slice().sort(function(a,b){
+      const ad=String(a.date||'\uffff'), bd=String(b.date||'\uffff');
+      return ad.localeCompare(bd) || (a.no||0)-(b.no||0); })
+    .map(function(m){
+      return {label:(nos[m.id]||'MDM').replace('MDM ','M'),
+              value:cases.filter(function(c){ return (c.decision||{}).meetingId===m.id; }).length}; });
+  /* submitted -> decided, in days */
+  const toDecision=cases.map(function(c){
+    const d=(c.decision||{}).date;
+    if(!d || !c.date) return null;
+    const n=mdtDaysBetween(c.date, d);
+    return (n>=0 && n<3650) ? n : null;
+  });
+  /* how often a patient has to come back */
+  const threads={};
+  cases.forEach(function(c){ const k=mdtThreadKeyOf(c); threads[k]=(threads[k]||0)+1; });
+  const patients=Object.keys(threads).length;
+  const repeats=Object.keys(threads).filter(function(k){ return threads[k]>1; }).length;
+  /* where cases sit, and how long they have sat there */
+  const byStage=MDT_STAGES.map(function(s){
+    const list=cases.filter(function(c){ return (c.stage||'submitted')===s.k; });
+    const ages=list.filter(function(c){ return c.date; })
+                   .map(function(c){ return mdtDaysBetween(c.date, localISO()); });
+    return {k:s.k, t:s.t, n:list.length, median:mdtMedian(ages)};
+  });
+  const tally=function(fn){ const o={}; cases.forEach(function(c){ const v=fn(c); if(v) o[v]=(o[v]||0)+1; }); return o; };
+  return {
+    cases:cases.length, patients:patients, meetings:mdtMeetings().length,
+    repeats:repeats, repeatPct:anPct(repeats, patients),
+    perMeeting:perMeeting,
+    perMeetingMedian:mdtMedian(perMeeting.map(function(m){ return m.value; })),
+    toDecisionMedian:mdtMedian(toDecision),
+    decided:cases.filter(function(c){ return (c.decision||{}).text; }).length,
+    open:cases.filter(function(c){ return c.stage!=='closed'; }).length,
+    byStage:byStage,
+    byTeam:tally(function(c){ return c.team ? 'Team '+c.team : ''; }),
+    byStatus:tally(function(c){ return c.status||''; }),
+    byIntent:tally(function(c){ return (c.decision||{}).intent||''; }),
+    byDx:tally(function(c){ return String(c.diagnosis||'').split('\n')[0].trim(); })
+  };
+}
+function renderMdtStats(){
+  const host=$('mdtStatsBody'); if(!host) return;
+  const s=mdtStats(), f=mdtFollowStats();
+  const d=function(v){ return v==null ? '\u2014' : String(v); };
+  let h='<div class="grid g4" style="margin-bottom:14px">'+
+    anTile(s.cases, 'Cases discussed', s.patients+' patients')+
+    anTile(s.meetings, 'Meetings held', s.perMeetingMedian!=null?('median '+s.perMeetingMedian+' a meeting'):'')+
+    anTile(d(s.toDecisionMedian)+(s.toDecisionMedian!=null?' d':''), 'Submission to decision', 'median')+
+    anTile(s.repeats, 'Came back again', s.repeatPct+'% of patients')+
+  '</div>';
+  h+='<div class="card"><h2>Cases per meeting</h2>'+
+     (s.perMeeting.length ? barChartSVG(s.perMeeting, function(v){ return String(v); })
+                          : '<p class="muted small">No meetings yet.</p>')+'</div>';
+  h+='<div class="card"><h2>Where cases are sitting</h2>'+
+     hbarChart(s.byStage.filter(function(x){ return x.n; }).map(function(x){
+        return [x.t+(x.median!=null?(' \u00b7 median '+x.median+' d old'):''), x.n]; }),
+        function(v){ return String(v); })+'</div>';
+  h+='<div class="an-2col">'+
+     '<div class="card"><h2>By team</h2>'+hbarChart(anTopPairs(s.byTeam,8), function(v){ return String(v); })+'</div>'+
+     '<div class="card"><h2>Pre-op / post-op</h2>'+hbarChart(anTopPairs(s.byStatus,6), function(v){ return String(v); })+'</div>'+
+     '</div>';
+  h+='<div class="an-2col">'+
+     '<div class="card"><h2>Commonest diagnoses</h2>'+hbarChart(anTopPairs(s.byDx,8), function(v){ return String(v); })+'</div>'+
+     '<div class="card"><h2>Intent of the decision</h2>'+hbarChart(anTopPairs(s.byIntent,6), function(v){ return String(v); })+'</div>'+
+     '</div>';
+  /* ---- the follow-through table ---- */
+  const rows=mdtFollowRows();
+  h+='<div class="card"><div class="scr-head"><h2>Was it carried out?</h2>'+
+      '<button class="btn btn-ghost btn-sm" onclick="mdtFollowCsv()">\u2b07 Export</button></div>'+
+    '<div class="grid g4" style="margin-bottom:12px">'+
+      anTile(f.total, 'Decisions recorded', '')+
+      anTile(f.operated, 'Operation on record', f.median!=null?('median '+f.median+' d after the MDT'):'')+
+      anTile(f.nothing, 'Nothing recorded yet', f.stale.length?(f.stale.length+' over 90 days'):'of those we can check', f.stale.length?'bad':'')+
+      anTile(f.unlinked, 'Cannot be checked', f.unlinked?'not linked to the registry':'')+
+    '</div>'+
+    (rows.length ? ('<table class="list"><thead><tr><th style="width:20%">Patient</th>'+
+      '<th>What the MDT agreed</th><th>What the registry shows</th><th style="width:110px">Gap</th></tr></thead><tbody>'+
+      rows.map(function(x){
+        const late = !!x.r && !x.done.length && x.waiting!=null && x.waiting>90;
+        return '<tr'+(late?' class="ac-over"':'')+'>'+
+          '<td><a href="#" onclick="mdtEdit(\''+x.c.id+'\');return false;"><b>'+esc(x.c.name||'\u2014')+'</b></a>'+
+            (x.c.mrn?'<br><span class="small muted">'+esc(x.c.mrn)+'</span>':'')+
+            (x.agreed?'<br><span class="small muted">'+esc(fmtDate(x.agreed))+'</span>':'')+'</td>'+
+          '<td class="small">'+esc(x.decision).replace(/\n/g,'<br>')+'</td>'+
+          '<td class="small">'+(x.done.length
+              ? x.done.map(function(t){ return '<span class="done-chip">'+esc(t)+'</span>'; }).join(' ')
+              : (x.r ? '<span class="muted">nothing recorded</span>'
+                     : '<span class="gap-chip">not linked to the registry</span>'))+'</td>'+
+          /* a case that comes back AFTER surgery gives a negative gap — that is not a
+             delay, it is a post-operative discussion, and a minus sign reads as a bug */
+          '<td class="small">'+(x.days!=null
+              ? (x.days>=0 ? (x.days+' days')
+                           : '<span class="muted">already done before this MDT</span>')
+              : (x.waiting!=null ? ('<span class="'+(late?'ov-txt':'muted')+'">'+x.waiting+' d waiting</span>') : '\u2014'))+'</td></tr>';
+      }).join('')+'</tbody></table>')
+     : '<p class="muted small">No decisions recorded yet.</p>')+'</div>';
+  host.innerHTML=h;
+}
+function mdtFollowCsv(){
+  const rows=mdtFollowRows();
+  if(!rows.length){ toast('Nothing to export'); return; }
+  const q=function(s){ return '"'+String(s==null?'':s).replace(/"/g,'""').replace(/\n/g,' ')+'"'; };
+  const head=['Patient','MR #','Team','Decided on','MDT decision','Registry shows','Surgery date',
+              'Days decision to surgery','Days waiting'].map(q).join(',');
+  const body=rows.map(function(x){
+    return [x.c.name, x.c.mrn, x.c.team, x.agreed, x.decision, x.done.join(' | '),
+            x.surgDate, (x.days==null?'':x.days), (x.days==null&&x.waiting!=null?x.waiting:'')]
+      .map(q).join(',');
+  }).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\ufeff'+head+'\n'+body],{type:'text/csv;charset=utf-8'}));
+  a.download='mdt-follow-through-'+localISO()+'.csv'; a.click(); URL.revokeObjectURL(a.href);
+  toast('Exported '+rows.length+' decision'+(rows.length===1?'':'s'));
+}
+function mdtShowStats(){
+  ['mdtListScreen','mdtFormScreen','mdtMtgScreen','mtgFormScreen'].forEach(function(id){
+    const e=$(id); if(e) e.classList.add('hidden'); });
+  const s=$('mdtStatsScreen'); if(s) s.classList.remove('hidden');
+  renderMdtStats();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+/* ===== DID THE DECISION ACTUALLY HAPPEN? =====
+   The board holds what was agreed; the registry holds what was done. The app is the only
+   place that has both, so it is the only place that can answer the audit question. No
+   attempt is made to read the decision text — the registry's own structured fields say
+   what happened, and the doctor reads the two side by side. */
+function mdtFollowRow(c){
+  const r=(db.registry||[]).filter(function(x){ return x.id===c.registryId; })[0] || null;
+  const agreed=(c.decision||{}).date || c.date || '';
+  const done=[];
+  let surgDate='';
+  if(r){
+    surgDate = regValidYmd(r.dateSurg) ? r.dateSurg : '';
+    if(surgDate) done.push('surgery '+fmtDate(surgDate));
+    const proc = String(r.surgDetails||'').trim() ||
+      (r.surgType ? regLabelFor('surgType', r.surgType) : '') ||
+      (r.planType ? regLabelFor('planType', r.planType) : '');
+    if(proc) done.push(proc);
+    if(String(r.neo_sys||'').trim() || String(r.neo_rt||'').trim()) done.push('neo-adjuvant recorded');
+    if(String(r.adj_sys||'').trim() || String(r.adj_rt||'').trim()) done.push('adjuvant recorded');
+    if(r.out_status) done.push(regLabelFor('out_status', r.out_status));
+  }
+  return {c:c, r:r, agreed:agreed,
+    decision: String((c.decision||{}).text||c.postMdtNote||'').trim(),
+    done: done, surgDate: surgDate,
+    days: (agreed && surgDate) ? mdtDaysBetween(agreed, surgDate) : null,
+    waiting: agreed ? mdtDaysBetween(agreed, localISO()) : null};
+}
+/* every case that has actually been decided, newest decision first */
+function mdtFollowRows(){
+  return mdtCases().filter(function(c){
+      return String((c.decision||{}).text||c.postMdtNote||'').trim(); })
+    .map(mdtFollowRow)
+    .sort(function(a,b){ return String(b.agreed).localeCompare(String(a.agreed)); });
+}
+function mdtFollowStats(rows){
+  rows = rows || mdtFollowRows();
+  const withReg = rows.filter(function(x){ return !!x.r; });
+  const operated = rows.filter(function(x){ return x.surgDate; });
+  const gaps = operated.map(function(x){ return x.days; }).filter(function(d){ return d!=null && d>=0; })
+                       .sort(function(a,b){ return a-b; });
+  const median = gaps.length ? (gaps.length%2 ? gaps[(gaps.length-1)/2]
+                    : Math.round((gaps[gaps.length/2-1]+gaps[gaps.length/2])/2)) : null;
+  /* Only a case linked to a registry entry can be checked at all. Counting an unlinked
+     case as "nothing done" would accuse the clinic of something the app simply cannot
+     see — those are reported separately as uncheckable. */
+  const nothing = withReg.filter(function(x){ return !x.done.length; });
+  const stale = nothing.filter(function(x){ return x.waiting!=null && x.waiting>90; });
+  return {total:rows.length, linked:withReg.length, unlinked:rows.length-withReg.length,
+          operated:operated.length, nothing:nothing.length,
+          median:median, stale:stale};
+}
+/* ===== WHAT THE MEETING AGREED, AND WHETHER IT HAPPENED =====
+   Actions carry what / who / due / done and nothing ever surfaced the ones that were
+   never carried out. A decision that is agreed and then quietly not done is the one
+   failure mode an MDT exists to prevent. */
+function mdtDaysBetween(a,b){ return Math.round((new Date(b)-new Date(a))/864e5); }
+function mdtOpenActionRows(){
+  const today=localISO(), out=[];
+  mdtCases().forEach(function(c){
+    if(c.stage==='closed') return;
+    (c.actions||[]).forEach(function(a,i){
+      if(!a || a.done || !a.what) return;
+      const due=a.due||'';
+      out.push({c:c, a:a, i:i, due:due,
+        over: due ? mdtDaysBetween(due, today) : null,
+        agreed: (c.decision||{}).date || c.date || ''});
+    });
+  });
+  /* worst first: most overdue, then due soonest, then no date at all */
+  out.sort(function(x,y){
+    if(x.due && y.due) return x.due.localeCompare(y.due);
+    if(x.due) return -1; if(y.due) return 1;
+    return String(x.agreed).localeCompare(String(y.agreed));
+  });
+  return out;
+}
+function mdtActionsOverdue(){ return mdtOpenActionRows().filter(function(r){ return r.over!==null && r.over>0; }); }
+function mdtActionDone(caseId, idx){
+  const c=mdtCases().filter(function(x){ return x.id===caseId; })[0]; if(!c) return;
+  const a=(c.actions||[])[idx]; if(!a) return;
+  const before=undoSnap(c);
+  a.done=true; a.doneAt=localISO(); a.doneBy=byTag();
+  syncTouch(c); persist();
+  logActivity('edit','MDT action', (a.what||'')+' \u2014 '+(c.name||''), undoOne('mdt', before, c));
+  renderMdtActions(); mdtRenderList();
+  toast('Marked done');
+}
+function renderMdtActions(){
+  const host=$('mdtActionsCard'); if(!host) return;
+  const rows=mdtOpenActionRows();
+  if(!rows.length){ host.innerHTML=''; host.classList.add('hidden'); return; }
+  host.classList.remove('hidden');
+  const over=rows.filter(function(r){ return r.over!==null && r.over>0; });
+  const soon=rows.filter(function(r){ return r.over!==null && r.over<=0; });
+  const none=rows.filter(function(r){ return r.over===null; });
+  const row=function(r){
+    const cls = (r.over!==null && r.over>0) ? 'ac-over' : (r.over===null ? 'ac-nodate' : '');
+    const when = r.over===null ? 'no date set'
+      : (r.over>0 ? (r.over+' day'+(r.over===1?'':'s')+' overdue') : ('due '+fmtDate(r.due)));
+    return '<tr class="'+cls+'">'+
+      '<td><button class="btn btn-ghost btn-sm" onclick="mdtActionDone(\''+r.c.id+'\','+r.i+')" title="Mark done">\u2713</button></td>'+
+      '<td><b>'+esc(r.a.what)+'</b>'+(r.a.who?'<br><span class="small muted">'+esc(r.a.who)+'</span>':'')+'</td>'+
+      '<td class="small"><a href="#" onclick="mdtEdit(\''+r.c.id+'\');return false;">'+esc(r.c.name||'\u2014')+'</a>'+
+        (r.c.mrn?'<br><span class="muted">'+esc(r.c.mrn)+'</span>':'')+'</td>'+
+      '<td class="small">'+esc(when)+
+        (r.agreed?'<br><span class="muted">agreed '+esc(fmtDate(r.agreed))+'</span>':'')+'</td></tr>';
+  };
+  host.innerHTML='<div class="card"><div class="scr-head"><h2>\u26a0 Agreed but not done '+
+    '<span class="rx-count">'+rows.length+'</span></h2>'+
+    (over.length?'<span class="ac-badge">'+over.length+' overdue</span>':'')+'</div>'+
+    '<table class="list"><thead><tr><th style="width:44px"></th><th>Action</th><th style="width:26%">Patient</th>'+
+    '<th style="width:26%">When</th></tr></thead><tbody>'+
+    over.map(row).join('')+soon.map(row).join('')+none.map(row).join('')+
+    '</tbody></table></div>';
+}
+
+/* ===== IS THE CASE READY FOR THE MEETING? =====
+   Everything that has to be in place before a case is worth discussing, checked in one
+   place so it is fixed the day before rather than discovered in the room. */
+function mdtCaseGaps(c){
+  const g=[];
+  if(!String(c.diagnosis||'').trim()) g.push('no working diagnosis');
+  if(!String(c.reason||'').trim()) g.push('no question for the meeting');
+  if(!String(c.keyFindings||'').trim()) g.push('no key findings');
+  const im=(c.imaging||{}), pa=(c.pathology||{});
+  if((im.status||'pending')==='pending') g.push('imaging not reviewed');
+  if((pa.status||'pending')==='pending') g.push('pathology not reviewed');
+  if(!c.registryId) g.push('not linked to a registry entry');
+  else if(!mdtPresItems(c).filter(function(it){ return it.kind==='img'; }).length) g.push('no pictures attached');
+  if(!((c.decision||{}).meetingId)) g.push('not on a meeting');
+  return g;
+}
+function mdtAgendaRows(){
+  return mdtFiltered().filter(function(c){ return c.stage!=='closed'; });
+}
+function renderMdtReady(){
+  const host=$('mdtReadyCard'); if(!host) return;
+  const rows=mdtAgendaRows().map(function(c){ return {c:c, g:mdtCaseGaps(c)}; })
+                            .filter(function(x){ return x.g.length; });
+  if(!rows.length){ host.innerHTML=''; host.classList.add('hidden'); return; }
+  host.classList.remove('hidden');
+  host.innerHTML='<div class="card"><div class="scr-head"><h2>\ud83d\udccb Not ready to discuss '+
+    '<span class="rx-count">'+rows.length+'</span></h2>'+
+    '<button class="btn btn-ghost btn-sm" onclick="mdtAgendaPrint()">\ud83d\udda8 Print the agenda</button></div>'+
+    '<table class="list"><thead><tr><th>Patient</th><th>Still needs</th><th style="width:90px"></th></tr></thead><tbody>'+
+    rows.map(function(x){
+      return '<tr><td><b>'+esc(x.c.name||'\u2014')+'</b>'+
+        (x.c.mrn?'<br><span class="small muted">'+esc(x.c.mrn)+'</span>':'')+'</td>'+
+        '<td class="small">'+x.g.map(function(t){ return '<span class="gap-chip">'+esc(t)+'</span>'; }).join(' ')+'</td>'+
+        '<td><button class="btn btn-ghost btn-sm" onclick="mdtEdit(\''+x.c.id+'\')">Open</button></td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+/* the pack that goes to the team before the meeting */
+function mdtAgendaPrint(){
+  const groups=mdtCompileGroups(mdtAgendaRows());
+  if(!groups.length){ toast('Nothing on the agenda \u2014 widen the date range or clear the search'); return; }
+  let body='';
+  groups.forEach(function(g){
+    body+='<h3 class="ag-h">'+esc(g.label)+(g.date?' \u00b7 '+esc(fmtDate(g.date)):'')+
+          ' \u00b7 '+g.cases.length+' case'+(g.cases.length===1?'':'s')+'</h3>';
+    g.cases.forEach(function(c,i){
+      const gaps=mdtCaseGaps(c);
+      body+='<div class="ag-c"><div class="ag-t"><b>'+(i+1)+'. '+esc(c.name||'\u2014')+'</b>'+
+        (c.mrn?' \u00b7 '+esc(c.mrn):'')+(c.team?' \u00b7 Team '+esc(c.team):'')+
+        (c.status?' \u00b7 '+esc(c.status):'')+'</div>'+
+        (c.diagnosis?'<div class="ag-d">'+esc([c.diagnosis,c.site].filter(Boolean).join(' \u2014 '))+'</div>':'')+
+        (c.keyFindings?'<div class="ag-k">'+esc(c.keyFindings).replace(/\n/g,'<br>')+'</div>':'')+
+        (c.reason?'<div class="ag-q"><b>Question:</b> '+esc(c.reason).replace(/\n/g,'<br>')+'</div>':'')+
+        (gaps.length?'<div class="ag-g">Outstanding: '+esc(gaps.join(' \u00b7 '))+'</div>':'')+
+      '</div>';
+    });
+  });
+  printContent('MDT AGENDA', body, true);
+}
 /* ===== ATTACHING PICTURES AND REPORTS FROM THE BOARD =====
    Files are filed on the patient's REGISTRY entry, not on the board case — one home
    per patient, so a case discussed five times does not scatter its films across five
@@ -7539,6 +7929,9 @@ function mdtToRegistry(){
   const age = (parts[0]||'').trim();
   const sexTxt = (parts[1]||'').trim().toLowerCase();
   const sex = sexTxt.indexOf('f')===0 ? '2' : (sexTxt.indexOf('m')===0 ? '1' : '');
+  /* it exists so this case can carry films and reports — it is not a registry case
+     until somebody operates */
+  window.__regNewPurpose='files';
   showTab('registry'); regNew();
   const put=function(k,v){ if(v) regSet(k,v); };
   put('name', c.name); put('mrn', c.mrn); put('team', c.team); put('contact', c.contact);
@@ -7549,7 +7942,7 @@ function mdtToRegistry(){
   window.__regFromMdt = mdtEditId;
   if(typeof regSyncNoPreview==='function') regSyncNoPreview();
   if(typeof railTicksAll==='function') railTicksAll();
-  toast('Registry entry started from the MDT case — check the details and save');
+  toast('Started as a records-only folder for the films and reports \u2014 switch it to a registry case if the patient is operated');
 }
 /* build the MDT-sheet summary out of what has already been typed */
 function mdtComposeFindings(){
@@ -10019,6 +10412,44 @@ function manualRefresh(){
 }
 /* the little spinning ring is also a tap-to-sync button */
 function spinnerSync(){ if(currentUser) manualRefresh(); }
+/* Compare this device against the cloud, collection by collection, and name what is
+   missing. "Sync doesn't work" is unanswerable; "registry: 61 here, 61 there — mdt: 0
+   here, 60 there" is a diagnosis. */
+async function syncCompare(){
+  const c=syncCfg();
+  if(!c.url || !c.anonKey){ alert('Cloud sync is not set up on this device.'); return; }
+  if(!navigator.onLine){ alert('This device is offline.'); return; }
+  toast('Checking the cloud\u2026');
+  let cloud;
+  try{
+    const cl=await syncClient(); const s=await cl.auth.getSession();
+    if(!s.data.session){ alert('Not signed in to the cloud on this device.'); return; }
+    cloud=await syncFetchAll(cl);
+  }catch(e){ alert('Could not read the cloud:\n\n'+((e&&e.message)||e)); return; }
+  const cc={}; let dels=0;
+  cloud.forEach(function(r){
+    if(r.kind==='__tomb' || r.kind==='__delreq'){ dels++; return; }
+    if(r.payload && r.payload.__del){ dels++; return; }     // a deletion, not a record
+    cc[r.kind]=(cc[r.kind]||0)+1;
+  });
+  const lines=[], gaps=[];
+  SYNC_COLLS.forEach(function(k){
+    const here=(db[k]||[]).length, there=cc[k]||0;
+    const mark = here===there ? '' : (here<there ? '   <-- MISSING HERE' : '   <-- NOT SENT YET');
+    if(here!==there) gaps.push(k+': '+here+' here, '+there+' in the cloud');
+    lines.push('  '+k+': '+here+' here / '+there+' cloud'+mark);
+  });
+  alert('SYNC CHECK\n\n'+
+    'Rows in the cloud altogether: '+cloud.length+' ('+dels+' of them deletions)\n'+
+    'Last sync: '+(c.lastSync?timeAgo(c.lastSync):'never')+'\n'+
+    'Last error: '+(c.lastError||'none')+'\n\n'+
+    lines.join('\n')+'\n\n'+
+    (gaps.length ? ('Not matching:\n\u2022 '+gaps.join('\n\u2022 ')+
+      '\n\nMISSING HERE \u2014 press \u27f3 Full resync on this device.\n'+
+      '(\u21bb Sync now only fetches recent changes, so it will not bring back older records.)\n'+
+      'NOT SENT YET \u2014 press \u21bb Sync now on this device.')
+                 : 'Everything matches.'));
+}
 function showDiag(){
   const c=syncCfg(); const u=currentUser||{};
   const lines=[
@@ -11676,7 +12107,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.07-b58';
+const APP_BUILD = '2026.08.07-b62';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -14404,6 +14835,8 @@ function regOldNumbered(){ return (db.registry||[]).filter(regNoIsOld); }
 
 /* give ONE case its number. Never touches any other case. */
 function regAssignNo(r){
+  /* a folder takes no number — a number belongs to a case in the year's sequence */
+  if(!regIsCase(r)){ r.regNo=''; r.regNoProv=false; r.regNoUnset=false; return ''; }
   const b = regNoBasis(r);
   if(!b){                       // no date to go on at all — say so rather than guess
     r.regNoProv = true; r.regNoUnset = true;
@@ -14444,6 +14877,7 @@ function regRenumberAll(){
      move it again the moment a real date is typed. */
   const items = [];
   arr.forEach(function(r,i){
+    if(!regIsCase(r)) return;                       // folders are not in the sequence
     const b = regNoBasis(r);
     if(!b){ r.regNoUnset = true; r.regNoProv = true; return; }
     r.regNoUnset = false;
@@ -14567,9 +15001,34 @@ function regSyncNoPreview(){
   window.__regSuggested = next;
   regSet('regNo', next);
 }
+/* ===== IS THIS A REGISTRY CASE, OR JUST A FOLDER? =====
+   Case files live on the registry entry, so linking an MDT case creates one even when the
+   patient will never be operated. Those folders were then counted, charted, exported to the
+   GTTH sheet and nagged about by the date checker forever. A purpose flag separates the two
+   without moving a single file.
+
+   `regPurpose` is absent on every entry that already exists, and absent means 'case' — so
+   nothing already in the registry changes, and no migration is needed. Only entries created
+   from the MDT board start life as 'files'. */
+let regPurposeCur='case';
+function regPurposeOf(r){ return (r && r.regPurpose==='files') ? 'files' : 'case'; }
+function regIsCase(r){ return regPurposeOf(r)==='case'; }
+function regCases(){ return (db.registry||[]).filter(regIsCase); }
+function regSetPurpose(v, quiet){
+  regPurposeCur = (v==='files') ? 'files' : 'case';
+  const seg=$('regPurposeSeg');
+  if(seg) Array.prototype.slice.call(seg.querySelectorAll('.seg-btn')).forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-v')===regPurposeCur); });
+  const note=$('regPurposeNote');
+  if(note) note.textContent = regPurposeCur==='files'
+    ? 'Kept for its films, reports and MDT link \u2014 left out of the registry list, counts and exports'
+    : '';
+  if(!quiet && typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
 function regNew(){
   if(!regFormBuilt) regBuildForm();
   regEditingId=null; regLinkedPatientId=null;
+  regSetPurpose(window.__regNewPurpose||'case', true); window.__regNewPurpose='';
   regFillForm({});
   cfStart({}); cfRender();
   window.__regSuggested = regPreviewNo(localISO());
@@ -14587,6 +15046,7 @@ function regEdit(id){
   if(!regFormBuilt) regBuildForm();
   const r=(db.registry||[]).find(x=>x.id===id); if(!r) return;
   regEditingId=id; regLinkedPatientId=r.patientId||null;
+  regSetPurpose(regPurposeOf(r), true);
   regFillForm(r);
   cfStart(r); cfRender();
   $('regFormTitle').textContent='Edit registry entry — '+(r.name||r.regNo||'');
@@ -14623,6 +15083,18 @@ function regSave(){
            if(rec.contact) p.phone=rec.contact; if(rec.mrn) p.mrn=rec.mrn; if(rec.city && !p.address) p.address=rec.city; }
   }
   rec.patientId = pid||null;
+  /* the flag is not a schema field — it does not belong in the GTTH column set */
+  rec.regPurpose = regPurposeCur;
+  /* A date of surgery is exactly the moment a folder becomes a registry case. Offer it,
+     out loud, rather than deciding quietly either way. */
+  let promoted=false;
+  if(rec.regPurpose==='files' && regValidYmd(rec.dateSurg)){
+    if(confirm('A date of surgery has been entered.\n\nMove '+(rec.name||'this patient')+
+               ' into the tumour registry as a proper case?\n\nIt will be numbered and will '+
+               'appear in the list, the counts and the exports.')){
+      rec.regPurpose='case'; regPurposeCur='case'; promoted=true;
+    }
+  }
   // Changes are applied straight away — an Undo button appears in 🔔 Notifications.
   let saved;
   if(regEditingId){
@@ -14651,6 +15123,9 @@ function regSave(){
   }
   /* A number belongs to a position in the year, not to a patient: enter a case today that was
      operated in April and it takes April's slot, with everything after it shifting down. */
+  /* A folder carries no number by design. The moment it becomes a case it needs one —
+     regSettleNo only corrects a PROVISIONAL number, and a folder never had one. */
+  if(regIsCase(saved) && !String(saved.regNo||'').trim()) regAssignNo(saved);
   let moved = 0;
   if(typeof regAutoRenumber==='function'){ try{ moved = regAutoRenumber(); }catch(e){} }
   /* came here from the MDT board -> point the two records at each other */
@@ -14662,6 +15137,11 @@ function regSave(){
   persist(); regCloseForm(); regRenderList(); regRenderKpis(); regRenderAnalytics();
   if(moved) toast(moved+' number'+(moved>1?'s':'')+' shifted to keep the year in date order');
   if(typeof gdRunQueue==='function') setTimeout(gdRunQueue, 400);
+  if(promoted) toast('Moved into the registry as a proper case');
+  if(saved.regPurpose==='files'){
+    toast('Saved as records only — films and reports kept, left out of the registry list');
+    return;
+  }
   const extra = window.__regSettledMsg; window.__regSettledMsg='';
   toast(extra ? ('Registry entry saved — '+extra)
     : ('Registry entry saved — No. '+(saved.regNo||'')+(regHasSurgDate(saved)?'':' (provisional — add the date of surgery)')));
@@ -14739,6 +15219,7 @@ function regUnlink(){ regLinkedPatientId=null; regUpdateLinkLine(); }
 /* ---- list + KPIs ---- */
 function regBadges(r){
   let h='';
+  if(!regIsCase(r)) h+='<span class="reg-tag files">Records only</span> ';
   const nat=(r.nature||'').toLowerCase();
   if(nat.includes('malignant')) h+='<span class="reg-tag mal">Malignant</span> ';
   else if(nat.includes('benign')) h+='<span class="reg-tag ben">Benign</span> ';
@@ -14764,13 +15245,30 @@ function regFiltered(){
   const q=($('regSearch').value||'').trim().toLowerCase();
   const terms=q.split(/\s+/).filter(Boolean);
   const rows = db.registry.filter(r=>{
+      /* a records-only folder is not a registry case — it stays out unless asked for,
+         and a typed search always finds it, like every other list in the app */
+      if(!regIsCase(r) && !window.__regShowFiles && !terms.length) return false;
       if(terms.length){ const h=regHaystack(r); return terms.every(t=>h.includes(t)); }
       return dfMatch('reg', regFilterDate(r));
     })
     .sort((a,b)=>String(b.regNo||'').localeCompare(String(a.regNo||'')));
-  dfCount('reg', rows.length, db.registry.length, !!terms.length);
+  /* the denominator has to match what is being shown, or it reads "5 of 3 cases" */
+  dfCount('reg', rows.length,
+          (window.__regShowFiles || terms.length) ? (db.registry||[]).length : regCases().length,
+          !!terms.length);
+  regRenderPurposeChips();
   return rows;
 }
+function regRenderPurposeChips(){
+  const host=$('regPurposeChips'); if(!host) return;
+  const files=(db.registry||[]).filter(function(r){ return !regIsCase(r); }).length;
+  if(!files){ host.innerHTML=''; return; }
+  host.innerHTML='<button type="button" class="chip'+(window.__regShowFiles?' on':'')+
+    '" onclick="regToggleFiles()" title="Folders kept only for films, reports and the MDT link">'+
+    '\ud83d\uddc2 Records only ('+files+')</button>'+
+    (window.__regShowFiles?'<span class="muted small" style="margin-left:8px">showing folders as well as registry cases</span>':'');
+}
+function regToggleFiles(){ window.__regShowFiles=!window.__regShowFiles; regRenderList(); }
 function regRenderList(){
   const rows=regFiltered();
   // drop any selected ids that no longer exist
@@ -14826,6 +15324,8 @@ function regLabelFor(key, val){
 /* why a number carries a warning: no date to build it from, or built from the visit date and
    still waiting for the surgery date to settle it */
 function regNoWarn(r){
+  /* a folder is not waiting for a number, so it must not be nagged about one */
+  if(!regIsCase(r)) return '';
   if(!regNoBasis(r))
     return ' <span class="reg-prov" title="No date of surgery, visit or admission on this case — its number cannot be worked out, so it has been left exactly as it is. Enter a date and it settles once.">&#9888;</span>';
   if(!regHasSurgDate(r))
@@ -14884,7 +15384,7 @@ function regClearSel(){ regSel.clear(); regRenderList(); }
 function regDateIssues(){
   const today=localISO();
   const out=[];
-  (db.registry||[]).forEach(function(r){
+  regCases().forEach(function(r){
     const d=r.dateSurg;
     let why='';
     if(!regValidYmd(d)) why='No date of surgery';
@@ -15001,7 +15501,7 @@ function regDateFixSave(){
                 : 'No dates were changed');
 }
 function regRenderKpis(){
-  const R=db.registry||[];
+  const R=regCases();                     // folders are not cases and are not counted
   const mal=R.filter(r=>(r.nature||'').toLowerCase().includes('malignant')).length;
   const rec=R.filter(r=>{const l=(r.lc_tumor||'').toLowerCase();return l.includes('recurrence')||l.includes('metastasis');}).length;
   const r0=R.filter(r=>(r.margin||'')==='R0').length;
@@ -15068,7 +15568,8 @@ function regImportSeed(){
 /* ---- CSV export / import ---- */
 function regCsvOrder(){ return REG_ORDER.map(o=>o[1]); }
 function regExportRecords(selectedOnly){
-  const all=(db.registry||[]).slice();
+  /* the GTTH sheet is a registry export — a folder kept for its films has no business in it */
+  const all=regCases().slice();
   const recs = selectedOnly ? all.filter(r=>regSel.has(r.id)) : all;
   return recs.sort((a,b)=>String(a.regNo||'').localeCompare(String(b.regNo||'')));
 }
@@ -18910,11 +19411,50 @@ function setShortcuts(on){ db.settings.shortcuts = on?'on':'off'; persist(); }
 /* ==================== CLOUD SYNC (Supabase) — dormant until configured ==================== */
 /* Every collection that travels between devices. Anything left out of this list only
    ever exists on the device it was typed on — that was the bug with `meds` and `videos`. */
+/* ===========================================================================
+   SYNC — one change log, one cursor.
+
+   The old engine pulled the whole table every time and tried to work out what had
+   changed by comparing snapshots. That forces it to answer a question a snapshot
+   cannot answer: "this record is not here — was it deleted, or have I never seen
+   it?" Five mechanisms existed to guess (knownIds, tombstones, suppressed, __tomb
+   rows, seenIds) and every sync bug we have had was two of them disagreeing.
+
+   Now a deletion IS a record: `payload.__del = true`, with the time it happened.
+   It travels the same path as an edit, competes on the same terms, and cannot be
+   lost by rebuilding a cache. Pull asks only for what changed since last time, so
+   the size of the database stops mattering.
+   =========================================================================== */
 const SYNC_COLLS=['users','patients','visits','registry','documents','surgeries','inventory','appts','recalls',
   'qrcodes','leaflets','expenses','queue','templates','noteTemplates','instrPresets','meds','videos',
-  'chips','ixRules','mdt','mdtMeetings'];
+  'chips','ixRules','mdt','mdtMeetings',
+  /* previously four bespoke push/pull channels of their own — now ordinary members */
+  'activity','accesslog','pendingChanges','prefs'];
+/* how far back a pull reaches beyond the cursor, to absorb clock differences
+   between devices. Cheap insurance: it only ever costs a few extra rows. */
+const SYNC_SKEW_MS = 36*3600*1000;
+const SYNC_PAGE_ROWS = 1000;
+const SYNC_DEL_KEEP_DAYS = 120;
+/* What actually goes on the wire for a record. Undo snapshots are deliberately
+   left behind: they can be 20 KB each, they are only useful on the device that
+   made the change, and shipping them was most of the activity feed's weight. */
+function syncPayloadOf(kind, rec){
+  if(kind!=='activity') return rec;
+  const c=Object.assign({}, rec); delete c.undo; return c;
+}
 let sb=null, syncRealtimeChan=null, syncTimer=null;
-function syncCfg(){ const c=db.settings.sync = db.settings.sync || {url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false}; if(!c.knownIds) c.knownIds={}; if(!c.suppressed) c.suppressed={}; return c; }
+function syncCfg(){
+  const c = db.settings.sync = db.settings.sync || {url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false};
+  if(!c.gone) c.gone={};          // deletions this device made, until the cloud has them
+  if(!c.hash) c.hash={};          // what we believe the cloud holds, by content hash
+  if(c.cur == null) c.cur='';     // the newest change we have processed
+  /* the old guessing machinery, if an upgrade left any behind */
+  if(c.knownIds) delete c.knownIds;
+  if(c.suppressed) delete c.suppressed;
+  if(c.sent) delete c.sent;
+  if(c.tombs) delete c.tombs;
+  return c;
+}
 function loadSupabaseLib(){
   return new Promise((res,rej)=>{
     if(window.supabase && window.supabase.createClient) return res();
@@ -18939,12 +19479,17 @@ async function syncSignIn(){
 }
 async function syncSignOut(){ try{ if(sb) await sb.auth.signOut(); }catch(_){ } stopAutoSync(); toast('Signed out of cloud'); renderSync(); }
 function localRecords(){ const out=[]; SYNC_COLLS.forEach(kind=>{ (db[kind]||[]).forEach(x=>{ if(x&&x.id) out.push({id:String(x.id),kind,payload:x,updated_at:new Date().toISOString()}); }); }); return out; }
+/* "Upload everything" — meaning: send anything the cloud is missing or that differs.
+   It must NOT blindly re-upload every row: that rewrites every timestamp to now, and
+   then every device drags the whole table back on every sync afterwards. Forgetting
+   what we think the cloud holds is enough; the pull re-learns it, and only genuine
+   differences are sent. */
 async function syncPush(){
-  const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) throw new Error('Sign in first');
-  const rows=localRecords(); if(!rows.length){ toast('Nothing to upload yet'); return; }
-  // upsert in batches
-  for(let i=0;i<rows.length;i+=400){ const {error}=await c.from('records').upsert(rows.slice(i,i+400)); if(error) throw error; }
-  syncCfg().lastSync=new Date().toISOString(); if(typeof syncSnapshotKnown==='function') syncSnapshotKnown(); persist(); renderSync();
+  /* The cursor and the hash map have to be cleared TOGETHER. Clearing only the map
+     leaves every row older than the cursor with no known hash — so they all look
+     unsent and get re-uploaded, rewriting their timestamps, which is the very thing
+     this is avoiding. Reading the whole log back is what re-learns them. */
+  await syncFullResync(true);
 }
 function applyRemoteRecord(kind, id, payload){
   if(!SYNC_COLLS.includes(kind)) return; db[kind]=db[kind]||[];
@@ -19000,30 +19545,47 @@ function logAccess(u, action){
   db.accesslog.push({id:uid('al'), who:loginId(u), name:u?u.name:'', action:action||'sign-in', at:new Date().toISOString(), device:(navigator.platform||'device')});
   if(db.accesslog.length>800) db.accesslog=db.accesslog.slice(-800);
 }
-async function syncPushAccess(){
-  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    const rows=(db.accesslog||[]).slice(-60).map(a=>({id:String(a.id), kind:'accesslog', payload:a, updated_at:a.at||new Date().toISOString()}));
-    await syncUpsert(c, rows, 'accesslog');
-  }catch(e){}
+/* ---- the four channels that used to have push/pull of their own ----
+   activity, the sign-in log, approvals and pinned favourites are ordinary members
+   of SYNC_COLLS now. These remain only so the couple of dozen callers scattered
+   through the app keep working; each just asks for a sync shortly. */
+function syncSoon(){
+  const c=syncCfg(); if(!c.url || !c.anonKey || !navigator.onLine) return Promise.resolve();
+  if(typeof syncMode==='function' && syncMode()==='manual') return Promise.resolve();
+  clearTimeout(window.__syncSoonT);
+  window.__syncSoonT=setTimeout(function(){ try{ syncNow(false,false); }catch(e){} }, 4000);
+  return Promise.resolve();
 }
-async function syncPullAccess(){
-  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    const {data,error}=await c.from('records').select('id,payload').eq('kind','accesslog'); if(error) return;
-    syncNoteCloud(data);
-    db.accesslog=db.accesslog||[]; const have=new Set(db.accesslog.map(a=>String(a.id)));
-    const cutoff=db.settings.accessClearedAt||'';   // don't re-add sign-ins the user already cleared
-    (data||[]).forEach(r=>{ if(cutoff && String((r.payload&&r.payload.at)||'')<=cutoff) return; if(!have.has(String(r.id))){ db.accesslog.push(r.payload); have.add(String(r.id)); } });
-    db.accesslog.sort((a,b)=>String(a.at).localeCompare(String(b.at)));
-    if(db.accesslog.length>800) db.accesslog=db.accesslog.slice(-800);
-  }catch(e){}
+function syncPushAccess(){ return syncSoon(); }
+function syncPullAccess(){ return Promise.resolve(); }
+function syncPushActivity(){ return syncSoon(); }
+function syncPullActivity(){ return Promise.resolve(); }
+function syncPushPending(){ return syncSoon(); }
+function syncPullPending(){ return Promise.resolve(); }
+function syncPushFavs(){ prefsSave(); return syncSoon(); }
+function syncPullFavs(){ return Promise.resolve(); }
+/* pinned favourites used to sync as one bespoke row keyed by a timestamp; they are
+   now an ordinary record in an ordinary collection */
+function prefsRec(){
+  db.prefs = db.prefs || [];
+  let r = db.prefs.filter(function(x){ return x && x.id==='favs'; })[0];
+  if(!r){ r={id:'favs', favMeds:[], favTpls:[], updatedAt:''}; db.prefs.push(r); }
+  return r;
 }
-/* ---- activity feed (add / change / delete alerts, shared across devices) ---- */
-/* ================= UNDO =================
-   Every change is applied straight away. Alongside it we store a snapshot of what the
-   record looked like before, so the notifications panel can offer an "Undo" button.
-   undo = { items:[ {coll:'registry', id:'reg_1', before:{...}|null} ] }
-     before === null  -> the record was newly added, so undoing removes it
-     before === {...} -> the record was edited or deleted, so undoing puts that copy back  */
+function prefsSave(){
+  const r=prefsRec(), s=db.settings||{};
+  const a=JSON.stringify([s.favMeds||[], s.favTpls||[]]);
+  if(a===JSON.stringify([r.favMeds||[], r.favTpls||[]])) return;
+  r.favMeds=(s.favMeds||[]).slice(); r.favTpls=(s.favTpls||[]).slice();
+  syncTouch(r);
+}
+function prefsApply(){
+  const r=(db.prefs||[]).filter(function(x){ return x && x.id==='favs'; })[0];
+  if(!r) return;
+  db.settings=db.settings||{};
+  db.settings.favMeds=(r.favMeds||[]).slice();
+  db.settings.favTpls=(r.favTpls||[]).slice();
+}
 const UNDO_MAX_SNAPSHOTS = 100;      // only the newest changes keep their snapshot
 const UNDO_MAX_BYTES = 20000;        // don't store a snapshot bigger than this
 function undoSnap(o){ try{ const s=JSON.stringify(o); if(!s || s.length>UNDO_MAX_BYTES) return undefined; return JSON.parse(s); }catch(e){ return undefined; } }
@@ -19093,17 +19655,13 @@ function undoActivity(id, quick){
 }
 /* a record that was deleted may have been tombstoned for the cloud; clear that so it can come back */
 function undoUnsuppress(coll, id){
-  try{
-    const c=syncCfg(); if(c.suppressed && Array.isArray(c.suppressed[coll])) c.suppressed[coll]=c.suppressed[coll].filter(x=>String(x)!==String(id));
-    if(c.url && c.anonKey && navigator.onLine) undoClearTombRow(coll, id);
-  }catch(e){}
+  /* Restoring a record gives it a fresh stamp, which is newer than the deletion
+     that removed it, so it wins on its own. All that is needed is to drop our own
+     record of having deleted it. */
+  if(typeof tombDrop==='function') tombDrop(coll, id);
+  try{ persist(); }catch(e){}
 }
-async function undoClearTombRow(coll, id){
-  try{ const cl=await syncClient(); const s=await cl.auth.getSession(); if(!s.data.session) return;
-    await cl.from('records').delete().eq('id','tomb:'+coll+'|'+id);
-    await cl.from('records').delete().eq('id','req:'+coll+':'+id);
-  }catch(e){}
-}
+function undoClearTombRow(){ return Promise.resolve(); }
 function logActivity(action, kind, label, undo){
   db.activity = db.activity||[];
   const rec={id:uid('ac'), action:action, kind:kind, label:String(label||'').slice(0,80),
@@ -19116,50 +19674,7 @@ function logActivity(action, kind, label, undo){
   if(typeof syncPushActivity==='function' && navigator.onLine){ clearTimeout(window.__actPush); window.__actPush=setTimeout(()=>syncPushActivity().catch(()=>{}), 20000); }
   if(typeof renderNotif==='function') renderNotif();
 }
-async function syncPushActivity(){
-  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    const rows=(db.activity||[]).slice(-60).map(a=>({id:String(a.id), kind:'activity', payload:a, updated_at:a.at||new Date().toISOString()}));
-    await syncUpsert(c, rows, 'activity');
-  }catch(e){}
-}
-async function syncPullActivity(){
-  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    const {data,error}=await c.from('records').select('id,payload').eq('kind','activity'); if(error) return;
-    syncNoteCloud(data);
-    db.activity=db.activity||[]; const byId={}; db.activity.forEach(a=>byId[String(a.id)]=a);
-    const cutoff = db.settings.activityClearedAt||'';   // don't re-add activity the user already cleared
-    (data||[]).forEach(r=>{ if(cutoff && String((r.payload&&r.payload.at)||'')<=cutoff) return; const ex=byId[String(r.id)]; if(!ex){ const p=Object.assign({},r.payload); if(p.read===undefined) p.read=false; db.activity.push(p); byId[String(r.id)]=p; } });
-    db.activity.sort((a,b)=>String(a.at).localeCompare(String(b.at)));
-    if(db.activity.length>800) db.activity=db.activity.slice(-800);
-  }catch(e){}
-}
 /* ---- pinned / favourite medicines (and templates): one shared list, newest edit wins across devices ---- */
-async function syncPushFavs(){
-  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    /* The payload must be STABLE when nothing has changed. It used to fall back to
-       new Date() when favMedsAt was unset, so the row differed on every sync and was written
-       every single time — one more steady drip into the realtime quota. */
-    const payload={ids:(db.settings.favMeds||[]), tpls:(db.settings.favTpls||[]),
-                   defQrId:db.settings.defQrId||'', at:db.settings.favMedsAt||''};
-    await syncUpsert(c, [{id:'favmeds', kind:'favmeds', payload,
-                          updated_at: payload.at || new Date().toISOString()}], 'favs');
-  }catch(e){}
-}
-async function syncPullFavs(){
-  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    const {data,error}=await c.from('records').select('id,payload').eq('kind','favmeds').limit(1); if(error) return;
-    syncNoteCloud(data);
-    const row=(data||[])[0]; if(!row||!row.payload) return;
-    const cloudAt=row.payload.at||''; const localAt=db.settings.favMedsAt||'';
-    if(cloudAt && cloudAt>localAt){   // cloud list is newer → adopt it
-      db.settings.favMeds = Array.isArray(row.payload.ids)? row.payload.ids : (db.settings.favMeds||[]);
-      if(Array.isArray(row.payload.tpls)) db.settings.favTpls = row.payload.tpls;
-      db.settings.favMedsAt = cloudAt; persist();
-      if(typeof renderFavBar==='function') renderFavBar();
-      if(typeof renderMedList==='function') renderMedList();
-    }
-  }catch(e){}
-}
 /* ---- pending changes: registry adds/edits by non-owners wait for the owner's approval ---- */
 /* A resolved request must never be dragged back to "pending". The device that made
    the request still holds its own copy saying "pending"; if that copy is pushed after
@@ -19168,116 +19683,174 @@ async function syncPullFavs(){
    and a request that has been settled for two days is deleted from the cloud outright. */
 const PENDING_KEEP_MS = 2*86400000;
 function pendingResolved(p){ return !!(p && p.status && p.status!=='pending'); }
-async function syncPushPending(){
-  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    const now=Date.now(), stale=[];
-    const rows=[];
-    (db.pendingChanges||[]).forEach(p=>{
-      if(pendingResolved(p)){
-        const age = p.resolvedAt ? (now - new Date(p.resolvedAt).getTime()) : 0;
-        if(age > PENDING_KEEP_MS){ stale.push(String(p.id)); return; }   // settled long ago → drop it
-      }
-      rows.push({id:String(p.id), kind:'pending', payload:p, updated_at:(p.resolvedAt||p.at||new Date().toISOString())});
-    });
-    await syncUpsert(c, rows, 'pending');
-    for(const id of stale){ try{ await c.from('records').delete().eq('id', id); }catch(e){} }
-    if(stale.length){ syncForget(stale); syncCountWrites(stale.length); }
-    if(stale.length){ const drop=new Set(stale); db.pendingChanges=(db.pendingChanges||[]).filter(p=>!drop.has(String(p.id))); }
-  }catch(e){}
-}
-async function syncPullPending(){
-  try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) return;
-    const {data,error}=await c.from('records').select('id,payload').eq('kind','pending'); if(error) return;
-    syncNoteCloud(data);
-    db.pendingChanges=db.pendingChanges||[]; const byId={}; db.pendingChanges.forEach(p=>byId[String(p.id)]=p);
-    (data||[]).forEach(r=>{
-      const remote=r.payload; if(!remote) return;
-      const ex=byId[String(r.id)];
-      if(!ex){ db.pendingChanges.push(remote); byId[String(r.id)]=remote; return; }
-      if(pendingResolved(ex) && !pendingResolved(remote)) return;      // ours is settled — keep it
-      Object.assign(ex, remote);
-    });
-    db.pendingChanges=db.pendingChanges.filter(p=>!pendingResolved(p) ||
-      (p.resolvedAt && (Date.now()-new Date(p.resolvedAt).getTime()) < PENDING_KEEP_MS));
-  }catch(e){}
-}
 async function syncDeletePendingRow(id){ try{ const c=await syncClient(); const sess=await c.auth.getSession(); if(sess.data.session) await c.from('records').delete().eq('id', String(id)); }catch(e){} }
+/* Read EVERY row, in pages.
+   `select()` without a range is capped by the server (PostgREST's max-rows, 1000 by
+   default) and has no ORDER BY, so which rows come back is not even stable. Past that
+   ceiling a device silently receives a partial database: new records simply never
+   arrive, with no error anywhere. Order by id and walk the whole table. */
+const SYNC_PAGE = 1000;
+async function syncFetchAll(c){
+  const out=[];
+  for(let from=0; ; from+=SYNC_PAGE){
+    const {data,error} = await c.from('records').select('id,kind,payload')
+      .order('id', {ascending:true}).range(from, from+SYNC_PAGE-1);
+    if(error) throw error;
+    const rows=data||[];
+    out.push.apply(out, rows);
+    if(rows.length < SYNC_PAGE) break;
+    if(from > 500000) break;                 // a runaway guard, never reached in practice
+  }
+  window.__syncLastPulled = out.length;
+  return out;
+}
 async function syncPull(replace){
   const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) throw new Error('Sign in first');
-  const {data,error}=await c.from('records').select('id,kind,payload'); if(error) throw error;
+  const data=await syncFetchAll(c);
   if(typeof tombPause==='function') tombPause();
   if(replace){ SYNC_COLLS.forEach(k=>{ if(data.some(r=>r.kind===k)) db[k]=[]; }); }
-  data.forEach(r=>applyRemoteRecord(r.kind, r.id, r.payload));
+  let newest='';
+  data.forEach(function(r){
+    const ua=String(r.updated_at||''); if(ua>newest) newest=ua;
+    if(r.kind==='__delreq' || r.kind==='__tomb') return;
+    if(r.payload && r.payload.__del) return;              // a deletion is not a record
+    applyRemoteRecord(r.kind, r.id, r.payload);
+  });
+  syncCfg().cur = newest || new Date().toISOString();
   if(typeof tombResume==='function') tombResume();
   reconcileUsers(); refreshCurrentUser();
   syncCfg().lastSync=new Date().toISOString(); if(typeof syncSnapshotKnown==='function') syncSnapshotKnown(); persist(); refreshAllViews(); renderSync();
 }
-function computeSyncPlan(local, cloud, state, isAdmin, decisions){
-  decisions = decisions||{};
-  const cloudNorm={}, tombs=new Set(), delreqs={};
-  SYNC_COLLS.forEach(k=>cloudNorm[k]={});
-  (cloud||[]).forEach(r=>{
-    if(r.kind==='__tomb'){ tombs.add(r.payload.k+'|'+r.payload.tid); }
-    else if(r.kind==='__delreq'){ delreqs[r.payload.k+'|'+r.payload.tid]=Object.assign({}, r.payload, {rowId:r.id}); }
-    else if(SYNC_COLLS.includes(r.kind)){ cloudNorm[r.kind][String(r.id)]=r.payload; }
-  });
-  const known=state.knownIds||{}, supp=state.suppressed||{};
-  /* Deletions recorded at the moment they happened, independent of knownIds. This is what
-     stops a deleted record coming back when knownIds is stale for any reason. */
-  const localTombs = state.tombs || {};
-  const newLocal={}, pushRows=[], deleteRowIds=[], newKnown={}, newSupp={}, pendingForAdmin=[];
-  const newTombKeys=new Set();
-  SYNC_COLLS.forEach(k=>{
-    const localArr=(local[k]||[]).slice();
-    const localById={}; localArr.forEach(x=>{ if(x&&x.id!=null) localById[String(x.id)]=x; });
-    const localIds=new Set(Object.keys(localById));
-    const knownSet=new Set((known[k]||[]).map(String));
-    Object.keys(localTombs).forEach(function(tk){
-      if(tk.indexOf(k+'|')!==0) return;
-      knownSet.add(tk.slice(k.length+1));      // we know we deleted it, whatever knownIds says
-    });
-    const suppSet=new Set((supp[k]||[]).map(String));
-    const cloudIds=new Set(Object.keys(cloudNorm[k]));
-    const nextSupp=new Set();
-    suppSet.forEach(id=>{ const key=k+'|'+id;
-      if(tombs.has(key)){} else if(delreqs[key]){ nextSupp.add(id); } });
-    knownSet.forEach(id=>{ const key=k+'|'+id;
-      if(localIds.has(id)) return; if(tombs.has(key)) return; if(!cloudIds.has(id)) return; if(nextSupp.has(id)) return;
-      if(isAdmin){ newTombKeys.add(key); deleteRowIds.push(String(id)); }
-      else { if(!delreqs[key]){ const rec=cloudNorm[k][id]||{}; pushRows.push({id:'req:'+k+':'+id, kind:'__delreq', payload:{k, tid:String(id), by:state.userName||'', at:state.now||'', label:(rec.name||rec.title||rec.label||rec.item||String(id))}, updated_at:state.now}); } nextSupp.add(id); }
-    });
-    if(isAdmin){
-      Object.keys(delreqs).forEach(key=>{ if(key.indexOf(k+'|')!==0) return; const req=delreqs[key]; const id=String(req.tid); const dec=decisions[key];
-        if(dec===undefined){ pendingForAdmin.push({key, k, tid:id, by:req.by, at:req.at, label:req.label}); }
-        else if(dec==='delete'){ newTombKeys.add(key); deleteRowIds.push(id); deleteRowIds.push(req.rowId); }
-        else if(dec==='keep'){ deleteRowIds.push(req.rowId); }
-      });
+/* ---- what we believe the cloud already holds, by content hash ---- */
+function syncHashes(){ const c=syncCfg(); if(!c.hash) c.hash={}; return c.hash; }
+function syncIsoMinus(iso, ms){
+  const t=Date.parse(iso||''); if(!t) return '';
+  return new Date(t-ms).toISOString();
+}
+function syncFind(k, id){
+  const arr=db[k]||[]; for(let i=0;i<arr.length;i++){ if(arr[i] && String(arr[i].id)===String(id)) return i; }
+  return -1;
+}
+/* Apply one row from the log. Everything — an edit, a creation, a deletion — is the
+   same decision: whichever side carries the later stamp wins. */
+function syncApplyRow(row, notes){
+  const k=row.kind, id=String(row.id), p=row.payload||{};
+  if(!SYNC_COLLS.includes(k)) return;
+  db[k]=db[k]||[];
+  const i=syncFind(k,id);
+  const local = i>=0 ? db[k][i] : null;
+  const cu = String(p.updatedAt || row.updated_at || '');
+  const lu = local ? String(local.updatedAt || '') : '';
+  if(p.__del){
+    if(!local){ tombDrop(k,id); return; }
+    if(lu && cu && lu > cu){
+      /* someone was still working on it after it was deleted — the later action wins,
+         and the doctor is told rather than left to notice */
+      notes.push({t:'kept', k:k, id:id, label:local.name||local.regNo||id});
+      return;
     }
-    const merged={};
-    Object.keys(cloudNorm[k]).forEach(id=>{ const key=k+'|'+id; if(tombs.has(key)||newTombKeys.has(key)) return; if(nextSupp.has(id)) return; merged[id]=cloudNorm[k][id]; });
-    Object.keys(localById).forEach(id=>{ const key=k+'|'+id; if(tombs.has(key)||newTombKeys.has(key)) return; if(nextSupp.has(id)) return;
-      if(!(id in merged)) merged[id]=localById[id];
-      else { // both sides have it → keep whichever was edited most recently (local wins only if it carries a strictly newer updatedAt)
-        const lu=(localById[id]&&localById[id].updatedAt)||'', cu=(merged[id]&&merged[id].updatedAt)||'';
-        if(lu && lu>cu) merged[id]=localById[id];
+    db[k].splice(i,1); tombDrop(k,id);
+    return;
+  }
+  const mine = tombGet(k,id);
+  if(mine){
+    if(String(mine.at) > cu) return;              // our deletion is the later action
+    tombDrop(k,id);
+    notes.push({t:'back', k:k, id:id, label:p.name||p.regNo||id});
+  }
+  if(!local){ db[k].push(p); return; }
+  if(!lu || (cu && cu > lu)) db[k][i]=p;
+}
+/* Ask only for what changed. The cursor is the newest stamp we have processed; we
+   reach a little further back than that so two devices with slightly different
+   clocks cannot step over each other. */
+async function syncDeltaPull(c, full, notes){
+  const cfg=syncCfg();
+  const since = full ? '' : syncIsoMinus(cfg.cur||'', SYNC_SKEW_MS);
+  let max = String(cfg.cur||''), seen = 0;
+  for(let from=0; ; from+=SYNC_PAGE_ROWS){
+    let q = c.from('records').select('id,kind,payload,updated_at')
+             .order('updated_at',{ascending:true}).order('id',{ascending:true})
+             .range(from, from+SYNC_PAGE_ROWS-1);
+    if(since) q = q.gte('updated_at', since);
+    const res = await q; if(res.error) throw res.error;
+    const rows = res.data||[];
+    const hash = syncHashes();
+    if(typeof tombPause==='function') tombPause();
+    rows.forEach(function(r){
+      seen++;
+      const ua=String(r.updated_at||'');
+      if(ua>max) max=ua;
+      /* Every row we read teaches the map what the cloud ACTUALLY holds. Without
+         this a full resync re-uploads the entire database — which rewrites every
+         row's timestamp to now, so the whole table then looks "recently changed"
+         and every later sync drags all of it back. It also means a row another
+         device overwrote is re-asserted rather than assumed to be ours. */
+      if(r.id!=null && r.payload!==undefined) hash[String(r.id)]=syncHash(r.payload);
+      if(r.kind==='__delreq') return;                 // legacy rows, cleaned below
+      if(r.kind==='__tomb'){                          // legacy deletions, honoured once
+        if(r.payload && r.payload.k)
+          syncApplyRow({id:r.payload.tid, kind:r.payload.k,
+                        payload:{__del:true, updatedAt:ua}, updated_at:ua}, notes);
+        return;
       }
+      syncApplyRow(r, notes);
     });
-    const arr=Object.values(merged);
-    newLocal[k]=arr;
-    /* Push only what the cloud does not already hold, byte for byte. This one line was the
-       whole realtime-quota problem: every sync used to re-upload every record with a fresh
-       updated_at, so each one was a genuine write, each write broadcast to every connected
-       device, and receiving a broadcast scheduled another sync that did it all again. */
-    arr.forEach(function(rec){
-      const cur = cloudNorm[k][String(rec.id)];
-      if(cur && syncHash(cur) === syncHash(rec)) return;
-      pushRows.push({id:String(rec.id), kind:k, payload:rec, updated_at:state.now});
+    if(typeof tombResume==='function') tombResume();
+    if(rows.length < SYNC_PAGE_ROWS) break;
+    if(from > 500000) break;                          // runaway guard
+  }
+  cfg.cur = max || new Date().toISOString();
+  return seen;
+}
+/* Everything whose content differs from what the cloud last confirmed, plus every
+   deletion not yet acknowledged. One list, one upsert. */
+function syncDeltaRows(now){
+  const hash=syncHashes(); now = now || new Date().toISOString();
+  const rows=[];
+  SYNC_COLLS.forEach(function(k){
+    (db[k]||[]).forEach(function(rec){
+      if(!rec || rec.id==null) return;
+      const pay=syncPayloadOf(k, rec);
+      const hv=syncHash(pay);
+      if(hash[String(rec.id)]===hv) return;
+      rows.push({id:String(rec.id), kind:k, payload:pay, updated_at:now, __h:hv});
     });
-    newKnown[k]=arr.map(x=>String(x.id));
-    newSupp[k]=[...nextSupp];
   });
-  newTombKeys.forEach(key=>{ const p=key.split('|'); pushRows.push({id:'tomb:'+key, kind:'__tomb', payload:{k:p[0], tid:p[1]}, updated_at:state.now}); });
-  return {newLocal, pushRows, deleteRowIds, newState:{knownIds:newKnown, suppressed:newSupp}, pendingForAdmin};
+  const gone=tombStore();
+  Object.keys(gone).forEach(function(key){
+    const g=gone[key];
+    const pay={id:g.id, __del:true, updatedAt:g.at, by:g.by||''};
+    const hv=syncHash(pay);
+    if(hash[g.id]===hv) return;
+    rows.push({id:g.id, kind:g.k, payload:pay, updated_at:now, __h:hv});
+  });
+  return rows;
+}
+async function syncDeltaPush(c, rows){
+  if(!rows || !rows.length) return 0;
+  const hash=syncHashes();
+  for(let i=0;i<rows.length;i+=400){
+    const slice=rows.slice(i, i+400);
+    const e = await c.from('records').upsert(slice.map(function(r){
+      return {id:r.id, kind:r.kind, payload:r.payload, updated_at:r.updated_at}; }));
+    if(e && e.error) throw e.error;
+    slice.forEach(function(r){ hash[r.id]=r.__h; });   // only after the write landed
+  }
+  if(typeof syncNoteWrites==='function') syncNoteWrites(rows.map(function(r){ return r.id; }));
+  if(typeof syncCountWrites==='function') syncCountWrites(rows.length);
+  return rows.length;
+}
+/* say out loud when a delete and an edit crossed in the post */
+function syncReportNotes(notes){
+  (notes||[]).forEach(function(nt){
+    try{
+      if(nt.t==='kept')
+        logActivity('edit', nt.k, (nt.label||nt.id)+' — deleted on another device, but your later edit was kept');
+      else if(nt.t==='back')
+        logActivity('add', nt.k, (nt.label||nt.id)+' — you deleted this, but a later edit elsewhere brought it back');
+    }catch(e){}
+  });
 }
 /* Two devices both start today's MR counter at 011, so after a merge the next number
    must jump past anything already used. Same for the sequential style. */
@@ -19298,7 +19871,15 @@ function reconcileMrnSeq(){
     if((db.seq.mrn||1) <= maxSeq) db.seq.mrn = maxSeq+1;
   }catch(e){}
 }
-function syncSnapshotKnown(){ const k={}; SYNC_COLLS.forEach(c=>{ k[c]=(db[c]||[]).map(x=>String(x.id)); }); syncCfg().knownIds=k; persist(); }
+/* after a wholesale read, what we hold IS what the cloud holds */
+function syncSnapshotKnown(){
+  const hash={};
+  SYNC_COLLS.forEach(function(k){ (db[k]||[]).forEach(function(x){
+    if(x && x.id!=null) hash[String(x.id)]=syncHash(syncPayloadOf(k,x)); }); });
+  const c=syncCfg(); c.hash=hash;
+  delete c.knownIds; delete c.suppressed; delete c.sent;   // the old guessing machinery
+  persist();
+}
 function askDeleteApprovals(list){
   return new Promise(resolve=>{
     let m=$('delApproveModal');
@@ -19327,26 +19908,38 @@ function askDeleteApprovals(list){
    collections on every save. It does not matter which button did the deleting, whether it was
    one record or forty, or whether a sync ever ran: if a record was here and is not any more,
    this device knows it deleted it and will say so at the next sync.                        */
-const TOMB_KEEP_DAYS = 400;
-function tombStore(){ const c = syncCfg(); if(!c.tombs) c.tombs = {}; return c.tombs; }
+const TOMB_KEEP_DAYS = SYNC_DEL_KEEP_DAYS;
+/* ---- the delete ledger ----
+   Every deletion this device makes is written down the moment it happens, with the
+   time it happened. It is pushed as an ordinary row carrying `__del`, and it is
+   only forgotten once it is that old. Nothing infers a deletion from an absence. */
+function tombStore(){ const c = syncCfg(); if(!c.gone) c.gone = {}; return c.gone; }
 function tombKey(coll, id){ return coll + '|' + String(id); }
-function tombAdd(coll, id){
+function tombAdd(coll, id, when){
   const t = tombStore();
-  t[tombKey(coll, id)] = new Date().toISOString();
+  const k = tombKey(coll, id);
+  if(!t[k]) t[k] = {k:coll, id:String(id), at:(when||new Date().toISOString()),
+                    by:(typeof byTag==='function'?byTag():'')};
 }
 function tombHas(coll, id){ return !!tombStore()[tombKey(coll, id)]; }
+function tombGet(coll, id){ return tombStore()[tombKey(coll, id)] || null; }
 function tombDrop(coll, id){ delete tombStore()[tombKey(coll, id)]; }
 function tombPrune(){
-  const t = tombStore(), cut = new Date(Date.now() - TOMB_KEEP_DAYS*864e5).toISOString();
-  Object.keys(t).forEach(function(k){ if(t[k] < cut) delete t[k]; });
+  const t = tombStore(), cut = new Date(Date.now() - SYNC_DEL_KEEP_DAYS*864e5).toISOString();
+  Object.keys(t).forEach(function(k){ if((t[k].at||'') < cut) delete t[k]; });
 }
-/* The mirror of what this device holds, kept up to date on every save. Comparing it to the
-   live collections is what turns "a record vanished" into a recorded deletion. */
+/* the single door every delete should go through */
+function syncDelete(coll, id){
+  tombAdd(coll, id);
+  db[coll] = (db[coll]||[]).filter(function(x){ return !x || String(x.id)!==String(id); });
+}
+/* The mirror of what this device holds. Comparing it to the live collections is the
+   safety net for any delete path that forgot to call syncDelete — and there are
+   dozens of them, written over two years. */
 function tombMirror(){ const c = syncCfg(); if(!c.seenIds) c.seenIds = {}; return c.seenIds; }
-/* Records also disappear for reasons that are NOT a deletion: a sync merge applying another
-   device's tombstone, a restore from backup, an import. Recording those as local deletions
-   would delete them for everybody — so the watcher is suspended around those operations and
-   only re-learns what is there. */
+/* Records also disappear for reasons that are NOT a deletion: applying another
+   device's change, a restore from backup, an import. The watcher is suspended
+   around those and only re-learns what is there. */
 let tombPaused = 0;
 function tombPause(){ tombPaused++; }
 function tombResume(){ tombPaused = Math.max(0, tombPaused-1); if(!tombPaused) tombWatch(true); }
@@ -19367,14 +19960,10 @@ function tombWatch(relearnOnly){
     });
   }catch(e){}
 }
-
-/* ==================== NUMBERS FOLLOW THE DATES ====================
-   The doctor's rule: a number belongs to a POSITION IN THE YEAR, not to a patient. Enter a
-   case today that was operated in April and it takes April's slot; everything after it shifts
-   down. Numbers are not a patient identifier — the MR number is. */
 function regOrderBroken(){
   const items = [];
   (db.registry||[]).forEach(function(r){
+    if(!regIsCase(r)) return;
     const b = regNoBasis(r); if(!b) return;
     const p = regNoParts(r.regNo);
     if(!p || !regNoIsNew(r.regNo)) return;
@@ -19929,45 +20518,60 @@ let __lastSyncAt=0;
 async function syncNow(loud, force){
   // background syncs are throttled so they don't fire constantly; manual/forced ones always run
   if(!force && (Date.now()-__lastSyncAt) < 25000) return;
-  if(document.body.classList.contains('syncing')) return;   // never overlap
+  if(document.body.classList.contains('syncing')){
+    if(loud) toast('A sync is already running \u2014 one moment');
+    return;
+  }
   document.body.classList.add('syncing');
   try{
-    const c=await syncClient(); const sess=await c.auth.getSession(); if(!sess.data.session) throw new Error('Sign in first');
-    const res=await c.from('records').select('id,kind,payload'); if(res.error) throw res.error; const cloud=res.data||[];
-    syncNoteCloud(cloud);          // the map now reflects the cloud, not just our own history
-    const local={}; SYNC_COLLS.forEach(k=>local[k]=db[k]||[]);
-    const isAdmin=!currentUser || currentUser.role==='admin';
-    const state={knownIds:syncCfg().knownIds||{}, suppressed:syncCfg().suppressed||{},
-                 tombs:(typeof tombStore==='function'? tombStore() : {}),
-                 now:new Date().toISOString(), userName:(currentUser&&currentUser.name)||syncCfg().email||''};
-    let plan=computeSyncPlan(local, cloud, state, isAdmin, {});
-    if(isAdmin && plan.pendingForAdmin.length){ const decisions=await askDeleteApprovals(plan.pendingForAdmin); plan=computeSyncPlan(local, cloud, state, isAdmin, decisions); }
-    if(typeof tombPause==='function') tombPause();
-    SYNC_COLLS.forEach(k=>{ db[k]=plan.newLocal[k]; });
-    if(typeof tombResume==='function') tombResume();
-    if(typeof syncRehash==='function') syncRehash();   // pulled copies are not local edits
-    if(typeof reconcileMrnSeq==='function') reconcileMrnSeq(); // never hand out an MR number another device already used
+    const c=await syncClient(); const sess=await c.auth.getSession();
+    if(!sess.data.session) throw new Error('Sign in first');
+    const cfg=syncCfg();
+    const first = !cfg.cur;                       // first run of this engine → read everything once
+    const notes=[];
+    const seen = await syncDeltaPull(c, first, notes);
+    /* Everything we push carries this stamp. The cursor has to move past it too, or
+       the next pull re-reads our own writes — and if the newest thing we PULLED was
+       old history, the cursor would sit in the past and drag the whole table back
+       every time. Rows another device wrote in the meantime are still caught,
+       because a push always stamps "now" and the window reaches 36 hours back. */
+    const stamp = new Date().toISOString();
+    const rows = syncDeltaRows(stamp);
+    const sent = await syncDeltaPush(c, rows);
+    if(sent && stamp > String(cfg.cur||'')) cfg.cur = stamp;
+    tombPrune();
+    if(typeof reconcileMrnSeq==='function') reconcileMrnSeq();
     if(typeof phraseBankInvalidate==='function') phraseBankInvalidate();
     try{ if(db.meds && db.meds.length) db.meds.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''))); }catch(e){}
-    reconcileUsers(); refreshCurrentUser();   // apply any access changes immediately, before later steps
-    const delIds=[...new Set(plan.deleteRowIds)];
-    for(const id of delIds){ await c.from('records').delete().eq('id', id); }
-    if(delIds.length){ syncForget(delIds); syncCountWrites(delIds.length); }
-    await syncUpsert(c, plan.pushRows, 'records');
-    syncCfg().knownIds=plan.newState.knownIds; syncCfg().suppressed=plan.newState.suppressed; syncCfg().lastSync=state.now; syncCfg().lastError=''; persist();
-    await syncPushAccess(); await syncPullAccess();
-    await syncPushActivity(); await syncPullActivity();
-    await syncPullPending(); await syncPushPending();
-    await syncPullFavs(); await syncPushFavs();
-    reconcileUsers(); refreshCurrentUser(); persist();
-    refreshAllViews(); renderSync(); if(typeof renderSyncChip==='function') renderSyncChip();
+    if(typeof prefsApply==='function') prefsApply();
+    reconcileUsers(); refreshCurrentUser();
+    syncReportNotes(notes);
+    cfg.lastSync=new Date().toISOString(); cfg.lastError='';
+    cfg.lastPulled=seen; cfg.lastPushed=sent;
+    persist();
+    refreshAllViews(); renderSync();
+    if(typeof renderSyncChip==='function') renderSyncChip();
     if(typeof renderNotif==='function') renderNotif();
     if(typeof renderUserList==='function') renderUserList();
     if(typeof renderHomeSync==='function') renderHomeSync();
     __lastSyncAt=Date.now();
-    if(loud) toast('✅ Up to date');
-  }catch(e){ syncCfg().lastError=(e&&e.message)||'Sync failed'; try{persist();}catch(_){ } if(typeof renderHomeSync==='function') renderHomeSync(); if(loud) toast('⚠ '+(e.message||'Couldn’t sync')); }
+    if(loud) toast('\u2705 Up to date \u00b7 '+seen+' change'+(seen===1?'':'s')+' read'+
+      (sent?(' \u00b7 '+sent+' sent'):''));
+  }catch(e){
+    syncCfg().lastError=(e&&e.message)||'Sync failed';
+    try{persist();}catch(_){}
+    if(typeof renderHomeSync==='function') renderHomeSync();
+    if(loud) toast('\u26a0 '+((e&&e.message)||'Could not sync'));
+  }
   finally{ document.body.classList.remove('syncing'); }
+}
+/* Start again from scratch: read the whole log and rebuild what we believe the
+   cloud holds. The escape hatch for a device that has somehow drifted. */
+async function syncFullResync(loud){
+  const cfg=syncCfg();
+  cfg.cur=''; cfg.hash={};
+  if(loud) toast('Reading everything from the cloud\u2026');
+  await syncNow(loud, true);
 }
 function refreshAllViews(){ const t=activeTabName(); if(t && typeof showTab==='function') showTab(t, true); }
 /* Manual means MANUAL. Every automatic path goes through here or kickSyncIfNeeded, so the
