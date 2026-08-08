@@ -5067,7 +5067,7 @@ function migrateDB(){
     if(!db.prefs.filter(function(x){ return x && x.id==='favs'; }).length){
       db.prefs.push({id:'favs', favMeds:((db.settings||{}).favMeds||[]).slice(),
                      favTpls:((db.settings||{}).favTpls||[]).slice(),
-                     updatedAt:new Date().toISOString()});
+                     updatedAt:syncStamp()});
     }
     /* records with no stamp can never win a merge — give the ones this device holds
        a stamp now, before the new engine starts comparing them */
@@ -5114,7 +5114,7 @@ function stampDirtyRecords(quiet){
   if(typeof SYNC_COLLS==='undefined') return;
   const first = (__recFp===null);
   if(first) __recFp={};
-  const now=new Date().toISOString();
+  const now=(typeof syncStamp==='function') ? syncStamp() : new Date().toISOString();
   SYNC_COLLS.forEach(k=>{
     const prevMap=__recFp[k]||{}, nextMap={};
     (db[k]||[]).forEach(rec=>{
@@ -5191,7 +5191,12 @@ function mrnPreview(){  // non-consuming — shown in the MR # box before saving
 }
 function uid(p){ return p + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 /* stamp a record with an edit time so cloud-sync keeps the NEWEST version instead of always preferring the cloud copy */
-function syncTouch(rec){ if(rec && typeof rec==='object') rec.updatedAt = new Date().toISOString(); return rec; }
+/* every record stamp in the app comes from syncStamp — see its comment for why */
+function syncTouch(rec){
+  if(rec && typeof rec==='object')
+    rec.updatedAt = (typeof syncStamp==='function') ? syncStamp() : new Date().toISOString();
+  return rec;
+}
 function isNoAllergy(s){
   s = (s||'').trim().toLowerCase().replace(/[.۔]+$/,'');
   return /^(nkda|nka|none|nil|no|n\/a|na|no known( drug)? allerg(y|ies)|no allerg(y|ies)( known)?)$/.test(s);
@@ -9808,7 +9813,7 @@ function savePatEdit(){
   p.allergies=$('peAllergies').value.trim(); p.medHx=$('peMedHx').value.trim(); p.surgHx=$('peSurgHx').value.trim();
   p.dob=$('peDob').value; p.bloodGroup=$('peBlood').value;
   p.occupation=$('peOcc').value.trim(); p.referredBy=$('peRefBy').value.trim(); p.cnic=$('peCnic').value.trim();
-  p.updatedAt=new Date().toISOString();
+  p.updatedAt=syncStamp();
   logActivity('edit','patient',p.name, undoOne('patients', patBefore, p));
   persist(); closePatModal(); renderPatientList();
   if(currentPatientId===p.id && !$('patientDetailCard').classList.contains('hidden')) openPatient(p.id);
@@ -12107,7 +12112,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.07-b62';
+const APP_BUILD = '2026.08.08-b64';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -12743,14 +12748,14 @@ function permApplyPreset(k){ permDraft=Object.assign({}, PERM_PRESETS[k].map); p
 function savePermEdit(){
   const u=db.users.find(x=>x.id===permEditId); if(!u) return;
   const m={}; Object.keys(permDraft).forEach(t=>{ if(permDraft[t]==='view'||permDraft[t]==='edit') m[t]=permDraft[t]; });
-  u.perms=m; u.updatedAt=new Date().toISOString(); persist(); closePermModal(); renderUserList();
+  u.perms=m; u.updatedAt=syncStamp(); persist(); closePermModal(); renderUserList();
   if(currentUser && currentUser.id===u.id){ applyPerms(); }
   if(typeof pushUsersNow==='function') pushUsersNow('Access saved & sent to '+u.name+' — they can sign in now'); else toast('Access updated for '+u.name);
 }
 function closePermModal(){ if($('permModal')) $('permModal').classList.add('hidden'); permEditId=null; }
 function approveUser(id){
   const u = db.users.find(x=>x.id===id); if(!u) return;
-  u.status='active'; u.approvedBy = byTag(); u.updatedAt=new Date().toISOString();
+  u.status='active'; u.approvedBy = byTag(); u.updatedAt=syncStamp();
   persist(); renderUserList();
   logActivity('approve','user',u.name);
   if(typeof pushUsersNow==='function') pushUsersNow();
@@ -12772,7 +12777,7 @@ function renameUser(id){
   const nm = prompt('Display name for this person:', looksLikeInvite(u.name)?'':(u.name||''));
   if(nm===null) return;
   const v=nm.trim(); if(!v){ toast('Name can’t be empty'); return; }
-  u.name=v; u.updatedAt=new Date().toISOString(); persist(); renderUserList();
+  u.name=v; u.updatedAt=syncStamp(); persist(); renderUserList();
   if(typeof pushUsersNow==='function') pushUsersNow('Name updated for '+v);
   if(currentUser && currentUser.id===u.id && typeof renderHome==='function') renderHome();
 }
@@ -12782,7 +12787,7 @@ async function resetUserPw(id){
   if(pw===null) return;
   if(!validPw(pw.trim())){ toast('⚠ Password must be at least 6 characters'); return; }
   u.pwHash = await userHashInput(loginId(u), pw.trim());
-  u.updatedAt=new Date().toISOString();
+  u.updatedAt=syncStamp();
   persist();
   if(typeof syncPushSoon==='function') syncPushSoon();
   toast('Password reset for '+u.name);
@@ -12790,7 +12795,7 @@ async function resetUserPw(id){
 function toggleUserRole(id){
   const u = db.users.find(x=>x.id===id); if(!u) return;
   if(u.isOwner){ toast('The owner’s role can’t be changed'); return; }
-  u.role = u.role==='admin' ? 'staff' : 'admin'; u.updatedAt=new Date().toISOString();
+  u.role = u.role==='admin' ? 'staff' : 'admin'; u.updatedAt=syncStamp();
   persist(); renderUserList();
   if(typeof syncPushSoon==='function') syncPushSoon();
   toast(u.name+' is now '+(u.role==='admin'?'an admin':'staff'));
@@ -15102,7 +15107,7 @@ function regSave(){
     const before=undoSnap(ex);
     const wasProv = !!ex.regNoProv;
     const typedNo = String(rec.regNo||'').trim();
-    Object.assign(ex, rec, {updatedAt:new Date().toISOString(), updatedBy:byTag()});
+    Object.assign(ex, rec, {updatedAt:syncStamp(), updatedBy:byTag()});
     // a number typed by hand wins; otherwise a provisional number settles once the
     // surgery date arrives. Either way NO other case is touched.
     let settled=false;
@@ -15163,7 +15168,7 @@ function approvePendingChange(id){
   if(pc.kind==='registry'){
     if(pc.op==='edit' && pc.targetId){
       const ex=db.registry.find(x=>x.id===pc.targetId);
-      if(ex){ Object.assign(ex, pc.payload, {updatedAt:new Date().toISOString(), updatedBy:pc.by}); }
+      if(ex){ Object.assign(ex, pc.payload, {updatedAt:syncStamp(), updatedBy:pc.by}); }
       else { db.registry.push(Object.assign({}, pc.payload, {id:pc.targetId||uid('reg'), createdAt:new Date().toISOString(), by:pc.by})); }
     } else {
       db.registry.push(Object.assign({}, pc.payload, {id:uid('reg'), createdAt:new Date().toISOString(), by:pc.by, approvedBy:byTag()}));
@@ -15612,7 +15617,7 @@ function regImportRows(rows){
       if(REG_DATE_KEYS.indexOf(k)>=0 && /^\d{5}(\.\d+)?$/.test(val)) val=excelSerialToISO(parseFloat(val));
       rec[k]=val; });
     if(!rec.regNo && !rec.name && !rec.mrn) continue;
-    if(rec.regNo && byReg[String(rec.regNo)]){ Object.assign(byReg[String(rec.regNo)], rec, {updatedAt:new Date().toISOString(),updatedBy:byTag()}); upd++; }
+    if(rec.regNo && byReg[String(rec.regNo)]){ Object.assign(byReg[String(rec.regNo)], rec, {updatedAt:syncStamp(),updatedBy:byTag()}); upd++; }
     else { const p = rec.mrn ? db.patients.find(x=>!x.regOnly && String(x.mrn)===String(rec.mrn)) : null;
       rec.patientId=p?p.id:null; rec.id=uid('reg'); rec.createdAt=new Date().toISOString(); rec.by=byTag();
       if(rec.regNo) rec.regNoOld=String(rec.regNo);
@@ -16151,7 +16156,7 @@ function invSave(){
   const name=$('invName').value.trim(); if(!name){ toast('⚠ Item name is required'); return; }
   const data={name, type:$('invType').value.trim(), company:$('invCompany').value.trim(), size:$('invSize').value.trim(),
     qty:parseInt($('invQty').value)||0, minQty:parseInt($('invMin').value)||0, cost:parseFloat($('invCost').value)||0, notes:$('invNotes').value.trim()};
-  if(invEditingId){ Object.assign(db.inventory.find(x=>x.id===invEditingId), data, {updatedAt:new Date().toISOString(), updatedBy:byTag()}); }
+  if(invEditingId){ Object.assign(db.inventory.find(x=>x.id===invEditingId), data, {updatedAt:syncStamp(), updatedBy:byTag()}); }
   else db.inventory.push(Object.assign(data,{id:uid('inv'), createdAt:new Date().toISOString(), by:byTag()}));
   persist(); invClearForm(); renderInventory(); toast('Inventory saved');
 }
@@ -19433,6 +19438,34 @@ const SYNC_COLLS=['users','patients','visits','registry','documents','surgeries'
 /* how far back a pull reaches beyond the cursor, to absorb clock differences
    between devices. Cheap insurance: it only ever costs a few extra rows. */
 const SYNC_SKEW_MS = 36*3600*1000;
+/* THE CURSOR IS A CLOCK, AND IT IS NOT OURS.
+   Every pull asks for rows stamped after the newest one it has seen. If a device's
+   own clock is wrong, that breaks in both directions and in silence:
+     - a phone three days SLOW pushed rows BELOW every other device's window, so they
+       were never read again — the writes were in the cloud and invisible;
+     - a tablet two days FAST dragged every other device's cursor into the future, so
+       every later write from a correctly-set device was skipped.
+   Both are fixed by never letting a push land behind what the pusher has already
+   read: stamp it one millisecond after the newest row we have seen. The stamps stay
+   monotonic across the whole clinic whatever any single clock says. */
+let __lastStamp = '';
+function syncStamp(){
+  let s = new Date().toISOString();
+  try{
+    /* never behind what we have already read from the cloud */
+    const seen = String(syncCfg().cur||'');
+    if(seen && s <= seen){ const t=Date.parse(seen); if(!isNaN(t)) s=new Date(t+1).toISOString(); }
+  }catch(e){}
+  /* and strictly after the last stamp this device issued, so a record written after a
+     deletion always beats it — every stamp in the app comes from here, or a delete
+     made with the monotonic clock would outrank an edit made with the raw one */
+  if(__lastStamp && s <= __lastStamp){
+    const t=Date.parse(__lastStamp);
+    if(!isNaN(t)) s=new Date(t+1).toISOString();
+  }
+  __lastStamp = s;
+  return s;
+}
 const SYNC_PAGE_ROWS = 1000;
 const SYNC_DEL_KEEP_DAYS = 120;
 /* What actually goes on the wire for a record. Undo snapshots are deliberately
@@ -19805,26 +19838,52 @@ async function syncDeltaPull(c, full, notes){
 }
 /* Everything whose content differs from what the cloud last confirmed, plus every
    deletion not yet acknowledged. One list, one upsert. */
+/* A cloud row is keyed on the record id alone. Send the same id twice in one upsert
+   and Postgres rejects the ENTIRE batch:
+     "ON CONFLICT DO UPDATE command cannot affect row a second time"
+   — so one stale pointer stops the whole clinic syncing. Three ways it happens, all
+   handled here rather than left to blow up on the wire:
+     1. a tombstone still held for a record that has since been re-created;
+     2. the same id twice inside one collection (a duplicate that crept in);
+     3. the same id in two different collections.
+   `syncDupReport` records anything odd so it can be seen rather than guessed at. */
+let syncDupReport = null;
 function syncDeltaRows(now){
-  const hash=syncHashes(); now = now || new Date().toISOString();
-  const rows=[];
+  const hash=syncHashes();
+  now = now || ((typeof syncStamp==='function') ? syncStamp() : new Date().toISOString());
+  const rows=[], seen={}, dups=[];
+  const gone=tombStore();
+
+  /* (1) a record that is present locally is NOT deleted — its tombstone is stale */
+  SYNC_COLLS.forEach(function(k){
+    (db[k]||[]).forEach(function(rec){
+      if(rec && rec.id!=null && tombHas(k, rec.id)) tombDrop(k, rec.id);
+    });
+  });
+
   SYNC_COLLS.forEach(function(k){
     (db[k]||[]).forEach(function(rec){
       if(!rec || rec.id==null) return;
+      const id=String(rec.id);
+      if(seen[id]){ dups.push(seen[id]+' / '+k+' — id '+id); return; }   // (2) and (3)
+      seen[id]=k;
       const pay=syncPayloadOf(k, rec);
       const hv=syncHash(pay);
-      if(hash[String(rec.id)]===hv) return;
-      rows.push({id:String(rec.id), kind:k, payload:pay, updated_at:now, __h:hv});
+      if(hash[id]===hv) return;
+      rows.push({id:id, kind:k, payload:pay, updated_at:now, __h:hv});
     });
   });
-  const gone=tombStore();
   Object.keys(gone).forEach(function(key){
     const g=gone[key];
-    const pay={id:g.id, __del:true, updatedAt:g.at, by:g.by||''};
+    const id=String(g.id);
+    if(seen[id]) return;                       // belt and braces after the sweep above
+    seen[id]='tombstone';
+    const pay={id:id, __del:true, updatedAt:g.at, by:g.by||''};
     const hv=syncHash(pay);
-    if(hash[g.id]===hv) return;
-    rows.push({id:g.id, kind:g.k, payload:pay, updated_at:now, __h:hv});
+    if(hash[id]===hv) return;
+    rows.push({id:id, kind:g.k, payload:pay, updated_at:now, __h:hv});
   });
+  syncDupReport = dups.length ? dups : null;
   return rows;
 }
 async function syncDeltaPush(c, rows){
@@ -19915,10 +19974,21 @@ const TOMB_KEEP_DAYS = SYNC_DEL_KEEP_DAYS;
    only forgotten once it is that old. Nothing infers a deletion from an absence. */
 function tombStore(){ const c = syncCfg(); if(!c.gone) c.gone = {}; return c.gone; }
 function tombKey(coll, id){ return coll + '|' + String(id); }
+/* A deletion is only honoured if it is LATER than the record it removes. Stamped from
+   the device's own clock, a phone three days slow could not delete anything: it pulled
+   the record back, dropped its own tombstone and pushed the record to everyone — which
+   is what "deleted records coming back" actually was. The stamp is therefore monotonic
+   like every other, and later than the record it is deleting. */
+function syncDelStamp(rec){
+  let s = (typeof syncStamp==='function') ? syncStamp() : new Date().toISOString();
+  const ru = (rec && rec.updatedAt) ? String(rec.updatedAt) : '';
+  if(ru && ru >= s){ const t=Date.parse(ru); if(!isNaN(t)) s=new Date(t+1).toISOString(); }
+  return s;
+}
 function tombAdd(coll, id, when){
   const t = tombStore();
   const k = tombKey(coll, id);
-  if(!t[k]) t[k] = {k:coll, id:String(id), at:(when||new Date().toISOString()),
+  if(!t[k]) t[k] = {k:coll, id:String(id), at:(when||syncDelStamp(null)),
                     by:(typeof byTag==='function'?byTag():'')};
 }
 function tombHas(coll, id){ return !!tombStore()[tombKey(coll, id)]; }
@@ -19930,7 +20000,8 @@ function tombPrune(){
 }
 /* the single door every delete should go through */
 function syncDelete(coll, id){
-  tombAdd(coll, id);
+  const rec = (db[coll]||[]).filter(function(x){ return x && String(x.id)===String(id); })[0];
+  tombAdd(coll, id, syncDelStamp(rec));
   db[coll] = (db[coll]||[]).filter(function(x){ return !x || String(x.id)!==String(id); });
 }
 /* The mirror of what this device holds. Comparing it to the live collections is the
@@ -19953,7 +20024,7 @@ function tombWatch(relearnOnly){
       (db[k]||[]).forEach(function(x){ if(x && x.id != null) now[String(x.id)] = 1; });
       const was = mirror[k];
       if(!quiet && Array.isArray(was)){
-        was.forEach(function(id){ if(!now[id]) tombAdd(k, id); });   // it was here, it is not now
+        was.forEach(function(id){ if(!now[id]) tombAdd(k, id, syncDelStamp(was && was.rec && was.rec[id])); });   // it was here, it is not now
       }
       Object.keys(now).forEach(function(id){ if(tombHas(k, id)) tombDrop(k, id); }); // re-created
       mirror[k] = Object.keys(now);
@@ -20535,10 +20606,17 @@ async function syncNow(loud, force){
        old history, the cursor would sit in the past and drag the whole table back
        every time. Rows another device wrote in the meantime are still caught,
        because a push always stamps "now" and the window reaches 36 hours back. */
-    const stamp = new Date().toISOString();
+    const stamp = syncStamp();
     const rows = syncDeltaRows(stamp);
     const sent = await syncDeltaPush(c, rows);
     if(sent && stamp > String(cfg.cur||'')) cfg.cur = stamp;
+    /* duplicated ids are a data fault, not a sync fault — say so instead of hiding it */
+    if(syncDupReport && syncDupReport.length){
+      notes.push({t:'dup', n:syncDupReport.length});
+      try{ logActivity('edit','sync', syncDupReport.length+
+        ' record'+(syncDupReport.length===1?' shares an id':'s share ids')+
+        ' with another — only one copy was sent: '+syncDupReport.slice(0,4).join('; ')); }catch(e){}
+    }
     tombPrune();
     if(typeof reconcileMrnSeq==='function') reconcileMrnSeq();
     if(typeof phraseBankInvalidate==='function') phraseBankInvalidate();
@@ -20638,7 +20716,16 @@ create table if not exists records (
 alter table records enable row level security;
 create policy "clinic access" on records
   for all to authenticated using (true) with check (true);
-alter publication supabase_realtime add table records;`;
+alter publication supabase_realtime add table records;
+
+-- Optional but recommended: let the SERVER own the change stamp, so a device with a
+-- wrong clock can never hide or skip a row. The app is safe without this, but this
+-- removes the whole class of problem.
+create or replace function records_touch() returns trigger as $$
+begin new.updated_at = now(); return new; end $$ language plpgsql;
+drop trigger if exists records_touch on records;
+create trigger records_touch before insert or update on records
+  for each row execute function records_touch();`;
 function renderSync(){
   const c=syncCfg(); const host=$('syncStatus');
   if(typeof renderSyncBudget==='function') try{ renderSyncBudget(); }catch(e){}
