@@ -320,6 +320,22 @@ html[data-theme="dark"] .allergy-ok{color:#6ad78f}
 /* ---------- Lock screen ---------- */
 #lockScreen{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center}
 #lockScreen.hidden{display:none}
+/* ---- nothing is shown until the app knows whether it is locked ----
+   The markup has the New Prescription tab open by default and the lock screen hidden, and
+   `initAuth()` runs at the END of a long start-up — thirty render steps after first paint.
+   So the browser painted a working prescription form for a moment before the sign-in
+   screen replaced it: patient details on a clinic screen, before anybody had signed in.
+   Holding the page until boot has decided fixes it in BOTH directions — a signed-in
+   doctor no longer gets a flash of the lock screen either. `#bootErrBar` is exempt, so a
+   start-up failure can still say so, and a timer in the boot script clears the hold
+   whatever happens, so this can never leave a blank page. */
+html.booting body > *:not(#bootErrBar):not(#bootSplash){visibility:hidden!important}
+#bootSplash{position:fixed;inset:0;z-index:400;background:var(--bg);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:14px}
+html:not(.booting) #bootSplash{display:none}
+#bootSplash .bs-mark{width:56px;height:56px;border-radius:16px;background:var(--teal);color:#fff;
+  display:flex;align-items:center;justify-content:center;font:700 27px Georgia,serif}
+#bootSplash .bs-tx{font:600 12px system-ui;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
 .lock-wrap{display:flex;border-radius:22px;overflow:hidden;box-shadow:0 26px 70px rgba(15,23,42,.28);
   max-height:94vh;animation:lockIn .4s cubic-bezier(.3,.8,.4,1) both}
 @keyframes lockIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
@@ -2353,6 +2369,12 @@ html.dark .gap-chip{background:#78350f;color:#fde68a}
 /* Early safety net: if anything throws while the app is starting up, never leave a
    dead page — reveal the sign-in screen and show what went wrong so it can be fixed. */
 window.__bootError=null;
+/* Hold the page blank until initAuth() has decided what to show (see the .booting rules in
+   the stylesheet). Set here, before <body> is parsed, so it applies to the FIRST paint. */
+try{ document.documentElement.classList.add('booting'); }catch(_e){}
+window.__bootDone=function(){ try{ document.documentElement.classList.remove('booting'); }catch(_e){} };
+/* …and let go no matter what. A hold that can get stuck is worse than the flash it fixes. */
+setTimeout(function(){ window.__bootDone(); }, 6000);
 window.addEventListener('error', function(ev){
   try{
     // Once the app has finished starting, ignore stray errors (e.g. a button tapped a split-second
@@ -2361,6 +2383,7 @@ window.addEventListener('error', function(ev){
     var msg=(ev && ev.message)||'Startup error';
     if(ev && ev.filename) msg+=' ('+String(ev.filename).split('/').pop()+':'+ev.lineno+')';
     window.__bootError=msg;
+    window.__bootDone();                       // a failed start must still be visible
     var ls=document.getElementById('lockScreen'); if(ls) ls.classList.remove('hidden');
     var le=document.getElementById('lockErr'); if(le) le.textContent='Startup problem: '+msg;
     var bn=document.getElementById('bootErrBar'); if(bn){ bn.style.display='block'; bn.textContent='⚠ Loading… if this stays, reload the page.'; }
@@ -2372,6 +2395,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 </head>
 <body>
 <div id="bootErrBar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#b91c1c;color:#fff;padding:10px 14px;font:13px system-ui;text-align:center"></div>
+<div id="bootSplash"><div class="bs-mark">&#8478;</div><div class="bs-tx">Starting…</div></div>
 <div id="lockScreen" class="hidden">
   <div class="lock-wrap">
     <div class="lock-side">
@@ -13028,7 +13052,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.11-b76';
+const APP_BUILD = '2026.08.11-b77';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -22045,6 +22069,8 @@ _initStep(()=>{ if(typeof syncNoticeMaybe==='function') syncNoticeMaybe(); });
 _initStep(()=>{ if(typeof renderNotif==='function') renderNotif(); });
 /* app finished starting up — from here, a stray click-time error must NOT show the "startup problem" bar */
 try{ window.__appReady = true; var _beb=document.getElementById('bootErrBar'); if(_beb) _beb.style.display='none'; }catch(e){}
+/* initAuth() has run: either the lock screen is up or the doctor's own first tab is. Show it. */
+try{ window.__bootDone(); }catch(e){}
 /* ---- auto-capitalise sentence starts (first letter, and after each new line) ---- */
 function autoCapField(el){
   const v = el.value; if(!v) return;
