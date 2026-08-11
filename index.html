@@ -256,6 +256,7 @@ textarea.ta-s{min-height:42px}
 .btn-danger{background:#fdecec;color:var(--danger)}
 .btn-sm{padding:5px 10px;font-size:12.5px;border-radius:7px}
 .btn-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn-bar .bb-gap{flex:1 1 auto;min-width:0}
 
 /* ---------- Tables ---------- */
 table.list{width:100%;border-collapse:collapse}
@@ -329,7 +330,7 @@ html[data-theme="dark"] .allergy-ok{color:#6ad78f}
   box-shadow:0 10px 26px rgba(0,0,0,.3)}
 .lk-logo img{width:100%;height:100%;object-fit:cover}
 .lk-name{font-weight:700;font-size:19px;letter-spacing:1.5px}
-.lk-quals{font-size:12.5px;opacity:.85;margin-top:6px;line-height:1.5}
+.lk-quals{font-size:12.5px;opacity:.85;margin-top:6px;line-height:1.5;white-space:pre-line}
 .lk-tag{margin-top:16px;background:rgba(255,255,255,.14);border-radius:999px;padding:5px 16px;font-size:12px;font-weight:600;letter-spacing:.4px}
 .lk-foot{margin-top:22px;font-size:11px;opacity:.55;letter-spacing:.5px;text-transform:uppercase}
 .lock-card{background:#fff;padding:36px 38px;width:372px;
@@ -561,7 +562,7 @@ html[data-theme="dark"] .role-badge.active{background:#12291a;color:#6ad78f;bord
 .rx-head{display:flex;justify-content:space-between;align-items:flex-start;
   border-bottom:3px double #111;padding-bottom:8px}
 .rx-head .doc .dname{font-size:20px;font-weight:700}
-.rx-head .doc .dquals{font-size:12.5px;margin-top:2px}
+.rx-head .doc .dquals{font-size:12.5px;margin-top:2px;white-space:pre-line}   /* the doctor may write his qualifications over several lines */
 .rx-head .doc .dreg{font-size:11.5px;margin-top:2px}
 .rx-head .clinic{text-align:right}
 .rx-head .clinic .cname{font-size:17px;font-weight:700}
@@ -1171,6 +1172,46 @@ html[data-theme="dark"] .ph-hd{background:#16242f}
 .cf-drive.warn{border-color:#f0a04b;background:rgba(240,160,75,.07)}
 .cf-drive .cd-tx{flex:1;min-width:150px;line-height:1.5;color:var(--muted)}
 .cf-drive .cd-tx b{color:var(--ink)}
+/* ---- naming the Drive folders ---- */
+.gd-warn{margin-top:12px;border:1px solid #f0a04b;background:rgba(240,160,75,.09);border-radius:12px;
+  padding:9px 12px;font-size:12px;line-height:1.6;color:var(--muted)}
+.gd-warn b{color:var(--ink)}
+.gd-toks{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.gd-toks button{border:1px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer;
+  border-radius:999px;padding:2px 9px;font:600 10.5px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-family:inherit;transition:.14s}
+.gd-toks button:hover{border-color:var(--teal);color:var(--teal)}
+.gd-prev{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:11px 13px;
+  background:var(--hover,#f5f8fa);font-size:12px;line-height:1.85;overflow-x:auto}
+html[data-theme="dark"] .gd-prev{background:#11202a}
+.gd-prev .gp-h{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.3px;
+  text-transform:uppercase;margin-bottom:6px}
+.gd-prev code{font-size:11.5px;white-space:normal;word-break:break-word}
+.gd-prev .gp-l{line-height:1.7}
+.gd-prev .gp-in{padding-left:14px;color:var(--muted)}
+.tb-pop .tb-grp{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--muted);margin:9px 0 5px}
+.tb-pop .tb-grp:first-of-type{margin-top:2px}
+.fu-box input[type="text"]{border:0;background:none;padding:6px 2px;width:100%}
+.fu-box input[type="text"]:focus{box-shadow:none;outline:none}
+/* ---- the carry-forward offer above Presenting complaints ---- */
+.rx-carry{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;
+  border:1px dashed var(--teal);background:var(--teal-light);border-radius:12px;padding:8px 12px}
+.rx-carry .rc-tx{flex:1;min-width:200px;font-size:12px;line-height:1.6;color:var(--ink)}
+.rx-carry .rc-h{display:block;font-size:10px;font-weight:800;letter-spacing:.6px;
+  text-transform:uppercase;color:var(--teal-dark);margin-bottom:2px}
+html[data-theme="dark"] .rx-carry{background:rgba(13,148,136,.10)}
+.gd-top{margin-top:14px}
+.gdt-on,.gdt-off{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--card)}
+.gdt-on{border-color:var(--green,#16a34a);background:rgba(22,181,129,.07)}
+.gdt-on .gdt-ic{font-size:17px;flex:none}
+.gdt-on .gdt-tx{display:flex;flex-direction:column;flex:1;min-width:160px;line-height:1.45}
+.gdt-on .gdt-tx b{font-size:13px;color:var(--ink)}
+.gdt-on .gdt-tx span{font-size:11.5px;color:var(--muted)}
+.gdt-off .field label{margin-bottom:3px}
+.gd-prev .gp-f{color:var(--ink);font-weight:600}
+.gd-prev .gp-src{color:var(--muted);font-size:11px}
 .cf-stage{border:1px solid var(--line);border-radius:14px;background:var(--card);margin-bottom:11px;overflow:hidden;
   position:relative}
 .cf-stage::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tile-ac,var(--teal));opacity:.5}
@@ -1311,6 +1352,53 @@ html[data-theme="dark"] .ix-2{background:rgba(217,119,6,.13)}
 .rom-read small{font-size:12px;font-weight:600;color:var(--muted);display:block;letter-spacing:.4px;text-transform:uppercase;margin-top:2px}
 .rom-pre{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:12px 0 4px}
 .rom-bar{display:flex;gap:8px;margin-top:14px}
+/* ---- the examination pad ---- */
+.ex-card{width:min(760px,96vw);text-align:left;max-height:92vh;overflow-y:auto}
+.ex-card h3{text-align:center}
+.ex-card .rom-hint{text-align:center}
+.ex-tabs{display:flex;gap:6px;margin:12px 0 14px}
+.ex-tabs button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--muted);
+  border-radius:11px;padding:7px 8px;font-size:12.5px;font-weight:700;cursor:pointer;transition:.14s}
+.ex-tabs button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.ex-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.ex-chips .chip.sm{font-size:11px;padding:2px 9px}
+.ex-dials{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.ex-one{flex:1 1 210px;min-width:190px;text-align:center;border:1px solid var(--line);
+  border-radius:15px;padding:9px 8px;transition:.15s}
+.ex-one.off{opacity:.42}
+.ex-side{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;
+  padding:1px 13px;font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  cursor:pointer;width:auto}
+.ex-one:not(.off) .ex-side{border-color:var(--teal);color:var(--teal-dark);background:var(--teal-light)}
+.ex-dial{margin:2px auto 0}
+.ex-read{font-size:19px;font-weight:800;letter-spacing:-.3px;color:var(--ink);min-height:24px}
+.ex-one.off .ex-read{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding-top:5px}
+.ex-nudge{display:flex;gap:4px;justify-content:center;margin-top:7px;flex-wrap:wrap}
+.ex-grid{width:100%;border-collapse:collapse;font-size:12px}
+.ex-grid th{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);
+  padding:3px 6px;text-align:center;font-weight:700}
+.ex-grid td{padding:5px 6px;border-top:1px solid var(--line);vertical-align:middle}
+.ex-root b{font-size:13.5px;color:var(--ink)}
+.ex-root span{display:block;font-size:10.5px;color:var(--muted);line-height:1.35}
+.ex-gr{display:inline-flex;gap:2px;flex-wrap:wrap;justify-content:center}
+.ex-gr button{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:7px;
+  min-width:23px;padding:2px 3px;font-size:11px;font-weight:700;cursor:pointer;width:auto;transition:.12s}
+.ex-gr button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.ex-gr button.bad.on{background:#b91c1c;border-color:#b91c1c;color:#fff}
+.ex-sen{border:1px solid var(--line);background:var(--card);border-radius:9px;padding:3px 10px;
+  font-size:11px;font-weight:700;cursor:pointer;min-width:104px;width:auto;transition:.12s}
+.ex-sen[data-v="intact"]{color:#15803d;border-color:rgba(21,128,61,.28)}
+.ex-sen[data-v="reduced"]{color:#b45309;border-color:rgba(180,83,9,.4);background:rgba(240,160,75,.10)}
+.ex-sen[data-v="absent"]{color:#b91c1c;border-color:rgba(185,28,28,.4);background:rgba(185,28,28,.08)}
+.ex-sen[data-v="hyperaesthesia"]{color:#6d28d9;border-color:rgba(109,40,217,.4);background:rgba(109,40,217,.08)}
+html[data-theme="dark"] .ex-sen[data-v="intact"]{color:#6ad78f}
+.ex-out{margin-top:13px;border:1px solid var(--line);border-radius:12px;padding:9px 12px;
+  background:var(--hover,#f5f8fa);font-size:12px;line-height:1.75;color:var(--ink)}
+html[data-theme="dark"] .ex-out{background:#11202a}
+@media(max-width:560px){
+  .ex-one{flex:1 1 100%}
+  .ex-gr button{min-width:26px;padding:3px 5px}
+}
 .rom-bar .btn{flex:1}
 .slr-wrap{display:flex;gap:14px;justify-content:center;margin:4px 0 2px}
 .slr-one{flex:1;min-width:0}
@@ -1477,6 +1565,24 @@ html[data-theme="dark"] .fr-tile[data-tint="7"]{--tile-bg:#2a1508;--tile-ic:#442
 .sc-tx span{font-size:11.5px;color:var(--muted)}
 .set-pane{min-width:0}
 html[data-theme="dark"] .set-prof:hover{background:#16242f}
+/* ---- the bar that follows you down every settings screen ----
+   Sticky rather than fixed, so it belongs to the Settings tab and cannot leak onto
+   another screen. On a phone it sits above the thumb bar. */
+.set-bar{position:sticky;bottom:0;z-index:40;margin-top:18px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:9px 14px;
+  box-shadow:0 -8px 22px rgba(6,20,30,.13)}
+.set-bar .sb-tx{font-size:12px;color:var(--muted);font-weight:600;min-width:0}
+.set-bar .sb-tx.dirty{color:#b45309}
+html[data-theme="dark"] .set-bar .sb-tx.dirty{color:#fbbf24}
+.set-bar .sb-b{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+@media(max-width:768px){
+  .set-bar{bottom:calc(58px + env(safe-area-inset-bottom));padding:8px 11px}
+  .set-bar .sb-tx{flex:1 1 100%;order:2}
+  .set-bar .sb-b{flex:1 1 100%;order:1}
+  .set-bar .sb-b .btn{flex:1 1 auto}
+}
+@media print{ .set-bar{display:none} }
 @media(max-width:900px){
   .set-wrap{grid-template-columns:1fr}
   .set-rail{position:static}
@@ -2423,12 +2529,6 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <input type="text" id="pRefBy" list="refByList" placeholder="e.g. Dr Asif, walk-in"></div>
     </div>
     <p class="muted small" style="margin:-2px 0 0">Date of birth, blood group, occupation, referred-by and CNIC are kept on the record and never printed.</p>
-    <div class="grid g3 mt">
-      <div class="field"><label>Known allergies</label><textarea class="ta-s" id="pAllergies" placeholder="e.g. Penicillin"></textarea></div>
-      <div class="field"><label>Medical history</label>
-        <textarea class="ta-s" id="pMedHx"></textarea></div>
-      <div class="field"><label>Surgical history</label><textarea class="ta-s" id="pSurgHx" placeholder="e.g. TKR (left) 2023&#10;Appendectomy 2019"></textarea></div>
-    </div>
   </div>
 
   <div class="card fr-pane" data-rk="notes">
@@ -2456,6 +2556,12 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <label class="vit"><span>Height</span><input type="text" id="vHt" inputmode="decimal" placeholder="—"><em>cm</em></label>
       </div>
     </div>
+    <div class="grid g3" style="margin-bottom:14px">
+      <div class="field"><label>Known allergies</label><textarea class="ta-s" id="pAllergies" placeholder="e.g. Penicillin"></textarea></div>
+      <div class="field"><label>Medical history</label>
+        <textarea class="ta-s" id="pMedHx"></textarea></div>
+      <div class="field"><label>Surgical history</label><textarea class="ta-s" id="pSurgHx" placeholder="e.g. TKR (left) 2023&#10;Appendectomy 2019"></textarea></div>
+    </div>
     <div class="btn-bar" style="margin-bottom:12px">
       <div class="med-search-wrap" style="flex:1;min-width:200px">
         <input type="text" id="ntSearch" data-norail="1" placeholder="🔍 Search clinical-notes templates…" autocomplete="off">
@@ -2465,16 +2571,17 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <button class="btn btn-ghost btn-sm" onclick="insertNoteTemplate()">Insert</button>
       <button class="btn btn-ghost btn-sm" onclick="saveAsNoteTemplate()" title="Save just the clinical notes (complaints, findings, diagnosis, investigations, advice, plan) as a reusable notes template — medicines are NOT included">💾 Save notes as template</button>
     </div>
+    <div class="rx-carry hidden" id="rxCarry"></div>
     <div class="grid g2">
       <div class="field"><label>Presenting complaints</label><textarea id="cComplaints" placeholder="e.g. Right knee pain × 3 months, worse on stairs and prolonged standing"></textarea></div>
       <div class="field"><label>Clinical findings <span id="cFindingsMx"></span></label><textarea id="cFindings" placeholder="e.g. Tenderness over medial joint line, crepitus, painful terminal flexion…"></textarea></div>
     </div>
     <div class="grid g2 mt">
+      <div class="field"><label>Investigations</label><textarea class="ta-s" id="cTests"></textarea></div>
       <div class="field"><label>Impression</label><textarea class="ta-s" id="cDiagnosis" placeholder="e.g. Osteoarthritis knee (right)"></textarea></div>
-      <div class="field"><label>Investigations</label><textarea class="ta-s" id="cTests" placeholder="e.g. X-ray knee AP/Lat (standing)&#10;CBC, ESR/CRP&#10;S. Vit D, S. Calcium, Uric acid"></textarea></div>
     </div>
     <div class="field mt">
-      <label>Bring at next visit <span class="muted small" style="font-weight:400">(tests to get done before coming back — printed in a box on the prescription)</span></label>
+      <label>Bring at next visit</label>
       <div class="btn-bar" style="margin-bottom:6px">
         <button class="btn btn-ghost btn-sm" onclick="nvCopyFromTests()" title="Copy what you typed in Investigations">↑ Copy from Investigations</button>
       </div>
@@ -2573,12 +2680,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
           <option value="365|1 year">+1 yr</option>
         </select>
       </div>
-      <div class="btn-bar" style="margin-bottom:7px;align-items:flex-start">
-        <span class="muted small" style="padding-top:4px;flex:none">for…</span>
-        <div class="chiprow" id="fuWhatChips"></div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <input type="text" id="cFollowUp" placeholder="e.g. Review after 2 weeks with reports" style="flex:1;min-width:260px">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start">
+        <div class="tagbox fu-box" id="cFollowUpTb" style="flex:1;min-width:260px">
+          <div class="tb-row" id="fuWhatChips"></div>
+          <input type="text" id="cFollowUp" placeholder="e.g. Review after 2 weeks with reports">
+        </div>
         <input type="date" id="cFuDate" style="width:170px" title="Due-list date">
         <button type="button" class="btn btn-ghost" id="cFuCal" onclick="openFuCal()"
           title="Pick a date and see how many are already booked that day">📅 Month view</button>
@@ -2590,11 +2696,14 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     </div>
   </div>
 
-  <div class="btn-bar">
+  <div class="btn-bar" id="rxToolbar">
     <button class="btn btn-green" onclick="saveVisit(true)">💾 Save &amp; Print</button>
     <button class="btn btn-primary" onclick="saveVisit(false)">Save visit</button>
     <button class="btn btn-ghost" onclick="previewRx()">Preview</button>
     <button class="btn btn-danger" onclick="clearVisitForm(true)">Clear form</button>
+    <span class="bb-gap"></span>
+    <button class="btn btn-ghost" onclick="showTab('queue')" title="Today's token list. The form stays exactly as it is \u2014 you can come straight back to it.">👥 Go to Queue</button>
+    <button class="btn btn-primary" onclick="nextPatient()" title="Empty the form and go back to the top, ready for the next patient">Next patient \u2192</button>
   </div>
 </section>
 
@@ -3878,13 +3987,13 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <h2>Doctor &amp; clinic</h2>
     <div class="grid g3">
       <div class="field"><label>Doctor name</label><input type="text" id="sDocName" placeholder="Dr. …"></div>
-      <div class="field"><label>Qualifications</label><input type="text" id="sQuals" placeholder="MBBS, FCPS (Medicine)"></div>
       <div class="field"><label>PMC / Reg. no.</label><input type="text" id="sRegNo"></div>
       <div class="field"><label>Clinic name</label><input type="text" id="sClinicName"></div>
       <div class="field"><label>Clinic address</label><input type="text" id="sAddress"></div>
       <div class="field"><label>Clinic phone</label><input type="text" id="sPhone"></div>
       <div class="field"><label>Timings</label><input type="text" id="sTimings" placeholder="Mon–Sat 5–9 pm"></div>
       <div class="field"><label>Footer note (optional)</label><input type="text" id="sFooter" placeholder="e.g. Not valid for court purposes"></div>
+      <div class="field" style="grid-column:1/-1"><label>Qualifications <span class="muted" style="font-weight:400;font-size:11.5px">— as many lines as you like; every line you type prints on its own line</span></label><textarea id="sQuals" class="ta-s" rows="3" placeholder="MBBS, FCPS (Orth), MACS (RCSI), CHPE&#10;Consultant Orthopedic &amp; Spine Surgery"></textarea></div>
     </div>
   </div>
 
@@ -4096,13 +4205,13 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <div class="grid g2">
       <div class="field"><label>Google OAuth client ID</label>
         <input type="text" id="gdClientId" data-norail="1" placeholder="123456789-abcdef.apps.googleusercontent.com" autocomplete="off" spellcheck="false"></div>
-      <div class="field"><label>Top-level folder name in your Drive</label>
-        <input type="text" id="gdRootName" data-norail="1" placeholder="Clinic Case Files"></div>
+      <div class="field"><label>Google API key <span class="muted" style="font-weight:400;font-size:11px">— only needed to choose folders you already have</span></label>
+        <input type="text" id="gdApiKey" data-norail="1" placeholder="AIza…" autocomplete="off" spellcheck="false"></div>
     </div>
     <div class="btn-bar" style="margin-top:6px">
       <button class="btn" onclick="gdSaveSettings()">💾 Save Drive settings</button>
       <button class="btn btn-ghost btn-sm" onclick="gdRunQueue()">↻ Upload anything waiting</button>
-      <button class="btn btn-ghost btn-sm" onclick="gdHelp()">❔ How do I get a client ID?</button>
+      <button class="btn btn-ghost btn-sm" onclick="gdHelp()">❔ How do I get these?</button>
     </div>
     <div class="cf-drive" style="margin-top:14px;display:block">
       <b style="color:var(--ink)">Where a file actually ends up</b>
@@ -4120,8 +4229,35 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       this device keeps a fast copy. <b>If Drive is not set up, nothing leaves this device</b> — the originals
       simply stay here, which is why the badge says <i>Local</i>.</div>
     </div>
-    <p class="muted small" style="margin-top:10px">Folders are made for you, once per case:<br>
-      <code style="font-size:11.5px">Clinic Case Files / 2601010001 — Ahmed Khan / 01 Pre-op docs · 02 Pre-op planning · 03 Intra-op · 04 Post-op · 05 Histopathology · 06 Follow-up / 8-52</code></p>
+  </div>
+
+  <!-- ===== What the folders are called ===== -->
+  <div class="card" data-set="gdrive">
+    <h2>📁 What your folders are called</h2>
+    <p class="muted small" style="margin-top:-4px">Folders are made for you, once per case. Name them however you file things yourself — the app follows your wording, not its own.</p>
+    <div class="gd-warn">⚠ <b>Nothing already in your Drive is renamed or moved.</b> Folders that exist keep the name they were made with and everything in them stays exactly where it is. A new name is used for folders made <b>from now on</b>.</div>
+
+    <div class="gd-top" id="gdTopFolder"></div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="field">
+        <label>Each case's own folder</label>
+        <input type="text" id="gdCaseName" data-norail="1" spellcheck="false" placeholder="{regNo} — {name}" oninput="gdNamePreview()">
+        <div class="gd-toks" id="gdToks"></div>
+      </div>
+      <div class="field">
+        <label>Inside each case's folder</label>
+        <div class="grid g2" id="gdDirGrid" style="gap:8px"></div>
+      </div>
+    </div>
+
+    <div class="gd-prev" id="gdNamePrev"></div>
+
+    <div class="btn-bar" style="margin-top:12px">
+      <button class="btn" onclick="gdSaveSettings()">💾 Save folder names</button>
+      <button class="btn btn-ghost btn-sm" onclick="gdNamesReset()">↺ Back to the standard names</button>
+    </div>
+    <p class="muted small" style="margin-top:9px">Like the rest of your Drive setup, these names are kept <b>on this device</b>. Whichever device makes a case's folder first decides its name, and every other device then uses that same folder — so nothing is ever duplicated. Set them the same way on each device if you want new folders to read alike wherever you make them.</p>
   </div>
 
   <!-- ===== Image quality ===== -->
@@ -4181,6 +4317,15 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <p class="muted small mt" id="dataStats"></p>
   </div>
     </div>
+  </div>
+  <!-- Save, from wherever you are in Settings -->
+  <div class="set-bar" id="setBar">
+    <span class="sb-tx" id="setBarNote">Everything on this screen is saved</span>
+    <span class="sb-b">
+      <button class="btn btn-primary" data-edit-only onclick="setSaveAll()">💾 Save settings</button>
+      <button class="btn btn-ghost btn-sm" onclick="testPrint()" title="Prints a sample prescription so you can check the letterhead and pad alignment">🖨 Test print</button>
+      <button class="btn btn-ghost btn-sm" onclick="showTab('home')" title="Back to the home screen">✓ Done</button>
+    </span>
   </div>
 </section>
 </main>
@@ -4722,7 +4867,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 43;
+const SEED_VERSION = 44;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -5088,6 +5233,17 @@ function migrateDB(){
       c.cur='';                                   // force one full read on the next sync
     }
   }
+  /* b68b — "Bring at next visit" used to have ONE picker called Common tests, chip set
+     `nexttest`. It now shares Investigations' three pickers (Radiology / Blood / Misc).
+     Any chip he added himself would otherwise be orphaned in a set no box reads, so they
+     are re-tagged into Misc — nothing is deleted, and a record that already uses one of
+     them is untouched because the record stores the words, not the chip.
+     Idempotent: after this runs there are no `nexttest` chips left to move. */
+  if((db.seedVersion||1) < 44){
+    (db.chips||[]).forEach(function(c){
+      if(c && c.set==='nexttest'){ c.set='misc'; if(typeof syncTouch==='function') syncTouch(c); }
+    });
+  }
   db.seedVersion = SEED_VERSION;
   persist();
 }
@@ -5315,12 +5471,53 @@ function loadSettingsForm(){
   if(typeof renderRxQrSelect==='function') renderRxQrSelect();   // fill the default-QR picker first
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) $(el).value = db.settings[key]||''; }
   applyBrand();
+  setDirtyMark(false);
+  setWatchFields();
 }
 function saveSettings(){
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) db.settings[key] = $(el).value.trim(); }
   persist(); applyBrand(); renderFeePresets(); resetIdle(); applyTheme();
   if(!linkedPatientId) showMrnPreview();
+  setDirtyMark(false);
   toast('Settings saved');
+}
+
+/* ---- the bar along the bottom of Settings ----
+   The doctor edits a field on one settings screen and the Save button used to live on
+   another. This saves whatever is on screen from wherever he is. It deliberately does NOT
+   ask Google to reconnect the way the Drive card's own button does — a general Save should
+   never throw up a sign-in window. */
+let setIsDirty = false;
+const SET_EXTRA_FIELDS = /^(gdClientId|gdApiKey|gdRootName|gdCaseName|gdFuDir|gdDir_[a-z]+|cqDim|cqQ|cqXdim|cqXq|cqGentle)$/;
+function setDirtyMark(on){
+  setIsDirty = !!on;
+  const n = $('setBarNote'); if(!n) return;
+  n.textContent = setIsDirty ? '● Unsaved changes on this screen' : 'Everything on this screen is saved';
+  n.classList.toggle('dirty', setIsDirty);
+}
+function setWatchFields(){
+  const sec = $('tab-settings');
+  if(!sec || sec.dataset.setWatch) return;
+  sec.dataset.setWatch = '1';
+  const mark = function(e){
+    const id = (e.target && e.target.id) || '';
+    if(S_FIELDS[id] || SET_EXTRA_FIELDS.test(id)) setDirtyMark(true);
+  };
+  sec.addEventListener('input', mark);
+  sec.addEventListener('change', mark);
+}
+function setSaveAll(){
+  /* the Drive card and the image-quality card keep their own buttons, but this picks up
+     whatever they are showing too, so one press means one press */
+  if($('gdClientId') && typeof gdCollectSettings === 'function') gdCollectSettings();
+  if($('cqDim') && typeof cmpSetCfg === 'function'){
+    const v = function(id){ return parseInt((($(id)||{}).value || '0'), 10) || 0; };
+    if(v('cqDim')) cmpSetCfg({maxDim:v('cqDim'), q:v('cqQ'), xrayDim:v('cqXdim'), xrayQ:v('cqXq'),
+                              gentle: !!(($('cqGentle')||{}).checked)});
+  }
+  saveSettings();                       // persists everything, including the two above
+  if(typeof renderGdSetting === 'function') try{ renderGdSetting(); }catch(e){}
+  if(typeof renderCmpSetting === 'function') try{ renderCmpSetting(); }catch(e){}
 }
 function renderFeePresets(){
   const bar = $('feePresetBar'); if(!bar) return;
@@ -8296,120 +8493,440 @@ function fuSuggestApply(days, text){
   toast('Follow-up set to your usual '+fuLabelFor(days));
 }
 
-/* ================= ROM DIAL & SLR GAUGE =================
-   Two measuring instruments that write into an ordinary text box, so nothing about the
-   record format changes — the note ends up saying "ROM 30-90°" exactly as if it had been
-   typed. The dial works the way the iPhone alarm does: grab a handle, swing it round the
-   ring, let go. Everything is pointer-events, so a mouse, a finger and a stylus all work. */
-const ROM_R = 84, ROM_C = 110;
-function romXY(deg, r){
-  const t = (deg - 90) * Math.PI/180;
-  return [ROM_C + (r||ROM_R)*Math.cos(t), ROM_C + (r||ROM_R)*Math.sin(t)];
-}
-function romArc(a, b, r){
-  r = r || ROM_R;
-  let sweep = (b - a + 360) % 360;
-  if(sweep >= 359.9) sweep = 359.9;              // a full circle cannot be drawn as one arc
-  const p0 = romXY(a, r), p1 = romXY(a + sweep, r);
-  return 'M'+p0[0].toFixed(2)+' '+p0[1].toFixed(2)+
-         ' A'+r+' '+r+' 0 '+(sweep>180?1:0)+' 1 '+p1[0].toFixed(2)+' '+p1[1].toFixed(2);
-}
-let ROM = null;   // {target, a, b, drag}
-function romOpen(targetId){
+/* ================= THE EXAMINATION PAD =================
+   Movement, power and sensation, in one panel that writes PLAIN TEXT into an ordinary
+   notes box. Nothing about the record format changes — the note ends up saying exactly
+   what he would have typed, so search, print, sync and the Urdu translator all carry on
+   knowing nothing about any of this.
+
+   The idea that makes it fast: **everything starts normal, and only the exception is
+   written down.** A full lower-limb neurological examination on a normal patient is one
+   tap and one short line; an L5 root lesion is three taps and still one line. That is
+   how the notes read when written by hand, and it is what keeps the printed sheet short.
+
+   The dials snap to 5°, because nobody measures a knee to the degree, and choosing a
+   joint sets both dials to that joint's normal arc so a normal side needs no work at all. */
+
+const EX_JOINTS = [
+  {k:'knee', t:'Knee',     mv:[{k:'flex', t:'flexion', n:[0,135]}]},
+  {k:'hip',  t:'Hip',      mv:[{k:'flex', t:'flexion', n:[0,120]}, {k:'abd', t:'abduction', n:[0,45]}]},
+  {k:'sho',  t:'Shoulder', mv:[{k:'abd',  t:'abduction', n:[0,180]}, {k:'flex', t:'flexion', n:[0,180]},
+                               {k:'er',   t:'external rotation', n:[0,90]}]},
+  {k:'elb',  t:'Elbow',    mv:[{k:'flex', t:'flexion', n:[0,150]}]},
+  {k:'ank',  t:'Ankle',    mv:[{k:'df',   t:'dorsiflexion', n:[0,20]}, {k:'pf', t:'plantarflexion', n:[0,50]}]},
+  {k:'wri',  t:'Wrist',    mv:[{k:'flex', t:'flexion', n:[0,80]}, {k:'ext', t:'extension', n:[0,70]}]},
+  {k:'cs',   t:'C-spine',  mv:[{k:'flex', t:'flexion', n:[0,50]}, {k:'ext', t:'extension', n:[0,60]},
+                               {k:'rot',  t:'rotation', n:[0,80]}]},
+  {k:'ls',   t:'L-spine',  mv:[{k:'flex', t:'flexion', n:[0,60]}, {k:'ext', t:'extension', n:[0,25]}]}
+];
+/* 4- and 4+ are on the strip because orthopaedic notes use them constantly and a plain
+   0-5 scale loses exactly the distinction that matters in a recovering root lesion. */
+const EX_GRADES = ['0','1','2','3','4-','4','4+','5'];
+const EX_NORMAL_POWER = '5';
+/* Myotomes are C5-T1: C1-C4 have no separately testable muscle group, which is why the
+   power grid starts at C5 while the sensory grid starts at C2. */
+const EX_MYO = {
+  ul: [['C5','Shoulder abduction'], ['C6','Elbow flexion / wrist extension'],
+       ['C7','Elbow extension'],    ['C8','Finger flexion'], ['T1','Finger abduction']],
+  ll: [['L2','Hip flexion'], ['L3','Knee extension'], ['L4','Ankle dorsiflexion'],
+       ['L5','Great toe extension (EHL)'], ['S1','Ankle plantarflexion']]
+};
+const EX_DERM = {
+  ul: [['C2','Occiput'], ['C3','Supraclavicular fossa'], ['C4','Acromioclavicular joint'],
+       ['C5','Lateral arm'], ['C6','Thumb'], ['C7','Middle finger'],
+       ['C8','Little finger'], ['T1','Medial forearm']],
+  ll: [['L2','Anterior thigh'], ['L3','Medial knee'], ['L4','Medial malleolus'],
+       ['L5','First web space'], ['S1','Lateral heel']]
+};
+const EX_SENS = ['intact','reduced','absent','hyperaesthesia'];
+const EX_NORMAL_SENS = 'intact';
+const EX_REGIONS = {ul:'upper limb', ll:'lower limb'};
+
+let EX = null;
+
+function exSnap(d){ return ((Math.round(d/5)*5) % 360 + 360) % 360; }
+function exOpen(targetId, tab){
   const el = $(targetId); if(!el) return;
-  ROM = {target: targetId, a: 0, b: 90, drag: null};
-  let m = $('romModal');
+  EX = {target: targetId, tab: tab || 'move',
+        joint: 'knee', mv: 'flex',
+        rom: {},                                  // "joint.movement" -> {r:[a,b], l:[a,b], ru, lu}
+        power: {}, powerOn: {ul:false, ll:false}, powerReg: 'll',
+        sens:  {}, sensOn:  {ul:false, ll:false}, sensReg:  'll',
+        drag: null};
+  exRomFor('knee','flex');                        // seed the first joint at its normal arc
+  let m = $('exModal');
   if(!m){
-    m = document.createElement('div'); m.id='romModal'; m.className='rom-modal hidden';
+    m = document.createElement('div'); m.id='exModal'; m.className='rom-modal hidden';
     document.body.appendChild(m);
-    m.addEventListener('click', function(e){ if(e.target===m) romClose(); });
+    m.addEventListener('click', function(e){ if(e.target===m) exClose(); });
   }
   m.innerHTML =
-    '<div class="rom-card" onclick="event.stopPropagation()">'+
-      '<h3>Range of movement</h3>'+
-      '<div class="rom-hint">Drag either handle round the dial — or tap a preset.</div>'+
-      romDialSvg()+
-      '<div class="rom-read" id="romRead"></div>'+
-      '<div class="rom-pre">'+
-        [[0,90],[0,110],[0,120],[0,130],[0,140],[10,90],[20,100],[30,90],[0,180]].map(function(p){
-          return '<button type="button" class="chip" onclick="romSet('+p[0]+','+p[1]+')">'+p[0]+'–'+p[1]+'°</button>';
+    '<div class="rom-card ex-card" onclick="event.stopPropagation()">'+
+      '<h3>Examination</h3>'+
+      '<div class="rom-hint" id="exHint"></div>'+
+      '<div class="ex-tabs">'+
+        ['move','power','sens'].map(function(k){
+          const t = {move:'Movement', power:'Power', sens:'Sensation'}[k];
+          return '<button type="button" class="ex-tb" data-k="'+k+'" onclick="exTab(\''+k+'\')">'+t+'</button>';
         }).join('')+
       '</div>'+
+      '<div id="exBody"></div>'+
+      '<div class="ex-out" id="exOut"></div>'+
       '<div class="rom-bar">'+
-        '<button type="button" class="btn btn-ghost" onclick="romClose()">Cancel</button>'+
-        '<button type="button" class="btn btn-green" onclick="romDone()">Add to the note</button>'+
+        '<button type="button" class="btn btn-ghost" onclick="exClose()">Cancel</button>'+
+        '<button type="button" class="btn btn-green" onclick="exDone()">Add to the note</button>'+
       '</div>'+
     '</div>';
   m.classList.remove('hidden');
-  romPaint();
-  const svg = m.querySelector('.rom-dial');
-  const pick = function(ev){
-    const r = svg.getBoundingClientRect();
-    const x = (ev.clientX - r.left) * (220/r.width) - ROM_C;
-    const y = (ev.clientY - r.top)  * (220/r.height) - ROM_C;
-    let deg = Math.round(Math.atan2(y, x) * 180/Math.PI + 90);
-    deg = ((deg % 360) + 360) % 360;
-    return deg;
-  };
-  const near = function(deg){
-    const da = Math.min(Math.abs(deg-ROM.a), 360-Math.abs(deg-ROM.a));
-    const db = Math.min(Math.abs(deg-ROM.b), 360-Math.abs(deg-ROM.b));
-    return da <= db ? 'a' : 'b';
-  };
-  svg.addEventListener('pointerdown', function(ev){
-    ev.preventDefault();
-    const d = pick(ev);
-    ROM.drag = near(d);
-    ROM[ROM.drag] = d;
-    svg.setPointerCapture(ev.pointerId);
-    romPaint();
-  });
-  svg.addEventListener('pointermove', function(ev){
-    if(!ROM || !ROM.drag) return;
-    ROM[ROM.drag] = pick(ev);
-    romPaint();
-  });
-  const stop = function(){ if(ROM) ROM.drag=null; };
-  svg.addEventListener('pointerup', stop);
-  svg.addEventListener('pointercancel', stop);
+  exTab(EX.tab);
 }
-function romDialSvg(){
-  let ticks='', labs='';
-  for(let d=0; d<360; d+=10){
-    const outer = romXY(d, ROM_R+11), inner = romXY(d, d%30===0 ? ROM_R+4 : ROM_R+8);
-    ticks += '<line class="rd-tick" x1="'+outer[0].toFixed(1)+'" y1="'+outer[1].toFixed(1)+
-             '" x2="'+inner[0].toFixed(1)+'" y2="'+inner[1].toFixed(1)+'" stroke-width="'+(d%90===0?1.6:1)+'"/>';
-    if(d%30===0){
-      const l = romXY(d, ROM_R+19);
-      labs += '<text class="rd-lab" x="'+l[0].toFixed(1)+'" y="'+l[1].toFixed(1)+'">'+d+'</text>';
-    }
+function exClose(){ const m=$('exModal'); if(m) m.classList.add('hidden'); EX=null; }
+/* the old single dial opened straight onto movement — keep the door where it was */
+function romOpen(targetId){ exOpen(targetId, 'move'); }
+
+function exTab(k){
+  if(!EX) return;
+  EX.tab = k;
+  document.querySelectorAll('#exModal .ex-tb').forEach(function(b){ b.classList.toggle('on', b.dataset.k===k); });
+  const body = $('exBody'); if(!body) return;
+  if(k==='move')  body.innerHTML = exMoveHtml();
+  if(k==='power') body.innerHTML = exGridHtml('power');
+  if(k==='sens')  body.innerHTML = exGridHtml('sens');
+  if(k==='move'){ exBindDials(); exPaintDials(); }
+  const hint = $('exHint');
+  if(hint) hint.textContent = (k==='move')
+    ? 'Both dials open at this joint\u2019s normal arc. Drag a handle, or press \u201cBoth normal\u201d \u2014 nothing is written until you do.'
+    : 'Everything starts normal. Touch only what is abnormal \u2014 only the exception is written into the note.';
+  exPaintOut();
+}
+
+/* ---------- movement ---------- */
+function exRomKey(j, m){ return j+'.'+m; }
+function exRomFor(j, m){
+  const key = exRomKey(j,m);
+  if(!EX.rom[key]){
+    const jj = EX_JOINTS.filter(function(x){ return x.k===j; })[0];
+    const mm = jj && jj.mv.filter(function(x){ return x.k===m; })[0];
+    const n = (mm && mm.n) || [0,90];
+    /* Both sides start OFF. Selecting a joint must not record it: tapping along the row
+       looking for the knee would otherwise leave a line claiming a normal shoulder, elbow
+       and ankle in a note he never made those findings in. A joint is recorded the moment
+       he touches it — drags a handle, nudges, or presses Both normal — and not before. */
+    EX.rom[key] = {r:[n[0],n[1]], l:[n[0],n[1]], ru:false, lu:false, norm:[n[0],n[1]]};
   }
-  return '<svg class="rom-dial" viewBox="0 0 220 220" width="220" height="220">'+
-    ticks + labs +
-    '<circle class="rd-track" cx="'+ROM_C+'" cy="'+ROM_C+'" r="'+ROM_R+'"/>'+
-    '<path class="rd-arc" id="romArcPath" d=""/>'+
-    '<circle class="rd-h" id="romHa" r="11"/>'+
-    '<circle class="rd-h" id="romHb" r="11"/>'+
-  '</svg>';
+  return EX.rom[key];
 }
-function romPaint(){
-  if(!ROM) return;
-  const arc=$('romArcPath'); if(arc) arc.setAttribute('d', romArc(ROM.a, ROM.b));
-  const pa=romXY(ROM.a), pb=romXY(ROM.b);
-  const ha=$('romHa'), hb=$('romHb');
-  if(ha){ ha.setAttribute('cx', pa[0].toFixed(2)); ha.setAttribute('cy', pa[1].toFixed(2));
-          ha.classList.toggle('on', ROM.drag==='a'); }
-  if(hb){ hb.setAttribute('cx', pb[0].toFixed(2)); hb.setAttribute('cy', pb[1].toFixed(2));
-          hb.classList.toggle('on', ROM.drag==='b'); }
-  const read=$('romRead');
-  if(read) read.innerHTML = ROM.a+'° – '+ROM.b+'°<small>arc of '+(((ROM.b-ROM.a)+360)%360)+'°</small>';
+function exCur(){ return exRomFor(EX.joint, EX.mv); }
+function exJoint(){ return EX_JOINTS.filter(function(x){ return x.k===EX.joint; })[0] || EX_JOINTS[0]; }
+function exPickJoint(j){
+  EX.joint = j;
+  EX.mv = exJoint().mv[0].k;
+  exRomFor(EX.joint, EX.mv);
+  exTab('move');
 }
-function romSet(a,b){ if(!ROM) return; ROM.a=a; ROM.b=b; romPaint(); }
-function romClose(){ const m=$('romModal'); if(m) m.classList.add('hidden'); ROM=null; }
-function romDone(){
-  if(!ROM) return;
-  insertMeasure(ROM.target, 'ROM '+ROM.a+'-'+ROM.b+'°');
-  romClose();
+function exPickMv(m){ EX.mv = m; exRomFor(EX.joint, EX.mv); exTab('move'); }
+function exMoveHtml(){
+  const j = exJoint();
+  return '<div class="ex-chips">'+
+      EX_JOINTS.map(function(x){
+        return '<button type="button" class="chip'+(x.k===EX.joint?' on':'')+
+               '" onclick="exPickJoint(\''+x.k+'\')">'+esc(x.t)+'</button>'; }).join('')+
+    '</div>'+
+    (j.mv.length>1
+      ? '<div class="ex-chips ex-mv">'+j.mv.map(function(x){
+          return '<button type="button" class="chip sm'+(x.k===EX.mv?' on':'')+
+                 '" onclick="exPickMv(\''+x.k+'\')">'+esc(x.t)+'</button>'; }).join('')+'</div>'
+      : '')+
+    '<div class="ex-dials">'+ exDialHtml('r') + exDialHtml('l') +'</div>'+
+    '<div class="ex-chips" style="justify-content:center;margin-top:10px">'+
+      '<button type="button" class="chip'+((exCur().ru||exCur().lu)?'':' on')+
+        '" onclick="exNormalBoth()">✓ Both normal ('+
+        exCur().norm[0]+'–'+exCur().norm[1]+'°)</button>'+
+      '<button type="button" class="chip" onclick="exClearMove()">Not examined</button>'+
+    '</div>';
+}
+const EXD_R = 56, EXD_C = 84, EXD_VB = 168;   // room outside the ring for the 0/90/180/270 labels
+function exXY(deg, r){
+  const t = (deg-90)*Math.PI/180;
+  return [EXD_C + (r||EXD_R)*Math.cos(t), EXD_C + (r||EXD_R)*Math.sin(t)];
+}
+function exArcD(a, b, r){
+  r = r || EXD_R;
+  let sweep = (b - a + 360) % 360;
+  if(sweep >= 359.9) sweep = 359.9;
+  const p0 = exXY(a, r), p1 = exXY(a + sweep, r);
+  return 'M'+p0[0].toFixed(2)+' '+p0[1].toFixed(2)+
+         ' A'+r+' '+r+' 0 '+(sweep>180?1:0)+' 1 '+p1[0].toFixed(2)+' '+p1[1].toFixed(2);
+}
+function exDialHtml(side){
+  const lab = side==='r' ? 'Right' : 'Left';
+  let ticks='', labs='';
+  for(let d=0; d<360; d+=15){
+    const o = exXY(d, EXD_R+9), i = exXY(d, d%45===0 ? EXD_R+3 : EXD_R+6);
+    ticks += '<line class="rd-tick" x1="'+o[0].toFixed(1)+'" y1="'+o[1].toFixed(1)+
+             '" x2="'+i[0].toFixed(1)+'" y2="'+i[1].toFixed(1)+'" stroke-width="'+(d%90===0?1.5:1)+'"/>';
+    if(d%90===0){ const l = exXY(d, EXD_R+17);
+      labs += '<text class="rd-lab" x="'+l[0].toFixed(1)+'" y="'+l[1].toFixed(1)+'">'+d+'</text>'; }
+  }
+  return '<div class="ex-one" id="exOne_'+side+'">'+
+    '<button type="button" class="ex-side" onclick="exUse(\''+side+'\')" '+
+      'title="Turn off if this side was not examined">'+lab+'</button>'+
+    '<svg class="rom-dial ex-dial" id="exDial_'+side+'" data-side="'+side+'" '+
+      'viewBox="0 0 '+EXD_VB+' '+EXD_VB+'" width="152" height="152">'+
+      ticks + labs +
+      '<circle class="rd-track" cx="'+EXD_C+'" cy="'+EXD_C+'" r="'+EXD_R+'"/>'+
+      '<path class="rd-arc" id="exArc_'+side+'" d=""/>'+
+      '<circle class="rd-h" id="exHa_'+side+'" r="9"/>'+
+      '<circle class="rd-h" id="exHb_'+side+'" r="9"/>'+
+    '</svg>'+
+    '<div class="ex-read" id="exRead_'+side+'"></div>'+
+    '<div class="ex-nudge">'+
+      '<button type="button" class="chip sm" onclick="exNudge(\''+side+'\',0,-5)">−5 start</button>'+
+      '<button type="button" class="chip sm" onclick="exNudge(\''+side+'\',0,5)">+5</button>'+
+      '<button type="button" class="chip sm" onclick="exNudge(\''+side+'\',1,-5)">−5 end</button>'+
+      '<button type="button" class="chip sm" onclick="exNudge(\''+side+'\',1,5)">+5</button>'+
+    '</div>'+
+  '</div>';
+}
+function exBindDials(){
+  ['r','l'].forEach(function(side){
+    const svg = $('exDial_'+side); if(!svg) return;
+    const pick = function(ev){
+      const box = svg.getBoundingClientRect();
+      const x = (ev.clientX - box.left) * (EXD_VB/box.width)  - EXD_C;
+      const y = (ev.clientY - box.top)  * (EXD_VB/box.height) - EXD_C;
+      return exSnap(Math.atan2(y, x) * 180/Math.PI + 90);
+    };
+    const near = function(deg){
+      const c = exCur(), v = c[side];
+      const da = Math.min(Math.abs(deg-v[0]), 360-Math.abs(deg-v[0]));
+      const db = Math.min(Math.abs(deg-v[1]), 360-Math.abs(deg-v[1]));
+      return da <= db ? 0 : 1;
+    };
+    svg.addEventListener('pointerdown', function(ev){
+      if(!EX) return;
+      ev.preventDefault();
+      const d = pick(ev);
+      EX.drag = {side: side, h: near(d)};
+      exCur()[side][EX.drag.h] = d;
+      exCur()[side==='r'?'ru':'lu'] = true;
+      try{ svg.setPointerCapture(ev.pointerId); }catch(e){}
+      exPaintDials(); exPaintOut();
+    });
+    svg.addEventListener('pointermove', function(ev){
+      if(!EX || !EX.drag || EX.drag.side!==side) return;
+      exCur()[side][EX.drag.h] = pick(ev);
+      exPaintDials(); exPaintOut();
+    });
+    const stop = function(){ if(EX) EX.drag = null; };
+    svg.addEventListener('pointerup', stop);
+    svg.addEventListener('pointercancel', stop);
+  });
+}
+function exPaintDials(){
+  if(!EX || EX.tab!=='move') return;
+  const c = exCur();
+  ['r','l'].forEach(function(side){
+    const v = c[side], on = c[side==='r'?'ru':'lu'];
+    const arc = $('exArc_'+side); if(arc) arc.setAttribute('d', exArcD(v[0], v[1]));
+    const pa = exXY(v[0]), pb = exXY(v[1]);
+    const ha = $('exHa_'+side), hb = $('exHb_'+side);
+    if(ha){ ha.setAttribute('cx', pa[0].toFixed(2)); ha.setAttribute('cy', pa[1].toFixed(2)); }
+    if(hb){ hb.setAttribute('cx', pb[0].toFixed(2)); hb.setAttribute('cy', pb[1].toFixed(2)); }
+    const rd = $('exRead_'+side);
+    if(rd) rd.textContent = on ? (v[0]+'–'+v[1]+'°') : 'not examined';
+    const one = $('exOne_'+side);
+    if(one) one.classList.toggle('off', !on);
+  });
+}
+function exNudge(side, h, by){
+  if(!EX) return;
+  const c = exCur();
+  c[side][h] = exSnap(c[side][h] + by);
+  c[side==='r'?'ru':'lu'] = true;
+  exPaintDials(); exPaintOut();
+}
+function exUse(side){
+  if(!EX) return;
+  const c = exCur(), k = side==='r' ? 'ru' : 'lu';
+  c[k] = !c[k];
+  exPaintDials(); exPaintOut();
+}
+function exNormalBoth(){
+  if(!EX) return;
+  const c = exCur();
+  c.r = c.norm.slice(); c.l = c.norm.slice(); c.ru = true; c.lu = true;
+  exPaintDials(); exPaintOut();
+}
+function exClearMove(){
+  if(!EX) return;
+  delete EX.rom[exRomKey(EX.joint, EX.mv)];
+  exRomFor(EX.joint, EX.mv);
+  const c = exCur(); c.ru = false; c.lu = false;
+  exPaintDials(); exPaintOut();
+}
+
+/* ---------- power and sensation: the same grid, two different scales ---------- */
+function exRows(kind, reg){ return (kind==='power' ? EX_MYO : EX_DERM)[reg] || []; }
+function exVal(kind, root, side){
+  const store = EX[kind][root] || {};
+  return store[side] || (kind==='power' ? EX_NORMAL_POWER : EX_NORMAL_SENS);
+}
+function exSetVal(kind, root, side, v){
+  if(!EX) return;
+  EX[kind][root] = EX[kind][root] || {};
+  EX[kind][root][side] = v;
+  EX[kind==='power'?'powerOn':'sensOn'][exReg(kind)] = true;
+  exTab(EX.tab);
+}
+function exReg(kind){ return kind==='power' ? EX.powerReg : EX.sensReg; }
+function exPickReg(kind, reg){
+  if(!EX) return;
+  if(kind==='power') EX.powerReg = reg; else EX.sensReg = reg;
+  exTab(EX.tab);
+}
+function exAllNormal(kind){
+  if(!EX) return;
+  const reg = exReg(kind);
+  exRows(kind, reg).forEach(function(r){
+    EX[kind][r[0]] = {r: kind==='power'?EX_NORMAL_POWER:EX_NORMAL_SENS,
+                      l: kind==='power'?EX_NORMAL_POWER:EX_NORMAL_SENS};
+  });
+  EX[kind==='power'?'powerOn':'sensOn'][reg] = true;
+  exTab(EX.tab);
+}
+function exNotExamined(kind){
+  if(!EX) return;
+  const reg = exReg(kind);
+  exRows(kind, reg).forEach(function(r){ delete EX[kind][r[0]]; });
+  EX[kind==='power'?'powerOn':'sensOn'][reg] = false;
+  exTab(EX.tab);
+}
+function exSensCycle(root, side){
+  const cur = exVal('sens', root, side);
+  const i = EX_SENS.indexOf(cur);
+  exSetVal('sens', root, side, EX_SENS[(i+1) % EX_SENS.length]);
+}
+function exGridHtml(kind){
+  const reg = exReg(kind);
+  const rows = exRows(kind, reg);
+  const on = EX[kind==='power'?'powerOn':'sensOn'][reg];
+  return '<div class="ex-chips">'+
+      ['ul','ll'].map(function(r){
+        const t = r==='ul' ? (kind==='power' ? 'Upper limb  C5–T1' : 'Upper limb  C2–T1')
+                           : 'Lower limb  L2–S1';
+        return '<button type="button" class="chip'+(r===reg?' on':'')+
+               '" onclick="exPickReg(\''+kind+'\',\''+r+'\')">'+esc(t)+'</button>'; }).join('')+
+    '</div>'+
+    (kind==='power' && reg==='ul'
+      ? '<p class="muted small" style="margin:-2px 0 8px">C1–C4 have no separately testable muscle group, so power starts at C5. The sensory levels above C5 are on the Sensation tab.</p>'
+      : '')+
+    '<table class="ex-grid"><thead><tr><th style="text-align:left">Root</th><th>Right</th><th>Left</th></tr></thead><tbody>'+
+    rows.map(function(r){
+      return '<tr><td class="ex-root"><b>'+esc(r[0])+'</b><span>'+esc(r[1])+'</span></td>'+
+        ['r','l'].map(function(side){
+          return '<td style="text-align:center">'+
+            (kind==='power' ? exPowerCell(r[0], side) : exSensCell(r[0], side))+'</td>';
+        }).join('')+'</tr>';
+    }).join('')+
+    '</tbody></table>'+
+    '<div class="ex-chips" style="justify-content:center;margin-top:10px">'+
+      '<button type="button" class="chip" onclick="exAllNormal(\''+kind+'\')">'+
+        (kind==='power' ? '↺ All 5/5' : '↺ All intact')+'</button>'+
+      '<button type="button" class="chip'+(on?'':' on')+'" onclick="exNotExamined(\''+kind+'\')">Not examined</button>'+
+    '</div>';
+}
+function exPowerCell(root, side){
+  const v = exVal('power', root, side);
+  return '<span class="ex-gr">'+EX_GRADES.map(function(g){
+    return '<button type="button" class="'+(g==='5'?'':'bad')+(g===v?' on':'')+
+           '" onclick="exSetVal(\'power\',\''+root+'\',\''+side+'\',\''+g+'\')">'+esc(g)+'</button>';
+  }).join('')+'</span>';
+}
+function exSensCell(root, side){
+  const v = exVal('sens', root, side);
+  return '<button type="button" class="ex-sen" data-v="'+esc(v)+'" '+
+         'onclick="exSensCycle(\''+root+'\',\''+side+'\')" '+
+         'title="Tap to cycle: intact → reduced → absent → hyperaesthesia">'+esc(v)+'</button>';
+}
+
+/* ---------- what gets written ----------
+   One line per thing examined, and each line names only what is abnormal. A region he
+   never opened produces NO line at all: writing "5/5 throughout" about a limb he did not
+   test would be a claim the examination does not support. */
+function exMoveLines(){
+  const out = [];
+  Object.keys(EX.rom).forEach(function(key){
+    const c = EX.rom[key];
+    if(!c || (!c.ru && !c.lu)) return;
+    const parts = key.split('.');
+    const j = EX_JOINTS.filter(function(x){ return x.k===parts[0]; })[0];
+    const m = j && j.mv.filter(function(x){ return x.k===parts[1]; })[0];
+    if(!j || !m) return;
+    const sides = [];
+    if(c.ru) sides.push('Rt '+c.r[0]+'–'+c.r[1]+'°');
+    if(c.lu) sides.push('Lt '+c.l[0]+'–'+c.l[1]+'°');
+    out.push({key:'ROM '+j.t.toLowerCase()+' '+m.t,
+              text:'ROM '+j.t.toLowerCase()+' '+m.t+' — '+sides.join(', ')});
+  });
+  return out;
+}
+function exExceptions(kind){
+  const bad = [];
+  ['ul','ll'].forEach(function(reg){
+    if(!EX[kind==='power'?'powerOn':'sensOn'][reg]) return;
+    exRows(kind, reg).forEach(function(row){
+      const root = row[0];
+      const norm = kind==='power' ? EX_NORMAL_POWER : EX_NORMAL_SENS;
+      const r = exVal(kind, root, 'r'), l = exVal(kind, root, 'l');
+      if(r===norm && l===norm) return;
+      const say = function(v){ return kind==='power' ? v+'/5' : v; };
+      if(r===l){ bad.push(root+' '+say(r)+' both sides'); return; }
+      if(r!==norm) bad.push(root+' Rt '+say(r));
+      if(l!==norm) bad.push(root+' Lt '+say(l));
+    });
+  });
+  return bad;
+}
+function exRegionLabel(kind){
+  const on = EX[kind==='power'?'powerOn':'sensOn'];
+  if(on.ul && on.ll) return '';
+  if(on.ul) return ' ('+EX_REGIONS.ul+')';
+  if(on.ll) return ' ('+EX_REGIONS.ll+')';
+  return null;                                   // nothing examined — no line at all
+}
+function exGridLine(kind){
+  const label = exRegionLabel(kind);
+  if(label===null) return null;
+  const head = kind==='power' ? 'Power' : 'Sensation';
+  const norm = kind==='power' ? '5/5 throughout' : 'intact throughout';
+  const bad  = exExceptions(kind);
+  return {key: head,
+          text: head + label + (bad.length ? ': ' + norm.replace(' throughout','') +
+                                              ' throughout except ' + bad.join(', ')
+                                          : ' ' + norm)};
+}
+function exLines(){
+  const out = exMoveLines();
+  const p = exGridLine('power'); if(p) out.push(p);
+  const s = exGridLine('sens');  if(s) out.push(s);
+  return out;
+}
+function exPaintOut(){
+  const host = $('exOut'); if(!host || !EX) return;
+  const lines = exLines();
+  host.innerHTML = lines.length
+    ? '<b>Goes into the note as:</b><br>'+lines.map(function(l){ return esc(l.text); }).join('<br>')
+    : '<span class="muted">Nothing recorded yet — pick a joint, or set a root that is abnormal.</span>';
+}
+function exDone(){
+  if(!EX) return;
+  const lines = exLines();
+  if(!lines.length){ toast('⚠ Nothing recorded yet'); return; }
+  const target = EX.target;
+  lines.forEach(function(l){ insertMeasure(target, l.text, l.key); });
+  exClose();
+  toast(lines.length+' line'+(lines.length>1?'s':'')+' added to the note');
 }
 
 /* ---- SLR: two speedometers, 0–90°, right and left ---- */
@@ -8515,9 +9032,13 @@ function slrDone(){
 }
 /* both instruments write the same way: append on its own line, replacing an earlier
    reading of the same kind so repeated taps correct rather than pile up */
-function insertMeasure(targetId, text){
+/* `key` decides what this line REPLACES. It used to be the first word, which was fine
+   when there was one ROM line — but the examination pad writes a line per joint AND per
+   movement, and "ROM" as a key would have made each new one delete the last. Callers now
+   pass the whole "ROM knee flexion" prefix; the old one-word behaviour is the default. */
+function insertMeasure(targetId, text, key){
   const el=$(targetId); if(!el) return;
-  const kind = text.split(' ')[0];
+  const kind = key || text.split(' ')[0];
   const keep = String(el.value||'').split('\n')
     .filter(function(l){ return l.trim() && l.trim().indexOf(kind+' ')!==0; });
   keep.push(text);
@@ -8528,8 +9049,8 @@ function insertMeasure(targetId, text){
   toast(text+' added');
 }
 function measureBtns(targetId){
-  return '<button type="button" class="mbtn" onclick="romOpen(\''+targetId+'\')" title="Pick a range of movement on a dial">'+
-           '<span class="mb-ic">◜</span>ROM</button>'+
+  return '<button type="button" class="mbtn" onclick="exOpen(\''+targetId+'\',\'move\')" title="Range of movement, power and sensation — everything starts normal, you touch only what is abnormal">'+
+           '<span class="mb-ic">◜</span>Exam</button>'+
          '<button type="button" class="mbtn" onclick="slrOpen(\''+targetId+'\')" title="Straight leg raise, right and left">'+
            '<span class="mb-ic">↗</span>SLR</button>';
 }
@@ -8606,7 +9127,17 @@ function cnicPrintToggle(){
    The record still stores ONE string, exactly as before — tbGet() recomposes pills plus
    free text, tbSet() splits an incoming string back into the two.                       */
 const TB = {};
-function tbDef(id, cfg){ TB[id] = Object.assign({items:[], none:'', sep:', ', title:'Quick add', free:'', set:''}, cfg); }
+function tbDef(id, cfg){ TB[id] = Object.assign({items:[], none:'', sep:', ', title:'Quick add', free:'', set:'', groups:null}, cfg); }
+/* A box may carry ONE picker (the original shape: items/title/set on the config) or
+   SEVERAL — Investigations has ＋Radiology, ＋Blood and ＋Misc side by side. Everything
+   below works off this one function, so a single-picker box behaves exactly as it always
+   did and there is no second code path to keep in step. */
+function tbGroups(id){
+  const c = TB[id]; if(!c) return [];
+  if(c.groups && c.groups.length) return c.groups;
+  return [{title:c.title, items:c.items, set:c.set}];
+}
+function tbGroup(id, gi){ const g = tbGroups(id); return g[gi] || g[0] || {title:'', items:[], set:''}; }
 /* Chips you add yourself. They live in a synced collection, so a chip typed on the phone
    turns up on the PC, and they sit alongside the built-in ones in every box of that set. */
 function tbChips(){ if(!Array.isArray(db.chips)) db.chips=[]; return db.chips; }
@@ -8615,51 +9146,63 @@ function tbCustom(set){
   const list = tbChips().filter(function(c){ return c && c.set===set && String(c.label||'').trim(); });
   return (typeof ordSort==='function' ? ordSort(list) : list).map(function(c){ return c.label.trim(); });
 }
-function tbAllItems(id){
-  const c=TB[id]; if(!c) return [];
+function tbGroupItems(id, gi){
+  const g = tbGroup(id, gi);
   const seen={}, out=[];
-  c.items.concat(tbCustom(c.set)).forEach(function(t){
+  (g.items||[]).concat(tbCustom(g.set)).forEach(function(t){
     const k=String(t).toLowerCase(); if(seen[k]) return; seen[k]=1; out.push(t); });
   return out;
 }
-function tbIsCustom(id, term){
-  const c=TB[id]; if(!c||!c.set) return false;
-  const t=String(term).toLowerCase();
-  return tbCustom(c.set).some(function(x){ return x.toLowerCase()===t; }) &&
-         !c.items.some(function(x){ return x.toLowerCase()===t; });
+/* every chip this box knows about, whichever picker it came from — this is what
+   tbSplit() uses to tell a pill from something he typed himself */
+function tbAllItems(id){
+  const seen={}, out=[];
+  tbGroups(id).forEach(function(g, gi){
+    tbGroupItems(id, gi).forEach(function(t){
+      const k=String(t).toLowerCase(); if(seen[k]) return; seen[k]=1; out.push(t); });
+  });
+  return out;
 }
-function tbAddChip(id){
+function tbIsCustom(id, term, gi){
+  const g=tbGroup(id, gi||0); if(!g||!g.set) return false;
+  const t=String(term).toLowerCase();
+  return tbCustom(g.set).some(function(x){ return x.toLowerCase()===t; }) &&
+         !(g.items||[]).some(function(x){ return x.toLowerCase()===t; });
+}
+function tbAddChip(id, gi){
   const c=TB[id]; if(!c) return;
-  if(!c.set){ toast('This box has no chip list to add to'); return; }
-  const label = prompt('New '+c.title.toLowerCase()+' chip — it is saved and synced to your other devices:', '');
+  const g=tbGroup(id, gi||0);
+  if(!g.set){ toast('This box has no chip list to add to'); return; }
+  const label = prompt('New '+String(g.title||'').toLowerCase()+' chip — it is saved and synced to your other devices:', '');
   if(label===null) return;
   const t = String(label).trim();
   if(!t) return;
   if(tbAllItems(id).some(function(x){ return x.toLowerCase()===t.toLowerCase(); })){
     toast('“'+t+'” is already on the list'); tbToggle(id,t); tbPopPaint(id); return;
   }
-  const rec = {id:uid('chip'), set:c.set, label:t, ord:tbChips().filter(function(x){ return x.set===c.set; }).length};
+  const rec = {id:uid('chip'), set:g.set, label:t, ord:tbChips().filter(function(x){ return x.set===g.set; }).length};
   if(typeof syncTouch==='function') syncTouch(rec);
   tbChips().push(rec);
   persist();
   tbToggle(id, t);
-  tbRepaintSet(c.set);
+  tbRepaintSet(g.set);
   tbPopPaint(id);
   toast('“'+t+'” added — it will sync to your other devices');
 }
-function tbDelChip(id, term){
-  const c=TB[id]; if(!c) return;
+function tbDelChip(id, term, gi){
+  const g=tbGroup(id, gi||0); if(!g) return;
   if(!confirm('Remove the chip “'+term+'” from the list? Records that already use it are untouched.')) return;
   const t=String(term).toLowerCase();
-  db.chips = tbChips().filter(function(x){ return !(x.set===c.set && String(x.label||'').trim().toLowerCase()===t); });
-  if(typeof syncRemove==='function'){ /* tombstones are handled by the generic delete path */ }
+  db.chips = tbChips().filter(function(x){ return !(x.set===g.set && String(x.label||'').trim().toLowerCase()===t); });
   persist();
-  tbRepaintSet(c.set);
+  tbRepaintSet(g.set);
   tbPopPaint(id);
 }
 /* every box that shares a chip set repaints together */
 function tbRepaintSet(set){
-  Object.keys(TB).forEach(function(k){ if(TB[k].set===set) tbRender(k); });
+  Object.keys(TB).forEach(function(k){
+    if(tbGroups(k).some(function(g){ return g.set===set; })) tbRender(k);
+  });
 }
 function tbWrapId(id){ return id+'Tb'; }
 function tbSplit(id, value){
@@ -8722,7 +9265,9 @@ function tbRender(id){
       return '<span class="tb-pill"><span>'+esc(t)+'</span>'+
         '<button type="button" title="Remove" onclick="tbToggle(\''+id+'\',\''+String(t).replace(/'/g,"\\'")+'\')">\u00d7</button></span>';
     }).join('')+
-    '<button type="button" class="tb-add" onclick="tbPopOpen(\''+id+'\',event)">\uff0b '+esc(c.title)+'</button>';
+    tbGroups(id).map(function(g, gi){
+      return '<button type="button" class="tb-add" onclick="tbPopOpen(\''+id+'\',event,'+gi+')">\uff0b '+esc(g.title)+'</button>';
+    }).join('');
   if(wrap) wrap.classList.toggle('tb-has', c.picked.length>0);
 }
 /* the picker — one shared floating panel */
@@ -8744,12 +9289,13 @@ function tbPopEl(){
   return p;
 }
 function tbPopClose(){ const p=$('tbPop'); if(p) p.classList.add('hidden'); }
-let tbPopFor='';
-function tbPopOpen(id, ev){
+let tbPopFor='', tbPopGi=0;
+function tbPopOpen(id, ev, gi){
   const c=TB[id]; if(!c) return;
+  gi = gi || 0;
   const p=tbPopEl();
-  if(tbPopFor===id && !p.classList.contains('hidden')){ tbPopClose(); return; }
-  tbPopFor=id;
+  if(tbPopFor===id && tbPopGi===gi && !p.classList.contains('hidden')){ tbPopClose(); return; }
+  tbPopFor=id; tbPopGi=gi;
   tbPopPaint(id);
   p.classList.remove('hidden');
   const btn = ev && ev.currentTarget ? ev.currentTarget : $(id+'TbRow');
@@ -8763,29 +9309,38 @@ function tbPopOpen(id, ev){
 }
 function tbPopPaint(id){
   const c=TB[id]; const p=$('tbPop'); if(!c||!p) return;
-  const list = tbAllItems(id).concat(c.none?[c.none]:[]);
+  const gi = (tbPopFor===id) ? tbPopGi : 0;
+  const g  = tbGroup(id, gi);
+  const list = tbGroupItems(id, gi).concat(c.none?[c.none]:[]);
   const q = String((p.querySelector('.tb-pq')||{}).value||'').trim().toLowerCase();
   const shown = q ? list.filter(function(t){ return String(t).toLowerCase().indexOf(q)>=0; }) : list;
   p.innerHTML =
-    '<div class="tb-ph">'+esc(c.title)+
-      (c.set?'<button type="button" class="tb-new" onclick="tbAddChip(\''+id+'\')" title="Add your own chip — saved and synced">\uff0b New</button>':'')+
+    '<div class="tb-ph">'+esc(g.title)+
+      (g.set?'<button type="button" class="tb-new" onclick="tbAddChip(\''+id+'\','+gi+')" title="Add your own chip — saved and synced">\uff0b New</button>':'')+
     '</div>'+
     (list.length>10 ? '<input type="text" class="tb-pq" data-norail="1" placeholder="Filter\u2026" autocomplete="off" oninput="tbPopPaint(\''+id+'\')" value="'+esc(q)+'">' : '')+
     '<div class="chiprow">'+
     shown.map(function(t){
       const esc1 = String(t).replace(/'/g,"\\'");
-      const own = tbIsCustom(id, t);
+      const own = tbIsCustom(id, t, gi);
       return '<span class="tb-cw'+(own?' own':'')+'">'+
         '<button type="button" class="chip'+(tbHas(id,t)?' on':'')+'" '+
         'onclick="tbToggle(\''+id+'\',\''+esc1+'\');tbPopPaint(\''+id+'\')">'+esc(t)+'</button>'+
         (own?'<button type="button" class="tb-del" title="Remove this chip from the list" '+
-             'onclick="tbDelChip(\''+id+'\',\''+esc1+'\')">\u00d7</button>':'')+
+             'onclick="tbDelChip(\''+id+'\',\''+esc1+'\','+gi+')">\u00d7</button>':'')+
         '</span>';
     }).join('')+
     (shown.length?'':'<span class="muted small">Nothing matches.</span>')+
     '</div>';
   const box=p.querySelector('.tb-pq');
   if(box && q){ box.focus(); box.setSelectionRange(q.length,q.length); }
+}
+/* read or write a box without caring whether it has been wrapped as a tag field —
+   every caller that used to touch `.value` directly goes through these two */
+function tbValGet(id){ return TB[id] ? tbGet(id) : String((($(id)||{}).value)||'').trim(); }
+function tbValSet(id, v){
+  if(TB[id]) { tbSet(id, v||''); return; }
+  const e=$(id); if(e) e.value = v||'';
 }
 /* wrap an existing textarea/input in the tag box */
 function tbInit(id, cfg){
@@ -8809,7 +9364,7 @@ const COMORBIDS = ['DM','HTN','IHD','CVA','Asthma','COPD','CKD',
 const COMORBID_NONE = 'No known comorbid';
 /* back-compat shims — older code called these directly */
 function hxInit(id){ tbInit(id, {items:COMORBIDS, none:COMORBID_NONE, title:'Comorbids', set:'comorbid',
-                                 free:'anything else — e.g. old polio right leg'}); }
+                                 }); }
 function hxPaint(id){ tbRender(id); }
 function hxToggle(id, term){ tbToggle(id, term); }
 
@@ -8888,10 +9443,85 @@ function linkPatient(pid){
   renderRxAlerts();
   startVisitTimer();
   if(typeof repeatBtnRefresh==='function') repeatBtnRefresh();
+  rxCarryRender();
   refreshFieldStatus();
+}
+
+/* ================= CARRYING THE LAST VISIT FORWARD =================
+   The app holds no language model — it is one offline file — so it cannot *summarise*
+   what he wrote last time, and it must not try. A paraphrase that is wrong is worse in a
+   clinical record than an empty box; this is the same rule that makes `urFuClause()`
+   return nothing rather than guess at Urdu.
+
+   What it CAN do honestly is hand back facts already on the record: which visit this is,
+   when the last one was and how long ago, the impression he reached then, and what he
+   asked the patient to bring. Every word is quoted from the record; none is invented.
+
+   Two conditions, both deliberate. It is ONE TAP, NEVER AUTOMATIC — a follow-up patient
+   turns up with a brand-new complaint often enough that a pre-filled box would eventually
+   be signed without being read. And the WHOLE SENTENCE IS ON SCREEN BEFORE HE TAPS, so he
+   is accepting something he has read rather than trusting it.                          */
+function rxCarryGap(fromISO){
+  const then = new Date(String(fromISO).slice(0,10)+'T12:00:00');
+  if(isNaN(then)) return '';
+  const days = Math.round((Date.now() - then.getTime()) / 86400000);
+  if(days <= 0)  return 'today';
+  if(days === 1) return 'yesterday';
+  if(days < 14)  return days+' days ago';
+  if(days < 60)  return Math.round(days/7)+' weeks ago';
+  if(days < 730) return Math.round(days/30)+' months ago';
+  return Math.round(days/365)+' years ago';
+}
+function rxCarryOrdinal(n){
+  const e = ['th','st','nd','rd'], v = n % 100;
+  return n + (e[(v-20)%10] || e[v] || e[0]);
+}
+function rxCarryText(pid){
+  if(!pid) return '';
+  const past = (db.visits||[]).filter(function(v){ return v.patientId===pid && v.id!==editingVisitId; })
+                              .slice().sort(function(a,b){ return String(a.date).localeCompare(String(b.date)); });
+  if(!past.length) return '';
+  const last = past[past.length-1];
+  const bits = ['Follow-up \u2014 '+rxCarryOrdinal(past.length+1)+' visit.'];
+  const gap = rxCarryGap(last.date);
+  bits.push('Last seen '+fmtDate(last.date)+(gap?' ('+gap+')':'')+'.');
+  const dx = String(last.diagnosis||'').split('\n')[0].trim();
+  if(dx) bits.push('Impression then: '+dx+'.');
+  const nt = String(last.nextTests||'').split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+  if(nt.length) bits.push('Was asked to return with: '+nt.join(', ')+'.');
+  else {
+    const fu = String(last.followUp||'').trim();
+    if(fu) bits.push('Advised: '+fu+'.');
+  }
+  return bits.join(' ');
+}
+function rxCarryRender(){
+  const host = $('rxCarry'); if(!host) return;
+  const txt = rxCarryText(linkedPatientId);
+  if(!txt){ host.classList.add('hidden'); host.innerHTML=''; return; }
+  host.classList.remove('hidden');
+  host.innerHTML =
+    '<span class="rc-tx"><span class="rc-h">From this patient\u2019s last visit</span>'+esc(txt)+'</span>'+
+    '<button type="button" class="btn btn-ghost btn-sm" onclick="rxCarryUse()" '+
+      'title="Puts exactly this line at the top of Presenting complaints. Nothing is added unless you press it.">'+
+      '\u21a9 Add to complaints</button>';
+}
+function rxCarryUse(){
+  const el = $('cComplaints'); if(!el) return;
+  const txt = rxCarryText(linkedPatientId);
+  if(!txt){ toast('Nothing to carry forward'); return; }
+  const cur = String(el.value||'').trim();
+  if(cur.indexOf(txt) >= 0){ toast('Already added'); return; }
+  el.value = txt + '\n' + cur;
+  el.dispatchEvent(new Event('input',{bubbles:true}));
+  el.focus();
+  try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){}
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+  toast('Carried forward \u2014 edit it for today');
 }
 function unlinkPatient(){
   linkedPatientId = null;
+  if(typeof rxCarryRender==='function') rxCarryRender();
   $('ptLinked').classList.add('hidden');
   ['pName','pAge','pPhone','pMrn','pAddress','pAllergies','pSurgHx','pCnic','pDob','pOccupation','pRefBy'].forEach(id=>{ if($(id)) $(id).value=''; });
   if($('pBlood')) $('pBlood').value='';
@@ -9245,7 +9875,7 @@ function collectVisitForm(){
     },
     printCnic: cnicPrintOn,
     complaints:$('cComplaints').value.trim(), findings:$('cFindings').value.trim(),
-    diagnosis:$('cDiagnosis').value.trim(), tests:$('cTests').value.trim(),
+    diagnosis:$('cDiagnosis').value.trim(), tests:tbValGet('cTests'),
     plan:$('cPlan').value.trim(), proc:$('cProc').value.trim(),
     nextTests:tbGet('cNextTests'),
     followUp: fuBoxOn ? $('cFollowUp').value.trim() : '',
@@ -9297,7 +9927,10 @@ function saveVisit(andPrint){
       diagnosis: f.diagnosis, tests: f.tests, plan: f.plan, proc: f.proc,
       nextTests: f.nextTests, followUp: f.followUp,
       followUpDate: f.followUpDate, fuOff: f.fuOff, printCnic: f.printCnic, fee: f.fee, qrId: f.qrId, meds: f.meds, vitals: f.vitals,
-      images: (editing.images||[]).concat(visitImgs.map(x=>x.id)),
+      /* Save can now be pressed twice on the same prescription, and `visitImgs` still
+         holds the pictures added this sitting, so a plain concat would file each of
+         them again. Union, not append. */
+      images: Array.from(new Set((editing.images||[]).concat(visitImgs.map(x=>x.id)))),
       editedAt: new Date().toISOString(), editedBy: byTag()
     });
     syncTouch(editing);
@@ -9325,12 +9958,44 @@ function saveVisit(andPrint){
     activeQueueId = null;
     updateQNavCount();
   }
-  editingVisitId = null;
+  /* The form is NOT cleared. He asked for it to stay put, and it should: he prints,
+     looks at the sheet, changes a dose, prints again. The whole risk in that is a
+     second press of Save writing a SECOND prescription for the same consultation, so
+     the form now holds on to what it just wrote — every later Save corrects that same
+     visit. Letting go of a patient is a deliberate act: `Next patient`, or `Clear form`.
+     (Emptying the form was the old code's way of preventing the duplicate. It cost him
+     the record he was still working on, every single time.) */
+  editingVisitId = visit.id;
+  stopVisitTimer();                       // the consultation is recorded; the clock stops
+  rxDirty = false;
   phraseBankInvalidate();
   persist();
   toast((editing?'Prescription updated for ':'Visit saved for ')+p.name+' ('+p.mrn+')');
   if(andPrint) printVisit(visit, p);
+  if(typeof updateEditBanner==='function') updateEditBanner(visit, 'saved');
+  if(typeof refreshFieldStatus==='function') refreshFieldStatus();
+}
+
+/* ---- letting go of the patient on the form ----
+   Only these two empty it, and both are things he presses on purpose. */
+let rxDirty = false;
+function rxWatchDirty(){
+  const sec = $('tab-visit');
+  if(!sec || sec.dataset.rxWatch) return;
+  sec.dataset.rxWatch = '1';
+  const mark = function(){ rxDirty = true; };
+  sec.addEventListener('input', mark);
+  sec.addEventListener('change', mark);
+}
+function nextPatient(){
+  const name = String((($('pName')||{}).value)||'').trim();
+  if(name && rxDirty &&
+     !confirm('Start the next patient?\n\nThis form has changes that have not been saved \u2014 they will be lost.')) return;
   clearVisitForm(false);
+  showTab('visit');
+  window.scrollTo({top:0, behavior:'smooth'});
+  const n = $('pName'); if(n) n.focus();
+  toast('Ready for the next patient');
 }
 
 /* --- consultation timer --- */
@@ -9369,12 +10034,13 @@ function clearVisitForm(ask){
   if(ask && !confirm('Clear the whole form?')) return;
   stopVisitTimer();
   editingVisitId = null;
+  rxDirty = false;
   if(typeof updateEditBanner==='function') updateEditBanner();
   unlinkPatient();
   $('pAllergies').value = 'NKDA';   // default: no known drug allergies (edit if the patient has any)
   tintAllergyBox();
-  ['cComplaints','cFindings','cDiagnosis','cTests','cPlan','cProc','cFollowUp','ptSearch','medSearch'].forEach(id=>$(id).value='');
-  tbSet('cNextTests','');
+  ['cComplaints','cFindings','cDiagnosis','cPlan','cProc','cFollowUp','ptSearch','medSearch'].forEach(id=>$(id).value='');
+  tbSet('cTests',''); tbSet('cNextTests','');
   $('rxBody').innerHTML=''; updateRxCount();
   if($('rxAlerts')) $('rxAlerts').innerHTML='';
   visitImgs = []; renderVisitImgStrip();
@@ -9835,7 +10501,7 @@ function copyVisitToForm(vid){
   clearVisitForm(false);
   linkPatient(v.patientId);
   $('cComplaints').value=v.complaints||''; $('cFindings').value=v.findings||'';
-  $('cDiagnosis').value=v.diagnosis||''; $('cTests').value=v.tests||'';
+  $('cDiagnosis').value=v.diagnosis||''; tbValSet('cTests', v.tests||'');
   $('cPlan').value=v.plan||''; $('cProc').value=v.proc||'';
   tbSet('cNextTests', v.nextTests||''); $('cFollowUp').value=v.followUp||'';
   if(v.followUpDate && $('cFuDate')) $('cFuDate').value=v.followUpDate;
@@ -9847,12 +10513,16 @@ function copyVisitToForm(vid){
   (v.meds||[]).forEach(m=>addRxRow(m));
   editingVisitId = vid;
   updateEditBanner(v);
+  if(typeof rxCarryRender==='function') rxCarryRender();   // this visit is no longer "last"
   showTab('visit');
   toast('Prescription reopened — saving updates this same visit (press “new follow-up” to make a new one)');
 }
-function updateEditBanner(v){
+function updateEditBanner(v, how){
   const b=$('editVisitBanner'); if(!b) return;
-  if(editingVisitId && v){
+  if(editingVisitId && v && how==='saved'){
+    b.classList.remove('hidden','newv');
+    $('editVisitText').textContent = '✓ Saved. The form is still here — pressing Save again corrects this same prescription rather than writing a second one. Use “Next patient” when you are done.';
+  } else if(editingVisitId && v){
     b.classList.remove('hidden','newv');
     $('editVisitText').textContent = '✎ Editing the prescription from '+fmtDate(v.date)+' — saving updates this same visit (no extra visit is counted).';
   } else if(editingVisitId===null && v==='newfollowup'){
@@ -10031,7 +10701,7 @@ function setRailProfile(){
   const name=s.docName||'Your clinic';
   return '<button class="set-prof" onclick="setCat(\'clinic\')">'+
     (typeof patAvatar==='function'? patAvatar(name, true) : '')+
-    '<span class="sp-tx"><b>'+esc(name)+'</b><span>'+esc([s.quals&&String(s.quals).split(',')[0], s.clinicName].filter(Boolean).join(' · ')||'Tap to edit your details')+'</span></span></button>';
+    '<span class="sp-tx"><b>'+esc(name)+'</b><span>'+esc([s.quals&&String(s.quals).split(/[\n,]/)[0], s.clinicName].filter(Boolean).join(' · ')||'Tap to edit your details')+'</span></span></button>';
 }
 function renderSetRail(){
   const rail=$('setRail'); if(!rail) return;
@@ -10118,19 +10788,42 @@ let fuWhatSel = -1;
 /* The reason-for-follow-up used to be a wrapping row of a dozen chips that changed height
    as you picked, shoving the date line about. It is now one fixed line: what you picked (if
    anything), the two everyday shortcuts, and a plus that opens the rest in a popover. */
+/* One chip, inside the box, exactly like every other picker in the app. SOS and
+   "tomorrow" used to hang outside the ＋ as two loose buttons; they are *when* he wants
+   the patient back, which is the same question the rest of the list answers, so they now
+   live at the top of the same popover under their own heading. */
+function fuWhatLabel(){
+  if(fuWhatSel===-2) return 'SOS';
+  if(fuWhatSel===-3) return 'tomorrow';
+  return (fuWhatSel>=0 && FU_WHAT[fuWhatSel]) ? FU_WHAT[fuWhatSel][0] : '';
+}
 function renderFuWhatChips(){
   const host=$('fuWhatChips'); if(!host) return;
-  const picked = (fuWhatSel>=0 && FU_WHAT[fuWhatSel]) ? FU_WHAT[fuWhatSel][0] : '';
+  const picked = fuWhatLabel();
+  const wrap=$('cFollowUpTb');
   host.innerHTML =
     (picked ? '<span class="tb-pill"><span>'+esc(picked)+'</span>'+
-       '<button type="button" title="Remove" onclick="fuPickWhat('+fuWhatSel+')">×</button></span>' : '') +
-    '<button type="button" class="chip'+(fuWhatSel===-2?' on':'')+'" onclick="fuPickWhen(-2)" title="Come back only if there is a problem">SOS</button>' +
-    '<button type="button" class="chip'+(fuWhatSel===-3?' on':'')+'" onclick="fuPickWhen(-3)">tomorrow</button>' +
-    '<button type="button" class="tb-add" onclick="fuWhatPopOpen(event)">＋ for…</button>';
+       '<button type="button" title="Remove" onclick="fuClearWhat()">×</button></span>' : '') +
+    '<button type="button" class="tb-add" onclick="fuWhatPopOpen(event)">＋ follow-up for</button>';
+  if(wrap) wrap.classList.toggle('tb-has', !!picked);
+}
+function fuClearWhat(){
+  if(fuWhatSel===-2 || fuWhatSel===-3) fuPickWhen(fuWhatSel);
+  else fuPickWhat(fuWhatSel);
 }
 function fuWhatPopOpen(ev){
   chipPopOpen('fu', ev, function(){
-    return '<div class="tb-ph">Follow-up for…</div><div class="chiprow">'+
+    return '<div class="tb-ph">Follow-up for…</div>'+
+      '<div class="tb-grp">When to come back</div>'+
+      '<div class="chiprow">'+
+        '<button type="button" class="chip'+(fuWhatSel===-2?' on':'')+'" '+
+          'title="Come back only if there is a problem" '+
+          'onclick="fuPickWhen(-2);chipPopRepaint()">SOS</button>'+
+        '<button type="button" class="chip'+(fuWhatSel===-3?' on':'')+'" '+
+          'onclick="fuPickWhen(-3);chipPopRepaint()">tomorrow</button>'+
+      '</div>'+
+      '<div class="tb-grp">What to come for</div>'+
+      '<div class="chiprow">'+
       FU_WHAT.map(function(w,i){
         return '<button type="button" class="chip'+(fuWhatSel===i?' on':'')+'" '+
                'onclick="fuPickWhat('+i+');chipPopRepaint()">'+esc(w[0])+'</button>';
@@ -10182,11 +10875,29 @@ function fuPickWhen(kind){
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
 }
 /* ---- "bring at next visit" quick chips ---- */
-const NEXT_TEST_CHIPS = ['X-ray','MRI','CT scan','Ultrasound','CBC, ESR/CRP','S. Vit D','S. Calcium','Uric acid',
-  'LFTs','RFTs','Bone scan','Biopsy report','Old films / reports'];
+/* ---- what he orders, in his own words ----
+   Three pickers rather than one long list, because "which X-ray" and "which blood test"
+   are different questions and a single list of thirty is slower than three of ten. Each
+   has its own chip set, so ＋New on Blood adds to Blood on every device.
+   These lines are PRINTED, so they are stored exactly as they should read on the sheet. */
+const INV_RADIOLOGY = ['X-ray Both Knees Standing AP & Lat',
+                       'X-ray LS Spine AP & Lat > Flex/Ext',
+                       'X-ray Pelvis w/ Both Hips AP & Frog Lat',
+                       'CT CAP w/ contrast',
+                       'MRI LS Spine Non-contrast',
+                       'MRI Knee Non-contrast'];
+const INV_BLOOD = ['CBC','ESR','CRP','AntiCCP Quantitative','RA factor Quantitative',
+                   'LFT','RFT','S/Electrolytes','HBsAg','AntiHCV','PT APTT INR','Blood group',
+                   'Bone profile: Ca, PO4, Vit D, PTH','LDH'];
+const INV_MISC = ['Urine complete','Urine culture','ECG','Echo'];
+function invGroups(){
+  return [{title:'Radiology', items:INV_RADIOLOGY, set:'radiology'},
+          {title:'Blood',     items:INV_BLOOD,     set:'blood'},
+          {title:'Misc',      items:INV_MISC,      set:'misc'}];
+}
 function renderNvChips(){ tbRender('cNextTests'); }
 function nvCopyFromTests(){
-  const src=($('cTests').value||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  const src=(tbValGet('cTests')||'').split('\n').map(s=>s.trim()).filter(Boolean);
   if(!src.length){ toast('\u26a0 Nothing typed in Investigations yet'); return; }
   const cur = tbGet('cNextTests');
   const have = cur.split('\n').map(s=>s.trim().toLowerCase()).filter(Boolean);
@@ -10962,7 +11673,17 @@ function refreshNoteTplSelect(){
 }
 function applyNoteTemplate(t){
   if(!t) return;
-  const setIf = (id,val)=>{ if(!val) return; const el=$(id); if(!el) return; el.value = el.value.trim()? el.value.replace(/\s+$/,'')+'\n'+val : val; };
+  const setIf = (id,val)=>{
+    if(!val) return;
+    const el=$(id); if(!el) return;
+    if(typeof TB!=='undefined' && TB[id]){          // a tag box: merge, so chips stay chips
+      const cur = tbValGet(id);
+      tbValSet(id, cur.trim() ? cur.replace(/\s+$/,'')+'\n'+val : val);
+      if(typeof tbChanged==='function') tbChanged(id);
+      return;
+    }
+    el.value = el.value.trim()? el.value.replace(/\s+$/,'')+'\n'+val : val;
+  };
   setIf('cComplaints',t.complaints); setIf('cFindings',t.findings); setIf('cDiagnosis',t.diagnosis);
   setIf('cTests',t.tests); setIf('cPlan',t.plan); setIf('cProc',t.proc);
   if(t.followUp && !$('cFollowUp').value) $('cFollowUp').value = t.followUp;
@@ -12112,7 +12833,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.08-b64';
+const APP_BUILD = '2026.08.11-b71';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -16453,9 +17174,176 @@ async function gdFolder(name, parentId){
     body: JSON.stringify({name:name, mimeType:GD_FOLDER_MIME, parents:[parentId||'root']})
   });
 }
+/* ==================== WHAT THE FOLDERS ARE CALLED ====================
+   The doctor files things his own way, so the tree is his to name. Three rules hold
+   this together, and all three matter:
+
+     1. NOTHING ALREADY IN DRIVE IS EVER RENAMED OR MOVED. Every folder id is cached
+        on the record (`cf.drive.caseId`, `bucket.drive.id`), so a change of pattern
+        only decides what folders made *from then on* are called. The settings screen
+        says this in as many words, because otherwise he will expect two hundred
+        existing folders to reorganise themselves.
+     2. An empty token takes its punctuation with it. '{regNo} — {name}' on a case
+        with no number reads 'Ahmed Khan', never ' — Ahmed Khan'.
+     3. With nothing set, the name is byte-for-byte what it has always been. The
+        default is a placeholder, never a stored value.                              */
+const GD_NAME_DEF = '{regNo} — {name}';
+const GD_FU_DIR_DEF = '06 Follow-up';
+const GD_TOKENS = [
+  ['{regNo}',     'Registry number',  function(r){ return String(r.regNo||'').trim(); }],
+  ['{name}',      'Patient name',     function(r){ return String(r.name||'').trim(); }],
+  ['{mrn}',       'MR number',        function(r){ return String(r.mrn||'').trim(); }],
+  ['{diagnosis}', 'Diagnosis',        function(r){ return gdTokLabel('diagnosis', r.diagnosis); }],
+  ['{site}',      'Site',             function(r){ return gdTokLabel('site', r.site); }],
+  ['{dateSurg}',  'Date of surgery',  function(r){ return String(r.dateSurg||'').trim(); }],
+  ['{year}',      'Year of the case', function(r){
+      const b = (typeof regNoBasis === 'function') ? regNoBasis(r) : null;
+      return b ? String(b.d).slice(0,4) : ''; }],
+  ['{city}',      'City',             function(r){ return String(r.city||'').trim(); }]
+];
+function gdTokLabel(key, val){
+  if(val === undefined || val === null || val === '') return '';
+  return (typeof regLabelFor === 'function') ? String(regLabelFor(key, val)||'') : String(val);
+}
+/* Drive will take almost anything, but a slash reads as a folder boundary and control
+   characters break the search query, so both go. */
+function gdCleanName(s){
+  return String(s||'')
+    .replace(/[\/\\]/g, '-')
+    .replace(/[\u0000-\u001f\u007f]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/^[\s\-–—·:,|_]+|[\s\-–—·:,|_]+$/g, '')
+    .slice(0, 120)
+    .trim();
+}
+function gdFillName(pattern, rec){
+  const pat = String(pattern||'');
+  /* split into literals and tokens, keeping order */
+  const parts = [];
+  let i = 0;
+  while(i < pat.length){
+    let hit = null;
+    for(let t = 0; t < GD_TOKENS.length; t++){
+      if(pat.substr(i, GD_TOKENS[t][0].length) === GD_TOKENS[t][0]){ hit = GD_TOKENS[t]; break; }
+    }
+    if(hit){ parts.push({tok: hit}); i += hit[0].length; }
+    else{
+      if(parts.length && parts[parts.length-1].lit !== undefined) parts[parts.length-1].lit += pat[i];
+      else parts.push({lit: pat[i]});
+      i++;
+    }
+  }
+  /* An empty token takes the punctuation on BOTH sides with it: the literal before it is
+     dropped, and the next run of literal text is swallowed once. That is what turns
+     '{name} ({mrn})' into 'Ahmed Khan' rather than 'Ahmed Khan)'. The one thing it cannot
+     do is tell a closing bracket from a real word, so trailing prose after an empty token
+     goes with it too — which is why these boxes take patterns, not sentences. */
+  let out = '', lit = '', swallow = false;
+  parts.forEach(function(p){
+    if(p.lit !== undefined){
+      if(swallow){ swallow = false; return; }
+      lit += p.lit; return;
+    }
+    const v = String(p.tok[2](rec || {}) || '').trim();
+    if(v){ out += lit + v; lit = ''; swallow = false; }
+    else  { lit = ''; swallow = true; }
+  });
+  if(!swallow) out += lit;
+  return out;
+}
 function gdCaseFolderName(rec){
-  const no = String(rec.regNo||'').trim(), nm = String(rec.name||'').trim();
-  return (no ? no : 'no-number') + (nm ? ' — '+nm : '');
+  rec = rec || {};
+  const pat = String(gdCfg().caseName || '').trim();
+  if(!pat){                                    // untouched — exactly as it has always been
+    const no = String(rec.regNo||'').trim(), nm = String(rec.name||'').trim();
+    return (no ? no : 'no-number') + (nm ? ' — '+nm : '');
+  }
+  return gdCleanName(gdFillName(pat, rec)) || String(rec.regNo||'').trim() || 'no-number';
+}
+/* the doctor's own name for one of the six stage folders, or the standard one */
+function gdStageDir(stageKey){
+  const st = CF_STAGES.filter(function(s){ return s.k === stageKey; })[0];
+  if(!st) return '';
+  return gdCleanName(((gdCfg().dirs||{})[stageKey]) || '') || st.dir;
+}
+function gdFuDirName(){ return gdCleanName(gdCfg().fuDir || '') || GD_FU_DIR_DEF; }
+
+/* ==================== USING FOLDERS HE ALREADY HAS ====================
+   `drive.file` lets the app see only what it made itself — which is exactly the level of
+   access something holding patient images should have, and is why it cannot simply be
+   pointed at an existing folder. Google's own **Picker** is the sanctioned way round it:
+   when he chooses a folder in Google's dialog, Google grants the app that one folder and
+   nothing else. His existing files stay invisible to the app; new ones land beside them.
+
+   Two credentials are involved and they are not the same thing: the OAuth **client ID**
+   (already in Settings) says who the app is, and an **API key** is what the Picker itself
+   needs. Without the key everything else still works and the picker explains itself —
+   nothing degrades silently.                                                           */
+function gdApiKey(){ return String(gdCfg().apiKey || '').trim(); }
+function gdPickedRootId(){ return String(gdCfg().rootId || '').trim(); }
+function gdPickedRootLabel(){ return String(gdCfg().rootLabel || '').trim(); }
+function gdPickerReason(){
+  const why = gdReason();
+  if(why) return why;
+  if(!gdApiKey()) return 'To choose a folder you already have, add your Google API key in Settings \u2192 Google Drive. It is separate from the client ID and takes a minute to get.';
+  return '';
+}
+function gdLoadPicker(){
+  return new Promise(function(res, rej){
+    if(window.google && window.google.picker) return res();
+    const boot = function(){
+      if(!window.gapi || !gapi.load) return rej(new Error('Could not load the Google folder picker'));
+      gapi.load('picker', {callback: function(){ res(); },
+                           onerror:  function(){ rej(new Error('Could not load the Google folder picker')); }});
+    };
+    if(window.gapi && window.gapi.load) return boot();
+    const s = document.createElement('script');
+    s.src = 'https://apis.google.com/js/api.js'; s.async = true; s.defer = true;
+    s.onload  = boot;
+    s.onerror = function(){ rej(new Error('Could not load the Google folder picker')); };
+    document.head.appendChild(s);
+  });
+}
+/* Opens Google's own dialog and hands back {id, name}, or null if he backed out. */
+async function gdPickFolder(){
+  const why = gdPickerReason();
+  if(why){ toast('\u26a0 '+why); return null; }
+  if(!await gdEnsure()){ toast('\u26a0 '+(gdReason()||'Connect Google Drive first')); return null; }
+  try{ await gdLoadPicker(); }catch(e){ toast('\u26a0 '+e.message); return null; }
+  return new Promise(function(res){
+    try{
+      const view = new google.picker.DocsView(google.picker.ViewId.FOLDERS)
+        .setIncludeFolders(true).setSelectFolderEnabled(true).setMimeTypes(GD_FOLDER_MIME);
+      const pk = new google.picker.PickerBuilder()
+        .setOAuthToken(gdToken)
+        .setDeveloperKey(gdApiKey())
+        .setTitle('Choose a folder in your Google Drive')
+        .addView(view)
+        .setCallback(function(d){
+          if(!d || !d.action) return;
+          if(d.action === google.picker.Action.PICKED){
+            const doc = (d.docs || [])[0];
+            res(doc ? {id: doc.id, name: doc.name || doc.title || ''} : null);
+          } else if(d.action === google.picker.Action.CANCEL){ res(null); }
+        })
+        .build();
+      pk.setVisible(true);
+    }catch(e){ toast('\u26a0 The folder picker could not open'); res(null); }
+  });
+}
+/* the top folder: everything new is made inside a folder he already had */
+async function gdPickTopFolder(){
+  const f = await gdPickFolder(); if(!f) return;
+  const c = gdCfg();
+  c.rootId = f.id; c.rootLabel = f.name;
+  persist(); renderGdSetting();
+  toast('\u2713 New case folders will be made inside \u201c'+f.name+'\u201d');
+}
+function gdClearTopFolder(){
+  const c = gdCfg();
+  c.rootId = ''; c.rootLabel = '';
+  persist(); renderGdSetting();
+  toast('The app will make its own top folder again');
 }
 /* Build (or find) the folder for one stage of one case, caching every id on the record so
    the tree is only ever created once. */
@@ -16463,11 +17351,18 @@ async function gdStageFolder(rec, stageKey, fuId){
   if(!await gdEnsure()) return null;
   const cf = cfOf(rec);
   cf.drive = cf.drive || {};
-  if(!cf.drive.rootId){
-    const f = await gdFolder(gdRootName(), gdCfg().rootFolderId || 'root');
-    cf.drive.rootId = f.id;
-  }
+  /* A case that already has its own folder — because it was made earlier, or because the
+     doctor pointed at one of his own with the picker — needs no top folder at all. Only
+     work out the top folder when a case folder has to be created inside it. */
   if(!cf.drive.caseId){
+    if(!cf.drive.rootId){
+      if(gdPickedRootId()){
+        cf.drive.rootId = gdPickedRootId();          // a folder he already had
+      } else {
+        const f = await gdFolder(gdRootName(), 'root');
+        cf.drive.rootId = f.id;
+      }
+    }
     const f = await gdFolder(gdCaseFolderName(rec), cf.drive.rootId);
     cf.drive.caseId = f.id; cf.drive.caseLink = f.webViewLink || gdFolderLink(f.id);
   }
@@ -16476,7 +17371,7 @@ async function gdStageFolder(rec, stageKey, fuId){
     const fu = (cf.fu||[]).filter(x=>x.id===fuId)[0];
     if(!fu) return null;
     if(!cf.drive.fuRootId){
-      const f = await gdFolder('06 Follow-up', cf.drive.caseId);
+      const f = await gdFolder(gdFuDirName(), cf.drive.caseId);
       cf.drive.fuRootId = f.id;
     }
     if(!fu.drive || !fu.drive.id){
@@ -16490,7 +17385,7 @@ async function gdStageFolder(rec, stageKey, fuId){
   if(!st) return null;
   bucket = cf[stageKey] = cf[stageKey] || {items:[]};
   if(!bucket.drive || !bucket.drive.id){
-    const f = await gdFolder(st.dir, cf.drive.caseId);
+    const f = await gdFolder(gdStageDir(stageKey), cf.drive.caseId);
     bucket.drive = {id:f.id, link:f.webViewLink || gdFolderLink(f.id)};
   }
   persist();
@@ -16774,6 +17669,27 @@ async function cfOpenCase(){
     gdRunQueue();
   }catch(e){ toast('⚠ Could not reach Google Drive'); }
 }
+/* Point this one case at a folder the doctor already has. From then on the six stage
+   folders are made INSIDE his folder, and everything he had in there is left alone —
+   the app cannot even see it. Nothing is moved out of the folder the app made before,
+   if there was one; anything already uploaded stays where it is. */
+async function cfPickCaseFolder(){
+  const f = await gdPickFolder(); if(!f) return;
+  if(!cfWork) cfStart({});
+  const had = cfWork.drive && cfWork.drive.caseId;
+  cfWork.drive = cfWork.drive || {};
+  cfWork.drive.caseId   = f.id;
+  cfWork.drive.caseLink = gdFolderLink(f.id);
+  cfWork.drive.picked   = true;
+  /* the stage folders belong to the old case folder, so they have to be worked out
+     again inside the new one — nothing in Drive is touched, only the app's shortcuts */
+  CF_STAGES.forEach(function(st){ if(cfWork[st.k]) cfWork[st.k].drive = null; });
+  cfWork.drive.fuRootId = null;
+  (cfWork.fu||[]).forEach(function(x){ x.drive = null; });
+  cfSyncBack(); cfRender();
+  toast('\u2713 This case will be filed in \u201c'+f.name+'\u201d'+(had?' from now on':''));
+  gdRunQueue();
+}
 function cfSetManualLink(){
   const cur = (cfWork && cfWork.manualLink) || '';
   const v = prompt('Paste the Google Drive folder link for this case\n(leave empty to clear):', cur);
@@ -16839,7 +17755,7 @@ function cfStageHTML(st){
          : '<div class="cf-drop" ondragover="event.preventDefault();this.classList.add(\'hot\')" '+
            'ondragleave="this.classList.remove(\'hot\')" '+
            'ondrop="event.preventDefault();this.classList.remove(\'hot\');cfAdd(\''+st.k+'\',\'\',event.dataTransfer.files)" '+
-           'onclick="cfPick(\''+st.k+'\',\'\')">Drop images or PDFs here, or tap to choose</div>')+
+           'onclick="cfPick(\''+st.k+'\',\'\')">Drop images, scans or any file here, or tap to choose</div>')+
     '</div></div>';
 }
 const CF_TINT_VARS = [
@@ -16861,9 +17777,18 @@ function cfPick(stageKey, fuId, camera){
     inp = document.createElement('input'); inp.type='file'; inp.id='cfFilePick';
     inp.multiple = true; inp.style.display='none'; document.body.appendChild(inp);
   }
-  inp.accept = camera ? 'image/*' : 'image/*,application/pdf,.pdf,.doc,.docx,.txt';
-  if(camera) inp.setAttribute('capture','environment'); else inp.removeAttribute('capture');
-  inp.onchange = function(){ const f = inp.files; inp.value=''; cfAdd(stageKey, fuId, f); };
+  /* No accept list off the camera: an accept list greys out everything it does not name in
+     the file dialog, and the doctor's scans, DICOMs, spreadsheets and zips were all
+     unselectable. Anything that is not an image is simply filed as a document. */
+  if(camera){ inp.accept = 'image/*'; inp.setAttribute('capture','environment'); }
+  else      { inp.removeAttribute('accept'); inp.removeAttribute('capture'); }
+  inp.onchange = function(){
+    /* `inp.files` is LIVE — clearing the input empties the very list we are about to read,
+       which is why choosing a file appeared to do nothing at all. Copy first, clear after. */
+    const f = Array.prototype.slice.call(inp.files || []);
+    inp.value = '';
+    cfAdd(stageKey, fuId, f);
+  };
   inp.click();
 }
 function cfDriveBarHTML(){
@@ -16883,6 +17808,7 @@ function cfDriveBarHTML(){
     (gdConfigured() && !gdSecureOrigin() ? '' :
       '<button type="button" class="btn btn-ghost btn-sm" onclick="showTab(\'settings\');setTimeout(function(){setCat(\'gdrive\')},60)">⚙ Drive setup</button>')+
     '<button type="button" class="btn btn-green btn-sm" onclick="cfOpenCase()">🗂 View complete record ↗</button>'+
+    '<button type="button" class="btn btn-ghost btn-sm" onclick="cfPickCaseFolder()" title="File this case in a folder you already have in your Drive. Google asks you to choose it, and the app is given that one folder only.">📂 Use a folder I already have</button>'+
     (caseLink ? '' : '<button type="button" class="btn btn-ghost btn-sm" onclick="cfSetManualLink()">🔗 Paste a folder link</button>')+
   '</div>';
 }
@@ -16988,14 +17914,140 @@ function renderGdSetting(){
     '</div>';
   const a = $('gdClientId'); if(a && document.activeElement !== a) a.value = c.clientId||'';
   const b = $('gdRootName'); if(b && document.activeElement !== b) b.value = c.rootName||'';
+  const k = $('gdApiKey');   if(k && document.activeElement !== k) k.value = c.apiKey||'';
+  renderGdNames();
+}
+/* the top of the tree: either a folder he chose, or one the app makes and names */
+function renderGdTopFolder(){
+  const host = $('gdTopFolder'); if(!host) return;
+  const picked = gdPickedRootId();
+  const why = gdPickerReason();
+  host.innerHTML = picked
+    ? '<div class="gdt-on"><span class="gdt-ic">📂</span>'+
+        '<span class="gdt-tx"><b>Everything new goes into a folder you already had</b>'+
+          '<span>' + esc(gdPickedRootLabel() || 'the folder you chose') + ' \u00b7 your own files in it are untouched, and the app cannot see them</span></span>'+
+        '<button type="button" class="btn btn-ghost btn-sm" onclick="gdPickTopFolder()">Change\u2026</button>'+
+        '<button type="button" class="btn btn-ghost btn-sm" onclick="gdClearTopFolder()">Use one the app makes</button>'+
+      '</div>'
+    : '<div class="gdt-off">'+
+        '<div class="field" style="margin:0;flex:1 1 240px"><label style="font-size:11px">Top-level folder the app makes for itself</label>'+
+          '<input type="text" id="gdRootName" data-norail="1" placeholder="Clinic Case Files" oninput="gdNamePreview()"></div>'+
+        '<button type="button" class="btn btn-ghost btn-sm" onclick="gdPickTopFolder()" title="'+esc(why||'Google asks you to choose it, and the app is given that one folder only')+'">📂 \u2026or use a folder I already have</button>'+
+        (why ? '<span class="muted small" style="flex:1 1 100%">'+esc(why)+'</span>' : '')+
+      '</div>';
+  const b = $('gdRootName');
+  if(b && document.activeElement !== b) b.value = gdCfg().rootName || '';
+}
+/* Reading the Drive boxes into settings is separate from saving them, because the bar at
+   the bottom of Settings saves everything on screen and must NOT ask Google to sign in. */
+function gdCollectSettings(){
+  const c = gdCfg();
+  if($('gdClientId')) c.clientId = String($('gdClientId').value||'').trim();
+  if($('gdRootName')) c.rootName = String($('gdRootName').value||'').trim();
+  if($('gdApiKey'))   c.apiKey   = String($('gdApiKey').value||'').trim();
+  if($('gdCaseName')) c.caseName = String($('gdCaseName').value||'').trim();
+  if($('gdFuDir')){
+    c.dirs = c.dirs || {};
+    CF_STAGES.forEach(function(s){
+      const el = $('gdDir_'+s.k);
+      if(el) c.dirs[s.k] = String(el.value||'').trim();
+    });
+    c.fuDir = String($('gdFuDir').value||'').trim();
+  }
+  return c;
 }
 function gdSaveSettings(){
-  const c = gdCfg();
-  c.clientId = String(($('gdClientId')||{}).value||'').trim();
-  c.rootName = String(($('gdRootName')||{}).value||'').trim();
+  const c = gdCollectSettings();
   persist(); renderGdSetting();
   toast('Drive settings saved');
   if(c.clientId && gdSecureOrigin()) gdConnect(false);
+}
+function gdNamesReset(){
+  if(!confirm('Put the folder names back to the standard ones?\n\nNothing already in your Drive is renamed — this only decides what new folders are called.')) return;
+  const c = gdCfg();
+  c.caseName = ''; c.dirs = {}; c.fuDir = '';
+  persist(); renderGdNames(); toast('Back to the standard names');
+}
+/* the six stage boxes, the follow-up box and the token chips */
+function renderGdNames(){
+  const c = gdCfg();
+  renderGdTopFolder();
+  const box = $('gdCaseName');
+  if(box && document.activeElement !== box) box.value = c.caseName || '';
+  const grid = $('gdDirGrid');
+  if(grid){
+    grid.innerHTML = CF_STAGES.map(function(s){
+      return '<div class="field" style="margin:0"><label style="font-size:11px">'+s.ic+' '+esc(s.t)+'</label>'+
+        '<input type="text" id="gdDir_'+s.k+'" data-norail="1" spellcheck="false" placeholder="'+esc(s.dir)+'" oninput="gdNamePreview()"></div>';
+    }).join('') +
+    '<div class="field" style="margin:0"><label style="font-size:11px">🗓 Follow-up</label>'+
+      '<input type="text" id="gdFuDir" data-norail="1" spellcheck="false" placeholder="'+esc(GD_FU_DIR_DEF)+'" oninput="gdNamePreview()"></div>';
+    CF_STAGES.forEach(function(s){
+      const el = $('gdDir_'+s.k); if(el) el.value = ((c.dirs||{})[s.k]) || '';
+    });
+    if($('gdFuDir')) $('gdFuDir').value = c.fuDir || '';
+  }
+  const toks = $('gdToks');
+  if(toks){
+    toks.innerHTML = '<span class="muted" style="font-size:11px;align-self:center;margin-right:2px">Tap to add:</span>'+
+      GD_TOKENS.map(function(t){
+        return '<button type="button" title="'+esc(t[1])+'" onclick="gdInsertToken(\''+t[0]+'\')">'+esc(t[0])+'</button>';
+      }).join('');
+  }
+  gdNamePreview();
+}
+function gdInsertToken(tok){
+  const el = $('gdCaseName'); if(!el) return;
+  const v = el.value || '', a = (el.selectionStart == null) ? v.length : el.selectionStart,
+        b = (el.selectionEnd == null) ? v.length : el.selectionEnd;
+  el.value = v.slice(0, a) + tok + v.slice(b);
+  el.focus();
+  try{ el.setSelectionRange(a + tok.length, a + tok.length); }catch(e){}
+  gdNamePreview();
+}
+/* Show it against a real case where there is one, so he is reading his own patient's
+   folder name rather than a made-up example. */
+function gdSampleCase(){
+  const real = (db.registry||[]).filter(function(r){
+    return (typeof regIsCase !== 'function' || regIsCase(r)) && (r.regNo || r.name);
+  });
+  if(real.length) return {rec: real[real.length-1], real: true};
+  return {real: false, rec: {regNo:'2601010001', name:'Ahmed Khan', mrn:'MR-1042',
+    diagnosis:'', site:'', dateSurg:'2026-01-01', firstVisit:'2026-01-01', city:'Sargodha'}};
+}
+function gdNamePreview(){
+  const host = $('gdNamePrev'); if(!host) return;
+  const saved = gdCfg();
+  /* preview what is TYPED, not what is stored, without touching the stored settings */
+  const typed = {
+    caseName: String((($('gdCaseName')||{}).value) || '').trim(),
+    fuDir:    String((($('gdFuDir')||{}).value) || '').trim(),
+    dirs:     {}
+  };
+  CF_STAGES.forEach(function(s){ typed.dirs[s.k] = String((($('gdDir_'+s.k)||{}).value) || '').trim(); });
+  const sample = gdSampleCase();
+  let caseName, dirs = [], fuDir;
+  const keep = {caseName: saved.caseName, dirs: saved.dirs, fuDir: saved.fuDir};
+  try{
+    saved.caseName = typed.caseName; saved.dirs = typed.dirs; saved.fuDir = typed.fuDir;
+    caseName = gdCaseFolderName(sample.rec);
+    dirs = CF_STAGES.map(function(s){ return gdStageDir(s.k); });
+    fuDir = gdFuDirName();
+  } finally {
+    saved.caseName = keep.caseName; saved.dirs = keep.dirs; saved.fuDir = keep.fuDir;
+  }
+  const fuLab = (typeof fuLabels === 'function' ? (fuLabels()[0] || '8/52') : '8/52');
+  host.innerHTML =
+    '<div class="gp-h">What a new case folder will be called</div>'+
+    '<div class="gp-l"><code>'+esc(gdPickedRootId() ? (gdPickedRootLabel()||'your folder') : gdRootName())+
+      ' / <span class="gp-f">'+esc(caseName)+'</span></code></div>'+
+    '<div class="gp-l gp-in"><code>&#8627; '+
+      dirs.map(function(d){ return '<span class="gp-f">'+esc(d)+'</span>'; }).join(' &middot; ')+
+      ' &middot; <span class="gp-f">'+esc(fuDir)+'</span> / '+esc(String(fuLab))+'</code></div>'+
+    '<div class="gp-src" style="margin-top:7px">'+
+      (sample.real ? 'Using your most recent case, so you can see it with real details.'
+                   : 'Using an example — add a case to the registry and this shows a real one.')+
+    '</div>';
 }
 function gdHelp(){
   alert(
@@ -17010,6 +18062,14 @@ function gdHelp(){
     '     from, e.g.  https://yourclinic.example.com\n'+
     '     (Google will not accept a file:// path — the app has to be on a web address.)\n'+
     '6.  Copy the client ID it gives you and paste it into the box here.\n\n'+
+    'The API key — only if you want to file into folders you already have.\n\n'+
+    '7.  APIs & Services \u2192 Library \u2192 enable "Google Picker API".\n'+
+    '8.  APIs & Services \u2192 Credentials \u2192 Create credentials \u2192 API key.\n'+
+    '9.  Restrict it (recommended): Application restrictions \u2192 Websites \u2192 add the same\n'+
+    '     address as above; API restrictions \u2192 Google Picker API.\n'+
+    '10. Paste it into the API key box here.\n\n'+
+    'The key only lets Google show you the folder chooser. The app still cannot see\n'+
+    'anything in your Drive except the folders you point it at and the ones it made.\n\n'+
     'This address, right now, is:\n     '+location.origin+
     (gdSecureOrigin() ? '' : '\n\n⚠ That is not an address Google will accept. Put the file on a web\n     address, or open it from http://localhost while testing.')
   );
@@ -18485,7 +19545,7 @@ const DRAFT_FORMS={
       $('pAddress').value=p.address||''; $('pAllergies').value=p.allergies||'NKDA';
       tbSet('pMedHx', p.medHx||''); $('pSurgHx').value=p.surgHx||'';
       $('cComplaints').value=f.complaints||''; $('cFindings').value=f.findings||'';
-      $('cDiagnosis').value=f.diagnosis||''; $('cTests').value=f.tests||'';
+      $('cDiagnosis').value=f.diagnosis||''; tbValSet('cTests', f.tests||'');
       $('cPlan').value=f.plan||''; $('cProc').value=f.proc||'';
       tbSet('cNextTests', f.nextTests||''); $('cFollowUp').value=f.followUp||'';
       $('cFuDate').value=f.followUpDate||''; $('cFee').value=f.fee||'';
@@ -20873,10 +21933,8 @@ try{
       if(lv && lv.diagnosis && !$('mdtDx').value) $('mdtDx').value=lv.diagnosis;
       $('mdtPtSearch').value=''; toast('Patient selected: '+p.name);
       if(typeof refreshFieldStatus==='function') refreshFieldStatus(); });
-  tbInit('mdtImgMod', {items:MDT_IMG_CHIPS, title:'Studies', set:'mdtimg',
-                       free:'anything else, one per line', sep:'\n'});
-  tbInit('mdtPresent', {items:MDT_PRESENT_CHIPS, title:'Who was there', set:'mdtpresent',
-                        free:'anyone else'});
+  tbInit('mdtImgMod', {items:MDT_IMG_CHIPS, title:'Studies', set:'mdtimg', sep:'\n'});
+  tbInit('mdtPresent', {items:MDT_PRESENT_CHIPS, title:'Who was there', set:'mdtpresent'});
   tbInit('mtgPresent', {items:MDT_PRESENT_CHIPS, title:'Who was there', set:'mdtpresent',
                         free:'names and specialties'});
   ['mdtImgFind'].forEach(function(id){
@@ -20889,8 +21947,12 @@ try{
   ['cFindings','dcFindings','opNotes'].forEach(function(id){
     const slot=$(id+'Mx'); if(slot) slot.innerHTML = measureBtns(id); });
   hxInit('pMedHx'); hxInit('dcMedHx');
-  tbInit('cNextTests', {items:NEXT_TEST_CHIPS, sep:'\n', title:'Common tests', set:'nexttest',
-                        free:'anything else, one per line'});
+  /* Investigations and Bring-at-next-visit share the same three pickers — what he orders
+     and what he wants brought back are the same vocabulary. One per line, so a chip that
+     contains commas ("Bone profile: Ca, PO4, Vit D, PTH") survives the round trip. */
+  tbInit('cTests',     {groups:invGroups(), sep:'\n'});
+  tbInit('cNextTests', {groups:invGroups(), sep:'\n'});
+  if(typeof rxWatchDirty==='function') rxWatchDirty();
 }catch(e){}
 try{ if(typeof dsFavRender==='function') dsFavRender(); if(typeof dsRefreshTplSelect==='function') dsRefreshTplSelect(); }catch(e){}
 if(db.settings.sync && db.settings.sync.url && syncMode()!=='manual'){ setTimeout(()=>{ try{ startAutoSync(); }catch(e){} }, 1500); }
