@@ -806,11 +806,9 @@ tr.reg-rowsel{background:var(--teal-tint,rgba(20,140,140,.08))}
 .ro-badge{background:#fff7ed;border:1px solid #fed7aa;color:#9a5b00;border-radius:10px;padding:9px 13px;margin-bottom:14px;font-size:13px}
 body.dark .ro-badge, body[data-theme=dark] .ro-badge{background:rgba(154,91,0,.16);border-color:rgba(254,215,170,.35);color:#f6c88a}
 .viewonly .btn-green,.viewonly .btn-danger,.viewonly [data-edit-only]{display:none!important}
-/* ---- approvals, pinned to the top of the one bell ----
-   They used to scroll away under a day's worth of saves and edits. Now they sit in a sticky
-   block at the head of the panel: the activity list scrolls underneath them and they never
-   leave the screen while anything is waiting. Amber, so the panel reads at a glance as
-   "something needs you" rather than "here is what happened". */
+/* ---- the Review pane, at the head of the bell ----
+   Amber, so the panel reads at a glance as "something needs you" rather than "here is what
+   happened", and fixed above the feed so it cannot scroll away under the day's activity. */
 .notif-pin{background:#fff7ed;border-bottom:2px solid #f0a04b;
   box-shadow:0 6px 14px rgba(180,83,9,.13)}
 html[data-theme="dark"] .notif-pin{background:#2a1c08;border-bottom-color:#7a5a1c}
@@ -824,7 +822,8 @@ html[data-theme="dark"] .notif-pin .np-h{color:#fbbf24}
   font-size:10.5px;opacity:.8}
 .notif-pin .notif-sec{background:transparent;color:#b45309;padding-top:4px}
 html[data-theme="dark"] .notif-pin .notif-sec{color:#fbbf24}
-.notif-pin .notif-item{background:transparent;border-bottom-color:rgba(240,160,75,.35)}
+.notif-pin .notif-item,
+.notif-pin .notif-item.unread{background:transparent;border-bottom-color:rgba(240,160,75,.35)}
 .notif-pin .notif-item:last-child{border-bottom:none}
 .notif-pin .np-mine{opacity:.85}
 .na-chip{background:#ea580c;color:#fff;border-radius:999px;padding:2px 10px;font-size:11px;
@@ -1203,6 +1202,24 @@ html[data-theme="dark"] .gd-prev{background:#11202a}
 .rx-carry .rc-h{display:block;font-size:10px;font-weight:800;letter-spacing:.6px;
   text-transform:uppercase;color:var(--teal-dark);margin-bottom:2px}
 html[data-theme="dark"] .rx-carry{background:rgba(13,148,136,.10)}
+/* ---- a window of its own: registry analytics, and the not-ready list ---- */
+.rom-card.ana-card{width:min(1040px,96vw);max-height:92vh;overflow-y:auto;text-align:left;padding:16px 18px}
+.ana-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;
+  padding-bottom:10px;border-bottom:1px solid var(--line)}
+.ana-head h3{margin:0;font-size:16px;flex:1;min-width:150px}
+/* the three "not needed for this case" switches */
+.na-row{display:flex;flex-wrap:wrap;gap:5px}
+.na-sw{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);
+  color:var(--muted);border-radius:999px;padding:2px 10px 2px 4px;font-size:11px;font-weight:700;
+  cursor:pointer;width:auto;transition:.14s}
+.na-sw .na-k{width:24px;height:14px;border-radius:999px;background:var(--line);position:relative;
+  flex:none;transition:.14s}
+.na-sw .na-k::after{content:"";position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;
+  background:#fff;transition:.14s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.na-sw.on{border-color:var(--teal);color:var(--teal-dark);background:var(--teal-light)}
+.na-sw.on .na-k{background:var(--teal)}
+.na-sw.on .na-k::after{transform:translateX(10px)}
+html[data-theme="dark"] .na-sw.on{color:#7fd8cf}
 .gd-top{margin-top:14px}
 .gdt-on,.gdt-off{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
   border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--card)}
@@ -1646,6 +1663,39 @@ html[data-theme="dark"] .ph-n{background:#1b2b38}
 .notif-item.notif-undone{opacity:.62}
 .notif-item.notif-undone .ni-tx b{text-decoration:line-through}
 .notif-sec{padding:8px 14px 2px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+/* ---- the activity feed, read as a conversation ----
+   Your own actions on the right, everyone else's on the left, one colour per person. The
+   colour comes from the name itself (actColour), so it is the same on every device without
+   anything being stored to keep them in step. */
+.notif-legend{display:flex;flex-wrap:wrap;gap:4px 12px;padding:7px 14px;flex:none;
+  border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)}
+.notif-legend:empty{display:none}
+.notif-legend .nl-one{display:inline-flex;align-items:center;gap:5px;font-weight:600}
+.notif-legend .nl-one i{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+#notifBody{padding:4px 10px 12px}
+.na-day{display:flex;justify-content:center;margin:12px 0 8px}
+.na-day span{background:var(--hover,#eef3f6);color:var(--muted);border-radius:999px;
+  padding:2px 12px;font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+html[data-theme="dark"] .na-day span{background:#16242f}
+.na-row{display:flex;align-items:flex-end;gap:7px;margin-bottom:8px}
+.na-row.mine{justify-content:flex-end}
+.na-av{width:26px;height:26px;border-radius:50%;flex:none;color:#fff;font-size:10px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;letter-spacing:.3px;margin-bottom:2px}
+.na-b{max-width:82%;background:var(--na-bg);border:1px solid var(--line);
+  border-left:3px solid var(--na-c);border-radius:13px 13px 13px 4px;padding:7px 11px 5px;font-size:12.5px;
+  line-height:1.5;position:relative}
+.na-row.mine .na-b{border-left:1px solid var(--line);border-right:3px solid var(--teal);
+  border-radius:13px 13px 4px 13px}
+.na-who{font-size:10.5px;font-weight:800;letter-spacing:.2px;margin-bottom:1px}
+.na-tx .na-ic{margin-right:5px}
+.na-tx b{color:var(--ink)}
+.na-note{font-size:11px;color:var(--muted);margin-top:2px}
+.na-t{font-size:10px;color:var(--muted);text-align:right;margin-top:2px;letter-spacing:.2px}
+.na-row.fresh .na-b::after{content:"";position:absolute;top:-3px;right:-3px;width:9px;height:9px;
+  border-radius:50%;background:var(--na-c);border:2px solid var(--card)}
+.na-row.mine.fresh .na-b::after{background:var(--teal)}
+.na-row.undone .na-b{opacity:.6}
+.na-row.undone .na-tx b{text-decoration:line-through}
 @media(max-width:768px){ #notifBtn{display:none}
   #notifPanel{top:calc(56px + env(safe-area-inset-top));right:8px;left:8px;width:auto} }
 @media(min-width:769px){ #mBell{display:none} }
@@ -2426,6 +2476,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <button id="notifBtn" aria-label="Notifications" onclick="toggleNotif(event)">🔔<span class="notif-badge hidden" id="notifBadge">0</span></button>
 <div id="notifPanel" class="hidden">
   <div class="notif-head"><b>Notifications</b><span id="notifApprChip" class="hidden"></span><div><button class="btn btn-ghost btn-sm" onclick="markNotifRead()">Mark all read</button><button class="btn btn-ghost btn-sm" id="notifClearAll" onclick="clearAllNotifications()" title="Empty the whole panel">🗑 Clear all</button><button class="btn btn-ghost btn-sm" onclick="toggleNotif()">✕</button></div></div>
+  <div id="notifLegend" class="notif-legend"></div>
   <div id="notifPin"></div>
   <div id="notifBody"></div>
 </div>
@@ -2747,8 +2798,12 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   <div class="page-head">Appointment Book</div>
   <div class="card">
     <h2>Book an appointment</h2>
-    <div class="grid g3">
-      <div class="field"><label>Existing patient</label>
+    <!-- Three named blocks of four. The middle row used to hold four boxes in a
+         three-column grid, so the fourth wrapped onto a line of its own and left the
+         card looking half-finished whatever the screen width. -->
+    <div class="reg-subhead">Who</div>
+    <div class="grid g4">
+      <div class="field" style="grid-column:span 2"><label>Existing patient</label>
         <div class="med-search-wrap">
           <input type="text" id="apPtSearch" placeholder="Search by name, phone or MR #…" autocomplete="off">
           <div class="med-suggest" id="apPtSuggest"></div>
@@ -2757,32 +2812,32 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="field"><label>— or new patient name</label><input type="text" id="apName" autocomplete="off"></div>
       <div class="field"><label>Phone</label><input type="text" id="apPhone" placeholder="03xx-xxxxxxx" autocomplete="off"></div>
     </div>
-    <div class="grid g3 mt">
+    <div class="reg-subhead">Details</div>
+    <div class="grid g4">
       <div class="field"><label>Age</label><input type="text" id="apAge" placeholder="e.g. 34 y" autocomplete="off"></div>
       <div class="field"><label>Sex</label><select id="apSex"><option value=""></option><option>Male</option><option>Female</option></select></div>
-      <div class="field"><label>Address</label><input type="text" id="apAddress" placeholder="Town / area" autocomplete="off"></div>
-      <div class="field"><label>CNIC <span class="muted small" style="font-weight:400">(optional)</span></label>
-        <input type="text" id="apCnic" inputmode="numeric" placeholder="35202-1234567-1" autocomplete="off"
-          oninput="cnicFormat(this)" title="Saved with the patient record. Never printed unless you tick the CNIC box on the prescription."></div>
-    </div>
-    <div class="grid g4 mt">
       <div class="field"><label>Date of birth <span class="muted small" style="font-weight:400">(fills the age)</span></label>
         <input type="date" id="apDob" onchange="dobFillAge('apDob','apAge')"></div>
       <div class="field"><label>Blood group</label>
         <select id="apBlood"><option value=""></option>
           <option>A+</option><option>A−</option><option>B+</option><option>B−</option>
           <option>AB+</option><option>AB−</option><option>O+</option><option>O−</option></select></div>
+      <div class="field"><label>Address</label><input type="text" id="apAddress" placeholder="Town / area" autocomplete="off"></div>
       <div class="field"><label>Occupation</label>
-        <input type="text" id="apOccupation" list="occList" placeholder="e.g. Farmer, teacher, driver" autocomplete="off">
+        <input type="text" id="apOccupation" list="occList" placeholder="e.g. Farmer, teacher" autocomplete="off">
         <datalist id="occList"></datalist></div>
       <div class="field"><label>Referred by</label>
-        <input type="text" id="apRefBy" list="refByList" placeholder="e.g. Dr Asif, walk-in, Facebook" autocomplete="off">
+        <input type="text" id="apRefBy" list="refByList" placeholder="e.g. Dr Asif, walk-in" autocomplete="off">
         <datalist id="refByList"></datalist></div>
+      <div class="field"><label>CNIC <span class="muted small" style="font-weight:400">(optional)</span></label>
+        <input type="text" id="apCnic" inputmode="numeric" placeholder="35202-1234567-1" autocomplete="off"
+          oninput="cnicFormat(this)" title="Saved with the patient record. Never printed unless you tick the CNIC box on the prescription."></div>
     </div>
-    <div class="grid g3 mt">
+    <div class="reg-subhead">When</div>
+    <div class="grid g4">
       <div class="field"><label>Date</label><input type="date" id="apDate"></div>
-      <div class="field"><label>Time (optional)</label><input type="time" id="apTime"></div>
-      <div class="field"><label>Reason / note</label><input type="text" id="apNote" placeholder="e.g. Stitch removal, X-ray review…"></div>
+      <div class="field"><label>Time <span class="muted small" style="font-weight:400">(optional)</span></label><input type="time" id="apTime"></div>
+      <div class="field" style="grid-column:span 2"><label>Reason / note</label><input type="text" id="apNote" placeholder="e.g. Stitch removal, X-ray review…"></div>
     </div>
     <div class="btn-bar mt">
       <button class="btn btn-green" onclick="bookAppt()">📅 Book appointment</button>
@@ -3335,9 +3390,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   <div class="reg-kpis" id="regKpis"></div>
 
   <div class="card">
-    <div class="pending-banner hidden" id="regPendingBanner"></div>
     <div class="reg-toolbar">
       <button class="btn btn-green" onclick="regNew()">+ New registry entry</button>
+      <button class="btn btn-ghost" onclick="regShowAnalytics()" title="The numbers behind the registry, in a window of their own">📊 Analytics</button>
       <!-- housekeeping. Hidden entirely once every number is settled and every date is sane —
            there is nothing to check, so there is no reason for the buttons to sit there. -->
       <span id="regFixWrap" class="hidden" style="display:contents">
@@ -3391,10 +3446,15 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 
 
 
-  <!-- ANALYTICS -->
-  <div class="card" id="regAnalyticsCard">
-    <h2>Registry analytics</h2>
-    <div id="regAnalytics"></div>
+  <!-- ANALYTICS — a window of its own, off the button in the toolbar. It used to sit at
+       the foot of the case list, so reading it meant scrolling past every case. -->
+  <div id="regAnalyticsModal" class="rom-modal hidden" onclick="if(event.target===this) regHideAnalytics()">
+    <div class="rom-card ana-card" onclick="event.stopPropagation()">
+      <div class="ana-head"><h3>📊 Registry analytics</h3>
+        <span class="muted small" id="regAnaScope"></span>
+        <button class="btn btn-ghost btn-sm" onclick="regHideAnalytics()">✕ Close</button></div>
+      <div id="regAnalytics"></div>
+    </div>
   </div>
   </div>
 
@@ -3441,7 +3501,15 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   <div id="mdtListScreen" class="scr">
     <div class="mdt-kpis" id="mdtKpis"></div>
     <div id="mdtActionsCard" class="hidden"></div>
-    <div id="mdtReadyCard" class="hidden"></div>
+    <!-- the not-ready list lives behind the stat button now, not on the board -->
+    <div id="mdtReadyModal" class="rom-modal hidden" onclick="if(event.target===this) mdtHideReady()">
+      <div class="rom-card ana-card" onclick="event.stopPropagation()">
+        <div class="ana-head"><h3>📋 Not ready to discuss</h3>
+          <button class="btn btn-ghost btn-sm" onclick="mdtAgendaPrint()">🖨 Print the agenda</button>
+          <button class="btn btn-ghost btn-sm" onclick="mdtHideReady()">✕ Close</button></div>
+        <div id="mdtReadyBody"></div>
+      </div>
+    </div>
     <div class="card">
       <div class="reg-toolbar">
         <button class="btn btn-green" onclick="mdtNew()">＋ Submit a case</button>
@@ -6553,6 +6621,10 @@ function mdtRenderList(){
       '<div class="mdt-k" style="--k-c:#0d9488" onclick="mdtFilter(\'all\')"><div class="kv">'+open.length+'</div><div class="kl">Open cases</div></div>'+
       '<div class="mdt-k" style="--k-c:#dc2626" onclick="mdtFilter(\'all\')"><div class="kv">'+urgent+'</div><div class="kl">Marked urgent</div></div>'+
       '<div class="mdt-k" style="--k-c:#d97706" onclick="mdtFilter(\'ready\')"><div class="kv">'+ready+'</div><div class="kl">Ready for the MDT</div></div>'+
+      (function(){ const n=(typeof mdtReadyRows==='function')?mdtReadyRows().length:0;
+        return '<div class="mdt-k" style="--k-c:#0369a1" onclick="mdtShowReady()" '+
+          'title="Everything still missing before these cases can be discussed \u2014 opens the list">'+
+          '<div class="kv">'+n+'</div><div class="kl">Not ready to discuss</div></div>'; })()+
       '<div class="mdt-k" style="--k-c:#4f46e5" onclick="mdtShowMeetings()"><div class="kv">'+acts+'</div><div class="kl">Actions still open</div></div>'+
       (function(){ const o=(typeof mdtActionsOverdue==='function')?mdtActionsOverdue().length:0;
         return o ? '<div class="mdt-k" style="--k-c:#b91c1c" onclick="document.getElementById(\'mdtActionsCard\').scrollIntoView({behavior:\'smooth\'})">'+
@@ -6849,33 +6921,74 @@ function mdtCaseGaps(c){
   if(!String(c.reason||'').trim()) g.push('no question for the meeting');
   if(!String(c.keyFindings||'').trim()) g.push('no key findings');
   const im=(c.imaging||{}), pa=(c.pathology||{});
+  /* "Not required" is a clinical judgement about THIS case, not a shortcut: a soft-tissue
+     lump with no films needs no radiology review, and a case discussed on imaging alone
+     needs no histology. Marked so, it stops being counted as missing — which is the whole
+     reason the list was unreadable. `regNA` is the same idea for a case that is not going
+     into the tumour registry at all. */
   if((im.status||'pending')==='pending') g.push('imaging not reviewed');
   if((pa.status||'pending')==='pending') g.push('pathology not reviewed');
-  if(!c.registryId) g.push('not linked to a registry entry');
-  else if(!mdtPresItems(c).filter(function(it){ return it.kind==='img'; }).length) g.push('no pictures attached');
+  if(!c.registryId && !c.regNA) g.push('not linked to a registry entry');
+  else if(c.registryId && !mdtPresItems(c).filter(function(it){ return it.kind==='img'; }).length) g.push('no pictures attached');
   if(!((c.decision||{}).meetingId)) g.push('not on a meeting');
   return g;
 }
 function mdtAgendaRows(){
   return mdtFiltered().filter(function(c){ return c.stage!=='closed'; });
 }
-function renderMdtReady(){
-  const host=$('mdtReadyCard'); if(!host) return;
-  const rows=mdtAgendaRows().map(function(c){ return {c:c, g:mdtCaseGaps(c)}; })
-                            .filter(function(x){ return x.g.length; });
-  if(!rows.length){ host.innerHTML=''; host.classList.add('hidden'); return; }
-  host.classList.remove('hidden');
-  host.innerHTML='<div class="card"><div class="scr-head"><h2>\ud83d\udccb Not ready to discuss '+
-    '<span class="rx-count">'+rows.length+'</span></h2>'+
-    '<button class="btn btn-ghost btn-sm" onclick="mdtAgendaPrint()">\ud83d\udda8 Print the agenda</button></div>'+
-    '<table class="list"><thead><tr><th>Patient</th><th>Still needs</th><th style="width:90px"></th></tr></thead><tbody>'+
-    rows.map(function(x){
-      return '<tr><td><b>'+esc(x.c.name||'\u2014')+'</b>'+
-        (x.c.mrn?'<br><span class="small muted">'+esc(x.c.mrn)+'</span>':'')+'</td>'+
-        '<td class="small">'+x.g.map(function(t){ return '<span class="gap-chip">'+esc(t)+'</span>'; }).join(' ')+'</td>'+
-        '<td><button class="btn btn-ghost btn-sm" onclick="mdtEdit(\''+x.c.id+'\')">Open</button></td></tr>';
-    }).join('')+'</tbody></table></div>';
+function mdtReadyRows(){
+  return mdtAgendaRows().map(function(c){ return {c:c, g:mdtCaseGaps(c)}; })
+                        .filter(function(x){ return x.g.length; });
 }
+/* Turn one of the three "not needed" switches on or off, from the list itself — the point
+   of the list is to be worked through, and walking into each case to change one dropdown
+   was why it sat there growing instead. */
+function mdtSetNA(id, what, on){
+  const c=(db.mdt||[]).filter(function(x){ return x.id===id; })[0]; if(!c) return;
+  if(what==='img'){  c.imaging   = Object.assign({}, c.imaging||{},   {status: on?'na':'pending'}); }
+  if(what==='path'){ c.pathology = Object.assign({}, c.pathology||{}, {status: on?'na':'pending'}); }
+  if(what==='reg'){  c.regNA = !!on; }
+  syncTouch(c); persist();
+  renderMdtReady();
+  if(typeof renderMdt==='function') renderMdt();
+}
+function mdtNAState(c){
+  return {img:  ((c.imaging||{}).status||'pending')==='na',
+          path: ((c.pathology||{}).status||'pending')==='na',
+          reg:  !!c.regNA};
+}
+function mdtNAChip(c, what, label){
+  const on = mdtNAState(c)[what];
+  return '<button type="button" class="na-sw'+(on?' on':'')+'" '+
+    'onclick="mdtSetNA(\''+c.id+'\',\''+what+'\','+(on?'false':'true')+')" '+
+    'title="'+(on?'Counted as needed again':'Not needed for this case \u2014 stops being counted as missing')+'">'+
+    '<span class="na-k"></span>'+esc(label)+'</button>';
+}
+function renderMdtReady(){
+  const rows = mdtReadyRows();
+  const body = $('mdtReadyBody');
+  if(body){
+    body.innerHTML = rows.length
+      ? '<p class="muted small" style="margin:0 0 10px">Switch off anything this case does not need \u2014 it stops being counted as missing, and the list stays short enough to work through.</p>'+
+        '<table class="list"><thead><tr><th>Patient</th><th>Still needs</th>'+
+        '<th style="width:34%">Not needed for this case</th><th style="width:76px"></th></tr></thead><tbody>'+
+        rows.map(function(x){
+          return '<tr><td><b>'+esc(x.c.name||'\u2014')+'</b>'+
+            (x.c.mrn?'<br><span class="small muted">'+esc(x.c.mrn)+'</span>':'')+'</td>'+
+            '<td class="small">'+x.g.map(function(t){ return '<span class="gap-chip">'+esc(t)+'</span>'; }).join(' ')+'</td>'+
+            '<td class="na-row">'+mdtNAChip(x.c,'img','Radiology')+mdtNAChip(x.c,'path','Pathology')+
+              mdtNAChip(x.c,'reg','Registry link')+'</td>'+
+            '<td><button class="btn btn-ghost btn-sm" onclick="mdtHideReady();mdtEdit(\''+x.c.id+'\')">Open</button></td></tr>';
+        }).join('')+'</tbody></table>'
+      : '<div class="empty"><span class="ei">\u2705</span><b>Every case is ready</b><br>Nothing on the agenda is missing anything.</div>';
+  }
+}
+function mdtShowReady(){
+  renderMdtReady();
+  const m=$('mdtReadyModal'); if(m) m.classList.remove('hidden');
+}
+function mdtHideReady(){ const m=$('mdtReadyModal'); if(m) m.classList.add('hidden'); }
+
 /* the pack that goes to the team before the meeting */
 function mdtAgendaPrint(){
   const groups=mdtCompileGroups(mdtAgendaRows());
@@ -6973,7 +7086,7 @@ function mdtAttachRender(){
           (it.kind==='img'
             ? '<img data-img="'+esc(it.id)+'" alt="">'
             : '<div class="ma-doc">'+(/pdf/i.test(it.mime||it.name||'')?'\ud83d\udcd5':'\ud83d\udcc4')+'</div>')+
-          '<button class="ma-x" onclick="mdtAttachRemove(\''+s.k+'\',\''+it.id+'\')" title="Remove">\u2715</button>'+
+          '<button class="ma-x" onclick="mdtAttachRemove(\''+s.k+'\',\''+it.id+'\')" title="Remove">✕</button>'+
           '<div class="ma-n">'+esc(it.name||'')+'</div>'+
           (it.up!=='done'?'<span class="ma-up" title="Waiting for Google Drive">\u2601</span>':'')+
         '</div>';
@@ -7441,7 +7554,7 @@ function mdtPresEl(){
       '<span class="mp-tabs" id="mpTabs"></span>'+
       '<span style="flex:1"></span>'+
       '<span class="mp-pos" id="mpPos"></span>'+
-      '<button class="mp-x" onclick="mdtPresClose()" title="Close (Esc)">\u2715</button></div>'+
+      '<button class="mp-x" onclick="mdtPresClose()" title="Close (Esc)">✕</button></div>'+
       '<div class="mp-body" id="mpBody"></div>'+
       '<div class="mp-foot"><button class="mp-nav" onclick="mdtPresStep(-1)">\u2039 Back</button>'+
       '<span class="mp-hint"><span class="mp-slide" id="mpSlidePos"></span>'+
@@ -7461,7 +7574,7 @@ function mdtPresPickEl(){
   if(!el){
     el=document.createElement('div'); el.id='mdtPickWrap'; el.className='mdt-pick hidden';
     el.innerHTML='<div class="mk-card"><div class="mk-h">Present\u2026'+
-      '<button class="mk-x" onclick="mdtPresPickClose()">\u2715</button></div>'+
+      '<button class="mk-x" onclick="mdtPresPickClose()">✕</button></div>'+
       '<div class="mk-mtg" id="mkMtg"></div>'+
       '<div class="mk-tools"><button class="btn btn-ghost btn-sm" onclick="mdtPickAll(true)">Select all</button>'+
         '<button class="btn btn-ghost btn-sm" onclick="mdtPickAll(false)">None</button>'+
@@ -10060,6 +10173,11 @@ function clearVisitForm(ask){
   if(typeof hxPaint==='function') hxPaint('pMedHx');
   applyDefFu();
   refreshFieldStatus();
+  /* Back to the beginning, properly: the sidebar goes to Patient as well as the page going
+     to the top. Without this he presses Next patient from the follow-up pane, the form
+     empties, and he is left staring at an empty follow-up box wondering where the name
+     went. In Full form mode there is nothing to switch, so scrolling is the whole job. */
+  if(typeof railReveal==='function') try{ railReveal('visit','pName'); }catch(e){}
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -10372,7 +10490,7 @@ function patientTimeline(pid){
     title:(v.diagnosis||'Consultation').split('\n')[0],
     sub:[ (v.meds||[]).length ? (v.meds||[]).map(m=>m.name).join(', ') : '', v.followUp?('Follow-up: '+v.followUp):'' ].filter(Boolean).join(' \u00b7 '),
     tag:(v.images&&v.images.length)?('\ud83d\udcce '+v.images.length):'',
-    go:"reprintVisit('"+v.id+"')", goLbl:'\ud83d\udda8 Print'}));
+    go:"reprintVisit('"+v.id+"')", goLbl:'🖨 Print'}));
   (db.surgeries||[]).filter(mine).forEach(o=>ev.push({
     d:tlDay(o.date), ic:'\ud83e\uddb4', kind:'Operation', title:o.procedure||'Operation',
     sub:[o.diagnosis, o.implant, o.complications&&('\u26a0 '+o.complications)].filter(Boolean).join(' \u00b7 '),
@@ -11263,11 +11381,9 @@ function renderHome(){
   const nAppr = (typeof apprCount==='function') ? apprCount() : 0;
   if(nAppr){
     const d = apprData();
-    const bits = [];
-    if(d.access.length)  bits.push('<b>'+d.access.length+' new account'+(d.access.length>1?'s':'')+'</b> ('+esc(d.access.map(u=>u.name).join(', '))+')');
-    if(d.changes.length) bits.push('<b>'+d.changes.length+' registry change'+(d.changes.length>1?'s':'')+'</b>');
-    $('homeApproval').innerHTML = '<div class="home-approve"><span>\u2705</span>'+
-      '<span style="flex:1">'+bits.join(' and ')+' waiting for your approval.</span>'+
+    $('homeApproval').innerHTML = '<div class="home-approve"><span>\ud83d\ude4b</span>'+
+      '<span style="flex:1"><b>'+d.access.length+' person'+(d.access.length>1?'s are':' is')+
+      '</b> asking for access to the clinic ('+esc(d.access.map(u=>u.name).join(', '))+').</span>'+
       '<button class="btn btn-primary btn-sm" onclick="toggleNotif(event)">Review</button></div>';
   } else {
     $('homeApproval').innerHTML = '';
@@ -11552,6 +11668,51 @@ setupSuggest('qPtSearch','qPtSuggest',
 );
 $('qPtSearch').addEventListener('input', function(){ if(!this.value.trim()){ qPatientId=null; $('qLinkedLabel').textContent=''; } });
 function todayQueue(){ const d = localISO(); return db.queue.filter(q=>q.date===d); }
+
+/* ---- two people, one token ----
+   `token` is issued as "the highest one I can see, plus one". On one device that is
+   correct. On two it is not: the desk adds a patient on the phone while the doctor adds
+   one on the PC, neither has seen the other's row yet, and both are handed token 4. The
+   rows have different ids so they both survive the sync, and two people are called by the
+   same number. This is the same shape of fault as the per-device medicine counter in §4 of
+   the blueprint, and it cannot be prevented by a cleverer counter — there is no shared
+   clock to count against.
+
+   So it is repaired instead, on exactly the terms the registry uses for its numbers (§8):
+   a day that is already tidy is left completely alone, a clash is settled by ARRIVAL TIME
+   so whoever was handed the number first keeps it, and the doctor is TOLD OUT LOUD how
+   many moved. A token must never change quietly — somebody is holding a slip with it. */
+function qTokensClash(rows){
+  const seen = {};
+  for(let i=0;i<rows.length;i++){
+    const t = rows[i].token;
+    if(!t || seen[t]) return true;
+    seen[t] = 1;
+  }
+  return false;
+}
+function qFixTokens(loud){
+  const rows = todayQueue();
+  if(rows.length < 2 || !qTokensClash(rows)) return 0;
+  /* arrival order, and the id as a tie-break so two devices settle on the same answer */
+  const order = rows.slice().sort(function(a,b){
+    const at = String(a.at||''), bt = String(b.at||'');
+    return at === bt ? String(a.id).localeCompare(String(b.id)) : at.localeCompare(bt);
+  });
+  let moved = 0;
+  order.forEach(function(q, i){
+    const want = i + 1;
+    if(q.token !== want){ q.token = want; syncTouch(q); moved++; }
+  });
+  if(moved){
+    persist();
+    if(loud){
+      toast('\u26a0 '+moved+' token'+(moved===1?' was':'s were')+' renumbered \u2014 two devices had given out the same number');
+      logActivity('edit','queue', moved+' token'+(moved===1?'':'s')+' renumbered after a clash');
+    }
+  }
+  return moved;
+}
 function addToQueue(){
   let name='', phone='', pid=null;
   if(qPatientId){
@@ -11575,12 +11736,42 @@ function addToQueue(){
 function startFromQueue(id){
   const q = db.queue.find(x=>x.id===id); if(!q) return;
   clearVisitForm(false);
-  if(q.patientId) linkPatient(q.patientId);
-  else { $('pName').value=q.name; $('pPhone').value=q.phone||''; $('pAge').value=q.age||''; $('pSex').value=q.sex||''; $('pAddress').value=q.address||''; }
+  let past = 0;
+  if(q.patientId){
+    linkPatient(q.patientId);
+    past = (db.visits||[]).filter(function(v){ return v.patientId===q.patientId; }).length;
+  } else {
+    $('pName').value=q.name; $('pPhone').value=q.phone||''; $('pAge').value=q.age||''; $('pSex').value=q.sex||''; $('pAddress').value=q.address||'';
+  }
   startVisitTimer();
   activeQueueId = id;
   showTab('visit');
-  toast('Token '+q.token+' — '+q.name+' (queue entry will be marked seen when you save)');
+  /* A patient who has been before is a FOLLOW-UP, and the form should say so and offer what
+     it already knows — the same carry-forward b71 put on the patient screen, and the same
+     "this will be a new, separate visit" banner. Coming in off the queue is the commonest
+     way he opens a returning patient, and it was the one route that said nothing at all. */
+  if(past){
+    if(typeof updateEditBanner==='function') updateEditBanner('newfollowup');
+    if(typeof rxCarryRender==='function') rxCarryRender();
+    if(typeof repeatBtnRefresh==='function') repeatBtnRefresh();
+  }
+  /* …and land at the TOP of the form. `clearVisitForm` puts the rail back to Patient, but
+     it ran while this tab was still hidden, so the scroll went nowhere. Do it after. */
+  if(typeof railReveal==='function') try{ railReveal('visit','pName'); }catch(e){}
+  window.scrollTo({top:0, behavior:'smooth'});
+  toast(past ? ('Token '+q.token+' — '+q.name+' \u00b7 follow-up, visit '+(past+1))
+             : ('Token '+q.token+' — '+q.name+' (marked seen when you save)'));
+}
+/* Seen without a prescription — he looked at the wound, sent them away, nothing to print.
+   It is the same 'done' state a saved prescription sets, so the day's counts stay true. */
+function markSeen(id){
+  const q = db.queue.find(x=>x.id===id); if(!q) return;
+  q.status = 'done';
+  q.seenAt = q.seenAt || new Date().toISOString();
+  syncTouch(q);
+  if(activeQueueId===id) activeQueueId = null;
+  persist(); renderQueue(); updateQNavCount();
+  toast('Token '+q.token+' — '+q.name+' marked seen');
 }
 function setQueueStatus(id, st){
   const q = db.queue.find(x=>x.id===id); if(!q) return;
@@ -11602,6 +11793,7 @@ function updateQNavCount(){
 }
 function renderQueue(){
   $('qDateLabel').textContent = fmtDate(localISO());
+  qFixTokens(true);                       // a clash is repaired before anyone reads the list
   const rows = todayQueue().sort((a,b)=>a.token-b.token);
   const waiting = rows.filter(q=>q.status==='waiting');
   $('qStats').innerHTML =
@@ -11621,6 +11813,7 @@ function renderQueue(){
       '<td>'+stChip+'</td>'+
       '<td>'+(q.status==='waiting'
         ? '<button class="btn btn-primary btn-sm" onclick="startFromQueue(\''+q.id+'\')">▶ Start prescription</button> '+
+          '<button class="btn btn-green btn-sm" onclick="markSeen(\''+q.id+'\')" title="Seen, with nothing to print \u2014 counts towards the day the same as a saved prescription">✓ Seen</button> '+
           '<button class="btn btn-ghost btn-sm" onclick="setQueueStatus(\''+q.id+'\',\'noshow\')">No-show</button> '
         : '<button class="btn btn-ghost btn-sm" onclick="setQueueStatus(\''+q.id+'\',\'waiting\')">↩ Back to waiting</button> ')+
         '<button class="btn btn-danger btn-sm" onclick="removeFromQueue(\''+q.id+'\')">✕</button></td></tr>';
@@ -12835,7 +13028,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.11-b72';
+const APP_BUILD = '2026.08.11-b76';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -13193,80 +13386,49 @@ function notifData(){
   // "Clear all" hides what was on screen at the time; anything that arrives afterwards shows again
   const fresh = (t)=> !cut || String(t||'') > cut;
   const pending = owner ? (db.users||[]).filter(u=>u.status==='pending' && fresh(u.requestedAt||u.updatedAt)) : [];
-  const changes = (owner ? pendingList() : pendingList().filter(p=>p.byId===(currentUser&&currentUser.id)))
-    .filter(p=>!p.dismissedAt && fresh(p.at));
-  const acts = (db.activity||[]).filter(a=>fresh(a.at)).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  /* oldest first — the feed reads like a conversation, newest at the bottom */
+  const acts = (db.activity||[]).filter(a=>fresh(a.at)).slice().sort((a,b)=>String(a.at).localeCompare(String(b.at)));
   const unread = acts.filter(a=>!a.read).length;
-  return {owner, pending, changes, acts, unread};
+  return {owner, pending, acts, unread};
 }
-/* ==================== APPROVALS — their own bell ====================
-   Approvals used to sit at the top of the activity panel. On a busy day forty edits, saves
-   and deletes pile in underneath and the two things that actually need a decision — somebody
-   waiting for access, a registry change waiting to be let in — scroll away and get missed.
+/* ==================== REVIEW — the pane at the head of the bell ====================
+   Two feeds, one bell, and they never mix:
+     \ud83d\udd14  activity  — what happened. Nothing here needs you.
+     \ud83d\ude4b  review    — what is waiting ON you. Pinned above the feed so a day's worth
+                  of saves and edits cannot bury it, which is exactly how it used to
+                  get missed.
 
-   So they have their own bell now, and the two feeds never mix:
-     🔔  activity   — what happened. Nothing here needs you.
-     ✅  approvals  — what is waiting on YOU. Amber, and it pulses until it is empty.
-
-   Crucially, "Clear all" on the activity panel no longer touches approvals. An approval
-   leaves this list when it is approved or rejected, and at no other time.               */
+   "Clear all" empties the activity feed and never touches Review. Something leaves Review
+   when it is dealt with, and at no other time.                                          */
 function apprData(){
   const owner = (typeof isOwnerNow === 'function') ? isOwnerNow() : false;
   const users = (db.users||[]).filter(function(u){ return u.status === 'pending'; });
-  const all   = (typeof pendingList === 'function') ? pendingList() : [];
-  const mine  = all.filter(function(p){ return p.byId === (currentUser && currentUser.id); });
-  return {owner: owner,
-          access: owner ? users : [],
-          changes: owner ? all : [],
-          waiting: owner ? [] : mine};      // a staff member's own, shown for information
+  return {owner: owner, access: owner ? users : []};
 }
-/* the badge counts only what needs a decision FROM YOU */
-function apprCount(){ const d = apprData(); return d.access.length + d.changes.length; }
-function apprWaiting(){ return apprData().waiting.length; }
+function apprCount(){ return apprData().access.length; }
 
-/* The approvals block that gets pinned to the head of the one bell. It is built here rather
-   than inside renderNotif so it stays a single, self-contained thing — approvals are the part
-   that must never quietly change shape. */
+/* The Review pane, at the head of the bell.
+
+   It used to also carry "registry changes to approve" — staff edits queued for the owner.
+   That workflow was dropped builds ago: `submitPendingChange()` lost its last caller and
+   staff now save to the registry directly. What survived was the scaffolding — a pane
+   headed "Needs you", a registry banner and a home banner, all announcing an approval
+   queue that could never fill. b74 removes all of it, and what is left is one pane called
+   REVIEW holding the only thing that genuinely still waits on the doctor: somebody asking
+   for access to the clinic. Empty, it does not render at all. */
 function apprHTML(){
-  const d = apprData(), n = apprCount(), w = apprWaiting();
-  if(!n && !w) return '';
-  let h = '<div class="notif-pin"><div class="np-h">'+
-    (n ? 'Needs you <span class="np-n">'+n+'</span>' : 'Waiting on the owner')+
-    '<span class="np-pin">\ud83d\udccc pinned</span></div>';
-  if(d.access.length){
-    h += '<div class="notif-sec">Access requests</div>';
-    d.access.forEach(function(u){
-      h += '<div class="notif-item unread"><span class="ni-ic">\ud83d\ude4b</span><div class="ni-tx">'+
-        '<b>'+esc(u.name)+'</b> is requesting access'+
-        '<div class="ni-sub">'+esc(u.email||u.uid||'')+(u.requestedAt?' \u00b7 '+timeAgo(u.requestedAt):'')+'</div>'+
-        '<div class="btn-bar" style="margin-top:6px">'+
-          '<button class="btn btn-green btn-sm" onclick="approveUser(\''+u.id+'\')">Approve &amp; set access</button> '+
-          '<button class="btn btn-ghost btn-sm" onclick="denyUser(\''+u.id+'\')">Reject</button>'+
-        '</div></div></div>';
-    });
-  }
-  if(d.changes.length){
-    h += '<div class="notif-sec">Registry changes to approve</div>';
-    d.changes.forEach(function(p){
-      h += '<div class="notif-item unread"><span class="ni-ic">'+(p.op==='edit'?'\u270f\ufe0f':'\u2795')+'</span><div class="ni-tx">'+
-        '<b>'+esc(p.by||'A user')+'</b> wants to '+(p.op==='edit'?'edit':'add')+
-        ' registry <b>'+esc(p.label||'')+'</b>'+
-        '<div class="ni-sub">'+timeAgo(p.at)+'</div>'+
-        '<div class="btn-bar" style="margin-top:6px">'+
-          '<button class="btn btn-green btn-sm" onclick="approvePendingChange(\''+p.id+'\')">Approve</button> '+
-          '<button class="btn btn-ghost btn-sm" onclick="rejectPendingChange(\''+p.id+'\')">Reject</button>'+
-        '</div></div></div>';
-    });
-  }
-  if(d.waiting.length){
-    h += '<div class="notif-sec">Your changes, waiting for the owner</div>';
-    d.waiting.forEach(function(p){
-      h += '<div class="notif-item np-mine"><span class="ni-ic">\u23f3</span><div class="ni-tx">'+
-        'You asked to '+(p.op==='edit'?'edit':'add')+' registry <b>'+esc(p.label||'')+'</b>'+
-        '<div class="ni-sub">'+timeAgo(p.at)+' \u00b7 waiting for the clinic owner</div>'+
-      '</div></div>';
-    });
-  }
+  const d = apprData(), n = apprCount();
+  if(!n) return '';
+  let h = '<div class="notif-pin"><div class="np-h">Review <span class="np-n">'+n+'</span></div>';
+  d.access.forEach(function(u){
+    h += '<div class="notif-item unread"><span class="ni-ic">\ud83d\ude4b</span><div class="ni-tx">'+
+      '<b>'+esc(u.name)+'</b> is asking for access to the clinic'+
+      '<div class="ni-sub">'+esc(u.email||u.uid||'')+(u.requestedAt?' \u00b7 '+timeAgo(u.requestedAt):'')+'</div>'+
+      '<div class="btn-bar" style="margin-top:6px">'+
+        '<button class="btn btn-green btn-sm" onclick="approveUser(\''+u.id+'\')">Let them in &amp; set access</button> '+
+        '<button class="btn btn-ghost btn-sm" onclick="denyUser(\''+u.id+'\')">Reject</button>'+
+      '</div></div></div>';
+  });
   return h + '</div>';
 }
 
@@ -13275,7 +13437,7 @@ function apprHTML(){
    and while something is waiting it turns amber and pulses — so the bell itself, not just
    the panel, tells you the difference between "things happened" and "you are holding
    something up". */
-function notifCount(){ return notifData().unread + apprCount() + apprWaiting(); }
+function notifCount(){ return notifData().unread + apprCount(); }
 function renderNotif(){
   const d=notifData(), n=notifCount(), a=apprCount();
   ['notifBadge','mBellBadge'].forEach(id=>{ const b=$(id); if(b){
@@ -13284,27 +13446,108 @@ function renderNotif(){
     b.classList.toggle('appr', a>0); } });
   ['notifBtn','mBell'].forEach(id=>{ const b=$(id); if(b){
     b.classList.toggle('has-appr', a>0);
-    b.title = a ? (a+' item'+(a===1?'':'s')+' waiting for your approval, pinned to the top')
+    b.title = a ? (a+' to review, at the top of the panel')
                 : 'Notifications'; } });
   const chip=$('notifApprChip');
-  if(chip){ chip.textContent = a ? (a+' need'+(a===1?'s':'')+' you') : '';
+  if(chip){ chip.textContent = a ? (a+' to review') : '';
             chip.className = a ? 'na-chip' : 'hidden'; }
   const body=$('notifBody'); if(!body) return;
-  /* Approvals live in their own fixed pane above the activity list, so the list scrolls
-     underneath them and they cannot be buried under a day's worth of saves and edits —
-     which is exactly how they used to get missed. */
   const pin = $('notifPin'); if(pin) pin.innerHTML = apprHTML();
-  let h = '';
-  if(d.acts.length){
-    h+='<div class="notif-sec" style="display:flex;justify-content:space-between;align-items:center">Recent activity <button class="btn btn-ghost btn-sm" style="padding:1px 9px;font-size:11px" onclick="clearActivity()">Clear</button></div>';
-    d.acts.slice(0,40).forEach(a=>{ h+='<div class="notif-item'+(a.read?'':' unread')+(a.undone?' notif-undone':'')+'"><span class="ni-ic">'+(a.undone?'\u21a9':actIcon(a.action))+'</span>'+
-      '<div class="ni-tx">'+esc(actVerb(a.action))+' '+esc(a.kind||'')+' <b>'+esc(a.label||'')+'</b>'+
-      '<div class="ni-sub">'+esc(a.who||'someone')+' · '+timeAgo(a.at)+'</div>'+
-      (undoCanUndo(a)? '<div class="btn-bar" style="margin-top:6px"><button class="btn btn-ghost btn-sm" onclick="undoActivity(\''+a.id+'\')" title="Put this record back the way it was">\u21a9 Undo</button></div>' : '')+
-      (a.undone? '<div class="ni-sub">\u21a9 undone'+(a.undoneBy?' by '+esc(a.undoneBy):'')+'</div>' : '')+
-      '</div></div>'; });
-  }
-  body.innerHTML = h || '<div class="notif-empty">You’re all caught up 🎉</div>';
+  const leg = $('notifLegend'); if(leg) leg.innerHTML = actLegendHTML(d.acts);
+  body.innerHTML = actFeedHTML(d.acts);
+  /* newest at the bottom, like any chat — so open it and you are already looking at the
+     latest thing that happened rather than scrolling down to find it */
+  body.scrollTop = body.scrollHeight;
+}
+
+/* ==================== THE FEED, READ AS A CONVERSATION ====================
+   The activity list was a flat column of rows, and on a shared clinic the one thing you
+   actually want from it — "who did that?" — was a grey line of small print under every
+   entry, identical for everyone.
+
+   So it is laid out like a chat: **your own actions on the right, everyone else's on the
+   left**, each colleague with their own colour, an initialled avatar and their name over
+   the bubble. You can tell at a glance whose morning it was without reading a word.
+
+   Two things make it honest rather than decorative:
+     * the colour is derived from the person, not assigned in order of appearance, so
+       Nadia is the same violet on the phone, the iPad and the PC without anything being
+       stored or synced to keep them in step;
+     * "mine" is decided by user id where the record has one and by name where it does
+       not, so activity written before b74 still lands on the correct side.            */
+const ACT_COLOURS = [
+  ['#0d9488','rgba(13,148,136,.13)'],  ['#4f46e5','rgba(79,70,229,.13)'],
+  ['#b45309','rgba(180,83,9,.14)'],    ['#be123c','rgba(190,18,60,.12)'],
+  ['#15803d','rgba(21,128,61,.13)'],   ['#7c3aed','rgba(124,58,237,.13)'],
+  ['#0369a1','rgba(3,105,161,.13)'],   ['#c2410c','rgba(194,65,12,.13)']
+];
+function actColour(who){
+  const k = String(who||'?').trim().toLowerCase();
+  let h = 0;
+  for(let i=0;i<k.length;i++){ h = (h*31 + k.charCodeAt(i)) >>> 0; }
+  return ACT_COLOURS[h % ACT_COLOURS.length];
+}
+function actInitials(who){
+  const parts = String(who||'').trim().split(/\s+/).filter(Boolean);
+  if(!parts.length) return '?';
+  if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+  return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+}
+function actIsMine(a){
+  if(!currentUser) return false;
+  if(a && a.byId) return a.byId === currentUser.id;
+  return String((a&&a.who)||'').trim().toLowerCase() === String(currentUser.name||'').trim().toLowerCase();
+}
+function actDayLabel(iso){
+  const d = String(iso||'').slice(0,10);
+  const today = localISO(new Date());
+  const yday  = localISO(new Date(Date.now()-86400000));
+  if(d === today) return 'Today';
+  if(d === yday)  return 'Yesterday';
+  return (typeof fmtDate==='function') ? fmtDate(d) : d;
+}
+function actTime(iso){
+  const t = new Date(iso);
+  if(isNaN(t)) return '';
+  return t.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+}
+/* who is in this feed, and what colour they are — so the colours mean something the
+   first time he opens it rather than after he has worked them out */
+function actLegendHTML(acts){
+  const seen = {}, out = [];
+  (acts||[]).forEach(function(a){
+    const w = String(a.who||'').trim(); if(!w) return;
+    const k = w.toLowerCase(); if(seen[k]) return; seen[k] = 1;
+    out.push({who:w, mine:actIsMine(a)});
+  });
+  if(out.length < 2) return '';
+  return out.slice(0,6).map(function(o){
+    const c = o.mine ? ['var(--teal)'] : actColour(o.who);
+    return '<span class="nl-one"><i style="background:'+c[0]+'"></i>'+esc(o.mine ? 'You' : o.who)+'</span>';
+  }).join('');
+}
+function actFeedHTML(acts){
+  if(!acts || !acts.length) return '<div class="notif-empty">You\u2019re all caught up \ud83c\udf89</div>';
+  let h = '', day = '';
+  acts.slice(-120).forEach(function(a){
+    const dl = actDayLabel(a.at);
+    if(dl !== day){ day = dl; h += '<div class="na-day"><span>'+esc(dl)+'</span></div>'; }
+    const mine = actIsMine(a);
+    const who  = String(a.who||'').trim() || 'someone';
+    const c    = actColour(who);
+    h += '<div class="na-row'+(mine?' mine':'')+(a.read?'':' fresh')+(a.undone?' undone':'')+'">'+
+      (mine ? '' : '<span class="na-av" style="background:'+c[0]+'" title="'+esc(who)+'">'+esc(actInitials(who))+'</span>')+
+      '<div class="na-b" style="--na-c:'+c[0]+';--na-bg:'+(mine?'var(--teal-light,rgba(20,140,140,.12))':c[1])+'">'+
+        (mine ? '' : '<div class="na-who" style="color:'+c[0]+'">'+esc(who)+'</div>')+
+        '<div class="na-tx"><span class="na-ic">'+(a.undone?'\u21a9':actIcon(a.action))+'</span>'+
+          esc(actVerb(a.action))+' '+esc(a.kind||'')+' <b>'+esc(a.label||'')+'</b></div>'+
+        (a.undone ? '<div class="na-note">\u21a9 undone'+(a.undoneBy?' by '+esc(a.undoneBy):'')+'</div>' : '')+
+        (undoCanUndo(a) ? '<div class="btn-bar" style="margin-top:5px"><button class="btn btn-ghost btn-sm" '+
+            'onclick="undoActivity(\''+a.id+'\')" title="Put this record back the way it was">\u21a9 Undo</button></div>' : '')+
+        '<div class="na-t">'+esc(actTime(a.at))+'</div>'+
+      '</div></div>';
+  });
+  return h;
 }
 let notifOpen=false;
 function toggleNotif(e, forceClose){
@@ -13315,17 +13558,12 @@ function toggleNotif(e, forceClose){
   if(show){ renderNotif(); setTimeout(()=>{ (db.activity||[]).forEach(a=>a.read=true); persist(); renderNotif(); }, 1500); }
 }
 function markNotifRead(){ (db.activity||[]).forEach(a=>a.read=true); persist(); renderNotif(); }
-/* Empty the whole panel on demand. Anything that still needs a decision from you —
-   somebody waiting for access, a registry change waiting for approval — is counted
-   and named in the confirmation, so nothing actionable disappears without you
-   knowing it did. Records themselves are never touched. */
-/* Empties the ACTIVITY feed. It can no longer sweep away an approval by accident — that
-   was the whole reason approvals were moved out from under it. An approval leaves the
-   approvals bell when it is approved or rejected, and at no other time. */
+/* Empties the ACTIVITY feed only. It cannot sweep away something waiting on you — that is
+   the whole reason Review sits in its own pane. Records are never touched. */
 async function clearAllNotifications(){
   const live = (typeof apprCount==='function') ? apprCount() : 0;
   let msg='Clear the activity feed?\n\nIt will be emptied on this device and across your other devices. Your records are not affected.';
-  if(live) msg += '\n\n\u2705 '+live+' approval'+(live===1?'':'s')+' will be left alone — they stay on the approvals bell until you approve or reject them.';
+  if(live) msg += '\n\n\ud83d\ude4b '+live+' item'+(live===1?'':'s')+' in Review will be left alone — they stay there until you deal with them.';
   if(!confirm(msg)) return;
   const now=new Date().toISOString();
   db.activity=[]; db.settings.activityClearedAt=now;
@@ -13334,7 +13572,7 @@ async function clearAllNotifications(){
   renderNotif();
   if(typeof renderActivityLog==='function') renderActivityLog();
   if(typeof syncPushActivity==='function') syncPushActivity().catch(()=>{});
-  toast(live ? 'Activity cleared — '+live+' approval'+(live===1?'':'s')+' still waiting'
+  toast(live ? 'Activity cleared — '+live+' still in Review'
              : 'Activity cleared');
 }
 async function clearActivity(){
@@ -15874,59 +16112,11 @@ function regSave(){
   toast(extra ? ('Registry entry saved — '+extra)
     : ('Registry entry saved — No. '+(saved.regNo||'')+(regHasSurgDate(saved)?'':' (provisional — add the date of surgery)')));
 }
-/* ---- pending-change queue (owner approval for staff registry adds/edits) ---- */
-function submitPendingChange(op, targetId, payload, label){
-  db.pendingChanges = db.pendingChanges||[];
-  const pc={id:uid('pc'), kind:'registry', op:op, targetId:targetId, payload:payload, label:label,
-    by:(currentUser?currentUser.name:''), byId:(currentUser?currentUser.id:''), at:new Date().toISOString(), status:'pending'};
-  db.pendingChanges.push(pc);
-  persist();
-  if(typeof syncPushPending==='function' && navigator.onLine){ clearTimeout(window.__pcPush); window.__pcPush=setTimeout(()=>syncPushPending().catch(()=>{}),1200); }
-  if(typeof renderNotif==='function') renderNotif();
-  if(typeof regRenderPendingBanner==='function') regRenderPendingBanner();
-}
-function pendingList(){ return (db.pendingChanges||[]).filter(p=>p.status==='pending'); }
-function approvePendingChange(id){
-  const pc=(db.pendingChanges||[]).find(x=>x.id===id); if(!pc) return;
-  if(pc.kind==='registry'){
-    if(pc.op==='edit' && pc.targetId){
-      const ex=db.registry.find(x=>x.id===pc.targetId);
-      if(ex){ Object.assign(ex, pc.payload, {updatedAt:syncStamp(), updatedBy:pc.by}); }
-      else { db.registry.push(Object.assign({}, pc.payload, {id:pc.targetId||uid('reg'), createdAt:new Date().toISOString(), by:pc.by})); }
-    } else {
-      db.registry.push(Object.assign({}, pc.payload, {id:uid('reg'), createdAt:new Date().toISOString(), by:pc.by, approvedBy:byTag()}));
-    }
-  }
-  pc.status='approved'; pc.resolvedAt=new Date().toISOString(); pc.resolvedBy=byTag();
-  logActivity(pc.op==='edit'?'edit':'add','registry',pc.label+' (approved)');
-  persist();
-  if(typeof syncPushPending==='function') syncPushPending().catch(()=>{});
-  renderNotif(); if(typeof renderRegistry==='function') renderRegistry();
-  toast('Approved — record updated');
-}
-function rejectPendingChange(id){
-  const pc=(db.pendingChanges||[]).find(x=>x.id===id); if(!pc) return;
-  if(!confirm('Reject '+(pc.by?pc.by+'’s ':'')+'change to “'+(pc.label||'this entry')+'”? It will not be applied.')) return;
-  pc.status='rejected'; pc.resolvedAt=new Date().toISOString(); pc.resolvedBy=byTag();
-  persist();
-  if(typeof syncPushPending==='function') syncPushPending().catch(()=>{});
-  renderNotif();
-  toast('Change rejected');
-}
-function myPendingCount(){ return pendingList().filter(p=>p.byId===(currentUser&&currentUser.id)).length; }
-function regRenderPendingBanner(){
-  const host=$('regPendingBanner'); if(!host) return;
-  const owner=isOwnerNow();
-  const list=pendingList();
-  if(owner){
-    host.classList.toggle('hidden', list.length===0);
-    if(list.length) host.innerHTML='📩 <b>'+list.length+'</b> registry change'+(list.length>1?'s':'')+' awaiting your approval — open the 🔔 notifications to review.';
-  } else {
-    const mine=myPendingCount();
-    host.classList.toggle('hidden', mine===0);
-    if(mine) host.innerHTML='⏳ <b>'+mine+'</b> of your change'+(mine>1?'s are':' is')+' waiting for the clinic owner’s approval.';
-  }
-}
+/* The pending-change queue (staff registry edits held for the owner's approval) was
+   removed at b74 — it had lost its last caller builds earlier and only its scaffolding
+   was left on screen. `db.pendingChanges` and its place in SYNC_COLLS are deliberately
+   untouched: emptying a synced collection to tidy up is how records get lost, and any
+   rows still out there are inert. Nothing reads them. */
 
 /* ---- patient linking (MR stays editable) ---- */
 function regUpdateLinkLine(){
@@ -16251,19 +16441,39 @@ function regBar(title, pairs){
     pairs.map(p=>'<div class="bar-row"><span>'+esc(p[0])+'</span><div class="bar-track"><div class="bar-fill" style="width:'+(p[1]/max*100)+'%"></div></div><span>'+p[1]+'</span></div>').join('')+'</div>';
 }
 function regCount(R,key,norm){ const m={}; R.forEach(r=>{ let v=r[key]; if(!v) return; if(norm) v=norm(v); m[v]=(m[v]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]); }
+/* The analytics used to sit at the foot of the case list, so reading it meant scrolling
+   past every case in the registry. It is the same block of numbers, in a window. */
+function regShowAnalytics(){
+  const m=$('regAnalyticsModal'); if(!m) return;
+  regRenderAnalytics();
+  const n=(db.registry||[]).filter(function(r){ return (typeof regIsCase!=='function') || regIsCase(r); }).length;
+  const sc=$('regAnaScope'); if(sc) sc.textContent = n+' case'+(n===1?'':'s')+' in the registry';
+  m.classList.remove('hidden');
+}
+function regHideAnalytics(){ const m=$('regAnalyticsModal'); if(m) m.classList.add('hidden'); }
 function regRenderAnalytics(){
-  const R=db.registry||[]; const host=$('regAnalytics');
+  /* Two things the blueprint already required and this function was not doing.
+     §8: a records-only FOLDER is not a registry case — "excluded from the list, the KPIs,
+     the analytics, the exports…". It was being counted here, so the totals and every rate
+     below them were computed over films-and-reports folders as well as real cases.
+     §10: coded values must read as words. `site` and `primaryTissue` are stored as codes
+     ('1i', '2a'), and the bars were labelled with the codes — unreadable, and the whole
+     point of giving analytics a window of its own is that it gets read. */
+  const R=(db.registry||[]).filter(function(r){ return (typeof regIsCase!=='function') || regIsCase(r); });
+  const host=$('regAnalytics'); if(!host) return;
   if(!R.length){ host.innerHTML='<div class="empty"><span class="ei">📊</span><b>No data yet</b><br>Add or import entries to see analytics.</div>'; return; }
-  const tissue=regCount(R,'primaryTissue');
-  const site=regCount(R,'site').slice(0,10);
+  const label=function(key){ return function(rows){ return rows.map(function(x){
+    return [(typeof regLabelFor==='function') ? regLabelFor(key, x[0]) : x[0], x[1]]; }); }; };
+  const tissue=label('primaryTissue')(regCount(R,'primaryTissue'));
+  const site=label('site')(regCount(R,'site').slice(0,10));
   const margin=[['R0',0],['R1',0],['R2',0]]; R.forEach(r=>{const i=['R0','R1','R2'].indexOf((r.margin||'').toUpperCase()); if(i>=0) margin[i][1]++;});
-  const surg=regCount(R,'surgType').slice(0,8);
+  const surg=label('surgType')(regCount(R,'surgType').slice(0,8));
   const mstsVals=R.map(r=>parseFloat(r.mstsLL||r.mstsUL)).filter(v=>!isNaN(v));
   const mstsMean = mstsVals.length? (mstsVals.reduce((a,b)=>a+b,0)/mstsVals.length) : null;
   const opCount=R.filter(r=>r.dateSurg).length;
   const recCount=R.filter(r=>{const l=(r.lc_tumor||'').toLowerCase();return l.includes('recurrence')||l.includes('metastasis');}).length;
   host.innerHTML =
-    '<p class="muted small">Across '+R.length+' registry entries · '+opCount+' with a recorded surgery date · local-recurrence/metastasis rate '+
+    '<p class="muted small">Across '+R.length+' registry case'+(R.length===1?'':'s')+' · '+opCount+' with a recorded surgery date · local-recurrence/metastasis rate '+
       (opCount?Math.round(recCount/opCount*100):0)+'%'+(mstsMean!=null?' · mean MSTS '+mstsMean.toFixed(1)+'/30':'')+'.</p>'+
     regBar('Primary tissue of origin', tissue)+
     regBar('Surgical margin (R status)', margin.filter(m=>m[1]>0).length?margin:[['(none recorded)',0]])+
@@ -16542,7 +16752,6 @@ function renderRegistry(){
   if(!db.registry) db.registry=[];
   if(!regFormBuilt) regBuildForm();
   regRenderList(); regRenderKpis(); regRenderAnalytics();
-  if(typeof regRenderPendingBanner==='function') regRenderPendingBanner();
 }
 
 
@@ -18233,7 +18442,7 @@ function prSheetEl(){
     s = document.createElement('div'); s.id='prSheet'; s.className='pr-sheet';
     s.innerHTML = '<div class="pr-scrim" onclick="prClose()"></div>'+
       '<div class="pr-card"><div class="pr-grab"></div>'+
-      '<div class="pr-h"><b>Jump to a section</b><button type="button" aria-label="Close" onclick="prClose()">\u2715</button></div>'+
+      '<div class="pr-h"><b>Jump to a section</b><button type="button" aria-label="Close" onclick="prClose()">✕</button></div>'+
       '<div class="pr-grid" id="prGrid"></div></div>';
     document.body.appendChild(s);
   }
@@ -18372,7 +18581,7 @@ function mMoreOpen(){
     m = document.createElement('div'); m.id='mMore';
     m.innerHTML = '<div class="pr-scrim" onclick="mMoreClose()"></div>'+
       '<div class="pr-card"><div class="pr-grab"></div>'+
-      '<div class="pr-h"><b>Everything else</b><button type="button" aria-label="Close" onclick="mMoreClose()">\u2715</button></div>'+
+      '<div class="pr-h"><b>Everything else</b><button type="button" aria-label="Close" onclick="mMoreClose()">✕</button></div>'+
       '<div id="mMoreBody"></div></div>';
     document.body.appendChild(m);
   }
@@ -19804,7 +20013,7 @@ function paletteItems(){
   Object.keys(TAB_LABELS_DEFAULT).forEach(tab=>{ if(!seen.has(tab)) items.push({t:'Go to '+navLabel(tab), ic:'\u27a4', grp:'Pages', run:()=>showTab(tab)}); });
   items.push({t:'New prescription', ic:'\ud83d\udcdd', grp:'Actions', run:()=>{ showTab('visit'); if(typeof clearVisitForm==='function') clearVisitForm(true); }});
   items.push({t:'Save current form', ic:'\ud83d\udcbe', grp:'Actions', run:saveActive});
-  items.push({t:'Print / preview', ic:'\ud83d\udda8', grp:'Actions', run:previewActive});
+  items.push({t:'Print / preview', ic:'🖨', grp:'Actions', run:previewActive});
   items.push({t:'Toggle light / dark', ic:'\ud83c\udf19', grp:'Actions', run:()=>toggleTheme()});
   items.push({t:'Customise menu & labels', ic:'\u270e', grp:'Actions', run:()=>openNavModal()});
   items.push({t:'Keyboard shortcuts help', ic:'\u2328', grp:'Actions', run:()=>showShortcutHelp()});
@@ -19908,7 +20117,7 @@ function palSeed(){
     .map(x=>Object.assign(x,{grp:'Recently opened'}));
   const quick=[
     {t:'New prescription', ic:'\ud83d\udcdd', grp:'Quick actions', run:()=>{ showTab('visit'); if(typeof clearVisitForm==='function') clearVisitForm(true); }},
-    {t:'Print / preview', ic:'\ud83d\udda8', grp:'Quick actions', run:previewActive},
+    {t:'Print / preview', ic:'🖨', grp:'Quick actions', run:previewActive},
     {t:'Toggle light / dark', ic:'\ud83c\udf19', grp:'Quick actions', run:()=>toggleTheme()}
   ];
   return today.concat(recent, quick);
@@ -20115,7 +20324,7 @@ async function openScanner(){
   if(!m){
     m=document.createElement('div'); m.id='scanModal'; m.className='scan-wrap hidden';
     m.innerHTML='<div class="scan-card"><div class="scan-head"><b>\ud83d\udcf7 Scan the patient\u2019s barcode</b>'+
-      '<button class="btn btn-ghost btn-sm" onclick="closeScanner()">\u2715 Close</button></div>'+
+      '<button class="btn btn-ghost btn-sm" onclick="closeScanner()">✕ Close</button></div>'+
       '<video id="scanVid" playsinline muted></video><div class="scan-line"></div>'+
       '<div class="scan-tip" id="scanTip">Hold the printed prescription so the barcode fills the box.</div></div>';
     document.body.appendChild(m);
@@ -20760,7 +20969,8 @@ function undoClearTombRow(){ return Promise.resolve(); }
 function logActivity(action, kind, label, undo){
   db.activity = db.activity||[];
   const rec={id:uid('ac'), action:action, kind:kind, label:String(label||'').slice(0,80),
-    who:(currentUser?currentUser.name:'') , at:new Date().toISOString(), read:false};
+    who:(currentUser?currentUser.name:''), byId:(currentUser?currentUser.id:''),
+    at:new Date().toISOString(), read:false};
   if(undo && undo.items && undo.items.length){ rec.undo=undo; window.__undoOffer={id:rec.id, at:Date.now()}; }
   db.activity.push(rec);
   if(db.activity.length>800) db.activity=db.activity.slice(-800);
@@ -21001,22 +21211,10 @@ function syncSnapshotKnown(){
   delete c.knownIds; delete c.suppressed; delete c.sent;   // the old guessing machinery
   persist();
 }
-function askDeleteApprovals(list){
-  return new Promise(resolve=>{
-    let m=$('delApproveModal');
-    if(!m){ m=document.createElement('div'); m.id='delApproveModal'; document.body.appendChild(m); }
-    m.className='nav-modal';
-    const rows=list.map((d,i)=>'<div class="ne-item" style="cursor:default"><span class="ne-nm">'+esc(d.label||d.tid)+' <span class="muted small">'+esc(d.k)+(d.by?' · deleted by '+esc(d.by):'')+'</span></span>'+
-      '<span class="ne-acts"><label class="small" style="display:flex;gap:5px;align-items:center"><input type="radio" name="da'+i+'" value="keep" checked style="width:auto"> Keep</label>'+
-      '<label class="small" style="display:flex;gap:5px;align-items:center;color:#b91c1c"><input type="radio" name="da'+i+'" value="delete" style="width:auto"> Delete</label></span></div>').join('');
-    m.innerHTML='<div class="nav-modal-card" style="max-width:580px"><div class="nav-modal-head"><b>Delete requests need your approval</b></div>'+
-      '<div class="nav-modal-body"><p class="muted small">Another user deleted these records. Choose <b>Delete</b> to remove everywhere, or <b>Keep</b> to restore them. Default is Keep.</p>'+
-      '<div class="btn-bar" style="margin-bottom:10px"><button class="btn btn-ghost btn-sm" onclick="document.querySelectorAll(\'#delApproveModal input[value=keep]\').forEach(r=>r.checked=true)">Keep all</button>'+
-      '<button class="btn btn-ghost btn-sm" onclick="document.querySelectorAll(\'#delApproveModal input[value=delete]\').forEach(r=>r.checked=true)">Delete all</button></div>'+
-      '<div style="display:flex;flex-direction:column;gap:7px">'+rows+'</div><div class="btn-bar mt"><button class="btn btn-green" id="daConfirm">Apply decisions</button></div></div></div>';
-    m.querySelector('#daConfirm').onclick=()=>{ const dec={}; list.forEach((d,i)=>{ const sel=m.querySelector('input[name=da'+i+']:checked'); dec[d.key]=sel?sel.value:'keep'; }); m.classList.add('hidden'); resolve(dec); };
-  });
-}
+/* `askDeleteApprovals()` lived here — a modal asking the doctor to confirm another
+   device's deletions. The tombstone rewrite at b50 removed its last caller; b74 removed
+   the function. Deletions are records now, not guesses (§6), and nothing asks.  */
+
 /* ==================== DELETIONS THAT STICK ====================
    A deletion used to be inferred at sync time: "this id is in knownIds, is not local any more,
    but is still in the cloud — so it was deleted here." That works only if knownIds is intact.
