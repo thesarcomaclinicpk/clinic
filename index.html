@@ -257,6 +257,8 @@ textarea.ta-s{min-height:42px}
 .btn-sm{padding:5px 10px;font-size:12.5px;border-radius:7px}
 .btn-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .btn-bar .bb-gap{flex:1 1 auto;min-width:0}
+/* the prescription's own bar sits under the last card, not against it */
+#rxToolbar{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
 
 /* ---------- Tables ---------- */
 table.list{width:100%;border-collapse:collapse}
@@ -2672,6 +2674,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <button class="btn btn-ghost btn-sm" onclick="setFu(42,'6 weeks')">+6 wk</button>
         <select id="fuMore" data-norail="1" onchange="fuMoreSel(this)" style="width:auto;padding:5px 9px;font-size:12.5px;border-radius:7px">
           <option value="">More…</option>
+          <option value="tomorrow">Tomorrow</option>
+          <option value="sos">SOS — only if there is a problem</option>
           <option value="56|8 weeks">+8 wk</option>
           <option value="70|10 weeks">+10 wk</option>
           <option value="84|12 weeks">+12 wk</option>
@@ -2702,8 +2706,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <button class="btn btn-ghost" onclick="previewRx()">Preview</button>
     <button class="btn btn-danger" onclick="clearVisitForm(true)">Clear form</button>
     <span class="bb-gap"></span>
-    <button class="btn btn-ghost" onclick="showTab('queue')" title="Today's token list. The form stays exactly as it is \u2014 you can come straight back to it.">👥 Go to Queue</button>
-    <button class="btn btn-primary" onclick="nextPatient()" title="Empty the form and go back to the top, ready for the next patient">Next patient \u2192</button>
+    <button class="btn btn-ghost" onclick="showTab('queue')" title="Today's token list. The form stays exactly as it is — you can come straight back to it.">👥 Go to Queue</button>
+    <button class="btn btn-primary" onclick="nextPatient()" title="Empty the form and go back to the top, ready for the next patient">Next patient →</button>
   </div>
 </section>
 
@@ -10814,15 +10818,6 @@ function fuClearWhat(){
 function fuWhatPopOpen(ev){
   chipPopOpen('fu', ev, function(){
     return '<div class="tb-ph">Follow-up for…</div>'+
-      '<div class="tb-grp">When to come back</div>'+
-      '<div class="chiprow">'+
-        '<button type="button" class="chip'+(fuWhatSel===-2?' on':'')+'" '+
-          'title="Come back only if there is a problem" '+
-          'onclick="fuPickWhen(-2);chipPopRepaint()">SOS</button>'+
-        '<button type="button" class="chip'+(fuWhatSel===-3?' on':'')+'" '+
-          'onclick="fuPickWhen(-3);chipPopRepaint()">tomorrow</button>'+
-      '</div>'+
-      '<div class="tb-grp">What to come for</div>'+
       '<div class="chiprow">'+
       FU_WHAT.map(function(w,i){
         return '<button type="button" class="chip'+(fuWhatSel===i?' on':'')+'" '+
@@ -10958,6 +10953,13 @@ function fuDaysFromText(s){
 })();
 function fuMoreSel(sel){
   if(!sel.value) return;
+  /* SOS and "tomorrow" answer the same question as +2 wk — WHEN to come back — so they
+     sit in this list with the rest of it, not among the reasons in the ＋ chip. */
+  if(sel.value==='sos' || sel.value==='tomorrow'){
+    fuPickWhen(sel.value==='sos' ? -2 : -3);
+    sel.value = '';
+    return;
+  }
   const [d,l] = sel.value.split('|');
   setFu(+d, l);
   sel.value = '';
@@ -12833,7 +12835,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.11-b71';
+const APP_BUILD = '2026.08.11-b72';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
