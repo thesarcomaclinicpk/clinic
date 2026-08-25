@@ -605,7 +605,7 @@ html[data-theme="dark"] .role-badge.active{background:#12291a;color:#6ad78f;bord
 .rx-cols{display:flex;gap:18px}
 .rx-main{flex:1;padding-top:2px}
 .rx-side{width:30%;border-left:1px solid #999;padding-left:13px;font-size:12.5px}
-.rx-side h4{font-size:11px;text-transform:uppercase;letter-spacing:.6px;margin:9px 0 2px;color:#333}
+.rx-side h4{font-size:11px;text-transform:uppercase;letter-spacing:.6px;margin:7px 0 1px;color:#333}
 .rx-side h4:first-child{margin-top:0}
 .rx-side p{white-space:pre-wrap}
 .rx-side .dx{font-weight:700;font-size:13.5px}
@@ -616,15 +616,21 @@ tr.cat-row td{background:var(--teal-light);color:var(--teal-dark);font-weight:70
 tr.cls-row td{background:transparent;color:var(--muted,#64748b);font-weight:600;font-size:11px;
   text-transform:uppercase;letter-spacing:.6px;padding:5px 10px 2px 18px;border-bottom:1px dashed #cbd5e1}
 #cPlan,#cProc{unicode-bidi:plaintext}
-.rx-advice p,.rx-side p{unicode-bidi:plaintext;line-height:1.65}
+.rx-advice p,.rx-side p{unicode-bidi:plaintext;line-height:1.5}
 .doc-title{text-align:center;font-size:16px;font-weight:700;letter-spacing:1.5px;text-decoration:underline;margin:9mm 0 7mm}
 .doc-body{font-size:13.5px;line-height:2;white-space:pre-wrap;text-align:justify;unicode-bidi:plaintext}
 .doc-sec{margin-bottom:5mm}
 .doc-sec h4{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#333;margin-bottom:1mm}
 .doc-sec p{font-size:13px;line-height:1.7;white-space:pre-wrap;unicode-bidi:plaintext}
 .dc-info{width:100%;border-collapse:collapse;margin:0 0 5mm;font-size:12.5px}
-.dc-info td{border:1px solid #555;padding:4px 9px}
-.dc-info td.lbl{width:19%;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+/* b85: the grid of boxes read as a form. No borders, alternating shaded rows instead —
+   the shading does the aligning a border was doing, and prints cleanly on a laser. A hairline
+   above and below keeps it a distinct block rather than loose text. */
+.dc-info{border-top:1px solid #999;border-bottom:1px solid #999}
+.dc-info td{border:0;padding:4.5px 9px}
+.dc-info tr:nth-child(even) td{background:#f2f2f2}
+.dc-info td.lbl{width:19%;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:#444}
+@media print{ .dc-info tr:nth-child(even) td{-webkit-print-color-adjust:exact;print-color-adjust:exact} }
 .dc-sec{margin-bottom:4.5mm;page-break-inside:avoid}
 .dc-sec h4{font-size:11.5px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #888;
   padding-bottom:1.5px;margin-bottom:2mm;color:#111}
@@ -640,6 +646,45 @@ tr.cls-row td{background:transparent;color:var(--muted,#64748b);font-weight:600;
 .dc-fig.solo{max-width:62%}
 .dc-fig img{width:100%;height:48mm;object-fit:contain;border:1px solid #888;background:#fff;display:block}
 .dc-fig figcaption{font-size:10px;margin-top:1mm;letter-spacing:.5px;font-weight:700;text-transform:uppercase;line-height:1.2}
+/* ================= DISCHARGE SUMMARY — three looks (b84) =================
+   The classic look draws a rule under EVERY heading, which on a first page with eight short
+   sections is eight horizontal lines: it reads as a form to be filled rather than a document
+   to be read. These are the alternatives, chosen once in Settings.
+
+   QUIET   — the same single column, no rules at all. Headings small, spaced and grey; the
+             space above a heading does the separating that a line was doing. Least change.
+   LETTER  — headings in a narrow left column, body in a wider right one. No rules. This is
+             how a teaching-hospital discharge letter is set, and it reads as correspondence
+             rather than as a form.
+   PANEL   — headings inline and bold at the head of their own paragraph, with one hairline
+             between GROUPS rather than between sections. The most compact of the three. */
+.dc-quiet .dc-sec h4, .dc-letter .dc-sec h4, .dc-panel .dc-sec h4{border-bottom:0}
+.dc-quiet .dc-sec{margin-bottom:3.6mm}
+.dc-quiet .dc-sec h4{color:#666;letter-spacing:1.2px;font-size:10.5px;margin-bottom:0.8mm;padding-bottom:0}
+.dc-quiet .dc-sec p{font-size:12.8px;line-height:1.58}
+
+.dc-letter .dc-sec{display:grid;grid-template-columns:36mm 1fr;gap:0 5mm;margin-bottom:3.2mm;
+  align-items:start}
+.dc-letter .dc-sec h4{grid-column:1;text-align:right;color:#555;font-size:10px;letter-spacing:.9px;
+  margin:0;padding:0.4mm 0 0;line-height:1.35}
+.dc-letter .dc-sec p, .dc-letter .dc-sec .dc-med, .dc-letter .dc-sec .dc-mur{grid-column:2;margin:0 0 1mm}
+.dc-letter .dc-sec p{font-size:12.8px;line-height:1.55}
+.dc-letter .dc-sec-ur h4{text-align:right}
+.dc-letter .dc-dx p{font-weight:700}
+@media print{ .dc-letter .dc-sec{break-inside:avoid} }
+
+.dc-panel .dc-sec{margin-bottom:2.8mm}
+.dc-panel .dc-sec h4{display:inline;float:none;color:#222;font-size:11px;letter-spacing:.7px;
+  margin:0 2mm 0 0;padding:0}
+.dc-panel .dc-sec h4:after{content:' ·';color:#999}
+.dc-panel .dc-sec p{display:inline;font-size:12.8px;line-height:1.6}
+.dc-panel .dc-sec p:not(:first-of-type){display:block;margin-top:0.6mm}
+.dc-panel .dc-sec-ur p, .dc-panel .dc-med, .dc-panel .dc-mur{display:block}
+.dc-panel .dc-dx{border-left:2.5px solid #333;padding-left:3mm;margin-bottom:4mm}
+.dc-panel .dc-dx p{font-weight:700}
+
+/* the pictures, wherever they now land */
+.dc-quiet .dc-imgband, .dc-letter .dc-imgband, .dc-panel .dc-imgband{border-top:0;padding-top:4mm}
 .inc-table{width:100%;border-collapse:collapse;font-size:13px}
 .inc-table th,.inc-table td{border:1px solid #333;padding:5px 8px;text-align:left}
 .inc-table th{background:#eee}
@@ -651,10 +696,10 @@ tr.cls-row td{background:transparent;color:var(--muted,#64748b);font-weight:600;
   padding:7px 12px;margin-bottom:8px;font-size:13px}
 /* bilingual (Urdu) print styling */
 .ur, .mur, .rx-advice-ur p, .dc-sec-ur p{font-family:'Noto Nastaliq Urdu','Urdu Typesetting','Jameel Noori Nastaleeq','Geeza Pro',Georgia,serif}
-.mur{direction:rtl;text-align:right;font-size:12.5px;line-height:1.9;color:#222;margin-top:1px}
+.mur{direction:rtl;text-align:right;font-size:12.5px;line-height:1.72;color:#222;margin-top:0}
 .minstr-inline{font-style:italic;font-size:12.5px;color:#333}
 .rx-advice-ur h4{text-align:right;font-size:12px;letter-spacing:0}
-.rx-advice-ur p{direction:rtl;text-align:right;line-height:2;font-size:13px}
+.rx-advice-ur p{direction:rtl;text-align:right;line-height:1.8;font-size:13px}
 .dc-sec-ur h4{text-align:right;font-size:12.5px;letter-spacing:0;border-bottom:1px solid #888}
 .dc-sec-ur p{direction:rtl;text-align:right;line-height:2.1;font-size:13px}
 .dc-med{margin-bottom:0.5mm}
@@ -706,11 +751,14 @@ input.rx-ur:focus{border-style:solid}
 .rx-sheet.pad .rx-cols{margin-top:12mm} /* clears the pre-printed ℞ symbol (ends ~84mm from top) */
 .rx-sheet.pad .rx-main{padding-left:2mm}
 .rx-symbol{font-size:26px;font-weight:700;margin:2px 0 6px}
-.rx-med{margin-bottom:9px;font-size:14px}
+/* b82: spacing tightened a little, type size deliberately UNCHANGED. A prescription is read
+   by elderly patients and by pharmacy staff who misread a dose at their peril, so legibility
+   is a safety property — the air between blocks is what gets recovered, never the letters. */
+.rx-med{margin-bottom:6px;font-size:14px}
 .rx-med .mname{font-weight:700}
 .rx-med .mline{font-size:13px;margin-top:1px}
 .rx-med .minstr{font-size:12px;font-style:italic;color:#333}
-.rx-advice{border-top:1px solid #999;margin-top:10px;padding-top:6px;font-size:12.5px}
+.rx-advice{border-top:1px solid #999;margin-top:7px;padding-top:4px;font-size:12.5px}
 .rx-advice h4{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#333;margin-bottom:2px}
 .rx-advice p{white-space:pre-wrap}
 .rx-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px;page-break-inside:avoid}
@@ -746,6 +794,15 @@ input.rx-ur:focus{border-style:solid}
 .rx-qr{text-align:center}
 .rx-qr svg{display:block;margin:0 auto}
 .qr-cap{font-size:8px;color:#333;margin-top:1mm;letter-spacing:.3px;font-family:-apple-system,Arial,sans-serif}
+/* the foot line: code on the left, practice line filling the rest (b84) */
+.rx-endline{display:flex;align-items:center;gap:9px;margin-top:8px}
+.rx-endline .rx-qr{flex:0 0 auto;text-align:left}
+.rx-endline .rx-qr svg{margin:0}   /* size comes from QRenc.svg — it writes an inline style */
+.rx-endline .qr-cap{margin-top:.6mm;font-size:7.5px;text-align:center;max-width:15mm;line-height:1.2}
+.rx-endsoc{flex:1;min-width:0}
+.rx-endsoc .rx-socials{margin-top:0}
+.rx-sheet.compact .rx-endline{margin-top:5px}
+
 .rx-foot .fu{font-size:13px}
 .rx-foot .sig{text-align:center;font-size:12px}
 .rx-foot .sig .line{border-top:1px solid #111;width:180px;margin-bottom:3px}
@@ -1890,6 +1947,18 @@ html[data-theme="dark"] .calc-note{background:#2f2810;border-left-color:#b45309}
 .txt-pop button b{display:block;font-size:12.8px;font-weight:700}
 .txt-pop button span{display:block;font-size:10.5px;color:var(--muted);margin-top:1px;line-height:1.4}
 .txt-pop .tp-sep{height:1px;background:var(--line);margin:4px 2px}
+.txt-pop .tp-note{font-size:11px;color:var(--muted);line-height:1.5;padding:4px 9px 6px}
+.sg-break-fold{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+.sg-break-fold>summary{cursor:pointer;font-size:12.4px;font-weight:700;list-style:none;color:var(--teal)}
+.sg-break-fold>summary::-webkit-details-marker{display:none}
+.sg-break-fold>summary:before{content:'▸ '}
+.sg-break-fold[open]>summary:before{content:'▾ '}
+.sg-tbl{width:100%;border-collapse:collapse;margin-top:8px;font-size:12.2px}
+.sg-tbl td{padding:3px 0;vertical-align:middle}
+.sg-tbl td:first-child{white-space:nowrap;padding-right:10px}
+.sg-barcell{width:100%}
+.sg-bar{display:block;height:7px;border-radius:4px;background:var(--teal);opacity:.55}
+.sg-num{white-space:nowrap;text-align:right;padding-left:10px;color:var(--muted);font-variant-numeric:tabular-nums}
 .u-extra-owner{background:#fef2f2}
 html[data-theme="dark"] .u-extra-owner{background:#2f1416}
 .reg-prov{color:#b45309;font-size:11px;cursor:help}
@@ -2847,6 +2916,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
     <button class="btn btn-primary" onclick="saveVisit(false)">Save visit</button>
     <button class="btn btn-ghost" onclick="previewRx()">Preview</button>
     <button class="btn btn-danger" onclick="clearVisitForm(true)">Clear form</button>
+    <button class="btn btn-ghost txt-btn-bar" onclick="txtFormOpen(this)" title="Capitalisation and tidying — applies to every clinical box on this form at once">Aa Text</button>
     <span class="bb-gap"></span>
     <button class="btn btn-ghost" onclick="showTab('queue')" title="Today's token list. The form stays exactly as it is — you can come straight back to it.">👥 Go to Queue</button>
     <button class="btn btn-primary" onclick="nextPatient()" title="Empty the form and go back to the top, ready for the next patient">Next patient →</button>
@@ -3167,6 +3237,7 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <h2>Admission &amp; history</h2>
         <div class="grid g2">
           <div class="field"><label>Date of admission</label><input type="date" id="dcAdmit"></div>
+          <div class="field"><label>Date of surgery</label><input type="date" id="dcSurgery"></div>
           <div class="field"><label>Date of discharge</label><input type="date" id="dcDischarge"></div>
         </div>
         <div class="grid g2 mt">
@@ -4218,6 +4289,20 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <div class="field"><label>Urdu line under each medicine</label><select id="sUrduRx"><option value="on">On — print Urdu translation</option><option value="off">Off — English only</option></select></div>
       <div class="field" style="grid-column:span 2"><label>Printer setup</label><button class="btn btn-ghost" onclick="showPrintSetup()" style="width:100%">⚙ Stop the file path &amp; page title printing</button></div>
       <div class="field"><label>Bottom reserve on the pad (mm)</label><input type="number" id="sPadBottom" placeholder="34" title="How much space at the foot of your pre-printed pad must stay clear. Increase this if text creeps onto the printed footer."></div>
+      <div class="field"><label>Discharge summary look</label>
+        <select id="sDcLayout">
+          <option value="letter">Letter — headings in a side column (recommended)</option>
+          <option value="classic">Classic — a rule under every heading</option>
+          <option value="quiet">Quiet — no rules, headings spaced</option>
+          <option value="panel">Panel — headings inline, grouped</option>
+        </select></div>
+      <div class="field" style="grid-column:span 2"><label>Capitalisation — applied to every clinical box, everywhere</label>
+        <select id="sCapStyle">
+          <option value="line">First letter of each line (the original behaviour)</option>
+          <option value="sentence">Sentence case — a capital after every full stop</option>
+          <option value="title">Title Case — Capitalise Each Word</option>
+          <option value="off">Off — leave my typing exactly as it is</option>
+        </select></div>
       <div class="field"><label>Patient barcode on prescriptions</label><select id="sRxBarcode"><option value="on">On — print the MR number as a barcode</option><option value="off">Off</option></select></div>
       <div class="field"><label>Suggest my usual wording</label><select id="sPhraseHelp"><option value="on">On — offer lines I've written before</option><option value="off">Off</option></select></div>
       <div class="field"><label>Urdu size on prints</label><select id="sUrduSize">
@@ -5040,12 +5125,12 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 46;
+const SEED_VERSION = 47;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
       regNo:'',clinicName:'Faizi Hospital',address:'53-A Main Satellite Town Rd, Satellite Town, Sargodha',
-      phone:'+92 315 7459655 · +92 304 3212222',timings:'',paper:'A4',footer:'',printMode:'pad',padTop:'68',padBottom:'34',urduRx:'on',rxBarcode:'on',phraseHelp:'on',mrnPrefix:'FH',mrnStyle:'date',logo:'',qrRx:'on',rxFinish:'grey',feeShare:'30',theme:'light',uiZoom:'100',
+      phone:'+92 315 7459655 · +92 304 3212222',timings:'',paper:'A4',footer:'',printMode:'pad',padTop:'68',padBottom:'34',urduRx:'on',rxBarcode:'on',phraseHelp:'on',capStyle:'line',dcLayout:'letter',mrnPrefix:'FH',mrnStyle:'date',logo:'',qrRx:'on',rxFinish:'grey',feeShare:'30',theme:'light',uiZoom:'100',
       autoLock:'10',defFu:'',feePresets:'',urduSize:'normal',backupPw:'',
       accent:'teal', photoLock:'', photoHero:'',
       brandTag:'The Sarcoma Clinic PK', nav:null, navLabels:{}, labelOverrides:{}, cardTint:'on', shortcuts:'on', favMeds:[], favTpls:[], defQrId:'', sync:{url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false},
@@ -5458,6 +5543,32 @@ function migrateDB(){
       }
     }
   }
+  /* ---- v47: get the photographs out of the 5 MB store ----
+     The sign-in photo, the home banner and the logo were base64 in `db.settings`, which is
+     localStorage — the same ~5 MB the entire clinic shares. Two photographs could be a fifth
+     of it. They move to IndexedDB, where every other picture already lives, and `settings`
+     keeps a marker so the app still knows one is set.
+
+     Deliberately fire-and-forget: IndexedDB is async and migrateDB is not, so the move is
+     started and the marker is only written once the picture is safely stored. If IndexedDB
+     refuses, the photo stays exactly where it is and nothing is lost — the worst case is
+     that this runs again next time. Idempotent: a marker is never re-migrated. */
+  if((db.seedVersion||1) < 47){
+    try{
+      ['photoLock','photoHero','logo'].forEach(function(k){
+        const v=(db.settings||{})[k];
+        if(!String(v||'').trim()) return;
+        if(String(v).indexOf('idb:')===0) return;          // already moved
+        if(String(v).indexOf('data:')!==0) return;         // not a picture we put there
+        imgPut('set:'+k, {url:v, at:new Date().toISOString()}).then(function(){
+          db.settings[k]='idb:'+k;
+          try{ __photoCache[k]=v; }catch(_e){}
+          persist();
+          if(typeof toast==='function') toast('Moved a photo out of the 5 MB store — space freed');
+        }).catch(function(){});
+      });
+    }catch(e){}
+  }
   db.seedVersion = SEED_VERSION;
   persist();
 }
@@ -5680,7 +5791,7 @@ function applyTabAccess(name){
 }
 
 /* ================= SETTINGS ================= */
-const S_FIELDS = {sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sDefQrId:'defQrId',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent',sFuDayCap:'fuDayCap',sVitalsDefault:'vitalsDefault'};
+const S_FIELDS = {sDcLayout:'dcLayout',sCapStyle:'capStyle',sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sDefQrId:'defQrId',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent',sFuDayCap:'fuDayCap',sVitalsDefault:'vitalsDefault'};
 function loadSettingsForm(){
   if(typeof renderRxQrSelect==='function') renderRxQrSelect();   // fill the default-QR picker first
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) $(el).value = db.settings[key]||''; }
@@ -5747,7 +5858,7 @@ function applyDefFu(){
 const APP_NAME = "Dr Ali Ijaz — Orthopedic Surgeon & Sarcoma Specialist";
 function applyBrand(){
   document.title = APP_NAME;
-  const logo = db.settings.logo;
+  const logo = photoIsInIdb(db.settings.logo) ? (__photoCache.logo||'') : db.settings.logo;
   document.querySelectorAll('.rx-logo').forEach(el=>{
     el.innerHTML = logo ? '<img src="'+logo+'" alt="">' : '&#8478;';
   });
@@ -5758,7 +5869,7 @@ function applyBrand(){
   // sign-in side-panel photo
   const ls = document.querySelector('.lock-side');
   if(ls){
-    if(db.settings.photoLock){
+    if(db.settings.photoLock && !photoIsInIdb(db.settings.photoLock)){
       ls.style.backgroundImage = 'linear-gradient(165deg, rgba(8,34,44,.55) 0%, rgba(8,30,40,.82) 70%, rgba(6,22,30,.92) 100%), url('+db.settings.photoLock+')';
       ls.style.backgroundSize = 'cover';
       ls.style.backgroundPosition = 'center';
@@ -5771,9 +5882,11 @@ function applyBrand(){
   // home hero photo (right side)
   const hl = document.querySelector('.hh-logo');
   if(hl){
-    if(db.settings.photoHero){
+    if(db.settings.photoHero && !photoIsInIdb(db.settings.photoHero)){
       hl.classList.add('photo');
       hl.innerHTML = '<img src="'+db.settings.photoHero+'" alt="">';
+    } else if(db.settings.photoHero){
+      hl.classList.add('photo');           // filled in by photoPaint() a moment later
     } else {
       hl.classList.remove('photo');
       hl.innerHTML = logo ? '<img src="'+logo+'" alt="">' : '&#8478;';
@@ -5781,31 +5894,96 @@ function applyBrand(){
   }
   ['photoLock','photoHero'].forEach(k=>{
     const el = $(k+'Prev');
-    if(el) el.innerHTML = db.settings[k] ? '<img src="'+db.settings[k]+'" style="width:52px;height:34px;border-radius:7px;object-fit:cover;vertical-align:middle;border:1px solid var(--line)">' : 'No photo set';
+    if(!el) return;
+    const v=db.settings[k];
+    if(!String(v||'').trim()) el.innerHTML='No photo set';
+    else if(!photoIsInIdb(v)) el.innerHTML='<img src="'+v+'" style="width:52px;height:34px;border-radius:7px;object-fit:cover;vertical-align:middle;border:1px solid var(--line)">';
+    /* an 'idb:' marker is filled in by photoPaint() a moment later */
   });
+  if(typeof photoPaint==='function') photoPaint();
+}
+/* ================= THE BIG PICTURES LIVE IN INDEXEDDB (b83) =================
+   The sign-in photo and the home banner were resized to 1400px wide, turned into base64 and
+   kept in `db.settings` — which is in localStorage, and localStorage is the ~5 MB store the
+   whole clinic shares. Base64 adds a third again on top of the JPEG, so two photographs
+   could take a megabyte between them: a fifth of everything, spent on decoration, before a
+   single patient was seen.
+
+   They now go where every other picture in this app already goes — IndexedDB, which is
+   hundreds of times larger and is not what the storage gauge is measuring. `db.settings`
+   keeps only the marker 'idb:', so the app still knows a photo is set. Nothing syncs: these
+   were never synced, because settings never were.
+
+   New photos are also captured at 1000px rather than 1400px. On a sign-in background and a
+   home banner nobody can see the difference, and it is half the bytes again. */
+const PHOTO_KEYS = ['photoLock','photoHero','logo'];
+const PHOTO_MARK = 'idb:';
+function photoIsInIdb(v){ return String(v||'').indexOf(PHOTO_MARK)===0; }
+function photoHasOne(key){ const v=(db.settings||{})[key]; return !!String(v||'').trim(); }
+const __photoCache = {};
+async function photoLoad(key){
+  const v=(db.settings||{})[key];
+  if(!String(v||'').trim()) return '';
+  if(!photoIsInIdb(v)) return v;                       // still inline (old data, or migration pending)
+  if(__photoCache[key]!==undefined) return __photoCache[key];
+  try{
+    const rec = await imgGet('set:'+key);
+    __photoCache[key] = (rec && rec.url) ? rec.url : '';
+  }catch(e){ __photoCache[key]=''; }
+  return __photoCache[key];
+}
+async function photoSave(key, dataUrl){
+  try{
+    await imgPut('set:'+key, {url:dataUrl, at:new Date().toISOString()});
+    __photoCache[key]=dataUrl;
+    db.settings[key]=PHOTO_MARK+key;
+  }catch(e){
+    db.settings[key]=dataUrl;                          // IndexedDB refused — keep working
+  }
+  persist();
+}
+async function photoDrop(key){
+  try{ await imgDel('set:'+key); }catch(e){}
+  __photoCache[key]='';
+  db.settings[key]=''; persist();
+}
+/* Paint the pictures once they are back from IndexedDB. applyBrand() stays synchronous —
+   it is called from everywhere — so this runs after it and fills them in. */
+async function photoPaint(){
+  const lock = await photoLoad('photoLock');
+  const ls=$('lockScreen');
+  if(ls && lock) ls.style.backgroundImage =
+    'linear-gradient(165deg, rgba(8,34,44,.55) 0%, rgba(8,30,40,.82) 70%, rgba(6,22,30,.92) 100%), url('+lock+')';
+  const hero = await photoLoad('photoHero');
+  const hl=document.querySelector('.home-hero');
+  if(hl && hero){ hl.classList.add('photo'); hl.innerHTML='<img src="'+hero+'" alt="">'; }
+  const lg = await photoLoad('logo');
+  if(lg) document.querySelectorAll('.brand-logo img').forEach(function(i){ i.src=lg; });
+  for(const k of ['photoLock','photoHero']){
+    const el=$(k+'Prev'); if(!el) continue;
+    const u=await photoLoad(k);
+    el.innerHTML = u ? '<img src="'+u+'" style="width:52px;height:34px;border-radius:7px;object-fit:cover;vertical-align:middle;border:1px solid var(--line)">' : 'No photo set';
+  }
 }
 function setSidePhoto(ev, key){
   const f = ev.target.files[0]; ev.target.value='';
   if(!f) return;
   const img = new Image();
   img.onload = ()=>{
-    const maxW = 1400;
+    const maxW = 1000;
     const s = Math.min(1, maxW/img.width);
     const c = document.createElement('canvas');
     c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
     c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-    db.settings[key] = c.toDataURL('image/jpeg', .74);
-    persist(); applyBrand();
+    photoSave(key, c.toDataURL('image/jpeg', .72)).then(function(){ applyBrand(); photoPaint(); });
     if(key==='photoHero' && document.querySelector('#tab-home.active')) renderHome();
-    toast('Photo updated');
+    toast('Photo updated — kept in the large picture store, not in the 5 MB one');
     URL.revokeObjectURL(img.src);
   };
   img.src = URL.createObjectURL(f);
 }
 function removeSidePhoto(key){
-  db.settings[key] = '';
-  persist(); applyBrand();
-  toast('Photo removed');
+  photoDrop(key).then(function(){ applyBrand(); photoPaint(); toast('Photo removed'); });
 }
 function setLogo(ev){
   const f = ev.target.files[0]; if(!f) return;
@@ -5817,8 +5995,7 @@ function setLogo(ev){
     // center-crop square, biased upward so faces sit well
     const sy = Math.max(0, (img.height - s) * 0.22);
     ctx.drawImage(img, (img.width - s)/2, sy, s, s, 0, 0, 160, 160);
-    db.settings.logo = c.toDataURL('image/jpeg', 0.85);
-    persist(); applyBrand();
+    photoSave('logo', c.toDataURL('image/jpeg', 0.85)).then(function(){ applyBrand(); photoPaint(); });
     toast('Logo updated');
     URL.revokeObjectURL(img.src);
   };
@@ -5826,7 +6003,7 @@ function setLogo(ev){
   ev.target.value = '';
 }
 function removeLogo(){
-  db.settings.logo = ''; persist(); applyBrand(); toast('Back to the default ℞ logo');
+  photoDrop('logo').then(function(){ applyBrand(); photoPaint(); toast('Back to the default ℞ logo'); });
 }
 function renderDataStats(){
   $('dataStats').textContent = db.patients.length+' patients · '+db.visits.length+' saved visits · '+db.meds.length+' medicines in directory';
@@ -5864,7 +6041,55 @@ function renderStorageGauge(){
       '<span><b>'+((db.registry||[]).length).toLocaleString()+'</b> registry</span>'+
       '<span><b>'+((db.documents||[]).length).toLocaleString()+'</b> discharges/docs</span>'+
       '<span>~<b>'+roomRecords.toLocaleString()+'</b> more fit</span></div>'+
-    '<div class="sg-note '+note+'">'+noteText+'</div>';
+    '<div class="sg-note '+note+'">'+noteText+'</div>'+
+    storageBreakdownHTML();
+}
+/* ---- what is actually using the space (b83) ----
+   The gauge said 24% and stopped there, which tells the doctor a number he cannot act on.
+   This says WHICH parts, biggest first, so the answer to "why is it filling up" is on the
+   screen rather than a guess. */
+function storageBreakdownHTML(){
+  const rows=[];
+  const add=function(label, chars){ if(chars>512) rows.push({label:label, chars:chars}); };
+  try{
+    Object.keys(db).forEach(function(k){
+      if(k==='settings') return;
+      try{ add(collLabel(k), JSON.stringify(db[k]||'').length); }catch(e){}
+    });
+    // settings is one blob, but the photographs inside it are worth naming on their own
+    let setChars=0;
+    try{ setChars = JSON.stringify(db.settings||{}).length; }catch(e){}
+    let picChars=0;
+    PHOTO_KEYS.forEach(function(k){
+      const v=(db.settings||{})[k]||'';
+      if(String(v).indexOf('data:')===0){ picChars+=v.length; }
+    });
+    if(picChars>512) add('Photos still in this store', picChars);
+    add('Settings', Math.max(0, setChars-picChars));
+  }catch(e){}
+  rows.sort(function(a,b){ return b.chars-a.chars; });
+  const top=rows.slice(0,8);
+  if(!top.length) return '';
+  const most=top[0].chars||1;
+  return '<details class="sg-break-fold"><summary>What is using the space</summary>'+
+    '<table class="sg-tbl"><tbody>'+top.map(function(r){
+      return '<tr><td>'+esc(r.label)+'</td>'+
+        '<td class="sg-barcell"><span class="sg-bar" style="width:'+Math.max(3,Math.round(r.chars/most*100))+'%"></span></td>'+
+        '<td class="sg-num">'+fmtKB(r.chars)+'</td></tr>'; }).join('')+
+    '</tbody></table>'+
+    '<p class="muted small" style="margin:8px 0 0;line-height:1.5">Photographs and scans of patients are '+
+    '<b>not</b> counted here — they live in the large picture store, which is hundreds of times '+
+    'bigger and is not what this gauge measures.</p></details>';
+}
+function collLabel(k){
+  const m={patients:'Patients', visits:'Prescriptions', registry:'Registry', documents:'Documents & discharges',
+    surgeries:'Operation logbook', mdt:'MDT cases', mdtMeetings:'MDT meetings', meds:'Medicine directory',
+    templates:'Prescription templates', noteTemplates:'Note templates', instrPresets:'Instruction presets',
+    chips:'Quick chips', ixRules:'Test rules', inventory:'Inventory', appts:'Appointments',
+    recalls:'Recalls', qrcodes:'QR codes', leaflets:'Leaflets', expenses:'Expenses', queue:'Queue',
+    videos:'Videos (thumbnails)', activity:'Activity log', accesslog:'Sign-in log',
+    pendingChanges:'Pending changes', users:'User accounts', prefs:'Preferences', seq:'Numbering'};
+  return m[k] || (String(k).charAt(0).toUpperCase()+String(k).slice(1));
 }
 /* --- backup encryption (AES-GCM, key derived from the password) --- */
 function bufToB64(buf){ const u=new Uint8Array(buf); let s=''; for(let i=0;i<u.length;i+=0x8000) s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000)); return btoa(s); }
@@ -9433,6 +9658,31 @@ function txtUndo(id){
   txtClose(); toast('Put back');
 }
 function txtClose(){ const m=$('txtPop'); if(m) m.classList.add('hidden'); }
+function txtFormOpen(btn){
+  let m=$('txtPop');
+  if(!m){ m=document.createElement('div'); m.id='txtPop'; m.className='txt-pop hidden';
+    document.body.appendChild(m);
+    document.addEventListener('mousedown', function(e){
+      if(!m.classList.contains('hidden') && !m.contains(e.target) && !e.target.closest('.txt-btn-bar')) txtClose(); }); }
+  m.innerHTML =
+    '<div class="tp-h">Every clinical box on this form</div>'+
+    '<button type="button" onclick="txtFormApply(\'title\')"><b>Capitalise Each Word</b><span>Title Case — MRI, CT and your own capitals are kept</span></button>'+
+    '<button type="button" onclick="txtFormApply(\'sentence\')"><b>Sentence case</b><span>Capital after each full stop</span></button>'+
+    '<button type="button" onclick="txtFormApply(\'upper\')"><b>UPPERCASE</b><span>Every letter capital</span></button>'+
+    '<button type="button" onclick="txtFormApply(\'lower\')"><b>lowercase</b><span>Every letter small</span></button>'+
+    '<div class="tp-sep"></div>'+
+    '<button type="button" onclick="txtFormApply(\'tidy\')"><b>✨ Tidy up</b><span>Double spaces, spacing round commas, stray blank lines</span></button>'+
+    '<button type="button" onclick="txtFormUndo()"><b>↶ Undo</b><span>Put the last change back</span></button>'+
+    '<div class="tp-sep"></div>'+
+    '<div class="tp-note">To have this done automatically for every patient, set it once in '+
+      '<b>Settings ▸ Prescriptions &amp; printing ▸ Capitalisation</b>.</div>';
+  m.classList.remove('hidden');
+  const r=btn.getBoundingClientRect(), w=Math.min(320, window.innerWidth-16);
+  m.style.width=w+'px';
+  m.style.left=Math.max(8, Math.min(window.innerWidth-w-8, r.left))+'px';
+  const h=m.offsetHeight;
+  m.style.top=Math.max(8, r.top-h-6)+'px';
+}
 function txtOpen(id, btn){
   let m=$('txtPop');
   if(!m){ m=document.createElement('div'); m.id='txtPop'; m.className='txt-pop hidden';
@@ -9458,23 +9708,84 @@ function txtOpen(id, btn){
   const below = r.bottom+6, h=m.offsetHeight;
   m.style.top=((below+h > window.innerHeight-8) ? Math.max(8, r.top-h-6) : below)+'px';
 }
-/* One button in the label of every long clinical box. Attached in JS rather than in the
-   markup so a new box gets it by being named here, not by being remembered. */
+/* ---- one setting, applied everywhere, set once (b82) ----
+   The first cut put an "Aa" button in the label of all eleven clinical boxes, and pressing
+   it per box per patient is exactly the tedium it was meant to remove. Capitalisation is now
+   a PREFERENCE: chosen once in Settings, applied by the app to every clinical box in the
+   prescription, the registry and the discharge summary, in every consultation, for ever.
+
+   It runs on BLUR, not on every keystroke. Re-casing a line while the doctor is still typing
+   moves the cursor and fights the typing — the box is corrected the moment he leaves it,
+   which is when he has finished saying the thing. */
 const TXT_BOXES = ['pAllergies','pMedHx','pSurgHx','cComplaints','cFindings','cTests',
   'cDiagnosis','cNextTests','cPlan','cProc','cFollowUp'];
-function txtToolsAttach(){
-  TXT_BOXES.forEach(function(id){
-    const el=$(id); if(!el || el.dataset.txtTools) return;
-    const field=el.closest('.field'); if(!field) return;
-    const lab=field.querySelector('label'); if(!lab) return;
-    const b=document.createElement('button');
-    b.type='button'; b.className='txt-btn'; b.textContent='Aa';
-    b.title='Capitalisation and tidying for this box';
-    b.onclick=function(ev){ ev.preventDefault(); txtOpen(id, b); };
-    lab.appendChild(b);
-    el.dataset.txtTools='1';
-  });
+function capStyle(){
+  const v=(db.settings||{}).capStyle;
+  return (v==='off'||v==='sentence'||v==='title') ? v : 'line';
 }
+/* Which boxes the preference governs. Deliberately not names, e-mails, codes or doses —
+   the same exclusions the as-you-type capitaliser already uses, kept in one place. */
+function txtIsProse(el){
+  if(!el || !el.matches) return false;
+  if(!el.matches('textarea, input[type=text]')) return false;
+  if(el.dir==='rtl') return false;
+  if(el.classList.contains('hsel-inp')||el.classList.contains('combo-cust')||
+     el.classList.contains('rx-ur')||el.classList.contains('no-cap')) return false;
+  if(el.getAttribute('autocapitalize')==='off') return false;
+  if(/search|url|uid|mail|phone|cnic|mrn|key|token|link|code|otp|Pw\b|passw|name/i
+       .test((el.id||'')+' '+(el.className||''))) return false;
+  const val=String(el.value||'').trim();
+  if(/^https?:\/\//i.test(val)) return false;
+  return true;
+}
+function txtAutoOnBlur(el){
+  const how = capStyle();
+  if(how==='off' || how==='line') return;          // 'line' is the original as-you-type behaviour
+  if(!txtIsProse(el)) return;
+  const before = String(el.value||''); if(!before.trim()) return;
+  const after = (how==='title') ? txtTitle(before) : txtSentence(before);
+  if(after===before) return;
+  if(el.id) TXT_UNDO[el.id] = before;
+  el.value = after;
+  window.__txtRestoring = true;
+  try{ el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); }
+  finally{ window.__txtRestoring = false; }
+}
+document.addEventListener('focusout', function(e){ try{ txtAutoOnBlur(e.target); }catch(_e){} });
+/* The manual tools survive as ONE control on the prescription toolbar, acting on the whole
+   form at once — not eleven buttons acting on one box each. */
+function txtFormApply(how){
+  let n=0;
+  TXT_BOXES.forEach(function(id){
+    const el=$(id); if(!el) return;
+    const before=String(el.value||''); if(!before.trim()) return;
+    const fn={title:txtTitle, sentence:txtSentence, tidy:txtTidy,
+              upper:function(x){return x.toUpperCase();}, lower:function(x){return x.toLowerCase();}}[how];
+    if(!fn) return;
+    const after=fn(before); if(after===before) return;
+    TXT_UNDO[id]=before; el.value=after;
+    window.__txtRestoring=true;
+    try{ el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); }
+    finally{ window.__txtRestoring=false; }
+    n++;
+  });
+  txtClose();
+  toast(n? (n+' box'+(n===1?'':'es')+' changed — press ↶ Undo to put them back') : 'Nothing to change');
+}
+function txtUndoQuiet(id){
+  const el=$(id); if(!el || TXT_UNDO[id]==null) return;
+  el.value=TXT_UNDO[id]; delete TXT_UNDO[id];
+  window.__txtRestoring=true;
+  try{ el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); }
+  finally{ window.__txtRestoring=false; }
+}
+function txtFormUndo(){
+  let n=0;
+  TXT_BOXES.forEach(function(id){ if(TXT_UNDO[id]!=null){ txtUndoQuiet(id); n++; } });
+  txtClose();
+  toast(n? ('Put '+n+' box'+(n===1?'':'es')+' back') : 'Nothing to undo');
+}
+function txtToolsAttach(){ /* the per-box buttons were removed in b82 — see above */ }
 function measureBtns(targetId){
   return '<button type="button" class="mbtn" onclick="exOpen(\''+targetId+'\',\'move\')" title="Range of movement, power and sensation — everything starts normal, you touch only what is abnormal">'+
            '<span class="mb-ic">◜</span>Exam</button>'+
@@ -12426,7 +12737,7 @@ function collectDsForm(){
     clinicNo: ($('dsClinicNo')?$('dsClinicNo').value.trim():''),
     cnic: ($('dsCnic')?$('dsCnic').value.trim():''),
     printCnic: cnicPrintOn,
-    dc:{admit:$('dcAdmit').value, discharge:$('dcDischarge').value, diagnosis:$('dcDiagnosis').value.trim(),
+    dc:{admit:$('dcAdmit').value, surgery:$('dcSurgery').value, discharge:$('dcDischarge').value, diagnosis:$('dcDiagnosis').value.trim(),
         clinical:$('dcClinical').value.trim(), findings:$('dcFindings').value.trim(),
         medHx:tbGet('dcMedHx'), surgHx:$('dcSurgHx').value.trim(),
         allergies:$('dcAllergies').value.trim(),
@@ -12471,7 +12782,7 @@ function clearDsForm(){
   if(typeof renderRxQrSelect==='function') renderRxQrSelect(true);
   $('dsRxBody').innerHTML='';
   $('dsSex').value='';
-  $('dsDate').value = localISO(); $('dcAdmit').value=''; $('dcDischarge').value='';
+  $('dsDate').value = localISO(); $('dcAdmit').value=''; $('dcSurgery').value=''; $('dcDischarge').value='';
   dsImgs = []; renderDsImgStrip();
   $('dcAddLog').checked = true;
   $('dsFormTitle').textContent = 'New discharge summary';
@@ -12636,7 +12947,7 @@ function opNew(){ if(!requireEdit()) return; clearOpForm(); opShowForm(); }
    assistant, complications) are never overwritten.                                        */
 function dsOpFields(d){
   const dc=d.dc||{};
-  return {date: dc.admit || d.date, patientId: d.patientId||null,
+  return {date: dc.surgery || dc.admit || d.date, patientId: d.patientId||null,
           name: d.name, age: d.age||'', sex: d.sex||'', diagnosis: dc.diagnosis||'',
           procedure: dc.proc||'', implant:[dc.implant, dc.implantCo].filter(Boolean).join(' — '),
           notes: dc.course||''};
@@ -12684,6 +12995,18 @@ function dsCnicOf(d){
   if(d.patientId){ const p=db.patients.find(x=>x.id===d.patientId); if(p && p.cnic) return String(p.cnic); }
   return '';
 }
+function dsPhoneOf(d){
+  if(!d) return '';
+  if(String(d.phone||'').trim()) return String(d.phone).trim();
+  if(d.patientId){ const p=db.patients.find(x=>x.id===d.patientId); if(p && p.phone) return String(p.phone); }
+  return '';
+}
+function dsAddressOf(d){
+  if(!d) return '';
+  if(String(d.address||'').trim()) return String(d.address).trim();
+  if(d.patientId){ const p=db.patients.find(x=>x.id===d.patientId); if(p && p.address) return String(p.address); }
+  return '';
+}
 function renderDsList(){
   const q = ($('dsSearch').value||'').trim().toLowerCase();
   const all = db.documents.filter(d=>d.type==='discharge');
@@ -12729,7 +13052,7 @@ function loadDs(id){
   $('dsClinicNo').value = d.clinicNo || dsClinicNoOf(d);
   $('dsCnic').value = d.cnic || dsCnicOf(d);
   cnicPrintSet(d.printCnic);
-  $('dcAdmit').value=dc.admit||''; $('dcDischarge').value=dc.discharge||''; $('dcDiagnosis').value=dc.diagnosis||'';
+  $('dcAdmit').value=dc.admit||''; $('dcSurgery').value=dc.surgery||''; $('dcDischarge').value=dc.discharge||''; $('dcDiagnosis').value=dc.diagnosis||'';
   $('dcClinical').value=dc.clinical||''; $('dcFindings').value=dc.findings||''; tbSet('dcMedHx', dc.medHx||''); $('dcSurgHx').value=dc.surgHx||''; $('dcAllergies').value=dc.allergies||'';
   $('dcProc').value=dc.proc||''; $('dcOpFindings').value=dc.opFindings||'';
   $('dcCourse').value=dc.course||''; $('dcInvest').value=dc.invest||'';
@@ -12761,7 +13084,11 @@ function loadDs(id){
   (async ()=>{
     for(const it of (dc.images||[]).slice(0,2)){
       const rec = await imgGet(it.id);
-      if(rec) dsImgs.push({id:it.id, thumb:rec.thumb, label:it.label||''});
+      /* An image saved by an older build, or by any path that did not make a thumbnail, has
+         only `full`. Reading `rec.thumb` blindly put the string "undefined" into an <img src>
+         and the browser went off to fetch a file of that name on every discharge opened. */
+      if(rec && (rec.thumb || rec.full))
+        dsImgs.push({id:it.id, thumb:rec.thumb || rec.full, label:it.label||''});
     }
     renderDsImgStrip();
   })();
@@ -12866,6 +13193,10 @@ function deleteDoc(id){
   db.documents = db.documents.filter(x=>x.id!==id);
   persist(); renderDocList();
 }
+function dcLayoutCls(){
+  const v=(db.settings||{}).dcLayout;
+  return (v==='quiet'||v==='letter'||v==='panel') ? (' dc-'+v) : '';
+}
 async function printDoc(d, forcePlain){
   const s = db.settings, pad = !forcePlain && (s.printMode||'pad')==='pad';
   const strip = '<div class="rx-pt">'+
@@ -12877,17 +13208,48 @@ async function printDoc(d, forcePlain){
   if(d.type==='discharge'){
     const dc = d.dc||{};
     const sec = (h,v,cls)=> v? '<div class="dc-sec'+(cls?' '+cls:'')+'"><h4>'+h+'</h4><p>'+emphHtml(v)+'</p></div>' : '';
-    const cell = (l,v)=>'<td class="lbl">'+l+'</td><td>'+esc(v||'—')+'</td>';
+    /* an empty pair is a spacer, not a missing value — it must not print a dash */
     const clinicNo = dsClinicNoOf(d), cnic = d.printCnic ? dsCnicOf(d) : '';
+    /* b86: the table used to be five hand-written rows, which left an empty box whenever a
+       value was missing and put the date of surgery on a line of its own. It is built from a
+       LIST now — anything without a value is simply not added, the rest close up behind it,
+       and there is never a hole. The address takes the full width, because a Sargodha address
+       does not fit in a quarter of the page. */
+    const grp = (list)=>list.filter(x=>String(x[1]||'').trim());
+    /* b87: a lone item stretched across the row, which still READ as an empty box — a label
+       on the left and a stretch of nothing where the second pair should have been. So the
+       two-column half of the table now only ever holds COMPLETE pairs: if the count comes out
+       odd, the last item moves down and prints full width alongside Address and Consultant,
+       where a wide row is what the eye expects rather than a gap.
+
+       Order matters here. Name, MR, age and registration pair off first, then the three
+       dates, so the dates keep reading together — which is what the blocks were for. */
+    const short = grp([
+      ['Patient name',      d.name],
+      ['MR # (hospital)',   dsMrnOf(d)],
+      ['Age / Sex',         [d.age,d.sex].filter(Boolean).join(' / ')],
+      ['Clinic reg #',      clinicNo],
+      ['Date of admission', dc.admit?fmtDate(dc.admit):''],
+      ['Date of surgery',   dc.surgery?fmtDate(dc.surgery):''],
+      ['Date of discharge', dc.discharge?fmtDate(dc.discharge):''],
+      ['Phone',             dsPhoneOf(d)],
+      ['CNIC',              cnic]
+    ]);
+    const wide = [];
+    if(short.length % 2) wide.push(short.pop());     // never leave half a row behind
+    grp([['Address', dsAddressOf(d)],
+         ['Consultant', db.settings.docName||'']]).forEach(function(w){ wide.push(w); });
+    let infoRows = '';
+    for(let i=0;i<short.length;i+=2){
+      const a=short[i], b=short[i+1];
+      infoRows += '<tr><td class="lbl">'+esc(a[0])+'</td><td>'+esc(a[1])+'</td>'+
+                     '<td class="lbl">'+esc(b[0])+'</td><td>'+esc(b[1])+'</td></tr>';
+    }
+    wide.forEach(function(w){
+      infoRows += '<tr><td class="lbl">'+esc(w[0])+'</td><td colspan="3">'+esc(w[1])+'</td></tr>';
+    });
     inner = '<div class="doc-title" style="margin-top:0">DISCHARGE SUMMARY</div>'+
-      '<table class="dc-info"><tbody>'+
-        '<tr>'+cell('Patient name', d.name)+cell('MR # (hospital)', dsMrnOf(d))+'</tr>'+
-        '<tr>'+cell('Age / Sex', [d.age,d.sex].filter(Boolean).join(' / '))+
-               cell('Clinic reg #', clinicNo)+'</tr>'+
-        (cnic? '<tr>'+cell('CNIC', cnic)+cell('Consultant', db.settings.docName)+'</tr>'
-             : '<tr>'+cell('Consultant', db.settings.docName)+cell('', '')+'</tr>')+
-        '<tr>'+cell('Date of admission', dc.admit?fmtDate(dc.admit):'')+cell('Date of discharge', dc.discharge?fmtDate(dc.discharge):'')+'</tr>'+
-      '</tbody></table>'+
+      '<table class="dc-info"><tbody>'+ infoRows +'</tbody></table>'+
       sec('Diagnosis', dc.diagnosis, 'dc-dx') +
       sec('Presenting complaints', dc.clinical) +
       sec('Clinical findings', dc.findings) +
@@ -12943,13 +13305,24 @@ async function printDoc(d, forcePlain){
   }
   const footHtml = '<div class="rx-foot dc-foot"><div class="fu">'+ buildDocQr(d) +'</div>'+
     '<div class="sig"><div class="line"></div>'+esc(s.docName||'Signature')+'</div></div>';
-  const sheetHtml = '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+rxFinishCls()+'">'+
+  const dcCls = (d.type==='discharge') ? dcLayoutCls() : '';
+  const sheetHtml = '<div class="rx-page"><div class="rx-sheet'+(pad?' pad':'')+urSizeCls()+rxFinishCls()+dcCls+'">'+
     (pad?'':buildPlainHeader()) +
+    /* The pictures belong at the foot of page 1 — that is where the doctor looks for them.
+       b84 let them flow to the end, which fixed the text loss but moved them off page 1.
+       b85 pins them back and lets the text run DOWN TO them and then continue on page 2,
+       which is what was wanted all along. What made the old version unusable was not the
+       pinning, it was the 18mm of wasted top margin on top of it (fixed in b84) — and text
+       being chopped mid-section to fill the last centimetre (see `splitOff` below). */
     '<div class="doc-flow">'+ inner + footHtml +'</div>'+
     (figs? '<div class="dc-imgband">'+figs+'</div>' : '')+
   '</div></div>';
 
-  const box = pageBox(pad, 18, 'A4');
+  /* b84: this used to be pageBox(pad, 18, 'A4') — eighteen millimetres added on top of the
+     top space the doctor had already calibrated for his own letterhead. It dates from when
+     the title carried a 9mm margin and documents did not paginate themselves; since they do,
+     it was simply a band of blank paper under the pre-printed area on every page. */
+  const box = pageBox(pad, 0, 'A4');
   setPageStyle(box, 'A4', false);          // documents paginate themselves now, same as prescriptions
   const pa = $('printArea');
   let cancelled = false, asked = false;
@@ -13057,8 +13430,14 @@ function docPaginate(pa, box, compact){
     cont.appendChild(p2);
     return cont;
   };
+  /* b85: "rather than breaking up text". A section used to be cut wherever it happened to
+     run out of room, leaving two or three lines stranded under a "(continued)" heading. A
+     whole section moving to the next page reads far better than a split one, so splitting is
+     now a LAST RESORT: only when the section could not fit on a page of its own anyway. */
   const splitOff = (el, col, room)=>{
     if(!el.classList || !el.classList.contains('dc-sec')) return null;
+    const fullPage = usablePx - pgnoPx - safePx;
+    if(el.offsetHeight <= fullPage) return null;      // it will fit whole on the next sheet
     const ps = Array.prototype.slice.call(el.children).filter(x=>x.tagName==='P');
     if(ps.length === 1) return splitPara(el, ps[0], col, room);
     if(ps.length < 2) return null;
@@ -13338,7 +13717,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.11-b81';
+const APP_BUILD = '2026.08.11-b87';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -15528,7 +15907,8 @@ function buildRxQr(v,p){
     if(!want) return '';
     const qc=(db.qrcodes||[]).find(x=>x.id===want);
     if(!qc || !String(qc.text||'').trim()) return '';
-    const svg = QRenc.svg(qc.text, 24);
+    const svg = QRenc.svg(qc.text, 15);   // b84: 24mm was a slab; the generator writes an
+                                          // inline style, so CSS cannot shrink it afterwards
     if(!svg) return '';
     return '<div class="rx-qr">'+svg+'<div class="qr-cap">'+esc(qc.label||'')+'</div></div>';
   }catch(e){ return ''; }
@@ -15559,7 +15939,7 @@ function buildDocQr(d){
     if(!want) return '';
     const qc=(db.qrcodes||[]).find(x=>x.id===want);
     if(!qc || !String(qc.text||'').trim()) return '';
-    const svg = QRenc.svg(qc.text, 22);
+    const svg = QRenc.svg(qc.text, 16);   // b84: same on the discharge summary
     if(!svg) return '';
     return '<div class="rx-qr dc-qr">'+svg+'<div class="qr-cap">'+esc(qc.label||'')+'</div></div>';
   }catch(e){ return ''; }
@@ -15705,12 +16085,17 @@ function printVisit(v, p, forcePlain){
     '</div>'+
     '<div class="rx-bottom">'+
       '<div class="rx-foot rx-foot-r">'+
-        '<div class="rx-corner">'+ buildRxQr(v,p) +
+        /* b84: the QR used to sit inside this corner cluster, a heavy square shoulder-to-
+         shoulder with two bordered boxes, floating in the white space beside them. It moves
+         down to the foot line, small, where it reads as furniture rather than as content —
+         and the page balances: boxes right, code left, practice line between them. */
+      '<div class="rx-corner">'+
           '<div class="rx-boxcol">'+ nextTestsBox(v) + fuDateBox(v) +'</div>'+
         '</div>'+
       '</div>'+
       (!pad && s.footer?'<div class="rx-footer-note">'+esc(s.footer)+'</div>':'')+
-      (!pad ? socialsPrintLine() : '')+
+      '<div class="rx-endline">'+ buildRxQr(v,p) +
+        '<div class="rx-endsoc">'+(!pad ? socialsPrintLine() : '')+'</div></div>'+
     '</div>'+
   '</div></div>';
 
@@ -21684,7 +22069,7 @@ const DRAFT_FORMS={
       if($('dsClinicNo')) $('dsClinicNo').value=f.clinicNo||'';
       if($('dsCnic')) $('dsCnic').value=f.cnic||'';
       if(typeof cnicPrintSet==='function') cnicPrintSet(f.printCnic);
-      $('dcAdmit').value=c.admit||''; $('dcDischarge').value=c.discharge||'';
+      $('dcAdmit').value=c.admit||''; $('dcSurgery').value=c.surgery||''; $('dcDischarge').value=c.discharge||'';
       $('dcDiagnosis').value=c.diagnosis||''; $('dcClinical').value=c.clinical||'';
       $('dcFindings').value=c.findings||''; tbSet('dcMedHx', c.medHx||'');
       $('dcSurgHx').value=c.surgHx||''; $('dcAllergies').value=c.allergies||'';
@@ -23072,7 +23457,7 @@ function syncDeltaRows(now){
     (db[k]||[]).forEach(function(rec){
       if(!rec || rec.id==null) return;
       const id=String(rec.id);
-      if(seen[id]){ dups.push(seen[id]+' / '+k+' — id '+id); return; }   // (2) and (3)
+      if(seen[id]){ dups.push({from:seen[id], to:k, id:id, rec:rec}); return; }   // (2) and (3)
       seen[id]=k;
       const pay=syncPayloadOf(k, rec);
       const hv=syncHash(pay);
@@ -23092,6 +23477,45 @@ function syncDeltaRows(now){
   });
   syncDupReport = dups.length ? dups : null;
   return rows;
+}
+/* ---- b83: repair the duplicate instead of reporting it every single sync ----
+   Two records carrying one id is a data fault, and until now the engine sent whichever it
+   met first and told the doctor, in these words, that "2 records share ids with another —
+   only one copy was sent: instrPresets / instrP". He could not act on that, and it came back
+   every time he synced, for ever, because nothing ever fixed it.
+
+   Nothing here is thrown away. The second record keeps everything it holds and is given an
+   id of its own, so BOTH reach the other devices — except where the two are identical, in
+   which case one is genuinely a copy and is dropped. Either way the fault is gone and the
+   message does not come back. */
+function syncFixDupIds(){
+  if(!syncDupReport || !syncDupReport.length) return null;
+  const out = {renamed:0, dropped:0, where:{}};
+  syncDupReport.forEach(function(d){
+    const list = db[d.to]; if(!Array.isArray(list)) return;
+    const i = list.indexOf(d.rec); if(i < 0) return;
+    const first = (db[d.from]||[]).filter(function(x){ return x && String(x.id)===String(d.id); })[0];
+    const same = first && JSON.stringify(syncPayloadOf(d.from, first)) === JSON.stringify(syncPayloadOf(d.to, d.rec));
+    out.where[d.to] = (out.where[d.to]||0) + 1;
+    if(same && d.from===d.to){ list.splice(i,1); out.dropped++; return; }   // a true copy
+    d.rec.id = uid(String(d.to).slice(0,3));
+    d.rec.updatedAt = syncStamp(); d.rec.updatedBy = byTag();
+    out.renamed++;
+  });
+  if(out.renamed || out.dropped){ syncDupReport = null; persist(); }
+  return (out.renamed || out.dropped) ? out : null;
+}
+/* The names the doctor sees. `instrPresets` is not a word. */
+const COLL_WORDS = {instrPresets:'instruction preset', noteTemplates:'note template',
+  templates:'prescription template', chips:'quick chip', meds:'medicine', ixRules:'test rule',
+  patients:'patient', visits:'prescription', registry:'registry entry', documents:'document',
+  surgeries:'operation', inventory:'inventory item', appts:'appointment', recalls:'recall',
+  qrcodes:'QR code', leaflets:'leaflet', expenses:'expense', queue:'queue entry',
+  videos:'video', mdt:'MDT case', mdtMeetings:'MDT meeting', users:'user account',
+  activity:'activity note', accesslog:'sign-in record', prefs:'preference'};
+function collWord(k, n){
+  const w = COLL_WORDS[k] || String(k||'record');
+  return (n===1) ? w : (w.charAt(w.length-1)==='y' && w!=='day' ? w.slice(0,-1)+'ies' : w+'s');
 }
 async function syncDeltaPush(c, rows){
   if(!rows || !rows.length) return 0;
@@ -23805,12 +24229,27 @@ async function syncNow(loud, force){
     const rows = syncDeltaRows(stamp);
     const sent = await syncDeltaPush(c, rows);
     if(sent && stamp > String(cfg.cur||'')) cfg.cur = stamp;
-    /* duplicated ids are a data fault, not a sync fault — say so instead of hiding it */
+    /* A duplicated id is a data fault. b83 repairs it and says so once, in English,
+       rather than reporting the same thing on every sync for ever. */
     if(syncDupReport && syncDupReport.length){
-      notes.push({t:'dup', n:syncDupReport.length});
-      try{ logActivity('edit','sync', syncDupReport.length+
-        ' record'+(syncDupReport.length===1?' shares an id':'s share ids')+
-        ' with another — only one copy was sent: '+syncDupReport.slice(0,4).join('; ')); }catch(e){}
+      const fixed = syncFixDupIds();
+      if(fixed){
+        const bits = Object.keys(fixed.where).map(function(k){
+          return fixed.where[k]+' '+collWord(k, fixed.where[k]); });
+        const what = bits.join(' and ');
+        /* logActivity trims a label to 80 characters, and "Nothing was lost" is the half he
+           actually wants — so the sentence is written to fit rather than to be trimmed. */
+        let msg;
+        if(fixed.renamed && fixed.dropped)
+          msg = 'Tidied up '+what+' — copies removed, rest kept. Nothing was lost.';
+        else if(fixed.dropped)
+          msg = 'Removed '+fixed.dropped+' exact duplicate '+what.replace(/^\d+ /,'')+
+                ' — you had it saved twice. Nothing was lost.';
+        else
+          msg = 'Tidied up '+what+' that shared a filing number. Nothing was lost.';
+        notes.push({t:'dup', n:fixed.renamed+fixed.dropped});
+        try{ logActivity('edit','sync', msg); }catch(e){}
+      }
     }
     tombPrune();
     if(typeof reconcileMrnSeq==='function') reconcileMrnSeq();
