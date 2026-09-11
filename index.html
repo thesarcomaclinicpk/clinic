@@ -207,12 +207,12 @@ section.tab{display:none}
 section.tab.active{display:block;animation:fadeIn .26s cubic-bezier(.3,.7,.4,1)}
 @keyframes fadeIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
 /* staggered entrance for dashboard tiles & action cards */
-.home-tiles .tile,.home-actions .ha-card{animation:tileIn .34s cubic-bezier(.3,.7,.4,1) both}
-.home-tiles .tile:nth-child(2),.home-actions .ha-card:nth-child(2){animation-delay:.05s}
-.home-tiles .tile:nth-child(3),.home-actions .ha-card:nth-child(3){animation-delay:.1s}
-.home-tiles .tile:nth-child(4),.home-actions .ha-card:nth-child(4){animation-delay:.15s}
-.home-tiles .tile:nth-child(5){animation-delay:.2s}
-.home-tiles .tile:nth-child(6){animation-delay:.25s}
+/* `both` retains the final keyframe, and a retained transform:none is the identity
+   matrix, which breaks position:fixed for every descendant — never-do #27 (b89). */
+.home-actions .ha-card{animation:tileIn .34s cubic-bezier(.3,.7,.4,1) backwards}
+.home-actions .ha-card:nth-child(2){animation-delay:.05s}
+.home-actions .ha-card:nth-child(3){animation-delay:.1s}
+.home-actions .ha-card:nth-child(4){animation-delay:.15s}
 @keyframes tileIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .tile{transition:transform .14s, box-shadow .14s}
 .tile:hover{transform:translateY(-2px);box-shadow:var(--sh-raise)}
@@ -363,7 +363,7 @@ html:not(.booting) #bootSplash{display:none}
   display:flex;align-items:center;justify-content:center;font:700 27px Georgia,serif}
 #bootSplash .bs-tx{font:700 var(--t-meta) system-ui;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
 .lock-wrap{display:flex;border-radius:var(--r-lg);overflow:hidden;box-shadow:0 26px 70px rgba(15,23,42,.28);
-  max-height:94vh;animation:lockIn .4s cubic-bezier(.3,.8,.4,1) both}
+  max-height:94vh;animation:lockIn .4s cubic-bezier(.3,.8,.4,1) backwards}
 @keyframes lockIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
 .lock-side{width:295px;background:linear-gradient(160deg,var(--teal) 0%,var(--teal-grad) 55%,#14313e 100%);
   color:#fff;padding:44px 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -425,39 +425,55 @@ body[data-role="staff"] #ng-practice{display:none!important}
 #qNavCount{background:#f59e0b;color:#3b2a00;border-radius:var(--r-pill);padding:0 var(--sp-3);font-size:var(--t-chip);font-weight:700;margin-left:var(--sp-2)}
 #qNavCount.hidden{display:none}
 /* ---------- Home / landing ---------- */
+/* The greeting band, b89. It was 218px tall and told the doctor his own name, today's
+   date, his own clinic address and his own social links — four things he knows — over a
+   210px watermark. It is now one line: the greeting, the date, and the page's own
+   control. The social buttons are for patients and live in Settings, which is where
+   they are set. Nothing here is decoration except the brand band itself. */
 .home-hero{position:relative;overflow:hidden;
   background:linear-gradient(120deg,var(--hero1) 0%,var(--hero2) 55%,var(--hero3) 100%);
-  border-radius:var(--r-lg);color:#fff;padding:34px 40px;margin-bottom:var(--sp-6);
-  display:flex;align-items:center;justify-content:space-between;gap:var(--sp-6);
-  box-shadow:0 18px 44px rgba(10,95,122,.34)}
-.home-hero::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(130% 150% at 100% -10%, rgba(255,255,255,.20), transparent 55%),
-             radial-gradient(90% 120% at -5% 110%, rgba(0,0,0,.16), transparent 60%)}
-.home-hero::after{content:"\2114";position:absolute;right:14px;bottom:-42px;font-size:210px;font-weight:700;line-height:1;
-  color:rgba(255,255,255,.07);pointer-events:none;font-family:Georgia,'Times New Roman',serif}
-.hh-left{position:relative;z-index:1}
-.hh-greet{font-size:29px;font-weight:700;letter-spacing:-.5px;text-shadow:0 1px 10px rgba(0,0,0,.12)}
-.hh-date{opacity:.92;font-size:var(--t-body);margin-top:var(--sp-3);font-weight:400}
-.hh-clinic{opacity:.82;font-size:var(--t-meta);margin-top:var(--sp-6);letter-spacing:.7px;text-transform:uppercase;font-weight:700}
-.hh-soc{margin-top:var(--sp-6);display:flex;gap:var(--sp-4);flex-wrap:wrap}
-.hh-soc a{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:var(--r-pill);
-  padding:var(--sp-3) var(--sp-6);font-size:var(--t-meta);font-weight:700;text-decoration:none;backdrop-filter:blur(6px);
-  transition:transform .14s, background .14s, color .14s}
-.hh-soc a:hover{transform:translateY(-2px);background:#fff;color:var(--teal-deep)}
-.hh-logo{position:relative;z-index:1}
-.hh-logo{width:64px!important;height:64px!important;font-size:34px!important;background:rgba(255,255,255,.14)!important;
-  border-radius:var(--r-lg)!important;display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden}
-.hh-logo img{width:100%;height:100%;object-fit:cover;border-radius:var(--r-lg)}
-.hh-logo.photo{width:190px!important;height:126px!important;border-radius:var(--r-lg)!important;
-  box-shadow:0 10px 26px rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.35)}
-.hh-logo.photo img{border-radius:var(--r-md)}
-@media(max-width:900px){.hh-logo.photo{display:none}}
-.home-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--sp-5);margin-bottom:var(--sp-6)}
+  border-radius:var(--r-lg);color:#fff;padding:var(--sp-4) var(--sp-6);margin-bottom:var(--sp-5);
+  display:flex;align-items:center;gap:var(--sp-5);
+  box-shadow:var(--card-sh)}
+.hh-left{position:relative;z-index:1;display:flex;align-items:baseline;flex-wrap:wrap;
+  gap:var(--sp-2) var(--sp-5);flex:1;min-width:0}
+.hh-greet{font-size:var(--t-head);font-weight:700;letter-spacing:-.2px}
+.hh-date{opacity:.78;font-size:var(--t-body);font-weight:400}
+/* The ℞ placeholder is decoration — the sidebar already carries the brand — so the slot
+   shows only when the doctor has actually set a banner photo, and it sits on the LEFT,
+   clear of the fixed search box and bell. */
+.hh-logo{display:none!important}
+.hh-logo.photo{display:flex!important;position:relative;z-index:1;
+  width:64px!important;height:36px!important;font-size:0!important;
+  background:rgba(255,255,255,.16)!important;border-radius:var(--r-sm)!important;
+  align-items:center;justify-content:center;flex:none;overflow:hidden;
+  border:1px solid rgba(255,255,255,.3)}
+.hh-logo.photo img{width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm)}
+/* The numbers, folded into one line (b89). Three of the six read 0 on a normal day and a
+   number that is always zero is noise in prime space — but hiding it would move the other
+   five about, so a zero recedes in weight and colour instead and nothing ever shifts. */
+.home-strip{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--sp-4) var(--sp-6);
+  background:var(--card);border:1px solid var(--card-bd);border-radius:var(--r-lg);
+  box-shadow:var(--card-sh);padding:var(--sp-5) var(--sp-6);margin-bottom:var(--sp-5)}
+.hs-i{display:inline-flex;align-items:baseline;gap:var(--sp-3);
+  background:none;border:none;padding:0;font:inherit;text-align:left;color:inherit}
+.hs-i.hs-go{cursor:pointer;border-radius:var(--r-sm)}
+.hs-i.hs-go:hover .hs-l{color:var(--teal)}
+.hs-v{font-size:var(--t-head);font-weight:700;color:var(--ink);line-height:1.1;white-space:nowrap}
+.hs-l{font-size:var(--t-meta);color:var(--muted);white-space:nowrap;transition:color .14s}
+.hs-i.hs-zero .hs-v{color:var(--muted);font-weight:400}
 .home-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:var(--sp-5);margin-bottom:var(--sp-6)}
 .ha-card{background:var(--card);border:1px solid var(--card-bd);border-radius:var(--r-lg);padding:var(--card-pad);cursor:pointer;text-align:left;
   display:flex;flex-direction:column;gap:var(--sp-1);font-family:inherit;transition:transform .12s, box-shadow .12s, border-color .12s;
   box-shadow:var(--card-sh)}
 .ha-card:hover{transform:translateY(-2px);box-shadow:var(--sh-raise);border-color:var(--teal)}
+/* one clear next action (b89) — the other three are the same card, unfilled */
+.ha-card.ha-primary{background:var(--teal-grad);border-color:var(--teal-grad)}
+.ha-card.ha-primary .ha-t{color:#fff}
+.ha-card.ha-primary .ha-s{color:rgba(255,255,255,.8)}
+.ha-card.ha-primary:hover{border-color:var(--teal-grad)}
+html[data-theme="dark"] .ha-card.ha-primary{background:var(--teal-grad);border-color:var(--teal-grad)}
+html[data-theme="dark"] .ha-card.ha-primary .ha-t{color:#fff}
 .ha-ic{font-size:23px;line-height:1}
 .ha-t{font-weight:700;margin-top:var(--sp-4);color:var(--ink);font-size:var(--t-title)}
 .ha-s{font-size:var(--t-meta);color:var(--muted)}
@@ -504,7 +520,7 @@ html[data-theme="dark"] .vid-card{background:#121e2a;border-color:#233545}
 .pp-scroll{flex:1;overflow:auto;padding:var(--sp-6) 0 34px}
 .pp-sheet{width:210mm;min-height:297mm;display:flex;flex-direction:column;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.55);
   border-radius:var(--r-sm);flex:none;margin:0 auto;zoom:var(--ppz,.78);
-  animation:ppIn .3s ease both}
+  animation:ppIn .3s ease backwards}
 /* the self-paginated preview: real sheets, with the pre-printed zones hatched behind them */
 .pp-sheet:has(.pp-page){background:transparent;box-shadow:none;min-height:0;gap:var(--sp-6);width:210mm}
 .pp-page{position:relative;flex:none;width:210mm;border-radius:var(--r-sm);overflow:hidden;
@@ -820,8 +836,11 @@ input.rx-ur:focus{border-style:solid}
 .rx-qr{text-align:center}
 .rx-qr svg{display:block;margin:0 auto}
 .qr-cap{font-size:8px;color:#333;margin-top:1mm;letter-spacing:.3px;font-family:-apple-system,Arial,sans-serif}
-/* the foot line: code on the left, practice line filling the rest (b84) */
-.rx-endline{display:flex;align-items:center;gap:9px;margin-top:8px}
+/* The foot line (b84), now the whole bottom band (b90): code on the left, practice line
+   filling the middle, the two boxes on the right — all standing on ONE baseline, which is
+   why this aligns to flex-end and not to centre. */
+.rx-endline{display:flex;align-items:flex-end;gap:9px;margin-top:8px}
+.rx-endline .rx-boxcol{flex:0 0 30%}
 .rx-endline .rx-qr{flex:0 0 auto;text-align:left}
 .rx-endline .rx-qr svg{margin:0}   /* size comes from QRenc.svg — it writes an inline style */
 .rx-endline .qr-cap{margin-top:.6mm;font-size:7.5px;text-align:center;max-width:15mm;line-height:1.2}
@@ -2336,9 +2355,9 @@ html[data-theme="dark"] .ne-group{background:#0f2530}
   .page-head{font-size:var(--t-head);margin-bottom:var(--sp-5)}
   .card{padding:var(--sp-6) var(--sp-5);border-radius:var(--r-md)}
   .home-tiles{grid-template-columns:1fr 1fr}
-  .home-hero{padding:var(--sp-6) var(--sp-6);border-radius:var(--r-lg);flex-wrap:wrap}
-  .hh-greet{font-size:22px}
-  .home-hero::after{font-size:130px;bottom:-24px}
+  .home-hero{padding:var(--sp-4) var(--sp-5);border-radius:var(--r-md);flex-wrap:wrap}
+  .hh-greet{font-size:var(--t-title)}
+  .home-strip{gap:var(--sp-3) var(--sp-5);padding:var(--sp-4) var(--sp-5)}
   .reg-toolbar{gap:var(--sp-3)}
   .search-row{flex-wrap:wrap}
   /* modals full-height friendly */
@@ -2660,23 +2679,18 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <!-- ============ TAB: HOME ============ -->
 <section class="tab" id="tab-home">
   <div class="home-hero">
-    <div class="hh-left">
-      <div class="hh-greet" id="hhGreet"></div>
-      <div class="hh-date" id="hhDate"></div>
-      <div class="hh-clinic" id="hhClinic"></div>
-      <div class="hh-soc" id="hhSoc"></div>
-    </div>
     <div class="hh-logo rx-logo">&#8478;</div>
+    <div class="hh-left">
+      <span class="hh-greet" id="hhGreet"></span>
+      <span class="hh-date" id="hhDate"></span>
+    </div>
   </div>
   <div id="homeApproval"></div>
   <div id="homeSync"></div>
-  <div class="btn-bar" style="justify-content:flex-end;margin-bottom:6px">
-    <button class="btn btn-ghost btn-sm" id="dashEditBtn" onclick="dashToggleEdit()">⚙ Customise this page</button>
-  </div>
   <div id="dashPicker" class="dash-picker hidden"></div>
-  <div class="home-tiles hb" data-hb="tiles" id="homeTiles"></div>
+  <div class="home-strip hb" data-hb="tiles" id="homeTiles"></div>
   <div class="home-actions hb" data-hb="actions">
-    <button class="ha-card" onclick="showTab('visit')"><span class="ha-ic">📝</span><span class="ha-t">New prescription</span><span class="ha-s">Write &amp; print for the next patient</span></button>
+    <button class="ha-card ha-primary" onclick="showTab('visit')"><span class="ha-ic">📝</span><span class="ha-t">New prescription</span><span class="ha-s">Write &amp; print for the next patient</span></button>
     <button class="ha-card" onclick="showTab('queue')"><span class="ha-ic">🎫</span><span class="ha-t">Queue</span><span class="ha-s" id="haQueueSub">Add arrivals, call by token</span></button>
     <button class="ha-card" onclick="showTab('patients')"><span class="ha-ic">🗂</span><span class="ha-t">Patients</span><span class="ha-s" id="haPtSub">Search records &amp; history</span></button>
     <button class="ha-card" onclick="showTab('discharge')"><span class="ha-ic">🏥</span><span class="ha-t">Discharge summary</span><span class="ha-s">For patients going home</span></button>
@@ -2702,6 +2716,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
       <span class="muted small" id="homeTodaySub"></span>
     </div>
     <div id="homeToday"></div>
+  </div>
+  <div class="btn-bar" style="justify-content:flex-end;margin-top:var(--sp-5)">
+    <button type="button" class="btn btn-ghost btn-sm" id="dashEditBtn" onclick="dashToggleEdit()">⚙ Customise this page</button>
   </div>
 </section>
 
@@ -5980,7 +5997,9 @@ async function photoPaint(){
   if(ls && lock) ls.style.backgroundImage =
     'linear-gradient(165deg, rgba(8,34,44,.55) 0%, rgba(8,30,40,.82) 70%, rgba(6,22,30,.92) 100%), url('+lock+')';
   const hero = await photoLoad('photoHero');
-  const hl=document.querySelector('.home-hero');
+  /* .hh-logo, NOT .home-hero — this replaced the whole greeting band with the picture,
+     taking the greeting, the date and the page's own control with it (fixed b89). */
+  const hl=document.querySelector('.hh-logo');
   if(hl && hero){ hl.classList.add('photo'); hl.innerHTML='<img src="'+hero+'" alt="">'; }
   const lg = await photoLoad('logo');
   if(lg) document.querySelectorAll('.brand-logo img').forEach(function(i){ i.src=lg; });
@@ -6542,13 +6561,18 @@ function railReveal(key, ctrlId){
    show, and in what order, is a per-device choice (it depends on the screen in front of
    you, not on the clinic), so it lives in localStorage rather than the synced settings.  */
 const DASH_KEY = 'fh_dash';
+/* Order matters: this list IS the default page order (b89). "Today at a glance" — who is
+   waiting — moved above the two reading panels, because the queue is what the app is
+   opened for and it was starting 260px below the fold on a laptop. A device where the
+   doctor has already arranged the page keeps his arrangement: dashRead only ever appends
+   a block he has not seen. */
 const DASH_BLOCKS = [
   {k:'tiles',     t:'The numbers',        s:'Patients today, queue, follow-ups, income'},
   {k:'actions',   t:'Quick actions',      s:'New prescription, queue, patients, discharge'},
+  {k:'today',     t:'Today at a glance',  s:'Appointments and the queue, hour by hour'},
   {k:'followups', t:'Follow-ups due',     s:'Who is due back'},
   {k:'recent',    t:'Recent prescriptions', s:'The last few you wrote'},
-  {k:'mdt',       t:'MDT board',          s:'Cases waiting on the tumour board'},
-  {k:'today',     t:'Today at a glance',  s:'Appointments and the queue, hour by hour'}
+  {k:'mdt',       t:'MDT board',          s:'Cases waiting on the tumour board'}
 ];
 const DASH_DEFAULT = {order:DASH_BLOCKS.map(function(b){ return b.k; }), off:['mdt']};
 function dashRead(){
@@ -11988,15 +12012,11 @@ function renderHome(){
   const who = currentUser ? currentUser.name : (db.settings.docName||'');
   $('hhGreet').textContent = greet+', '+who;
   if(typeof renderHomeSync==='function') renderHomeSync();
-  $('hhDate').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  $('hhClinic').textContent = [db.settings.brandTag, db.settings.clinicName, db.settings.address].filter(Boolean).join(' · ');
-  const soc = [
-    db.settings.fbUrl && ['ⓕ Facebook', db.settings.fbUrl],
-    db.settings.igUrl && ['📷 Instagram', db.settings.igUrl],
-    db.settings.liUrl && ['in LinkedIn', db.settings.liUrl],
-    db.settings.waBiz && ['💬 WhatsApp '+db.settings.waBiz, 'https://wa.me/'+waPhone(db.settings.waBiz)]
-  ].filter(Boolean);
-  $('hhSoc').innerHTML = soc.map(s=>'<a href="'+esc(s[1])+'" target="_blank" rel="noopener">'+esc(s[0])+'</a>').join('');
+  $('hhDate').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long'});
+  /* b89: the clinic name and address, and the social buttons, are gone from this band.
+     He knows where he works, and the social links are for PATIENTS — they print on the
+     prescription and are set in Settings ▸ Branding, which is the only place they are
+     needed. Nothing was deleted: turn them back on by putting the elements back. */
   if(typeof renderHomeToday==='function') renderHomeToday();
   if(typeof renderHomeMdt==='function') renderHomeMdt();
   if(typeof dashApply==='function') dashApply();
@@ -12007,15 +12027,26 @@ function renderHome(){
   const ops = db.surgeries.filter(o=>o.date && o.date.startsWith(ym)).length;
   const gross = seen.reduce((a,v)=>a+(+v.fee||0),0);
   const net = gross - Math.round(gross*feeSharePct()/100) - expensesOn(today).reduce((a,e)=>a+(+e.amount||0),0);
-  const tv = (n, pre) => '<div class="tv"><span class="cup" data-to="'+n+'"'+(pre?' data-pre="'+pre+'"':'')+'>'+(pre||'')+n.toLocaleString()+'</span></div>';
-  const go = (tab)=> canTab(tab) ? (' class="tile tile-go" onclick="showTab(\''+tab+'\')" title="Open '+esc(navLabel(tab))+'"') : ' class="tile"';
+  /* One line, not six tiles (b89). A number that reads 0 on most days was taking a sixth
+     of the best space on the screen. Hiding the zeros would have moved the other five
+     about from one morning to the next, so a zero recedes in weight and colour instead
+     and the row is the same shape every day. `.cup` is what animateCounts drives. */
+  const hsItem = (n, label, tab, pre, extra) => {
+    const go = tab && canTab(tab);
+    const t = go ? 'button' : 'span';
+    return '<'+t+(go?' type="button"':'')+' class="hs-i'+(go?' hs-go':'')+(n?'':' hs-zero')+(extra?' '+extra:'')+'"'+
+      (go?' onclick="showTab(\''+tab+'\')" title="Open '+esc(navLabel(tab))+'"':'')+'>'+
+      '<span class="hs-v"><span class="cup" data-to="'+n+'"'+(pre?' data-pre="'+pre+'"':'')+'>'+
+        (pre||'')+n.toLocaleString()+'</span></span>'+
+      '<span class="hs-l">'+label+'</span></'+t+'>';
+  };
   $('homeTiles').innerHTML =
-    '<div'+go('patients')+'>'+tv(seen.length)+'<div class="tl">Patients today</div></div>'+
-    '<div'+go('queue')+'>'+tv(waiting)+'<div class="tl">Waiting in queue</div></div>'+
-    '<div'+go('patients')+'>'+tv(fuDue.length)+'<div class="tl">Follow-ups due</div></div>'+
-    '<div'+go('appts')+'>'+tv((db.appts||[]).filter(a=>a.date===today && a.status==='booked').length)+'<div class="tl">Appointments today</div></div>'+
-    '<div'+go('oplog')+'>'+tv(ops)+'<div class="tl">Operations this month</div></div>'+
-    '<div class="tile adm-only">'+tv(net,'Rs ')+'<div class="tl">Net income today</div></div>';
+    hsItem(seen.length, 'Patients today', 'patients')+
+    hsItem(waiting, 'Waiting in queue', 'queue')+
+    hsItem(fuDue.length, 'Follow-ups due', 'patients')+
+    hsItem((db.appts||[]).filter(a=>a.date===today && a.status==='booked').length, 'Appointments today', 'appts')+
+    hsItem(ops, 'Operations this month', 'oplog')+
+    hsItem(net, 'Net income today', null, 'Rs ', 'adm-only');
   animateCounts($('homeTiles'));
   $('haQueueSub').textContent = waiting ? (waiting+' waiting — next token '+((db.queue||[]).filter(q=>q.date===today&&q.status==='waiting').sort((a,b)=>a.token-b.token)[0]||{}).token) : 'Add arrivals, call by token';
   $('haPtSub').textContent = db.patients.length ? (db.patients.length+' records — search & history') : 'Search records & history';
@@ -13287,8 +13318,10 @@ async function printDoc(d, forcePlain){
       sec('Condition at discharge', dc.condition) +
       (((db.settings.urduRx||'on')!=='off' && dc.conditionUr)
         ? '<div class="dc-sec dc-sec-ur" dir="rtl"><h4>رخصت کے وقت حالت</h4><p>'+esc(dc.conditionUr)+'</p></div>' : '') +
+      /* dc-list, b91: this section is a LIST, and a list may be split between its items.
+         Every other section is prose and stays whole — see splitOff and never-do #37. */
       ((dc.medsArr && dc.medsArr.length) ?
-        '<div class="dc-sec"><h4>Discharge medications</h4>'+dc.medsArr.map((m,i)=>{
+        '<div class="dc-sec dc-list"><h4>Discharge medications</h4>'+dc.medsArr.map((m,i)=>{
           const urOn = (db.settings.urduRx||'on')!=='off';
           const ur = urOn ? ((m.ur&&m.ur.trim()) || medUrduLine(m)) : '';
           return '<p class="dc-med"><b>'+(i+1)+'. '+esc(m.name)+'</b>'+
@@ -13296,7 +13329,7 @@ async function printDoc(d, forcePlain){
             (m.instr?' <i>('+esc(m.instr)+')</i>':'')+'</p>'+
             (ur?'<p class="mur dc-mur">'+esc(ur)+'</p>':'');
         }).join('')+'</div>'
-      : dc.meds? '<div class="dc-sec"><h4>Discharge medications</h4>'+dc.meds.split('\n').map(line=>{
+      : dc.meds? '<div class="dc-sec dc-list"><h4>Discharge medications</h4>'+dc.meds.split('\n').map(line=>{
         const t = line.trim(); if(!t) return '';
         return /[؀-ۿ]/.test(t) ? '<p class="mur dc-mur">'+esc(t)+'</p>' : '<p class="dc-med">'+esc(t)+'</p>';
       }).join('')+'</div>' : '') +
@@ -13456,10 +13489,17 @@ function docPaginate(pa, box, compact){
      run out of room, leaving two or three lines stranded under a "(continued)" heading. A
      whole section moving to the next page reads far better than a split one, so splitting is
      now a LAST RESORT: only when the section could not fit on a page of its own anyway. */
+  /* b91: a LIST is not prose. The rule above is about paragraphs — two or three lines
+     stranded under a "(continued)" heading read worse than a whole section moving over. A
+     numbered medicine list is not that: it breaks between medicines the way any list does,
+     and refusing to break it left a THIRD of page 1 empty while eight medicines sat alone
+     on page 2. So a section marked `dc-list` may be split even when it would fit whole on
+     the next sheet; everything else still may not. */
   const splitOff = (el, col, room)=>{
     if(!el.classList || !el.classList.contains('dc-sec')) return null;
+    const isList = el.classList.contains('dc-list');
     const fullPage = usablePx - pgnoPx - safePx;
-    if(el.offsetHeight <= fullPage) return null;      // it will fit whole on the next sheet
+    if(!isList && el.offsetHeight <= fullPage) return null;   // it will fit whole on the next sheet
     const ps = Array.prototype.slice.call(el.children).filter(x=>x.tagName==='P');
     if(ps.length === 1) return splitPara(el, ps[0], col, room);
     if(ps.length < 2) return null;
@@ -13470,6 +13510,14 @@ function docPaginate(pa, box, compact){
     }
     while(fit>=0 && ps[fit+1] && ps[fit+1].classList.contains('mur')) fit--;
     if(fit < 0 || fit >= ps.length-1) return null;
+    /* Never strand a lone medicine. One line left behind under a heading with the rest
+       overleaf reads worse than the whole block moving over; two is the smallest number
+       that looks deliberate rather than accidental. */
+    if(isList){
+      let stay = 0;
+      for(let i=0;i<=fit;i++) if(ps[i].classList.contains('dc-med')) stay++;
+      if(stay < 2) return null;
+    }
     const cont = document.createElement('div');
     cont.className = el.className;
     const h = el.querySelector('h4');
@@ -13739,7 +13787,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.08.27-b88';
+const APP_BUILD = '2026.09.11-b92';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -16106,18 +16154,16 @@ function printVisit(v, p, forcePlain){
       '</div>'+
     '</div>'+
     '<div class="rx-bottom">'+
-      '<div class="rx-foot rx-foot-r">'+
-        /* b84: the QR used to sit inside this corner cluster, a heavy square shoulder-to-
-         shoulder with two bordered boxes, floating in the white space beside them. It moves
-         down to the foot line, small, where it reads as furniture rather than as content —
-         and the page balances: boxes right, code left, practice line between them. */
-      '<div class="rx-corner">'+
-          '<div class="rx-boxcol">'+ nextTestsBox(v) + fuDateBox(v) +'</div>'+
-        '</div>'+
-      '</div>'+
       (!pad && s.footer?'<div class="rx-footer-note">'+esc(s.footer)+'</div>':'')+
+      /* b84 moved the QR down to the foot line, small, where it reads as furniture rather
+         than as content — and the page balances: boxes right, code left, practice line
+         between them. But the boxes stayed in a row of their OWN, above it, so they ended
+         up floating 22mm clear of the line everything else stood on. b90 makes it one row,
+         bottom-aligned: code left, practice line between, boxes right, one baseline. */
       '<div class="rx-endline">'+ buildRxQr(v,p) +
-        '<div class="rx-endsoc">'+(!pad ? socialsPrintLine() : '')+'</div></div>'+
+        '<div class="rx-endsoc">'+(!pad ? socialsPrintLine() : '')+'</div>'+
+        '<div class="rx-boxcol">'+ nextTestsBox(v) + fuDateBox(v) +'</div>'+
+      '</div>'+
     '</div>'+
   '</div></div>';
 
@@ -16234,11 +16280,18 @@ function rxPaginate(pa, box, paper, compact){
   if(band){
     first.pg.appendChild(band);
     bandH = band.offsetHeight;
-    const bc = band.querySelector('.rx-boxcol');
-    const qr = band.querySelector('.rx-corner .rx-qr, .rx-corner .rx-bc');
-    const bcH = bc ? bc.offsetHeight : 0;
-    const qrH = qr ? qr.offsetHeight : 0;
-    mainBlockH = Math.max(qrH, bandH - Math.max(0, bcH - qrH));
+    /* The band is one bottom-aligned row (b90), so a difference of heights no longer tells
+       you which column a thing stands in. Measure how far each piece REACHES UP from the
+       foot of the band instead: the boxes sit in the right-hand 30% under the clinical
+       column, while only the footer note, the QR and the practice line reach into the
+       medicines column — which is why the medicines may run further down the page than the
+       clinical notes may. Treating both the same is what pushed a four-medicine
+       prescription onto a second sheet. */
+    const foot = band.getBoundingClientRect().bottom;
+    const upTo = (sel)=>{ const el = band.querySelector(sel); if(!el) return 0;
+      const r = el.getBoundingClientRect();
+      return r.height ? (foot - r.top) : 0; };
+    mainBlockH = Math.max(upTo('.rx-footer-note'), upTo('.rx-endline .rx-qr'), upTo('.rx-endsoc'));
   }
 
   const usablePx = (box.ph - box.top - box.bot) * MM;      // the printable height of a page
@@ -16300,10 +16353,16 @@ function rxPaginate(pa, box, paper, compact){
     if(mi === beforeM && si === beforeS) break;            // nothing fits anywhere — stop rather than loop
   }
 
-  // the bottom band belongs to page 1, always, pinned above the pre-printed area
+  /* The bottom band belongs to page 1, always, pinned above the pre-printed area — and
+     above the page number when there is one. Both used to be pinned to the SAME bottom at
+     the SAME left margin, so on any prescription that ran to two sheets "Page 1 of 2" was
+     printed straight across the QR code: unreadable text over a code that then would not
+     scan. The page number keeps its corner on every sheet; the band steps up over it, and
+     only on the sheets where it exists (b90). */
+  const pgnoLiftMm = (pages.length > 1) ? (pgnoPx / MM) : 0;
   if(band){
     band.style.cssText = 'position:absolute;left:'+box.side+'mm;right:'+box.side+'mm;'+
-      'bottom:'+(box.bot + RX_SAFE_MM)+'mm;margin:0';
+      'bottom:'+(box.bot + RX_SAFE_MM + pgnoLiftMm)+'mm;margin:0';
   }
   // one page number per sheet, bottom left, inside the safe area
   pages.forEach((pg, i)=>{
@@ -24077,46 +24136,120 @@ function syncForget(ids){
    live   – subscribe to realtime; instant, and now costs one message per real change
    poll   – no subscription at all; costs zero realtime messages
    manual – only when the doctor presses Sync                                                */
+/* How often the clinic checks is the CLINIC's setting, not this device's (b92).
+   Cloud Sync is an owner-only screen (never-do #21), so the staff iPads could never reach
+   this picker at all: whatever mode a device was left on at pairing, it was stuck with, and
+   the doctor changing his own made no difference to anybody else's. That is the same shape
+   as the Drive setup in b80 — the half that is clinic setup goes in `prefs`, which syncs,
+   and every device reads it. The connection itself (URL, anon key, the paired account) is
+   rightly personal and stays in `db.settings`, which does not sync and must not (§4).
+
+   Precedence is deliberately simple, because the doctor has to be able to predict it: the
+   clinic's choice wins wherever it has arrived. A device that has never heard from the
+   clinic keeps doing what it was doing, so nothing changes for anyone until he chooses. */
+function syncSharedRec(){
+  return ((db.prefs||[]).filter(function(x){ return x && x.id==='syncmode'; })[0]) || null;
+}
+function syncClinicMode(){
+  const r = syncSharedRec();
+  const m = r && r.mode;
+  return (m==='live'||m==='poll'||m==='manual') ? m : '';
+}
+/* Precedence, and the one exception in it.
+
+   "Only when I press Sync" is the single mode a device keeps for ITSELF. Two reasons, and
+   the second is the important one. A device on manual does not sync in the background at
+   all — not on a timer, not at start-up (§6, "manual really means manual") — so a clinic-wide
+   manual would stop every device and then have no way of ever telling them to start again:
+   the instruction to restart travels by the very channel that has just been switched off.
+   And a device is only ever on manual because a PERSON chose it there; `c.mode` is written
+   nowhere else, so a staff iPad that has never seen this screen has no `c.mode` at all and
+   follows the clinic, which is the whole point of this change. */
 function syncMode(){
   const c = syncCfg();
+  if(c.mode === 'manual') return 'manual';      // told to stop, by somebody, on this device
+  const clinic = syncClinicMode();
+  if(clinic) return clinic;
   if(c.mode) return c.mode;
   return c.auto ? 'live' : 'manual';
 }
 function syncSetMode(m){
+  const mode = (m==='live'||m==='poll'||m==='manual') ? m : 'poll';
   const c = syncCfg();
-  c.mode = (m==='live'||m==='poll'||m==='manual') ? m : 'poll';
-  c.auto = (c.mode !== 'manual');
+  c.mode = mode;
+  c.auto = (mode !== 'manual');
+  /* Publish it for the clinic. Owner-only, exactly like the Drive setup: it is setup, not a
+     device preference, and a staff device must never be able to decide it for everyone.
+     Manual is never published — see syncMode() above. */
+  let shared = null;
+  if(mode !== 'manual' && (typeof isOwnerNow!=='function' || isOwnerNow())){
+    db.prefs = db.prefs || [];
+    shared = syncSharedRec();
+    if(!shared){ shared = {id:'syncmode'}; db.prefs.push(shared); }
+    shared.mode = mode;
+    shared.by = (typeof byTag==='function') ? byTag() : '';
+    syncTouch(shared);
+  }
   persist();
-  stopAutoSync();
-  if(c.mode !== 'manual') startAutoSync();
+  syncApplyMode();
   if(typeof renderSync==='function') renderSync();
   if(typeof renderSyncBudget==='function') renderSyncBudget();
-  toast(c.mode==='live' ? 'Instant updates on'
-      : c.mode==='poll' ? 'Checking every few minutes — no realtime messages used'
-      : 'Manual sync only');
+  toast(mode==='live' ? 'Instant updates on — every device in the clinic'
+      : mode==='poll' ? 'Checking every '+Math.round(SYNC_POLL_MS/60000)+' minutes on every device — no realtime messages used'
+      : 'Manual sync only — on this device');
+  if(shared && typeof syncSoon==='function') syncSoon();
+}
+/* Stop and restart the background timer against whatever the mode is NOW. Called when the
+   doctor changes it, and again when a pull brings the clinic's choice in from another
+   device — otherwise a staff iPad keeps the old timer until somebody reloads the app. */
+function syncApplyMode(){
+  if(typeof stopAutoSync!=='function') return;
+  stopAutoSync();
+  if(syncMode() !== 'manual' && typeof startAutoSync==='function') startAutoSync();
 }
 /* Realtime is a safety net once pushes are honest, so the poll can be far slower than the
    old sixty seconds — and it stops completely while the app is in the background, which is
    where a phone used to sit burning through the quota all day. */
 function syncPollMs(){
   if(document.hidden) return 0;
-  return syncMode()==='live' ? 300000 : 120000;
+  /* b90: the background check is every five minutes in both modes — on 'live' the poll is
+     only a safety net behind realtime, and on 'poll' five minutes is what the doctor asked
+     for. Changing it here changes it everywhere; the label below is written from the same
+     number so the two can never drift apart. */
+  return SYNC_POLL_MS;
 }
 
 
 /* ---- the settings panel for all of this ---- */
+/* The background interval, and the words for it, in one place. A label that says two
+   minutes while the timer runs every five is worse than either number on its own. */
+const SYNC_POLL_MS = 300000;
+function syncPollWords(){
+  const m = Math.round(SYNC_POLL_MS/60000);
+  return 'Every '+m+' minute'+(m===1?'':'s');
+}
 const SYNC_MODES = [
   {k:'live',   t:'Instant',        s:'Devices update each other the moment something changes'},
-  {k:'poll',   t:'Every 2 minutes', s:'No realtime messages at all — costs nothing against the quota'},
+  {k:'poll',   t:syncPollWords(), s:'No realtime messages at all — costs nothing against the quota'},
   {k:'manual', t:'Only when I press Sync', s:'Nothing happens in the background'}
 ];
 function renderSyncModePick(){
   const host = $('syncModePick'); if(!host) return;
   const cur = syncMode();
+  /* Say out loud that this is the whole clinic's setting, not this iPad's — he cannot see
+     the staff devices, so the only way he knows what he has just done is if it says so. */
+  const clinic = syncClinicMode();
   host.innerHTML = SYNC_MODES.map(function(m){
     return '<button type="button" class="chip'+(cur===m.k?' on':'')+'" title="'+esc(m.s)+'" '+
       'onclick="syncSetMode(\''+m.k+'\')">'+esc(m.t)+'</button>';
-  }).join('');
+  }).join('') +
+  '<p class="muted small" style="margin:8px 0 0">'+
+    '<b>Instant</b> and <b>'+esc(syncPollWords())+'</b> apply to <b>every device in the clinic</b>, '+
+    'including the staff iPads \u2014 they cannot reach this screen themselves'+
+    (clinic ? ' (set to <b>'+esc((SYNC_MODES.filter(function(m){return m.k===clinic;})[0]||{}).t||clinic)+'</b> at the moment)' : '')+
+    '. <b>Only when I press Sync</b> applies to this device alone: a device that stops '+
+    'checking cannot be told to start again.'+
+  '</p>';
 }
 function renderSyncBudget(){
   const host = $('syncBudget'); if(!host) return;
@@ -24138,13 +24271,13 @@ function renderSyncBudget(){
         'At the last '+(est.days||0)+' day'+(est.days===1?'':'s')+' of use: about <b>'+
         est.perDay.toLocaleString()+'</b> a day, <b>'+est.perMonth.toLocaleString()+'</b> a month'+
         (mode==='live' ? ' ('+pct+'% of the allowance).' : ' — you are on <b>'+
-          (mode==='poll'?'Every 2 minutes':'Manual')+'</b>, which sends none.')+
+          (mode==='poll'?syncPollWords():'Manual')+'</b>, which sends none.')+
         '<br><span class="muted">Today: '+s.writes.toLocaleString()+' change'+(s.writes===1?'':'s')+
         ' uploaded, '+s.recv.toLocaleString()+' update'+(s.recv===1?'':'s')+' received.</span>'+
       '</div>'+
       (over ? '<div style="margin-top:8px;color:#b45309"><b>⚠ Over the allowance at this rate.</b> '+
-              'Switch to <b>Every 2 minutes</b> above — records still sync, they just arrive within '+
-              'a couple of minutes instead of instantly, and it costs nothing.</div>' : '')+
+              'Switch to <b>'+syncPollWords()+'</b> above — records still sync, they just arrive '+
+              'a few minutes later instead of instantly, and it costs nothing.</div>' : '')+
     '</div>'+
     '<div class="field" style="margin-top:11px"><label>Devices that stay connected '+
       '<span class="muted" style="font-weight:400">(used to work the estimate out)</span></label>'+
@@ -24171,7 +24304,7 @@ function syncExplain(){
     '• A record is uploaded only when it genuinely differs from the cloud copy.\n'+
     '• A device ignores the echo of its own writes, so the loop cannot start.\n'+
     '• The background check stops completely while the app is in the background.\n'+
-    '• On "Every 2 minutes" no realtime connection is opened at all — zero messages.\n\n'+
+    '• On "'+syncPollWords()+'" no realtime connection is opened at all — zero messages.\n\n'+
     'A normal clinic day of thirty or forty saved records now costs a few hundred messages\n'+
     'instead of hundreds of thousands.'
   );
@@ -24201,7 +24334,7 @@ function syncNoticeMaybe(){
           '<p class="small">That is fixed. A record is now uploaded only when it has actually '+
           'changed, and a device ignores the echo of its own writes.</p>'+
           '<p class="small">As a precaution while your grace period runs, devices now check for '+
-          'each other&rsquo;s changes <b>every couple of minutes</b> instead of instantly. Nothing is '+
+          'each other&rsquo;s changes <b>'+syncPollWords().toLowerCase()+'</b> instead of instantly. Nothing is '+
           'lost — it just arrives a minute or two later. There is a live meter in '+
           '<b>Settings \\u2192 Cloud sync</b>; once it shows the usage is small you can switch '+
           'back to <b>Instant</b> there.</p>'+
@@ -24225,6 +24358,9 @@ async function syncNow(loud, force){
     return;
   }
   document.body.classList.add('syncing');
+  // what the clinic said before this pull, so a change arriving from another device can
+  // retime this one the moment it lands (b92)
+  const modeBeforePull = (typeof syncClinicMode==='function') ? syncClinicMode() : '';
   try{
     const c=await syncClient(); const sess=await c.auth.getSession();
     if(!sess.data.session) throw new Error('Sign in first');
@@ -24268,6 +24404,9 @@ async function syncNow(loud, force){
     if(typeof phraseBankInvalidate==='function') phraseBankInvalidate();
     try{ if(db.meds && db.meds.length) db.meds.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''))); }catch(e){}
     if(typeof prefsApply==='function') prefsApply();
+    /* the clinic may have changed how often everyone checks — retime this device now
+       rather than at the next reload (b92) */
+    if(typeof syncApplyMode==='function' && syncClinicMode() !== modeBeforePull) syncApplyMode();
     reconcileUsers(); refreshCurrentUser();
     syncReportNotes(notes);
     cfg.lastSync=new Date().toISOString(); cfg.lastError='';
