@@ -1317,6 +1317,14 @@ html[data-theme="dark"] .gd-prev{background:#11202a}
 .rx-carry{display:flex;gap:var(--sp-4);align-items:center;flex-wrap:wrap;margin-bottom:var(--sp-5);
   border:1px dashed var(--teal);background:var(--teal-light);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5)}
 .rx-carry .rc-tx{flex:1;min-width:200px;font-size:var(--t-meta);line-height:1.6;color:var(--ink)}
+/* one offer per field, each carrying the words it will write (b93) */
+.rx-carry .rc-offers{display:flex;flex-wrap:wrap;gap:var(--sp-3);width:100%}
+.rx-carry .rc-off{max-width:100%;text-align:left;background:var(--card);color:var(--ink);
+  border:1px solid var(--card-bd);border-radius:var(--r-sm);padding:var(--sp-2) var(--sp-4);
+  font:inherit;font-size:var(--t-meta);cursor:pointer;line-height:1.45;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:border-color .14s}
+.rx-carry .rc-off:hover{border-color:var(--teal)}
+.rx-carry .rc-off b{font-weight:700}
 .rx-carry .rc-h{display:block;font-size:var(--t-chip);font-weight:700;letter-spacing:.6px;
   text-transform:uppercase;color:var(--teal-dark);margin-bottom:var(--sp-1)}
 html[data-theme="dark"] .rx-carry{background:rgba(13,148,136,.10)}
@@ -3393,6 +3401,8 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
               <button class="btn btn-ghost btn-sm" onclick="dsSetFu(42,'6 weeks')">+6 wk</button>
               <select id="dsFuMore" data-norail="1" onchange="dsFuMoreSel(this)" style="width:auto;padding:5px 9px;font-size:12.5px;border-radius:7px">
                 <option value="">More…</option>
+                <option value="tomorrow">Tomorrow</option>
+                <option value="sos">SOS — only if there is a problem</option>
                 <option value="56|8 weeks">+8 wk</option>
                 <option value="70|10 weeks">+10 wk</option>
                 <option value="84|12 weeks">+12 wk</option>
@@ -3401,12 +3411,11 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
                 <option value="365|1 year">+1 yr</option>
               </select>
             </div>
-            <div class="btn-bar" style="margin-bottom:7px;align-items:flex-start">
-              <span class="muted small" style="padding-top:4px;flex:none">for…</span>
-              <div class="chiprow" id="dsFuWhatChips"></div>
-            </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <input type="text" id="dcFu" placeholder="e.g. OPD after 2 weeks for stitch removal; X-ray at 6 weeks" style="flex:1;min-width:260px">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start">
+              <div class="tagbox fu-box" id="dsFollowUpTb" style="flex:1;min-width:260px">
+                <div class="tb-row" id="dsFuWhatChips"></div>
+                <input type="text" id="dcFu" placeholder="e.g. OPD after 2 weeks for stitch removal; X-ray at 6 weeks">
+              </div>
               <input type="date" id="dsFuDate" style="width:170px" title="Due-list date">
               <button type="button" class="btn btn-ghost" onclick="openFuCal('ds')"
                 title="Pick a date and see how many are already booked that day">📅 Month view</button>
@@ -5156,7 +5165,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 48;
+const SEED_VERSION = 49;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -5251,20 +5260,14 @@ function migrateDB(){
   // v7: MR number prefix
   if(db.settings.mrnPrefix===undefined) db.settings.mrnPrefix='FH';
   // v8: editable instruction library + logo
+  /* v8 gave the shipped presets ids and tried to de-duplicate them here, by label, keeping
+     whichever copy came FIRST. That is the wrong copy — the doctor's edit is the newest one,
+     not the earliest — and the ids it handed out were positional, which is what let the same
+     id mean two different presets on two builds. Both are now ipRepair()'s job, which is one
+     function, idempotent, and used by the v49 step below as well (b94). */
+  let __ipMergedAtMigrate = 0;
   if(!db.instrPresets) db.instrPresets = seedInstrPresets();
-  else { // b18: give every SHIPPED standard preset a STABLE id (so the instruction library syncs cleanly, no duplicates),
-         // keep the user's edits to shipped presets, keep their custom presets, and drop duplicate labels.
-    const seeded = seedInstrPresets();
-    const norm = s => (s||'').trim().toLowerCase();
-    const shippedLabels = new Set(seeded.map(s=>norm(s.label)));
-    const prevByLabel = {}; db.instrPresets.forEach(p=>{ const k=norm(p.label); if(!(k in prevByLabel)) prevByLabel[k]=p; });
-    // shipped presets: stable seed id, but keep the user's edited English/Urdu text if they'd changed it
-    const shipped = seeded.map(s=>{ const prev=prevByLabel[norm(s.label)]; return prev ? {id:s.id, label:s.label, en:prev.en, ur:prev.ur, updatedAt:prev.updatedAt} : s; });
-    // custom presets the user added (labels not in the shipped set), de-duplicated by label
-    const seen=new Set(); const custom=[];
-    db.instrPresets.forEach(p=>{ const k=norm(p.label); if(shippedLabels.has(k)||seen.has(k)) return; seen.add(k); custom.push(p); });
-    db.instrPresets = shipped.concat(custom);
-  }
+  else __ipMergedAtMigrate = ipRepair();
   if(db.settings.logo===undefined) db.settings.logo='';
   // v9: QR codes + profit tracking
   if(db.settings.qrRx===undefined) db.settings.qrRx='on';
@@ -5609,6 +5612,22 @@ function migrateDB(){
   if(!db.settings.cardTintV48){
     if(db.settings.cardTint===undefined || db.settings.cardTint==='on') db.settings.cardTint='off';
     db.settings.cardTintV48 = true;
+  }
+
+  /* ---- v49: one instruction title, one preset (b94) ----
+     ipRepair() has already run above, on the raw library, so by here the duplicates are
+     collapsed, every shipped preset carries a title-derived id, and the copy he edited last
+     is the one that survived. All that is left is to tell him — once, in his own words, and
+     never with a collection name in it (never-do #32). `logActivity` trims at 80 characters,
+     so the sentence is written to fit. */
+  if((db.seedVersion||1) < 49){
+    const dups = __ipMergedAtMigrate;
+    if(dups > 0){
+      const msg = 'Tidied up '+dups+' duplicate instruction title'+(dups===1?'':'s')+
+                  ' \u2014 your own wording was kept.';
+      try{ if(typeof logActivity==='function') logActivity('edit','instrPresets', msg); }catch(e){}
+      try{ if(typeof toast==='function') toast(msg); }catch(e){}
+    }
   }
 
   db.seedVersion = SEED_VERSION;
@@ -10260,48 +10279,83 @@ function rxCarryOrdinal(n){
   const e = ['th','st','nd','rd'], v = n % 100;
   return n + (e[(v-20)%10] || e[v] || e[0]);
 }
-function rxCarryText(pid){
-  if(!pid) return '';
+function rxCarryLast(pid){
+  if(!pid) return null;
   const past = (db.visits||[]).filter(function(v){ return v.patientId===pid && v.id!==editingVisitId; })
                               .slice().sort(function(a,b){ return String(a.date).localeCompare(String(b.date)); });
-  if(!past.length) return '';
-  const last = past[past.length-1];
-  const bits = ['Follow-up \u2014 '+rxCarryOrdinal(past.length+1)+' visit.'];
-  const gap = rxCarryGap(last.date);
-  bits.push('Last seen '+fmtDate(last.date)+(gap?' ('+gap+')':'')+'.');
-  const dx = String(last.diagnosis||'').split('\n')[0].trim();
-  if(dx) bits.push('Impression then: '+dx+'.');
-  const nt = String(last.nextTests||'').split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
-  if(nt.length) bits.push('Was asked to return with: '+nt.join(', ')+'.');
-  else {
-    const fu = String(last.followUp||'').trim();
-    if(fu) bits.push('Advised: '+fu+'.');
-  }
-  return bits.join(' ');
+  if(!past.length) return null;
+  return {last: past[past.length-1], n: past.length + 1};
+}
+/* b93: ONE line, and nothing else.
+   It used to read "Follow-up — 3rd visit. Last seen 12 Jun (8 weeks ago). Impression then:
+   Osteoarthritis knee (right). Was asked to return with: X-ray both knees standing." — four
+   facts in one sentence, all of it landing in Presenting complaints on one tap, where only
+   the first two belonged. The doctor's words: it should read only the visit and the gap, and
+   then offer each of the other facts against the field it actually belongs in.
+   Every word is still quoted from the record; nothing here is composed (§10, b71). */
+function rxCarryText(pid){
+  const c = rxCarryLast(pid);
+  if(!c) return '';
+  const gap = rxCarryGap(c.last.date);
+  return 'Follow-up \u2014 '+rxCarryOrdinal(c.n)+' visit. Last seen '+fmtDate(c.last.date)+
+         (gap ? ' ('+gap+')' : '')+'.';
+}
+/* One offer per field, each showing exactly what it will write BEFORE it is tapped — the
+   b71 condition, applied field by field instead of to one sentence. `cTests` is where "was
+   asked to return with" belongs: what he asked them to bring is what they have now brought,
+   so it is today's investigations, not a note in the history. */
+function rxCarryOffers(pid){
+  const c = rxCarryLast(pid);
+  if(!c) return [];
+  const last = c.last;
+  const first = function(v){ return String(v||'').split('\n')[0].trim(); };
+  const join  = function(v){ return String(v||'').split('\n').map(function(x){ return x.trim(); })
+                                .filter(Boolean).join(', '); };
+  return [
+    {k:'dx',    lab:'Impression',     target:'cDiagnosis', text:first(last.diagnosis)},
+    {k:'tests', lab:'Investigations', target:'cTests',     text:join(last.nextTests)},
+    {k:'plan',  lab:'Plan',           target:'cPlan',      text:first(last.plan)}
+  ].filter(function(o){ return !!o.text; });
 }
 function rxCarryRender(){
   const host = $('rxCarry'); if(!host) return;
   const txt = rxCarryText(linkedPatientId);
   if(!txt){ host.classList.add('hidden'); host.innerHTML=''; return; }
+  const offers = rxCarryOffers(linkedPatientId);
   host.classList.remove('hidden');
   host.innerHTML =
     '<span class="rc-tx"><span class="rc-h">From this patient\u2019s last visit</span>'+esc(txt)+'</span>'+
     '<button type="button" class="btn btn-ghost btn-sm" onclick="rxCarryUse()" '+
       'title="Puts exactly this line at the top of Presenting complaints. Nothing is added unless you press it.">'+
-      '\u21a9 Add to complaints</button>';
+      '\u21a9 Add to complaints</button>'+
+    (offers.length
+      ? '<span class="rc-offers">'+offers.map(function(o){
+          return '<button type="button" class="rc-off" onclick="rxCarryFill(\''+o.k+'\')" '+
+            'title="Writes exactly this into '+esc(o.lab)+'. Nothing is filled unless you press it.">'+
+            '\u21a9 <b>'+esc(o.lab)+':</b> '+esc(o.text)+'</button>';
+        }).join('')+'</span>'
+      : '');
 }
-function rxCarryUse(){
-  const el = $('cComplaints'); if(!el) return;
-  const txt = rxCarryText(linkedPatientId);
-  if(!txt){ toast('Nothing to carry forward'); return; }
-  const cur = String(el.value||'').trim();
-  if(cur.indexOf(txt) >= 0){ toast('Already added'); return; }
-  el.value = txt + '\n' + cur;
+function rxCarryUse(){ rxCarryPut($('cComplaints'), rxCarryText(linkedPatientId), 'the complaints'); }
+function rxCarryFill(key){
+  const o = rxCarryOffers(linkedPatientId).filter(function(x){ return x.k===key; })[0];
+  if(!o){ toast('Nothing to carry forward'); return; }
+  rxCarryPut($(o.target), o.text, o.lab, true);
+}
+/* Prepends rather than replaces: whatever he has already typed for today is his, and a
+   carried fact must never be the thing that ate it. */
+function rxCarryPut(el, txt, what, tagField){
+  if(!el || !txt){ toast('Nothing to carry forward'); return; }
+  const get = tagField ? function(){ return tbValGet(el.id); } : function(){ return String(el.value||''); };
+  const set = tagField ? function(v){ tbValSet(el.id, v); } : function(v){ el.value = v; };
+  const cur = get().trim();
+  if(cur.indexOf(txt) >= 0){ toast('Already in '+what); return; }
+  set(cur ? (txt + '\n' + cur) : txt);
   el.dispatchEvent(new Event('input',{bubbles:true}));
-  el.focus();
-  try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){}
+  if(typeof railReveal==='function') try{ railReveal('visit', el.id); }catch(e){}
+  if(!tagField){ el.focus(); try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){} }
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
-  toast('Carried forward \u2014 edit it for today');
+  toast('Carried into '+what+' \u2014 edit it for today');
 }
 function unlinkPatient(){
   linkedPatientId = null;
@@ -10391,8 +10445,94 @@ const INSTR_PRESETS = [
 "Methotrexate is taken ONCE A WEEK only — on the same day each week. NEVER take it daily; a daily dose can be dangerous. Take folic acid on a different day as prescribed. Avoid alcohol completely. Have your blood tests (blood count and liver) done regularly as advised. Before starting any new medicine, tell the doctor or pharmacist that you take methotrexate. Report mouth ulcers, unusual cough or breathlessness, fever, or yellowing of the eyes. Do not become pregnant / father a child while on methotrexate — please discuss contraception.",
 "میتھوٹریکسیٹ ہفتے میں صرف ایک بار لینی ہے — ہر ہفتے وہی مقررہ دن۔\nاسے روزانہ ہرگز نہ لیں؛ روزانہ خوراک خطرناک ہو سکتی ہے۔\nفولک ایسڈ ہدایت کے مطابق الگ دن لیں۔\nشراب سے مکمل پرہیز کریں۔\nخون کے ٹیسٹ (خون کی مکمل گنتی اور جگر) باقاعدگی سے کرواتے رہیں۔\nکوئی نئی دوا شروع کرنے سے پہلے ڈاکٹر یا فارماسسٹ کو بتائیں کہ آپ میتھوٹریکسیٹ لے رہے ہیں۔\nمنہ کے چھالے، غیر معمولی کھانسی یا سانس کی تنگی، بخار یا آنکھوں کی زردی ہو تو بتائیں۔\nمیتھوٹریکسیٹ کے دوران حمل نہ ٹھہرے / بچہ پیدا کرنے سے گریز کریں — مانع حمل کے بارے میں مشورہ کریں۔"]
 ];
+/* b94: the id of a shipped preset came from its POSITION in INSTR_PRESETS — 'ip'+(i+1).
+   Insert or reorder one preset between builds and `ip5` means a different preset than it did
+   before, so two devices on two builds hold the same id for two different things. `instrPresets`
+   syncs, and sync merges by id: the doctor's edit to one preset lands on another, and the one
+   it displaced comes back from the seed under a new id as a second row with the same title.
+   That is exactly "duplicated every title, and my edits are lost or mixed up".
+
+   So the id comes from the TITLE, like `medStableId` does for medicines (never-do #4) — and
+   from the English half of it, because the Urdu half of a label is the part most likely to be
+   retyped, and a label that changes must not silently become a new preset. */
+function ipKey(label){
+  return String(label||'').split('\u2014')[0]           // the English half, before the em dash
+    .trim().toLowerCase()
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);
+}
+function ipStableId(label){
+  const k = ipKey(label);
+  return k ? ('ip_'+k) : ('ip_'+uid('ip'));
+}
+function ipIsStableId(id){ return String(id||'').indexOf('ip_')===0; }
 function seedInstrPresets(){
-  return INSTR_PRESETS.map((p,i)=>({id:'ip'+(i+1), label:p[0], en:p[1], ur:p[2]}));
+  return INSTR_PRESETS.map(function(p){ return {id: ipStableId(p[0]), label:p[0], en:p[1], ur:p[2]}; });
+}
+/* One title, one preset, and his wording wins.
+
+   Idempotent, and safe to run on any install: it groups everything by title, keeps the copy
+   he edited MOST RECENTLY (the old code kept whichever came first in the array, which is how
+   an edit could be thrown away in favour of a shipped default), re-keys it to the stable id,
+   and lets the duplicates vanish — `tombWatch` turns each vanished id into a tombstone from
+   `persist()`, so they die on every device instead of coming back on the next sync (§6: a
+   deletion is a record, not an absence).
+
+   His own presets are kept whole, one per title. His label is kept wherever he changed one:
+   a shipped title he has retyped is still his (§5, merge, never overwrite). */
+function ipRepair(){
+  const seeded = seedInstrPresets();
+  const groups = {};
+  (db.instrPresets||[]).forEach(function(p){
+    if(!p) return;
+    const k = ipKey(p.label);
+    if(!k) return;
+    (groups[k] = groups[k] || []).push(p);
+  });
+  const newestFirst = function(a,b){ return String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')); };
+  let merged = 0;
+  const out = [];
+  const take = function(k){
+    const had = (groups[k] || []).slice().sort(newestFirst);
+    delete groups[k];
+    if(had.length > 1) merged += had.length - 1;
+    return had[0] || null;
+  };
+  // the shipped library first, in the shipped order, carrying his text and title where he changed them
+  seeded.forEach(function(sd){
+    const keep = take(ipKey(sd.label));
+    out.push(syncTouch({
+      id: sd.id,
+      label: (keep && String(keep.label||'').trim()) ? keep.label : sd.label,
+      en:    (keep && String(keep.en||'').trim())    ? keep.en    : sd.en,
+      ur:    (keep && String(keep.ur||'').trim())    ? keep.ur    : sd.ur
+    }));
+  });
+  // then his own, one per title
+  Object.keys(groups).forEach(function(k){
+    const keep = take(k);
+    if(!keep) return;
+    out.push(syncTouch(Object.assign({}, keep, {id: ipStableId(keep.label)})));
+  });
+  /* Every id that is no longer here has to be a DELETION, not an absence (§6). A dropped
+     duplicate — and the old positional id of every preset that was re-keyed — must be
+     tombstoned, or the next pull from a device that still holds it brings it straight back
+     and the library is duplicated again.
+
+     tombWatch() from persist() would usually notice these, but only because its mirror
+     happens to have been filled by loadDB() first. That is a timing assumption, and this is
+     the one operation in the app whose whole job is to stop the doctor's wording being lost,
+     so it says what it means instead: syncDelStamp keeps each tombstone later than the
+     record it removes (never-do #1). */
+  const kept = {};
+  out.forEach(function(p){ kept[String(p.id)] = 1; });
+  (db.instrPresets||[]).forEach(function(p){
+    if(!p || p.id == null) return;
+    const id = String(p.id);
+    if(kept[id]) return;
+    try{ tombAdd('instrPresets', id, (typeof syncDelStamp==='function') ? syncDelStamp(p) : undefined); }catch(e){}
+  });
+  db.instrPresets = out;
+  return merged;
 }
 function refreshPresetSelects(){
   ['urduPreset','urduPresetDs'].forEach(id=>{
@@ -10510,6 +10650,8 @@ function durCellHTML(value){
         '<option value="">⋯</option>'+
         '<option value="Continue (until advised otherwise)">Continue…</option>'+
         '<option value="As needed">As needed</option>'+
+        '<option value="As needed for pain">As needed for pain</option>'+
+        '<option value="Only if required">Only if required</option>'+
         '<option value="__cust">Custom text…</option>'+
       '</select>'+
     '</span>'+
@@ -11600,15 +11742,29 @@ function fuClearWhat(){
   if(fuWhatSel===-2 || fuWhatSel===-3) fuPickWhen(fuWhatSel);
   else fuPickWhat(fuWhatSel);
 }
+/* ONE list, painted for whichever form asked (b93). The prescription and the discharge
+   summary had grown two of these that were not quite the same: the discharge had no
+   "tomorrow" at all, kept SOS as a loose chip outside the box, and sat its reasons in a
+   row above the field instead of inside it. Two copies of a list is how that happens, so
+   there is one copy now and the caller passes its own state and handler names.
+   SOS and "tomorrow" head the list under their own heading, which is where the b71 note
+   always said they should be: they answer WHEN he wants the patient back, the same
+   question as "+2 wk", not what for. */
+function fuPopHtml(sel, pickWhat){
+  /* Reasons ONLY. b71 decided this and `test_b71` guards it: SOS and "tomorrow" answer
+     WHEN he wants the patient back — the same question as "+2 wk" — so they live in the
+     More… list beside the intervals, not among the reasons. b93 briefly put them here too
+     and the b71 suite caught it, which is the suite doing its job. */
+  const chip = function(on, onclick, label){
+    return '<button type="button" class="chip'+(on?' on':'')+'" onclick="'+onclick+';chipPopRepaint()">'+
+           esc(label)+'</button>';
+  };
+  return '<div class="tb-ph">Follow-up for…</div><div class="chiprow">'+
+      FU_WHAT.map(function(w,i){ return chip(sel===i, pickWhat+'('+i+')', w[0]); }).join('')+
+    '</div>';
+}
 function fuWhatPopOpen(ev){
-  chipPopOpen('fu', ev, function(){
-    return '<div class="tb-ph">Follow-up for…</div>'+
-      '<div class="chiprow">'+
-      FU_WHAT.map(function(w,i){
-        return '<button type="button" class="chip'+(fuWhatSel===i?' on':'')+'" '+
-               'onclick="fuPickWhat('+i+');chipPopRepaint()">'+esc(w[0])+'</button>';
-      }).join('')+'</div>';
-  });
+  chipPopOpen('fu', ev, function(){ return fuPopHtml(fuWhatSel, 'fuPickWhat'); });
 }
 /* a tiny shared popover for chip lists that are not tag fields */
 let chipPopPaintFn=null, chipPopKey='';
@@ -12864,28 +13020,34 @@ function dsFuBoxToggle(){
   toast(dsFuBoxOn ? 'Follow-up on' : 'Follow-up off — nothing printed, not on the due list');
   if(typeof draftAfter==='function') draftAfter('discharge');
 }
+/* b93: the same chip, in the box, with the same words as the prescription's. */
+function dsFuWhatLabel(){
+  if(dsFuWhatSel===-2) return 'SOS';
+  if(dsFuWhatSel===-3) return 'tomorrow';
+  return (dsFuWhatSel>=0 && FU_WHAT[dsFuWhatSel]) ? FU_WHAT[dsFuWhatSel][0] : '';
+}
+function dsFuClearWhat(){
+  if(dsFuWhatSel===-2 || dsFuWhatSel===-3) dsFuPickWhen(dsFuWhatSel);
+  else dsFuPickWhat(dsFuWhatSel);
+}
 function dsRenderFuChips(){
   const host=$('dsFuWhatChips'); if(!host || typeof FU_WHAT==='undefined') return;
-  const picked = (dsFuWhatSel>=0 && FU_WHAT[dsFuWhatSel]) ? FU_WHAT[dsFuWhatSel][0] : '';
+  const picked = dsFuWhatLabel();
+  const wrap=$('dsFollowUpTb');
   host.innerHTML =
     (picked ? '<span class="tb-pill"><span>'+esc(picked)+'</span>'+
-       '<button type="button" title="Remove" onclick="dsFuPickWhat('+dsFuWhatSel+')">×</button></span>' : '') +
-    '<button type="button" class="chip'+(dsFuWhatSel===-2?' on':'')+'" onclick="dsFuPickWhen(-2)" title="Come back only if there is a problem">SOS</button>' +
-    '<button type="button" class="tb-add" onclick="dsFuWhatPopOpen(event)">＋ for…</button>';
+       '<button type="button" title="Remove" onclick="dsFuClearWhat()">×</button></span>' : '') +
+    '<button type="button" class="tb-add" onclick="dsFuWhatPopOpen(event)">＋ follow-up for</button>';
+  if(wrap) wrap.classList.toggle('tb-has', !!picked);
 }
 function dsFuWhatPopOpen(ev){
-  chipPopOpen('dsfu', ev, function(){
-    return '<div class="tb-ph">Follow-up for…</div><div class="chiprow">'+
-      FU_WHAT.map(function(w,i){
-        return '<button type="button" class="chip'+(dsFuWhatSel===i?' on':'')+'" '+
-               'onclick="dsFuPickWhat('+i+');chipPopRepaint()">'+esc(w[0])+'</button>';
-      }).join('')+'</div>';
-  });
+  chipPopOpen('dsfu', ev, function(){ return fuPopHtml(dsFuWhatSel, 'dsFuPickWhat'); });
 }
 function dsFuCompose(){
   const box=$('dcFu'); if(!box) return;
   const what = (dsFuWhatSel>=0 && FU_WHAT[dsFuWhatSel]) ? FU_WHAT[dsFuWhatSel][1] : '';
   if(dsFuWhatSel===-2){ box.value = 'Review SOS' + (what?' '+what:''); }
+  else if(dsFuWhatSel===-3){ box.value = 'Review tomorrow' + (what?' '+what:''); }
   else {
     const when = dsFuWhenLabel ? ('Review after '+dsFuWhenLabel) : 'Review';
     box.value = (when + (what?' '+what:'')).trim();
@@ -12899,9 +13061,12 @@ function dsFuPickWhat(i){
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
 }
 function dsFuPickWhen(kind){
+  if(!dsFuBoxOn) dsFuBoxSet(true);
   dsFuWhatSel = (dsFuWhatSel===kind) ? -1 : kind;
   dsRenderFuChips();
-  if(dsFuWhatSel===-2 && $('dsFuDate')) $('dsFuDate').value='';
+  const d=$('dsFuDate');
+  if(d && dsFuWhatSel===-3){ d.value = localISO(new Date(Date.now()+86400000)); d.dataset.auto='1'; }
+  else if(d && dsFuWhatSel===-2){ d.value=''; d.dataset.auto='1'; }
   dsFuCompose();
   if(typeof refreshFieldStatus==='function') refreshFieldStatus();
 }
@@ -12910,12 +13075,19 @@ function dsSetFu(days, label){
   const el=$('dsFuDate'); if(el){ el.value = localISO(new Date(Date.now()+days*86400000)); el.dataset.auto='1'; }
   if(label){
     dsFuWhenDays=days; dsFuWhenLabel=label;
-    if(dsFuWhatSel===-2) dsFuWhatSel=-1;
+    if(dsFuWhatSel===-2 || dsFuWhatSel===-3) dsFuWhatSel=-1;
     dsRenderFuChips(); dsFuCompose();
   }
 }
 function dsFuMoreSel(sel){
   if(!sel.value) return;
+  /* same list, same handling as the prescription's fuMoreSel: SOS and "tomorrow" answer
+     WHEN, so they belong in this list with +2 wk rather than among the reasons (b93) */
+  if(sel.value==='sos' || sel.value==='tomorrow'){
+    dsFuPickWhen(sel.value==='sos' ? -2 : -3);
+    sel.value='';
+    return;
+  }
   const parts = sel.value.split('|');
   dsSetFu(+parts[0], parts[1]);
   sel.value='';
@@ -13787,7 +13959,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.09.11-b92';
+const APP_BUILD = '2026.09.11-b94';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -15000,6 +15172,10 @@ const UR_FREQ = {
 };
 const UR_DUR = {
 'single dose':'صرف ایک خوراک','ongoing':'مستقل جاری رکھیں','as needed':'ضرورت کے مطابق',
+/* b93: added with the two new duration options. Half of what comes off this printer is
+   Urdu, and a duration the translator does not know is simply dropped from the Urdu line —
+   so a new option needs its words here, or the patient's half of the sheet loses it. */
+'as needed for pain':'درد کی صورت میں','only if required':'صرف ضرورت پڑنے پر',
 'until settled':'آرام آنے تک','once yearly':'سال میں ایک بار','continue as before':'پہلے کی طرح جاری رکھیں',
 '1 week':'ایک ہفتہ','2 weeks':'2 ہفتے','3 weeks':'3 ہفتے','1 month':'ایک مہینہ','2–6 weeks':'2 سے 6 ہفتے',
 '5–7 days':'5 سے 7 دن','6 months':'6 مہینے','3 months':'3 مہینے','2 years':'2 سال'
