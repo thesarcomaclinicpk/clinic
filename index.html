@@ -115,13 +115,71 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
   color:#d9f2f8;position:fixed;top:0;bottom:0;left:0;z-index:60;
   display:flex;flex-direction:column;padding:var(--sp-6) var(--sp-5) var(--sp-5)}
 #content{margin-left:var(--side-w);flex:1;min-width:0}
-.brand{display:flex;align-items:center;gap:var(--sp-5);padding:var(--sp-1) var(--sp-4) var(--sp-6);border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:var(--sp-5)}
+.brand{display:flex;flex-direction:column;align-items:stretch;gap:var(--sp-3);
+  padding:var(--sp-1) var(--sp-2) var(--sp-5);border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:var(--sp-5)}
+.brand .brand-row{display:flex;align-items:center;gap:var(--sp-5)}
 .rx-logo img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
-.brand .rx-logo{background:rgba(255,255,255,.95);color:var(--teal-deep);border-radius:11px;overflow:hidden;
-  width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;
-  font-family:Georgia,serif;font-size:22px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.25)}
-.brand .b1{font-weight:700;font-size:var(--t-title);letter-spacing:.4px;color:#fff}
-.brand .b2{font-size:var(--t-chip);color:#8fc9d9;letter-spacing:.3px;margin-top:var(--sp-1)}
+/* ---- the wordmark at the top of the left bar (b104, restyled b105) ----
+   The practice name set in a book serif, the doctor's name in spaced capitals beneath a
+   hairline rule, and an engraved S roundel. Built from the fonts every device already
+   has: the app must open with no network (§2), so a web font is not available to us and
+   a wordmark has to be made out of tracking, weight and case instead of a typeface.
+   The roundel is still `.rx-logo`, so an uploaded logo fills it exactly as before — each
+   slot's own markup IS its fallback, cached by `applyBrand` the first time through. */
+.brand .rx-logo{width:38px;height:38px;flex:none;display:flex;align-items:center;justify-content:center;
+  border:0;border-radius:var(--r-round);background:none;overflow:hidden;box-shadow:none;
+  color:#fff;font-family:inherit;font-size:var(--t-body);font-weight:700}
+.brand .rx-logo svg{width:100%;height:100%;display:block;overflow:visible}
+.brand .rx-logo.has-img{background:rgba(255,255,255,.95);border:1px solid rgba(255,255,255,.3)}
+.brand .b1{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  font-weight:400;font-size:17px;letter-spacing:.2px;color:#fff;line-height:1.14;white-space:nowrap}
+.brand .b1 em{font-style:italic;font-size:13px;opacity:.8;letter-spacing:.4px}
+/* the second line gets the whole width of the bar rather than the stub beside the roundel,
+   so a name long enough to wrap still sets on one line under a full-width rule */
+.brand .b2{font-size:var(--t-chip);color:#86c4d6;letter-spacing:2.2px;text-transform:uppercase;
+  padding-top:var(--sp-3);border-top:1px solid rgba(255,255,255,.17);white-space:nowrap}
+
+/* ---- the shine (b105) ----
+   He asked for a golden halo travelling the curves of the S, and a sheen across the words.
+   The halo is a short gold DASH on a second copy of the same path: `pathLength="100"`
+   normalises the path so the dash can be written in percent and animated with
+   `stroke-dashoffset`, which is the only way to make light follow a curve rather than
+   slide across a box. `alternate` is what sends it back up again.
+   Nothing here animates a TRANSFORM (never-do #27), and `html.a11y-motion` already stops
+   every animation in the file, so his Reduce-motion switch covers these too. */
+.mk-ring{fill:none;stroke:rgba(255,255,255,.42);stroke-width:1}
+.mk-disc{fill:#fff}
+.mk-s{fill:none;stroke:var(--teal-deep);stroke-width:2.9;stroke-linecap:round;stroke-linejoin:round}
+.mk-bloom{fill:none;stroke:#f0c96a;stroke-width:6.5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:26 74;opacity:.22;animation:mkShine 3.8s ease-in-out infinite alternate}
+.mk-halo{fill:none;stroke:#d6a136;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:16 84;opacity:.95;animation:mkShine 3.8s ease-in-out infinite alternate}
+.mk-spark{fill:none;stroke:#fff6de;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:5 95;animation:mkShine 3.8s ease-in-out infinite alternate}
+.mk-glowring{fill:none;stroke:#e8c46a;stroke-width:1;stroke-dasharray:22 78;opacity:.75;
+  animation:mkRing 7.6s linear infinite}
+@keyframes mkShine{from{stroke-dashoffset:13}to{stroke-dashoffset:-87}}
+@keyframes mkRing{from{stroke-dashoffset:0}to{stroke-dashoffset:-100}}
+
+/* The sheen must carry the text's OWN colour across the whole gradient, because painting
+   a background behind the glyphs only shows through where the fill is transparent — so
+   anywhere the highlight is not, the gradient has to BE the normal colour. If the browser
+   cannot clip a background to text, the @supports block never applies and the words stay
+   plainly readable, which is the only outcome that matters. */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .brand .b1{background-image:linear-gradient(100deg,#fff 0%,#fff 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#fff 62%,#fff 100%);
+    background-size:300% 100%;background-position:150% 0;background-repeat:repeat;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:brandSheen 6s ease-in-out infinite}
+  .brand .b2{background-image:linear-gradient(100deg,#86c4d6 0%,#86c4d6 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#86c4d6 62%,#86c4d6 100%);
+    background-size:300% 100%;background-position:150% 0;background-repeat:repeat;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:brandSheen 6s ease-in-out .5s infinite}
+}
+@keyframes brandSheen{0%{background-position:150% 0}45%,100%{background-position:-50% 0}}
+@media (prefers-reduced-motion:reduce){
+  .mk-bloom,.mk-halo,.mk-spark,.mk-glowring,.brand .b1,.brand .b2{animation:none}
+}
 #side nav{display:flex;flex-direction:column;gap:var(--sp-1);flex:1;min-height:0;overflow-y:auto}
 /* grouped navigation with animated sub-menus */
 .nav-group{border-radius:var(--r-sm)}
@@ -200,7 +258,8 @@ main{max-width:1180px;margin:0 auto;padding:var(--sp-6) 30px 90px}
   .signed-row{flex-direction:column;gap:var(--sp-3);padding:var(--sp-3) var(--sp-2)}
   .nav-gh .chev{display:none}
   .nav-sub{margin-left:0;padding-left:0;border-left:none}
-  .brand{justify-content:center;padding-left:0;padding-right:0}
+  .brand{padding-left:0;padding-right:0}
+  .brand .brand-row{justify-content:center}
   #side nav button, .side-foot button{justify-content:center;padding:var(--sp-5) 0}
 }
 section.tab{display:none}
@@ -2404,6 +2463,7 @@ html[data-theme="dark"] .ne-group{background:#0f2530}
   #side nav button, .side-foot button{justify-content:flex-start!important;padding:var(--sp-5) var(--sp-5)!important}
   #side nav button span{white-space:normal}
   .brand{justify-content:flex-start!important;padding-left:var(--sp-4)!important;padding-right:var(--sp-4)!important}
+  .brand .brand-row{justify-content:flex-start!important}
   .nav-gh .chev{display:block!important}
   .nav-sub{margin-left:var(--sp-4);padding-left:var(--sp-4);border-left:1px solid rgba(255,255,255,.12)}
   .side-ctrls{flex-direction:row!important}
@@ -2699,8 +2759,19 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
 <div id="app">
 <aside id="side">
   <div class="brand">
-    <div class="rx-logo">&#8478;</div>
-    <div class="btxt"><div class="b1">DR ALI IJAZ</div><div class="b2">Orthopedic Surgeon &amp; Sarcoma Specialist</div></div>
+    <div class="brand-row">
+      <div class="rx-logo"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+        <circle class="mk-ring" cx="20" cy="20" r="19"/>
+        <circle class="mk-glowring" cx="20" cy="20" r="19" pathLength="100"/>
+        <circle class="mk-disc" cx="20" cy="20" r="15.2"/>
+        <path class="mk-s" pathLength="100" d="M26 13.2C24.3 10.6 20.4 9.4 17.2 10.6c-3.8 1.4-4.6 6-1.4 8.3 2.5 1.8 6.8 2.2 9.2 4.4 3 2.7 2 7.4-1.8 8.7-3.3 1.1-7.2-.2-9.2-3.2"/>
+        <path class="mk-bloom" pathLength="100" d="M26 13.2C24.3 10.6 20.4 9.4 17.2 10.6c-3.8 1.4-4.6 6-1.4 8.3 2.5 1.8 6.8 2.2 9.2 4.4 3 2.7 2 7.4-1.8 8.7-3.3 1.1-7.2-.2-9.2-3.2"/>
+        <path class="mk-halo" pathLength="100" d="M26 13.2C24.3 10.6 20.4 9.4 17.2 10.6c-3.8 1.4-4.6 6-1.4 8.3 2.5 1.8 6.8 2.2 9.2 4.4 3 2.7 2 7.4-1.8 8.7-3.3 1.1-7.2-.2-9.2-3.2"/>
+        <path class="mk-spark" pathLength="100" d="M26 13.2C24.3 10.6 20.4 9.4 17.2 10.6c-3.8 1.4-4.6 6-1.4 8.3 2.5 1.8 6.8 2.2 9.2 4.4 3 2.7 2 7.4-1.8 8.7-3.3 1.1-7.2-.2-9.2-3.2"/>
+      </svg></div>
+      <div class="btxt"><div class="b1">The Sarcoma<br>Clinic <em>PK</em></div></div>
+    </div>
+    <div class="btxt b2">Ali Ijaz Ahmad</div>
   </div>
   <nav id="sideNav"></nav>
   <div class="side-foot">
@@ -6076,7 +6147,12 @@ function applyBrand(){
   document.title = APP_NAME;
   const logo = photoIsInIdb(db.settings.logo) ? (__photoCache.logo||'') : db.settings.logo;
   document.querySelectorAll('.rx-logo').forEach(el=>{
-    el.innerHTML = logo ? '<img src="'+logo+'" alt="">' : '&#8478;';
+    /* b105: what a slot SHIPPED with is what it shows when no logo is set — the roundel
+       in the sidebar, the ℞ everywhere else. Cached on the first pass, before anything
+       is overwritten, so there is still exactly one painter (never-do #54). */
+    if(el.__dflt === undefined) el.__dflt = el.innerHTML;
+    el.innerHTML = logo ? '<img src="'+logo+'" alt="">' : el.__dflt;
+    el.classList.toggle('has-img', !!logo);
   });
   const pv = $('logoPreviewWrap');
   if(pv) pv.innerHTML = logo
@@ -14774,7 +14850,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.11.14-b103';
+const APP_BUILD = '2026.11.14-b105';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
