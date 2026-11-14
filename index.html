@@ -115,9 +115,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
   color:#d9f2f8;position:fixed;top:0;bottom:0;left:0;z-index:60;
   display:flex;flex-direction:column;padding:var(--sp-6) var(--sp-5) var(--sp-5)}
 #content{margin-left:var(--side-w);flex:1;min-width:0}
-.brand{display:flex;flex-direction:column;align-items:stretch;gap:var(--sp-3);
+.brand{display:flex;flex-direction:column;align-items:stretch;gap:var(--sp-2);text-align:center;
   padding:var(--sp-1) var(--sp-2) var(--sp-5);border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:var(--sp-5)}
-.brand .brand-row{display:flex;align-items:center;gap:var(--sp-5)}
+.brand .brand-row{display:flex;align-items:center;justify-content:center;margin-bottom:var(--sp-2)}
 .rx-logo img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
 /* ---- the wordmark at the top of the left bar (b104, restyled b105) ----
    The practice name set in a book serif, the doctor's name in spaced capitals beneath a
@@ -131,13 +131,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
   color:#fff;font-family:inherit;font-size:var(--t-body);font-weight:700}
 .brand .rx-logo svg{width:100%;height:100%;display:block;overflow:visible}
 .brand .rx-logo.has-img{background:rgba(255,255,255,.95);border:1px solid rgba(255,255,255,.3)}
+/* The clinic name is the only line allowed to wrap, and it wraps centred, because a
+   different serif on a different machine measures differently and a clipped word is how
+   "PK" went missing at b105. The two lines under it are short by design. */
 .brand .b1{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-  font-weight:400;font-size:17px;letter-spacing:.2px;color:#fff;line-height:1.14;white-space:nowrap}
-.brand .b1 em{font-style:italic;font-size:13px;opacity:.8;letter-spacing:.4px}
-/* the second line gets the whole width of the bar rather than the stub beside the roundel,
-   so a name long enough to wrap still sets on one line under a full-width rule */
-.brand .b2{font-size:var(--t-chip);color:#86c4d6;letter-spacing:2.2px;text-transform:uppercase;
-  padding-top:var(--sp-3);border-top:1px solid rgba(255,255,255,.17);white-space:nowrap}
+  font-weight:400;font-size:17px;letter-spacing:.2px;color:#fff;line-height:1.16;text-wrap:balance}
+/* his own name, then the line he chooses to put under it — both read from settings */
+.brand .b2{font-size:var(--t-chip);color:#cfe9f1;letter-spacing:1.9px;text-transform:uppercase;
+  margin-top:var(--sp-2);padding-top:var(--sp-4);border-top:1px solid rgba(255,255,255,.17)}
+.brand .b3{font-size:var(--t-chip);color:#86c4d6;letter-spacing:.5px;line-height:1.45;
+  margin-top:var(--sp-1);text-wrap:balance}
+.brand .b3:empty{display:none}
+
+/* ---- the lockup arrives, then the light crosses it (b106) ----
+   One 15-second cycle a line: it bulges in, overshoots, settles, holds while the sheen
+   passes, and goes again. The POP is on a wrapper and the SHEEN on the line inside it,
+   deliberately: `background-clip:text` paints a background and cuts the letters out of
+   it, and `opacity` on that same element makes it its own compositing layer — which is
+   how an italic "PK" carrying `opacity:.8` vanished on his machine at b105 while looking
+   perfectly fine here. Separate elements, separate jobs, nothing to compose wrongly.
+   `backwards` holds the first frame through the stagger delay so the later lines do not
+   flash before their turn; it is NOT `both`, so no transform is ever retained and
+   never-do #27 is untouched. */
+.brand .bpop{animation:brandPop 15s cubic-bezier(.22,1.2,.36,1) infinite backwards}
+.brand .bpop.p2{animation-delay:.16s}
+.brand .bpop.p3{animation-delay:.32s}
+@keyframes brandPop{
+  0%{opacity:0;transform:scale(.78)}
+  3%{opacity:1;transform:scale(1.08)}
+  5.5%{transform:scale(.98)}
+  8%,93%{opacity:1;transform:scale(1)}
+  97%{opacity:0;transform:scale(.95)}
+  100%{opacity:0;transform:scale(.78)}
+}
 
 /* ---- the shine (b105) ----
    He asked for a golden halo travelling the curves of the S, and a sheen across the words.
@@ -168,17 +194,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
    plainly readable, which is the only outcome that matters. */
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   .brand .b1{background-image:linear-gradient(100deg,#fff 0%,#fff 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#fff 62%,#fff 100%);
-    background-size:300% 100%;background-position:150% 0;background-repeat:repeat;
+    background-size:200% 100%;background-position:110% 0;background-repeat:repeat;
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    animation:brandSheen 6s ease-in-out infinite}
-  .brand .b2{background-image:linear-gradient(100deg,#86c4d6 0%,#86c4d6 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#86c4d6 62%,#86c4d6 100%);
-    background-size:300% 100%;background-position:150% 0;background-repeat:repeat;
+    animation:brandSheen 15s ease-in-out infinite}
+  .brand .b2{background-image:linear-gradient(100deg,#cfe9f1 0%,#cfe9f1 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#cfe9f1 62%,#cfe9f1 100%);
+    background-size:200% 100%;background-position:110% 0;background-repeat:repeat;
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    animation:brandSheen 6s ease-in-out .5s infinite}
+    animation:brandSheen 15s ease-in-out .16s infinite}
+  .brand .b3{background-image:linear-gradient(100deg,#86c4d6 0%,#86c4d6 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#86c4d6 62%,#86c4d6 100%);
+    background-size:200% 100%;background-position:110% 0;background-repeat:repeat;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:brandSheen 15s ease-in-out .32s infinite}
 }
-@keyframes brandSheen{0%{background-position:150% 0}45%,100%{background-position:-50% 0}}
+/* The light waits for the lockup to land, takes six and a half seconds to cross it, and
+   then rests until the cycle starts again — b105 swept it in under three and he asked for
+   it slower. It should be noticed out of the corner of the eye, not read.
+   The gradient is TWICE the box, not three times: a percentage background-position is a
+   percentage of (box − image), so a wider image spends most of the travel off-screen and
+   the highlight only actually crosses the words for a fraction of the time you asked it
+   to. At 200% the whole journey is on the words. */
+@keyframes brandSheen{0%,22%{background-position:110% 0}65%,100%{background-position:-10% 0}}
 @media (prefers-reduced-motion:reduce){
-  .mk-bloom,.mk-halo,.mk-spark,.mk-glowring,.brand .b1,.brand .b2{animation:none}
+  .mk-bloom,.mk-halo,.mk-spark,.mk-glowring,
+  .brand .bpop,.brand .b1,.brand .b2,.brand .b3{animation:none}
 }
 #side nav{display:flex;flex-direction:column;gap:var(--sp-1);flex:1;min-height:0;overflow-y:auto}
 /* grouped navigation with animated sub-menus */
@@ -259,7 +297,6 @@ main{max-width:1180px;margin:0 auto;padding:var(--sp-6) 30px 90px}
   .nav-gh .chev{display:none}
   .nav-sub{margin-left:0;padding-left:0;border-left:none}
   .brand{padding-left:0;padding-right:0}
-  .brand .brand-row{justify-content:center}
   #side nav button, .side-foot button{justify-content:center;padding:var(--sp-5) 0}
 }
 section.tab{display:none}
@@ -2463,7 +2500,6 @@ html[data-theme="dark"] .ne-group{background:#0f2530}
   #side nav button, .side-foot button{justify-content:flex-start!important;padding:var(--sp-5) var(--sp-5)!important}
   #side nav button span{white-space:normal}
   .brand{justify-content:flex-start!important;padding-left:var(--sp-4)!important;padding-right:var(--sp-4)!important}
-  .brand .brand-row{justify-content:flex-start!important}
   .nav-gh .chev{display:block!important}
   .nav-sub{margin-left:var(--sp-4);padding-left:var(--sp-4);border-left:1px solid rgba(255,255,255,.12)}
   .side-ctrls{flex-direction:row!important}
@@ -2769,9 +2805,10 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
         <path class="mk-halo" pathLength="100" d="M26 13.2C24.3 10.6 20.4 9.4 17.2 10.6c-3.8 1.4-4.6 6-1.4 8.3 2.5 1.8 6.8 2.2 9.2 4.4 3 2.7 2 7.4-1.8 8.7-3.3 1.1-7.2-.2-9.2-3.2"/>
         <path class="mk-spark" pathLength="100" d="M26 13.2C24.3 10.6 20.4 9.4 17.2 10.6c-3.8 1.4-4.6 6-1.4 8.3 2.5 1.8 6.8 2.2 9.2 4.4 3 2.7 2 7.4-1.8 8.7-3.3 1.1-7.2-.2-9.2-3.2"/>
       </svg></div>
-      <div class="btxt"><div class="b1">The Sarcoma<br>Clinic <em>PK</em></div></div>
     </div>
-    <div class="btxt b2">Ali Ijaz Ahmad</div>
+    <div class="btxt bpop"><div class="b1" id="brandTagLine">The Sarcoma Clinic PK</div></div>
+    <div class="btxt bpop p2"><div class="b2" id="brandWhoLine">Dr Ali Ijaz Ahmad</div></div>
+    <div class="btxt bpop p3"><div class="b3" id="brandSubLine">Orthopaedic Oncology</div></div>
   </div>
   <nav id="sideNav"></nav>
   <div class="side-foot">
@@ -4434,7 +4471,9 @@ setTimeout(function(){ try{ if(window.__appReady){ var b=document.getElementById
   <div class="card" data-set="clinic">
     <h2>Branding, logo &amp; social</h2>
     <div class="grid g3">
-      <div class="field"><label>Brand / tagline</label><input type="text" id="sBrandTag" placeholder="The Sarcoma Clinic PK" autocomplete="no-autofill" data-lpignore="true" data-form-type="other"></div>
+      <div class="field"><label>Brand / tagline <span class="muted" style="font-weight:400;font-size:11.5px">— top line of the menu bar, and the sign-in screen</span></label><input type="text" id="sBrandTag" placeholder="The Sarcoma Clinic PK" autocomplete="no-autofill" data-lpignore="true" data-form-type="other"></div>
+      <div class="field"><label>Your name, in the menu bar</label><input type="text" id="sBrandWho" placeholder="Dr Ali Ijaz Ahmad" autocomplete="no-autofill" data-lpignore="true" data-form-type="other"></div>
+      <div class="field"><label>Line under your name <span class="muted" style="font-weight:400;font-size:11.5px">— qualification, speciality or interest</span></label><input type="text" id="sBrandLine" placeholder="Orthopaedic Oncology" autocomplete="no-autofill" data-lpignore="true" data-form-type="other"></div>
       <div class="field"><label>Facebook page URL</label><input type="text" id="sFbUrl" autocomplete="no-autofill" data-lpignore="true" data-form-type="other"></div>
       <div class="field"><label>Instagram URL</label><input type="text" id="sIgUrl" autocomplete="no-autofill" data-lpignore="true" data-form-type="other"></div>
       <div class="field"><label>LinkedIn URL</label><input type="text" id="sLiUrl" autocomplete="no-autofill" data-lpignore="true" data-form-type="other"></div>
@@ -5270,7 +5309,7 @@ const SEED_MEDS = [
 ["Voltral Emulgel 2%","Diclofenac diethylamine 2%","Gels & topical","Apply 2–4 cm","BD (1+0+1)","2 weeks","Massage gently; twice-daily strength","Novartis / Haleon","NSAID gel"]
 ];
 
-const SEED_VERSION = 51;
+const SEED_VERSION = 52;
 function freshDB(){
   return {
     settings:{docName:'Dr. Ali Ijaz Ahmad',quals:'MBBS, FCPS (Orth), MACS (RCSI), CHPE — Consultant Orthopedic & Spine Surgery',
@@ -5278,7 +5317,8 @@ function freshDB(){
       phone:'+92 315 7459655 · +92 304 3212222',timings:'',paper:'A4',footer:'',printMode:'pad',padTop:'68',padBottom:'34',urduRx:'on',rxBarcode:'on',phraseHelp:'on',capStyle:'line',dcLayout:'letter',mrnPrefix:'FH',mrnStyle:'date',logo:'',qrRx:'on',rxFinish:'grey',feeShare:'30',theme:'light',uiZoom:'100',
       autoLock:'10',defFu:'',feePresets:'',urduSize:'normal',backupPw:'',lockBg:'artwork',
       accent:'teal', photoLock:'', photoHero:'',
-      brandTag:'The Sarcoma Clinic PK', nav:null, navLabels:{}, labelOverrides:{}, cardTint:'off', cardTintV48:true, shortcuts:'on', favMeds:[], favTpls:[], defQrId:'', sync:{url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false},
+      brandTag:'The Sarcoma Clinic PK', brandWho:'Dr Ali Ijaz Ahmad',
+      brandLine:'Orthopaedic Oncology', nav:null, navLabels:{}, labelOverrides:{}, cardTint:'off', cardTintV48:true, shortcuts:'on', favMeds:[], favTpls:[], defQrId:'', sync:{url:'',anonKey:'',enabled:false,email:'',lastSync:'',auto:false},
       fbUrl:'https://www.facebook.com/share/1MAwmf6mD6/',
       igUrl:'https://www.instagram.com/thesarcomaclinicpk',
       liUrl:'https://www.linkedin.com/in/draliijaz',
@@ -5407,6 +5447,16 @@ function migrateDB(){
   if(db.settings.igUrl===undefined) db.settings.igUrl='https://www.instagram.com/thesarcomaclinicpk';
   if(db.settings.liUrl===undefined) db.settings.liUrl='https://www.linkedin.com/in/draliijaz';
   if(db.settings.waBiz===undefined) db.settings.waBiz='0315-7459655';
+  /* v52: the two lines under the brand in the left bar. `brandTag` (v16) is the clinic
+     name and is shared with the sign-in screen; these two are his own name and whatever
+     he wants said under it. Seeded from the letterhead's doctor name where there is one,
+     so an existing install opens with the name he already uses rather than a placeholder,
+     and kept SEPARATE from it afterwards — editing the bar must not quietly reword every
+     prescription he prints. Defensive and idempotent (\u00a75). */
+  if(db.settings.brandWho===undefined)
+    db.settings.brandWho = String(db.settings.docName||'').trim() || 'Dr Ali Ijaz Ahmad';
+  if(db.settings.brandLine===undefined)
+    db.settings.brandLine = 'Orthopaedic Oncology';
   // v17: accent themes + video urdu titles
   if(db.settings.accent===undefined) db.settings.accent='teal';
   // v18: sign-in & home banner photos
@@ -5989,7 +6039,7 @@ function applyTabAccess(name){
 }
 
 /* ================= SETTINGS ================= */
-const S_FIELDS = {sDcLayout:'dcLayout',sCapStyle:'capStyle',sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sDefQrId:'defQrId',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent',sFuDayCap:'fuDayCap',sVitalsDefault:'vitalsDefault'};
+const S_FIELDS = {sDcLayout:'dcLayout',sCapStyle:'capStyle',sDocName:'docName',sQuals:'quals',sRegNo:'regNo',sClinicName:'clinicName',sAddress:'address',sPhone:'phone',sTimings:'timings',sPaper:'paper',sFooter:'footer',sPrintMode:'printMode',sPadTop:'padTop',sDefFee:'defFee',sUrduRx:'urduRx',sRxBarcode:'rxBarcode',sPadBottom:'padBottom',sPhraseHelp:'phraseHelp',sMrnPrefix:'mrnPrefix',sMrnStyle:'mrnStyle',sQrRx:'qrRx',sDefQrId:'defQrId',sRxFinish:'rxFinish',sFeeShare:'feeShare',sAutoLock:'autoLock',sDefFu:'defFu',sFeePresets:'feePresets',sUrduSize:'urduSize',sBackupPw:'backupPw',sBrandTag:'brandTag',sBrandWho:'brandWho',sBrandLine:'brandLine',sFbUrl:'fbUrl',sIgUrl:'igUrl',sLiUrl:'liUrl',sWaBiz:'waBiz',sAccent:'accent',sFuDayCap:'fuDayCap',sVitalsDefault:'vitalsDefault'};
 function loadSettingsForm(){
   if(typeof renderRxQrSelect==='function') renderRxQrSelect();   // fill the default-QR picker first
   for(const [el,key] of Object.entries(S_FIELDS)){ if($(el)) $(el).value = db.settings[key]||''; }
@@ -6154,6 +6204,20 @@ function applyBrand(){
     el.innerHTML = logo ? '<img src="'+logo+'" alt="">' : el.__dflt;
     el.classList.toggle('has-img', !!logo);
   });
+  /* b106: the three brand lines are his, from settings. `brandTag` is the clinic and is
+     shared with the sign-in screen; the other two belong to the bar alone. Blank is
+     allowed — an empty line simply collapses (`.b3:empty`) rather than printing a
+     placeholder at him. One painter (never-do #54): nothing else writes these. */
+  const bset = db.settings||{};
+  const bline = (id, v)=>{
+    const el = $(id); if(!el) return;
+    el.textContent = String(v||'').trim();
+    const wrap = el.parentElement;            // a blank line takes no room, gap and all
+    if(wrap && wrap.classList.contains('bpop')) wrap.classList.toggle('hidden', !el.textContent);
+  };
+  bline('brandTagLine', bset.brandTag!==undefined ? bset.brandTag : 'The Sarcoma Clinic PK');
+  bline('brandWhoLine', bset.brandWho!==undefined ? bset.brandWho : 'Dr Ali Ijaz Ahmad');
+  bline('brandSubLine', bset.brandLine!==undefined ? bset.brandLine : '');
   const pv = $('logoPreviewWrap');
   if(pv) pv.innerHTML = logo
     ? '<img src="'+logo+'" style="width:34px;height:34px;border-radius:9px;object-fit:cover;vertical-align:middle;border:1px solid var(--line)">'
@@ -14850,7 +14914,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.11.14-b105';
+const APP_BUILD = '2026.11.14-b106';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
