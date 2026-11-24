@@ -135,12 +135,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
    different serif on a different machine measures differently and a clipped word is how
    "PK" went missing at b105. The two lines under it are short by design. */
 .brand .b1{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-  font-weight:400;font-size:17px;letter-spacing:.2px;color:#fff;line-height:1.16;text-wrap:balance}
+  font-weight:600;font-size:17px;letter-spacing:.2px;color:#fff;line-height:1.18;text-wrap:balance}
 /* his own name, then the line he chooses to put under it — both read from settings */
-.brand .b2{font-size:var(--t-chip);color:#cfe9f1;letter-spacing:1.9px;text-transform:uppercase;
-  margin-top:var(--sp-2);padding-top:var(--sp-4);border-top:1px solid rgba(255,255,255,.17)}
-.brand .b3{font-size:var(--t-chip);color:#86c4d6;letter-spacing:.5px;line-height:1.45;
-  margin-top:var(--sp-1);text-wrap:balance}
+.brand .b2{font-size:var(--t-meta);font-weight:600;color:#e2f3f8;letter-spacing:1.6px;
+  text-transform:uppercase;margin-top:var(--sp-2);padding-top:var(--sp-4);
+  border-top:1px solid rgba(255,255,255,.17)}
+/* no tracking on this one: it is the longest line in the bar and the only one that may
+   be any length at all, so it gets its letters back to keep "Sarcoma | Limb Salvage |
+   Arthroplasty" on a single line. Anything longer balances onto two tidy ones. */
+.brand .b3{font-size:var(--t-chip);color:#a9d8e7;
+  line-height:1.5;margin-top:var(--sp-2);text-wrap:balance}
 .brand .b3:empty{display:none}
 
 /* ---- the lockup arrives, then the light crosses it (b106) ----
@@ -152,17 +156,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
    perfectly fine here. Separate elements, separate jobs, nothing to compose wrongly.
    `backwards` holds the first frame through the stagger delay so the later lines do not
    flash before their turn; it is NOT `both`, so no transform is ever retained and
-   never-do #27 is untouched. */
-.brand .bpop{animation:brandPop 15s cubic-bezier(.22,1.2,.36,1) infinite backwards}
-.brand .bpop.p2{animation-delay:.16s}
-.brand .bpop.p3{animation-delay:.32s}
+   never-do #27 is untouched.
+
+   b107: BOTH effects are switched on for as long as they last and then switched off
+   again, by `brandCycle()`, instead of running as infinite CSS animations. A transform
+   that never ends keeps the text in a composited layer for ever, and a background clipped
+   to text is painted as a mask — either one costs the words their subpixel antialiasing,
+   which on a Windows screen reads as thin, slightly blurred type. He saw it immediately.
+   Between effects the lines are now ordinary text with no animation, no transform and no
+   clip, and the browser renders them as sharply as the menu underneath. */
+.brand .bpop.in{animation:brandPop 1.25s cubic-bezier(.22,1.2,.36,1) backwards}
+.brand .bpop.p2.in{animation-delay:.16s}
+.brand .bpop.p3.in{animation-delay:.32s}
 @keyframes brandPop{
   0%{opacity:0;transform:scale(.78)}
-  3%{opacity:1;transform:scale(1.08)}
-  5.5%{transform:scale(.98)}
-  8%,93%{opacity:1;transform:scale(1)}
-  97%{opacity:0;transform:scale(.95)}
-  100%{opacity:0;transform:scale(.78)}
+  42%{opacity:1;transform:scale(1.07)}
+  68%{transform:scale(.985)}
+  100%{opacity:1;transform:none}
 }
 
 /* ---- the shine (b105) ----
@@ -193,18 +203,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
    cannot clip a background to text, the @supports block never applies and the words stay
    plainly readable, which is the only outcome that matters. */
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
-  .brand .b1{background-image:linear-gradient(100deg,#fff 0%,#fff 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#fff 62%,#fff 100%);
+  .brand.shine .b1{background-image:linear-gradient(100deg,#fff 0%,#fff 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#fff 62%,#fff 100%);
     background-size:200% 100%;background-position:110% 0;background-repeat:repeat;
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    animation:brandSheen 15s ease-in-out infinite}
-  .brand .b2{background-image:linear-gradient(100deg,#cfe9f1 0%,#cfe9f1 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#cfe9f1 62%,#cfe9f1 100%);
+    animation:brandSheen 6.6s linear}
+  .brand.shine .b2{background-image:linear-gradient(100deg,#e2f3f8 0%,#e2f3f8 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#e2f3f8 62%,#e2f3f8 100%);
     background-size:200% 100%;background-position:110% 0;background-repeat:repeat;
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    animation:brandSheen 15s ease-in-out .16s infinite}
-  .brand .b3{background-image:linear-gradient(100deg,#86c4d6 0%,#86c4d6 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#86c4d6 62%,#86c4d6 100%);
+    animation:brandSheen 6.6s linear .16s backwards}
+  .brand.shine .b3{background-image:linear-gradient(100deg,#a9d8e7 0%,#a9d8e7 38%,#ffeab4 47%,#fff7dd 50%,#ffeab4 53%,#a9d8e7 62%,#a9d8e7 100%);
     background-size:200% 100%;background-position:110% 0;background-repeat:repeat;
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    animation:brandSheen 15s ease-in-out .32s infinite}
+    animation:brandSheen 6.6s linear .32s backwards}
 }
 /* The light waits for the lockup to land, takes six and a half seconds to cross it, and
    then rests until the cycle starts again — b105 swept it in under three and he asked for
@@ -213,7 +223,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
    percentage of (box − image), so a wider image spends most of the travel off-screen and
    the highlight only actually crosses the words for a fraction of the time you asked it
    to. At 200% the whole journey is on the words. */
-@keyframes brandSheen{0%,22%{background-position:110% 0}65%,100%{background-position:-10% 0}}
+@keyframes brandSheen{from{background-position:110% 0}to{background-position:-10% 0}}
 @media (prefers-reduced-motion:reduce){
   .mk-bloom,.mk-halo,.mk-spark,.mk-glowring,
   .brand .bpop,.brand .b1,.brand .b2,.brand .b3{animation:none}
@@ -1434,6 +1444,26 @@ html[data-theme="dark"] .rx-prev{background:rgba(13,148,136,.10)}
 }
 /* ---- a window of its own: registry analytics, and the not-ready list ---- */
 .rom-card.ana-card{width:min(1040px,96vw);max-height:92vh;overflow-y:auto;text-align:left;padding:var(--sp-6) var(--sp-6)}
+/* ---- the analytics panes (b109) ---- */
+.ra-tabs{display:flex;gap:var(--sp-3);flex-wrap:wrap;margin-bottom:var(--sp-5);
+  border-bottom:1px solid var(--line);padding-bottom:var(--sp-4)}
+.ra-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:var(--sp-4);margin-bottom:var(--sp-5)}
+.ra-kpi{border:1px solid var(--line);border-radius:var(--r-md);padding:var(--sp-5);background:var(--card)}
+.ra-kpi.ak-warn{border-color:#f0a04b;background:rgba(240,160,75,.07)}
+.ra-kpi .ak-n{font-size:var(--t-head);font-weight:700;color:var(--ink);line-height:1.15}
+.ra-kpi .ak-l{font-size:var(--t-body);font-weight:700;color:var(--ink);margin-top:var(--sp-2)}
+.ra-kpi .ak-s{font-size:var(--t-meta);color:var(--muted);margin-top:var(--sp-1);line-height:1.45}
+.ra-chart{margin:var(--sp-4) 0 var(--sp-6)}
+.ra-svg{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:var(--r-md)}
+.ra-legend{display:flex;flex-wrap:wrap;gap:var(--sp-5);margin-top:var(--sp-4);font-size:var(--t-meta)}
+.ra-key{display:inline-block;width:10px;height:10px;border-radius:var(--r-round);margin-right:var(--sp-3);vertical-align:middle}
+.ra-note{font-size:var(--t-meta);color:var(--muted);line-height:1.6;margin:var(--sp-3) 0 var(--sp-5)}
+.ra-warn{font-size:var(--t-meta);color:#b45309;line-height:1.6;margin:var(--sp-3) 0 var(--sp-5)}
+.ra-warn-i{color:#b45309}
+.ra-tbl{margin-bottom:var(--sp-5)}
+.ra-t1 .t1-head td:first-child{font-weight:700}
+.ra-t1 .t1-sub{padding-left:var(--sp-6);color:var(--muted)}
+
 .ana-head{display:flex;align-items:center;gap:var(--sp-4);flex-wrap:wrap;margin-bottom:var(--sp-5);
   padding-bottom:var(--sp-4);border-bottom:1px solid var(--line)}
 .ana-head h3{margin:0;font-size:var(--t-title);flex:1;min-width:150px}
@@ -2469,6 +2499,18 @@ html[data-theme="dark"] .ne-group{background:#0f2530}
 .reg-menu.hidden{display:none}
 .reg-menu button{display:block;width:100%;text-align:left;padding:var(--sp-4) var(--sp-5);border:none;background:none;cursor:pointer;border-radius:var(--r-sm);font-size:var(--t-body);color:var(--ink)}
 .reg-menu button:hover{background:var(--teal-light);color:var(--teal-dark)}
+/* The action cell takes exactly the room its buttons need and no more — `width:1%` on a
+   full-width table means "shrink to fit", so the three that stay out sit on ONE line and
+   the medicines column gives up the space instead. That is the whole fix for a row that
+   had grown to five lines deep (b108). */
+.v-acts{white-space:nowrap;width:1%;text-align:right}
+.v-when{white-space:nowrap}
+.v-acts .btn{vertical-align:middle}
+/* a row menu opens leftwards, or it runs off the end of the table (b108) */
+.reg-menu.rmenu-right{left:auto;right:0}
+.reg-menu .rm-sep{height:1px;background:var(--line);margin:var(--sp-2) var(--sp-3)}
+.reg-menu button.rm-danger{color:#b91c1c}
+.reg-menu button.rm-danger:hover{background:#fef2f2;color:#991b1b}
 
 /* ================= MOBILE (drawer + responsive) ================= */
 #mtopbar{display:none;position:fixed;top:0;left:0;right:0;height:52px;z-index:58;
@@ -6249,6 +6291,47 @@ function applyBrand(){
     /* an 'idb:' marker is filled in by photoPaint() a moment later */
   });
   if(typeof photoPaint==='function') photoPaint();
+}
+
+/* ---- the brand's fifteen seconds (b107) ----
+   This used to be two infinite CSS animations. Infinite is the problem: a transform that
+   never ends keeps the words in their own composited layer, and a background clipped to
+   text is painted through a mask — both give up subpixel antialiasing, and on a Windows
+   screen that is exactly the thin, slightly blurred type he reported. So each effect is
+   switched on for as long as it runs and switched off again, and in between the lines are
+   ordinary text that the browser renders as sharply as anything else in the bar.
+
+   Starting it is optional, by design: if this never runs, the brand simply sits there,
+   fully visible and perfectly legible. An animation whose failure mode is a blank logo
+   would not be worth having. */
+let brandCycleT = null;
+function brandStill(){
+  const b = document.querySelector('.brand'); if(!b) return;
+  b.classList.remove('shine');
+  b.querySelectorAll('.bpop').forEach(function(e){ e.classList.remove('in'); });
+}
+function brandQuiet(){
+  /* his own Reduce-motion switch, and the one on the machine */
+  if(document.documentElement.classList.contains('a11y-motion')) return true;
+  try{ return !!(window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches); }
+  catch(e){ return false; }
+}
+function brandRun(){
+  const b = document.querySelector('.brand'); if(!b) return;
+  if(document.hidden || brandQuiet()){ brandStill(); return; }
+  const pops = b.querySelectorAll('.bpop');
+  pops.forEach(function(e){ e.classList.remove('in'); void e.offsetWidth; e.classList.add('in'); });
+  setTimeout(function(){ pops.forEach(function(e){ e.classList.remove('in'); }); }, 1750);
+  setTimeout(function(){
+    if(document.hidden || brandQuiet()) return;
+    b.classList.add('shine');
+    setTimeout(function(){ b.classList.remove('shine'); }, 7100);
+  }, 3300);
+}
+function brandCycle(){
+  if(brandCycleT) return;                 // one clock only (never-do #54)
+  brandRun();
+  brandCycleT = setInterval(brandRun, 15000);
 }
 /* ================= THE BIG PICTURES LIVE IN INDEXEDDB (b83) =================
    The sign-in photo and the home banner were resized to 1400px wide, turned into base64 and
@@ -11986,20 +12069,10 @@ function openPatient(pid){
   window.__visitShown = vs.map(v=>v.id);
   $('pdVisits').innerHTML = vs.length ? vs.map(v=>
     '<tr'+(visitSel.has(v.id)?' class="reg-rowsel"':'')+'><td>'+selCheckbox(visitSel, v.id, 'visitToggleOne')+'</td>'+
-    '<td>'+fmtDate(v.date)+((v.by||v.dur)?'<br><span class="small muted">'+[v.by&&('by '+esc(v.by)), v.dur&&(Math.max(1,Math.round(v.dur/60))+' min')].filter(Boolean).join(' · ')+'</span>':'')+'</td>'+
+    '<td class="v-when">'+fmtDate(v.date)+((v.by||v.dur)?'<br><span class="small muted">'+[v.by&&('by '+esc(v.by)), v.dur&&(Math.max(1,Math.round(v.dur/60))+' min')].filter(Boolean).join(' · ')+'</span>':'')+'</td>'+
     '<td>'+esc(v.diagnosis||'—')+'</td>'+
     '<td class="small">'+esc((v.meds||[]).map(m=>m.name).join(', ')||'—')+'</td>'+
-    '<td>'+
-      '<button class="btn btn-ghost btn-sm" onclick="previewSavedVisit(\''+v.id+'\')" title="See exactly how it will print">👁 Preview</button> '+
-      '<button class="btn btn-ghost btn-sm" onclick="reprintVisit(\''+v.id+'\')">🖨 Print</button> '+
-      '<button class="btn btn-primary btn-sm" onclick="copyVisitToForm(\''+v.id+'\')" title="Reopen THIS prescription to correct it — saving updates this same visit, and its date does not change">✎ Edit / re-issue</button> '+
-      '<button class="btn btn-primary btn-sm" onclick="copyVisitAsNew(\''+v.id+'\')" title="Start a NEW prescription dated today with everything from this one copied into it — this visit is left untouched">⧉ Copy</button> '+
-      '<button class="btn btn-ghost btn-sm" onclick="dischargeFromVisit(\''+v.id+'\')" title="Create a discharge summary pre-filled from this visit">🏥 Discharge</button> '+
-      '<button class="btn btn-ghost btn-sm" onclick="reprintVisitPlain(\''+v.id+'\')" title="Prints with full letterhead — for blank paper or Save as PDF">📄 PDF</button> '+
-      '<button class="btn btn-ghost btn-sm" onclick="waVisit(\''+v.id+'\')" title="Open WhatsApp with the prescription as text">📤 WA</button>'+
-      ((v.images&&v.images.length)?' <button class="btn btn-ghost btn-sm" onclick="viewVisitImages(\''+v.id+'\')" title="View attached images">📎 '+v.images.length+'</button>':'')+
-      ' <button class="btn btn-danger btn-sm" onclick="deleteVisit(\''+v.id+'\')" title="Delete this prescription version">✕</button>'+
-    '</td></tr>'
+    '<td class="v-acts">'+visitRowActions(v)+'</td></tr>'
   ).join('') : '<tr><td colspan="5" class="muted">No visits recorded.</td></tr>';
   visitUpdateSelUI();
 }
@@ -12200,6 +12273,37 @@ function rxFillFromVisit(v, opts){
   if(typeof renderRxQrSelect==='function'){ renderRxQrSelect();
     if($('cQrSel')) $('cQrSel').value = (v.qrId!=null ? v.qrId : (db.settings.defQrId||'')); }
   (v.meds||[]).forEach(m=>addRxRow(m));
+}
+/* ---- the buttons on a saved visit (b108) ----
+   This row had grown to eight buttons and wrapped onto five lines, which made the two
+   that matter — Edit and Copy, which are different features and must never be confused
+   (never-do #56) — no easier to find than Delete. Three stay out: reprint, correct,
+   copy. Everything occasional goes behind the ⋯, and Delete goes to the bottom of it,
+   away from the hand. The menu is the registry's own `.reg-menu`, so there is one menu
+   in this app and not two (never-do #54); `regToggleMenu` closes the others and the
+   document-level click handler closes them all. */
+function visitRowActions(v){
+  const id = v.id, mid = 'vrm_' + id, q = "'" + id + "'";
+  const img = (v.images && v.images.length) || 0;
+  return '' +
+    '<button class="btn btn-ghost btn-sm" onclick="reprintVisit(' + q + ')" title="Print this prescription again on your pad">\ud83d\udda8 Print</button> ' +
+    '<button class="btn btn-primary btn-sm" onclick="copyVisitToForm(' + q + ')" title="Reopen THIS prescription to correct it \u2014 saving updates this same visit, and its date does not change">\u270e Edit / re-issue</button> ' +
+    '<button class="btn btn-primary btn-sm" onclick="copyVisitAsNew(' + q + ')" title="Start a NEW prescription dated today with everything from this one copied into it \u2014 this visit is left untouched">\u29c9 Copy</button> ' +
+    (img ? '<button class="btn btn-ghost btn-sm" onclick="viewVisitImages(' + q + ')" title="View the ' + img + ' image(s) attached to this visit">\ud83d\udcce ' + img + '</button> ' : '') +
+    '<span class="reg-menu-wrap">' +
+      '<button class="btn btn-ghost btn-sm" aria-haspopup="true" title="More for this visit" ' +
+        'onclick="regToggleMenu(\'' + mid + '\',event)">\u22ef</button>' +
+      '<div class="reg-menu rmenu-right hidden" id="' + mid + '">' +
+        '<div class="reg-menu-head">This prescription</div>' +
+        '<button onclick="regCloseMenus();previewSavedVisit(' + q + ')">\ud83d\udc41 Preview exactly as it prints</button>' +
+        '<button onclick="regCloseMenus();reprintVisitPlain(' + q + ')">\ud83d\udcc4 Print on blank paper / save as PDF</button>' +
+        '<button onclick="regCloseMenus();waVisit(' + q + ')">\ud83d\udce4 Send on WhatsApp</button>' +
+        '<div class="reg-menu-head">Make something from it</div>' +
+        '<button onclick="regCloseMenus();dischargeFromVisit(' + q + ')">\ud83c\udfe5 Discharge summary from this visit</button>' +
+        '<div class="rm-sep"></div>' +
+        '<button class="rm-danger" onclick="regCloseMenus();deleteVisit(' + q + ')">\u2715 Delete this prescription</button>' +
+      '</div>' +
+    '</span>';
 }
 function copyVisitToForm(vid){
   const v = db.visits.find(x=>x.id===vid); if(!v) return;
@@ -14914,7 +15018,7 @@ async function sha256(str){
     return 'x'+h.toString(16);
   }
 }
-const APP_BUILD = '2026.11.14-b106';
+const APP_BUILD = '2026.11.24-b109';
 try{ const _bl=document.getElementById('appBuild'); if(_bl) _bl.textContent=APP_BUILD; }catch(e){}
 /* ---- multi-user accounts ---- */
 let currentUser = null;
@@ -18489,34 +18593,577 @@ function regShowAnalytics(){
   m.classList.remove('hidden');
 }
 function regHideAnalytics(){ const m=$('regAnalyticsModal'); if(m) m.classList.add('hidden'); }
+/* ======================= REGISTRY ANALYTICS (b109) =======================
+   The registry was collecting ISOLS-grade data — dates of surgery, recurrence,
+   metastasis and death, margins, grade, stage, Clavien-Dindo, MSTS — and showing four
+   bar charts off it. This is the rest.
+
+   Five panes, because one scroll of everything is not read: **Survival**, **Outcomes**,
+   **Health** (what is missing and who has fallen out of follow-up), **Service**
+   (volume and the delays that matter in this setting), and **Table 1**, the baseline
+   table every paper opens with.
+
+   Two rules run through all of it.
+
+   1. **Never show a number without its denominator and never invent one** (never-do #19).
+      Every rate here says what it is a rate OF, and every analysis says how many cases it
+      had to leave out and why. A survival curve drawn from eleven patients is not wrong,
+      but it is not evidence either, and it says so on the chart.
+   2. **Nothing is computed from a field the doctor did not fill in.** Missing is missing;
+      it is counted in Health, not guessed at here.                                      */
+
+const RA_TABS = [['survival','Survival'],['outcomes','Outcomes'],['health','Registry health'],
+                  ['service','Service'],['table1','Table 1']];
+let raTab = 'survival';
+const RA_MS_DAY = 86400000;
+
+/* ---- small arithmetic, kept honest ---- */
+function raDate(v){
+  if(!v) return null;
+  const s = String(v).trim();
+  const d = new Date(s.length<=10 ? (s+'T00:00:00') : s);
+  return isNaN(d.getTime()) ? null : d;
+}
+function raDays(from, to){
+  const a = raDate(from), b = raDate(to);
+  if(!a || !b) return null;
+  return Math.round((b - a) / RA_MS_DAY);
+}
+function raMonths(days){ return days==null ? null : days/30.4375; }
+function raNum(v){ const n = parseFloat(String(v==null?'':v).replace(/[^0-9.\-]/g,'')); return isNaN(n)?null:n; }
+function raPct(n, d){ return d ? Math.round(n/d*1000)/10 : 0; }
+function raMedIQR(arr){
+  const a = arr.filter(function(x){ return x!=null && !isNaN(x); }).slice().sort(function(x,y){ return x-y; });
+  if(!a.length) return null;
+  const q = function(p){
+    const i = (a.length-1)*p, lo = Math.floor(i), hi = Math.ceil(i);
+    return lo===hi ? a[lo] : a[lo] + (a[hi]-a[lo])*(i-lo);
+  };
+  return {n:a.length, med:q(0.5), q1:q(0.25), q3:q(0.75), min:a[0], max:a[a.length-1]};
+}
+function raFmt(x, dp){ return x==null ? '—' : (Math.round(x*Math.pow(10,dp||0))/Math.pow(10,dp||0)).toFixed(dp||0); }
+function raMedTxt(m, dp, unit){
+  if(!m) return '—';
+  return raFmt(m.med,dp)+(unit||'')+' <span class="muted">(IQR '+raFmt(m.q1,dp)+'–'+raFmt(m.q3,dp)+')</span>';
+}
+/* erfc, Abramowitz & Stegun 7.1.26 — accurate to ~1.5e-7, which is far more than a
+   p-value needs. Used only to turn a log-rank chi-square into a p. */
+function raErfc(x){
+  const z = Math.abs(x), t = 1/(1+0.3275911*z);
+  const y = 1 - (((((1.061405429*t - 1.453152027)*t) + 1.421413741)*t - 0.284496736)*t + 0.254829592)*t*Math.exp(-z*z);
+  const erf = x>=0 ? y : -y;
+  return 1 - erf;
+}
+function raPFromChi1(chi2){ return chi2<=0 ? 1 : raErfc(Math.sqrt(chi2/2)); }
+function raPTxt(p){ return p<0.001 ? 'p < 0.001' : ('p = '+p.toFixed(3)); }
+
+/* ---- reading a case ---- */
+function raCases(){ return (typeof regCases==='function') ? regCases() : (db.registry||[]); }
+function raLab(key, v){ return (typeof regLabelFor==='function') ? regLabelFor(key, v) : String(v||''); }
+/* Margin is stored as the schema code 0/1/2. The GTTH import carried literal R0/R1/R2,
+   and the first cut of this screen only ever looked for those — so the margin chart said
+   "(none recorded)" on a registry full of margins. Read both. */
+function raMargin(r){
+  const v = String(r.margin==null?'':r.margin).trim().toUpperCase();
+  if(v==='0'||v==='R0') return 'R0';
+  if(v==='1'||v==='R1') return 'R1';
+  if(v==='2'||v==='R2') return 'R2';
+  return null;
+}
+function raDeathDate(r){
+  if(r.out_deathDate) return r.out_deathDate;
+  return null;
+}
+function raIsDead(r){
+  if(r.out_deathDate) return true;
+  const s = String(r.out_status||'');
+  return s==='3' || s==='4';                 // DOD or DOC
+}
+/* the last date we have any word on this patient */
+function raLastKnown(r){
+  const cands = [r.out_lastFu, raDeathDate(r), r.out_recurDate, r.out_metsDate,
+                 r.out_revDate, r.out_cdDate, r.out_mstsDate, r.out_eq5dDate];
+  let best = null;
+  cands.forEach(function(c){ const d = raDate(c); if(d && (!best || d>best)) best = d; });
+  return best;
+}
+
+/* ---- Kaplan–Meier, product limit, with Greenwood's variance ----
+   `rows` are {t: days from surgery, e: 1 event / 0 censored}. Anything with no time
+   origin, no endpoint date and no follow-up date never reaches here: it is excluded by
+   the caller, counted, and said out loud on the chart. */
+function raKM(rows){
+  const R = rows.filter(function(x){ return x.t!=null && x.t>=0; })
+                .sort(function(a,b){ return a.t-b.t; });
+  const out = {n:R.length, events:0, pts:[{t:0,S:1,lo:1,hi:1,atRisk:R.length}], median:null, maxT:0};
+  if(!R.length) return out;
+  out.maxT = R[R.length-1].t;
+  let S = 1, sumVar = 0, i = 0, atRisk = R.length;
+  while(i < R.length){
+    const t = R[i].t;
+    let d = 0, c = 0;
+    while(i < R.length && R[i].t === t){ if(R[i].e) d++; else c++; i++; }
+    if(d > 0){
+      const nAt = atRisk;
+      S *= (1 - d/nAt);
+      sumVar += (nAt - d) > 0 ? d/(nAt*(nAt-d)) : 0;
+      const se = S*Math.sqrt(sumVar);
+      out.pts.push({t:t, S:S, lo:Math.max(0,S-1.96*se), hi:Math.min(1,S+1.96*se), atRisk:nAt, d:d});
+      out.events += d;
+      if(out.median==null && S<=0.5) out.median = t;
+    }
+    atRisk -= (d + c);
+  }
+  return out;
+}
+function raAtRisk(rows, t){
+  return rows.filter(function(x){ return x.t!=null && x.t >= t; }).length;
+}
+/* log-rank, two groups. Returns null unless both arms have something to compare. */
+function raLogRank(a, b){
+  const A = a.filter(function(x){ return x.t!=null; }), B = b.filter(function(x){ return x.t!=null; });
+  const evA = A.filter(function(x){ return x.e; }).length, evB = B.filter(function(x){ return x.e; }).length;
+  if(evA + evB < 5 || !A.length || !B.length) return null;
+  const times = {};
+  A.concat(B).forEach(function(x){ if(x.e) times[x.t]=1; });
+  const ts = Object.keys(times).map(Number).sort(function(p,q){ return p-q; });
+  let O1 = 0, E1 = 0, V = 0;
+  ts.forEach(function(t){
+    const n1 = raAtRisk(A,t), n2 = raAtRisk(B,t), n = n1+n2;
+    if(n < 2) return;
+    const d1 = A.filter(function(x){ return x.e && x.t===t; }).length;
+    const d2 = B.filter(function(x){ return x.e && x.t===t; }).length;
+    const d = d1+d2; if(!d) return;
+    O1 += d1;
+    E1 += d*n1/n;
+    V  += d*(n1/n)*(1-n1/n)*((n-d)/(n-1));
+  });
+  if(V <= 0) return null;
+  const chi2 = Math.pow(O1-E1,2)/V;
+  return {chi2:chi2, p:raPFromChi1(chi2), eventsA:evA, eventsB:evB};
+}
+
+/* ---- drawing one chart: curves, 95% bands, and the numbers at risk ---- */
+function raCurve(series, opts){
+  opts = opts || {};
+  /* The numbers at risk are drawn INSIDE the svg, at the same x as the ticks above them.
+     A separate HTML table underneath cannot line up with the curve at any width, which is
+     exactly the kind of chart that gets read wrong. */
+  const W = 880, L = 54, Rp = 18, T = 14, B = 46;
+  const riskH = 16 + series.length*17;
+  const H = 300 + riskH;
+  const months = Math.max(12, Math.ceil(Math.max.apply(null,
+                  series.map(function(s){ return raMonths(s.km.maxT)||0; }).concat([12]))));
+  const step = months<=24 ? 6 : (months<=60 ? 12 : 24);
+  const ticks = []; for(let m=0; m<=months; m+=step) ticks.push(m);
+  const x = function(mo){ return L + (mo/months)*(W-L-Rp); };
+  const axisY = 300 - B;
+  const y = function(S){ return T + (1-S)*(300-T-B); };
+  const COL = ['var(--teal)','#b45309','#7c3aed'];
+
+  let body = '';
+  // grid
+  ticks.forEach(function(m){ body += '<line x1="'+x(m).toFixed(1)+'" y1="'+T+'" x2="'+x(m).toFixed(1)+'" y2="'+axisY+'" stroke="var(--line)" stroke-width="1"/>'; });
+  [0,0.25,0.5,0.75,1].forEach(function(s){
+    body += '<line x1="'+L+'" y1="'+y(s).toFixed(1)+'" x2="'+(W-Rp)+'" y2="'+y(s).toFixed(1)+'" stroke="var(--line)" stroke-width="1"/>'+
+            '<text x="'+(L-8)+'" y="'+(y(s)+4).toFixed(1)+'" text-anchor="end" font-size="11" fill="#6b8491">'+Math.round(s*100)+'%</text>';
+  });
+  series.forEach(function(s, si){
+    const col = COL[si%COL.length];
+    let d = '', band = '', bandBack = '', px = x(0), py = y(1), lo = [], hi = [];
+    s.km.pts.forEach(function(p){
+      const mx = x(raMonths(p.t)||0), my = y(p.S);
+      d += (d? ' L':'M') + px.toFixed(1)+' '+py.toFixed(1) + ' L' + mx.toFixed(1)+' '+py.toFixed(1);
+      lo.push([mx, y(p.lo)]); hi.push([mx, y(p.hi)]);
+      px = mx; py = my;
+      d += ' L' + mx.toFixed(1)+' '+my.toFixed(1);
+    });
+    d += ' L' + x(months).toFixed(1)+' '+py.toFixed(1);
+    if(opts.band !== false && lo.length>1){
+      band = hi.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1); }).join(' ') + ' ' +
+             lo.slice().reverse().map(function(p){ return 'L'+p[0].toFixed(1)+' '+p[1].toFixed(1); }).join(' ') + ' Z';
+      bandBack = '<path d="'+band+'" fill="'+col+'" opacity=".12"/>';
+    }
+    body += bandBack + '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="2.2" stroke-linejoin="round"/>';
+  });
+  ticks.forEach(function(m){
+    body += '<text x="'+x(m).toFixed(1)+'" y="'+(axisY+18)+'" text-anchor="middle" font-size="11" fill="#6b8491">'+m+'</text>';
+  });
+  body += '<text x="'+((L+W-Rp)/2).toFixed(0)+'" y="'+(axisY+36)+'" text-anchor="middle" font-size="11" fill="#6b8491">Months from surgery</text>';
+
+  // numbers at risk, under their own ticks
+  const r0 = axisY + 56;
+  body += '<text x="'+L+'" y="'+r0+'" font-size="11" font-weight="700" fill="#6b8491">Number at risk</text>';
+  series.forEach(function(s, si){
+    const ry = r0 + 17*(si+1);
+    body += '<circle cx="14" cy="'+(ry-4)+'" r="4" fill="'+COL[si%COL.length]+'"/>';
+    ticks.forEach(function(m){
+      body += '<text x="'+x(m).toFixed(1)+'" y="'+ry+'" text-anchor="middle" font-size="11" fill="#6b8491">'+
+        raAtRisk(s.rows, Math.round(m*30.4375))+'</text>';
+    });
+  });
+
+  const legend = series.map(function(s, si){
+    const m = s.km.median;
+    return '<span class="ra-leg"><span class="ra-key" style="background:'+COL[si%COL.length]+'"></span>'+
+      esc(s.name)+' <span class="muted">(n='+s.km.n+', '+s.km.events+' event'+(s.km.events===1?'':'s')+
+      ', median '+(m==null?'not reached':raFmt(raMonths(m),1)+' mo')+')</span></span>';
+  }).join('');
+
+  return '<div class="ra-chart">'+
+    '<svg viewBox="0 0 '+W+' '+H+'" class="ra-svg" role="img" aria-label="'+esc(opts.title||'Survival curve')+'">'+body+'</svg>'+
+    '<div class="ra-legend">'+legend+'</div></div>';
+}
+
+/* ---- building the rows for one endpoint ---- */
+function raEndpoint(R, eventDateOf, alsoDeath){
+  const rows = [], skip = {noOrigin:0, noFollow:0};
+  R.forEach(function(r){
+    const origin = r.dateSurg;
+    if(!raDate(origin)){ skip.noOrigin++; return; }
+    const ev = eventDateOf(r);
+    let t = null, e = 0;
+    if(raDate(ev)){ t = raDays(origin, ev); e = 1; }
+    else {
+      const last = alsoDeath && raIsDead(r) && raDate(raDeathDate(r)) ? raDate(raDeathDate(r)) : raLastKnown(r);
+      if(!last){ skip.noFollow++; return; }
+      t = Math.round((last - raDate(origin))/RA_MS_DAY);
+    }
+    if(t==null || t<0){ skip.noFollow++; return; }
+    rows.push({t:t, e:e, r:r});
+  });
+  return {rows:rows, skip:skip};
+}
+function raSkipNote(skip, what){
+  const bits = [];
+  if(skip.noOrigin) bits.push(skip.noOrigin+' with no date of surgery');
+  if(skip.noFollow) bits.push(skip.noFollow+' with no follow-up date recorded');
+  if(!bits.length) return '';
+  return '<p class="ra-note">Left out of '+esc(what)+': '+bits.join(' · ')+
+         '. They are listed under <b>Registry health</b>.</p>';
+}
+function raThin(km){
+  if(km.n < 10) return '<p class="ra-warn">Only '+km.n+' case'+(km.n===1?'':'s')+' here — read this as a description of those '+km.n+', not as evidence.</p>';
+  if(km.events < 5) return '<p class="ra-warn">Only '+km.events+' event'+(km.events===1?'':'s')+' so far. The curve will move a lot with the next one.</p>';
+  return '';
+}
+
+/* ---- the panes ---- */
+function raRenderSurvival(R){
+  const os  = raEndpoint(R, function(r){ return raIsDead(r) ? raDeathDate(r) : null; }, false);
+  const lrf = raEndpoint(R, function(r){ return r.out_recurDate || null; }, true);
+  const mfs = raEndpoint(R, function(r){ return r.out_metsDate || null; }, true);
+  let h = '';
+
+  h += '<div class="reg-subhead">Overall survival</div>';
+  if(os.rows.length){
+    const km = raKM(os.rows);
+    h += raCurve([{name:'All operated cases', rows:os.rows, km:km}], {title:'Overall survival'});
+    h += raThin(km);
+    h += '<p class="ra-note">Time runs from the date of surgery. A death from any cause counts as an event — '+
+         'died of disease and died of another cause are not separated here.</p>';
+  } else h += '<p class="ra-note">No case yet has both a date of surgery and a follow-up date.</p>';
+  h += raSkipNote(os.skip, 'overall survival');
+
+  h += '<div class="reg-subhead">Local recurrence-free survival</div>';
+  if(lrf.rows.length){
+    const km = raKM(lrf.rows);
+    h += raCurve([{name:'All operated cases', rows:lrf.rows, km:km}], {title:'Local recurrence-free survival'});
+    h += raThin(km);
+    // by margin — the comparison this registry exists to make
+    const r0 = lrf.rows.filter(function(x){ return raMargin(x.r)==='R0'; });
+    const r12 = lrf.rows.filter(function(x){ const m=raMargin(x.r); return m==='R1'||m==='R2'; });
+    if(r0.length && r12.length){
+      const lr = raLogRank(r0, r12);
+      h += '<div class="reg-subhead">Local recurrence-free survival by margin</div>'+
+        raCurve([{name:'R0 — clear margin', rows:r0, km:raKM(r0)},
+                 {name:'R1 / R2 — involved', rows:r12, km:raKM(r12)}], {band:false, title:'LRFS by margin'});
+      h += lr ? ('<p class="ra-note">Log-rank '+raPTxt(lr.p)+' (χ² = '+raFmt(lr.chi2,2)+', 1 df).</p>')
+              : '<p class="ra-note">Too few recurrences yet to compare the two margins.</p>';
+    } else {
+      h += '<p class="ra-note">A margin comparison needs cases on both sides: '+r0.length+' R0 and '+r12.length+' R1/R2 so far.</p>';
+    }
+  } else h += '<p class="ra-note">Nothing to plot yet.</p>';
+  h += raSkipNote(lrf.skip, 'recurrence-free survival');
+
+  h += '<div class="reg-subhead">Metastasis-free survival</div>';
+  if(mfs.rows.length){
+    const km = raKM(mfs.rows);
+    h += raCurve([{name:'All operated cases', rows:mfs.rows, km:km}], {title:'Metastasis-free survival'});
+    h += raThin(km);
+  } else h += '<p class="ra-note">Nothing to plot yet.</p>';
+  h += raSkipNote(mfs.skip, 'metastasis-free survival');
+  return h;
+}
+
+function raRenderOutcomes(R){
+  const op = R.filter(function(r){ return raDate(r.dateSurg); });
+  const tiles = [];
+  const rec = op.filter(function(r){ return raDate(r.out_recurDate); });
+  const mets = op.filter(function(r){ return raDate(r.out_metsDate); });
+  const recT = raMedIQR(rec.map(function(r){ return raMonths(raDays(r.dateSurg, r.out_recurDate)); }));
+  tiles.push(['Operated cases', op.length, 'with a recorded date of surgery']);
+  tiles.push(['Local recurrence', rec.length+' <span class="muted">('+raPct(rec.length, op.length)+'%)</span>',
+              recT ? ('median '+raFmt(recT.med,1)+' months after surgery') : 'of operated cases']);
+  tiles.push(['Metastasis', mets.length+' <span class="muted">('+raPct(mets.length, op.length)+'%)</span>', 'of operated cases']);
+  const limb = op.filter(function(r){ return r.limbPres==='1'; }).length;
+  const amp = op.filter(function(r){ return r.limbPres==='2'; }).length;
+  tiles.push(['Limb spared', (limb+amp) ? (raPct(limb, limb+amp)+'%') : '—', limb+' spared · '+amp+' amputation'+(amp===1?'':'s')]);
+  const cd = op.filter(function(r){ return ['3a','3b','4a','4b','5'].indexOf(String(r.out_cdGrade))>=0; }).length;
+  const cdKnown = op.filter(function(r){ return r.out_cdGrade!=null && r.out_cdGrade!==''; }).length;
+  tiles.push(['Clavien-Dindo ≥ IIIa', cd+' <span class="muted">('+raPct(cd, cdKnown)+'%)</span>',
+              cdKnown ? ('of '+cdKnown+' with a grade recorded') : 'no grades recorded yet']);
+  const rev = op.filter(function(r){ return String(r.out_revDone)==='1'; }).length;
+  tiles.push(['Revision surgery', rev+' <span class="muted">('+raPct(rev, op.length)+'%)</span>', 'of operated cases']);
+
+  let h = '<div class="ra-kpis">'+tiles.map(function(t){
+    return '<div class="ra-kpi"><div class="ak-n">'+t[1]+'</div><div class="ak-l">'+esc(t[0])+'</div><div class="ak-s">'+esc(t[2])+'</div></div>';
+  }).join('')+'</div>';
+
+  const mg = {R0:0,R1:0,R2:0}; let mgKnown = 0;
+  op.forEach(function(r){ const m = raMargin(r); if(m){ mg[m]++; mgKnown++; } });
+  h += regBar('Surgical margin — '+mgKnown+' of '+op.length+' recorded',
+        mgKnown ? [['R0 — clear',mg.R0],['R1 — microscopic',mg.R1],['R2 — macroscopic',mg.R2]] : [['(none recorded)',0]]);
+
+  h += regBar('Surgery type', regCount(op,'surgType').map(function(x){ return [raLab('surgType',x[0]), x[1]]; }));
+  h += regBar('Grade (FNCLCC)', regCount(R,'grade').map(function(x){ return [raLab('grade',x[0]), x[1]]; }));
+  h += regBar('Stage (AJCC 8th)', regCount(R,'stage').map(function(x){ return [raLab('stage',x[0]), x[1]]; }));
+
+  const ms = raMedIQR(R.map(function(r){ return raNum(r.out_mstsLL!=null&&r.out_mstsLL!==''?r.out_mstsLL:(r.out_mstsUL!=null&&r.out_mstsUL!==''?r.out_mstsUL:(r.mstsLL||r.mstsUL))); }));
+  const tess = raMedIQR(R.map(function(r){ return raNum(r.out_tess); }));
+  h += '<div class="reg-subhead">Function at last review</div><table class="list an-tbl"><tbody>'+
+    '<tr><td>MSTS (/30)</td><td>'+raMedTxt(ms,1)+'</td><td class="muted">'+(ms?ms.n:0)+' recorded</td></tr>'+
+    '<tr><td>TESS (/100)</td><td>'+raMedTxt(tess,1)+'</td><td class="muted">'+(tess?tess.n:0)+' recorded</td></tr>'+
+    '</tbody></table>';
+  return h;
+}
+
+function raRenderHealth(R){
+  const today = new Date();
+  const FIELDS = [['dateSurg','Date of surgery'],['margin','Margin status'],['grade','Grade'],
+                  ['stage','Stage'],['primaryTissue','Primary tissue'],['site','Site'],
+                  ['diagnosis','Diagnosis'],['out_status','Status at last follow-up'],
+                  ['out_lastFu','Date of last follow-up']];
+  const miss = FIELDS.map(function(f){
+    const n = R.filter(function(r){ return r[f[0]]==null || String(r[f[0]]).trim()===''; }).length;
+    return [f[1], n];
+  }).filter(function(x){ return x[1]>0; }).sort(function(a,b){ return b[1]-a[1]; });
+
+  const stale = R.filter(function(r){
+    if(raIsDead(r)) return false;
+    const last = raLastKnown(r);
+    if(!last) return true;
+    return (today - last)/RA_MS_DAY > 365;
+  });
+  const lost = R.filter(function(r){ return String(r.out_status)==='5'; });
+  const complete = R.filter(function(r){
+    return FIELDS.every(function(f){ return r[f[0]]!=null && String(r[f[0]]).trim()!==''; });
+  }).length;
+
+  let h = '<div class="ra-kpis">'+
+    '<div class="ra-kpi"><div class="ak-n">'+R.length+'</div><div class="ak-l">Cases</div><div class="ak-s">folders are not counted</div></div>'+
+    '<div class="ra-kpi"><div class="ak-n">'+complete+' <span class="muted">('+raPct(complete,R.length)+'%)</span></div>'+
+      '<div class="ak-l">Complete</div><div class="ak-s">all nine key fields filled</div></div>'+
+    '<div class="ra-kpi'+(stale.length?' ak-warn':'')+'"><div class="ak-n">'+stale.length+'</div>'+
+      '<div class="ak-l">No word in 12 months</div><div class="ak-s">alive at last review</div></div>'+
+    '<div class="ra-kpi"><div class="ak-n">'+lost.length+'</div><div class="ak-l">Marked lost</div>'+
+      '<div class="ak-s">status says lost to follow-up</div></div>'+
+    '</div>';
+
+  h += '<div class="reg-subhead">What is missing</div>';
+  h += miss.length
+    ? regBar('', miss.map(function(m){ return [m[0]+' — missing', m[1]]; }))
+    : '<p class="ra-note">Nothing missing in the nine fields this screen checks. That is unusual and worth keeping.</p>';
+
+  h += '<div class="reg-subhead">Nobody has heard from these in a year</div>';
+  if(!stale.length) h += '<p class="ra-note">Every living case has been seen or spoken to within the last twelve months.</p>';
+  else {
+    const rows = stale.slice().sort(function(a,b){
+      const la = raLastKnown(a), lb = raLastKnown(b);
+      return (la?la.getTime():0) - (lb?lb.getTime():0);
+    }).slice(0,40);
+    h += '<table class="list an-tbl"><thead><tr><th>Reg no</th><th>Name</th><th>Surgery</th><th>Last heard</th><th></th></tr></thead><tbody>'+
+      rows.map(function(r){
+        const last = raLastKnown(r);
+        return '<tr><td>'+esc(r.regNo||'—')+'</td><td>'+esc(r.name||'—')+'</td>'+
+          '<td>'+(r.dateSurg?fmtDate(r.dateSurg):'—')+'</td>'+
+          '<td>'+(last?fmtDate(last.toISOString().slice(0,10)):'<span class="ra-warn-i">never</span>')+'</td>'+
+          '<td class="v-acts"><button class="btn btn-ghost btn-sm" onclick="raOpenCase(\''+r.id+'\')">Open</button></td></tr>';
+      }).join('')+'</tbody></table>'+
+      (stale.length>40 ? '<p class="ra-note">Showing the 40 longest-overdue of '+stale.length+'.</p>' : '');
+  }
+  return h;
+}
+
+function raRenderService(R){
+  const byYear = {}, byMonth = {};
+  R.forEach(function(r){
+    const d = raDate(r.dateSurg) || raDate(r.firstVisit);
+    if(!d) return;
+    const y = d.getFullYear();
+    byYear[y] = (byYear[y]||0)+1;
+    const k = y+'-'+String(d.getMonth()+1).padStart(2,'0');
+    byMonth[k] = (byMonth[k]||0)+1;
+  });
+  const years = Object.keys(byYear).sort();
+  let h = regBar('Cases per year', years.map(function(y){ return [y, byYear[y]]; }));
+
+  const last12 = [];
+  const now = new Date();
+  for(let i=11;i>=0;i--){
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const k = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    last12.push([d.toLocaleString(undefined,{month:'short'})+' '+String(d.getFullYear()).slice(2), byMonth[k]||0]);
+  }
+  h += regBar('The last twelve months', last12);
+
+  const prov = regCount(R,'province').map(function(x){ return [raLab('province',x[0]), x[1]]; });
+  h += regBar('Where they come from', prov.length?prov:[['(not recorded)',0]]);
+
+  const d1 = raMedIQR(R.map(function(r){ return raDays(r.firstVisit, r.dateMdt); }).filter(function(d){ return d!=null && d>=0; }));
+  const d2 = raMedIQR(R.map(function(r){ return raDays(r.dateMdt, r.dateSurg); }).filter(function(d){ return d!=null && d>=0; }));
+  const d3 = raMedIQR(R.map(function(r){ return raDays(r.firstVisit, r.dateSurg); }).filter(function(d){ return d!=null && d>=0; }));
+  h += '<div class="reg-subhead">How long things take</div>'+
+    '<table class="list an-tbl"><thead><tr><th>Interval</th><th>Median (days)</th><th>Cases with both dates</th></tr></thead><tbody>'+
+    '<tr><td>First visit → MDT</td><td>'+raMedTxt(d1,0)+'</td><td class="muted">'+(d1?d1.n:0)+'</td></tr>'+
+    '<tr><td>MDT → surgery</td><td>'+raMedTxt(d2,0)+'</td><td class="muted">'+(d2?d2.n:0)+'</td></tr>'+
+    '<tr><td>First visit → surgery</td><td>'+raMedTxt(d3,0)+'</td><td class="muted">'+(d3?d3.n:0)+'</td></tr>'+
+    '</tbody></table>'+
+    '<p class="ra-note">Only cases that carry both dates are counted, so these are the delays you have '+
+    'recorded, not the delays you have had.</p>';
+  return h;
+}
+
+/* ---- Table 1 ---- */
+const RA_T1 = [
+  ['n', 'Cases', null],
+  ['age', 'Age (years), median [IQR]', 'num'],
+  ['sex', 'Sex', 'cat'],
+  ['primaryTissue', 'Primary tissue', 'cat'],
+  ['site', 'Site', 'cat'],
+  ['nature', 'Nature', 'cat'],
+  ['tumorType', 'Tumour type', 'cat'],
+  ['grade', 'Grade (FNCLCC)', 'cat'],
+  ['stage', 'Stage (AJCC 8th)', 'cat'],
+  ['prevTx', 'Treatment before presentation', 'cat'],
+  ['intent', 'Treatment intent', 'cat'],
+  ['surgType', 'Surgery type', 'cat'],
+  ['limbPres', 'Limb preservation', 'cat'],
+  ['margin', 'Margin status', 'margin'],
+  ['neo_sys', 'Neo-adjuvant systemic therapy', 'cat'],
+  ['adj_sys', 'Adjuvant systemic therapy', 'cat'],
+  ['adj_rt', 'Adjuvant radiotherapy', 'cat'],
+  ['out_cdGrade', 'Highest Clavien-Dindo grade', 'cat'],
+  ['out_status', 'Status at last follow-up', 'cat']
+];
+function raTable1Rows(R){
+  const rows = [];
+  rows.push({lab:'Cases', val:String(R.length), sub:false});
+  RA_T1.forEach(function(f){
+    const key = f[0], lab = f[1], kind = f[2];
+    if(!kind) return;
+    if(kind==='num'){
+      const m = raMedIQR(R.map(function(r){ return raNum(r[key]); }));
+      rows.push({lab:lab, val: m ? (raFmt(m.med,0)+' ['+raFmt(m.q1,0)+'–'+raFmt(m.q3,0)+']') : '—',
+                 miss: R.length - (m?m.n:0), sub:false});
+      return;
+    }
+    const counts = {}; let known = 0;
+    R.forEach(function(r){
+      const v = (kind==='margin') ? raMargin(r) : (r[key]==null||String(r[key]).trim()==='' ? null : String(r[key]));
+      if(v==null) return;
+      counts[v] = (counts[v]||0)+1; known++;
+    });
+    rows.push({lab:lab, val:'', miss:R.length-known, sub:false, head:true});
+    Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; }).forEach(function(v){
+      rows.push({lab:(kind==='margin'? v : raLab(key, v)), sub:true,
+                 val:counts[v]+' ('+raPct(counts[v], known)+'%)'});
+    });
+  });
+  return rows;
+}
+function raRenderTable1(R){
+  const rows = raTable1Rows(R);
+  return '<p class="ra-note">Counts are of the cases where that field is filled in; the last column says how '+
+    'many were blank. Percentages are of the known, which is the convention, and is why they add to 100 '+
+    'even when something is missing.</p>'+
+    '<div class="btn-bar" style="margin-bottom:10px">'+
+      '<button class="btn btn-primary btn-sm" onclick="raCopyTable1()">⧉ Copy for a paper</button>'+
+      '<button class="btn btn-ghost btn-sm" onclick="raDownloadTable1()">⬇ Download as CSV</button>'+
+    '</div>'+
+    '<table class="list an-tbl an-t1"><thead><tr><th>Characteristic</th><th style="width:150px">Value</th><th style="width:110px">Missing</th></tr></thead><tbody>'+
+    rows.map(function(r){
+      return '<tr'+(r.head?' class="t1-head"':'')+'><td'+(r.sub?' class="t1-sub"':'')+'>'+esc(r.lab)+'</td>'+
+        '<td>'+r.val+'</td><td class="muted">'+(r.miss!=null&&r.miss>0?r.miss:'')+'</td></tr>';
+    }).join('')+'</tbody></table>';
+}
+function raTable1Text(sep){
+  const R = raCases();
+  const rows = raTable1Rows(R);
+  return rows.map(function(r){
+    const v = String(r.val).replace(/<[^>]+>/g,'');
+    return [(r.sub?'  ':'')+r.lab, v, (r.miss!=null&&r.miss>0?r.miss:'')].join(sep);
+  }).join('\n');
+}
+function raCopyTable1(){
+  const txt = raTable1Text('\t');
+  const done = function(){ toast('Table 1 copied — paste straight into Word or Excel'); };
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done, function(){ raCopyFallback(txt, done); }); }
+    else raCopyFallback(txt, done);
+  }catch(e){ raCopyFallback(txt, done); }
+}
+function raCopyFallback(txt, done){
+  const ta = document.createElement('textarea');
+  ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){ toast('⚠ Could not copy — select the table and copy it by hand'); }
+  ta.remove();
+}
+function raDownloadTable1(){
+  const csv = '﻿' + 'Characteristic,Value,Missing\n' +
+    raTable1Text('\u0001').split('\n').map(function(line){
+      return line.split('\u0001').map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(',');
+    }).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+  a.download = 'registry-table1-' + localISO() + '.csv';
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ---- jumping from a number to the case behind it ---- */
+function raOpenCase(id){
+  regHideAnalytics();
+  if(typeof regEdit==='function') regEdit(id);
+}
+
+/* ---- the one painter (never-do #54) ---- */
+function raSetTab(which){
+  raTab = which;
+  regRenderAnalytics();
+}
 function regRenderAnalytics(){
-  /* Two things the blueprint already required and this function was not doing.
-     §8: a records-only FOLDER is not a registry case — "excluded from the list, the KPIs,
-     the analytics, the exports…". It was being counted here, so the totals and every rate
-     below them were computed over films-and-reports folders as well as real cases.
-     §10: coded values must read as words. `site` and `primaryTissue` are stored as codes
-     ('1i', '2a'), and the bars were labelled with the codes — unreadable, and the whole
-     point of giving analytics a window of its own is that it gets read. */
-  const R=(db.registry||[]).filter(function(r){ return (typeof regIsCase!=='function') || regIsCase(r); });
-  const host=$('regAnalytics'); if(!host) return;
-  if(!R.length){ host.innerHTML='<div class="empty"><span class="ei">📊</span><b>No data yet</b><br>Add or import entries to see analytics.</div>'; return; }
-  const label=function(key){ return function(rows){ return rows.map(function(x){
-    return [(typeof regLabelFor==='function') ? regLabelFor(key, x[0]) : x[0], x[1]]; }); }; };
-  const tissue=label('primaryTissue')(regCount(R,'primaryTissue'));
-  const site=label('site')(regCount(R,'site').slice(0,10));
-  const margin=[['R0',0],['R1',0],['R2',0]]; R.forEach(r=>{const i=['R0','R1','R2'].indexOf((r.margin||'').toUpperCase()); if(i>=0) margin[i][1]++;});
-  const surg=label('surgType')(regCount(R,'surgType').slice(0,8));
-  const mstsVals=R.map(r=>parseFloat(r.mstsLL||r.mstsUL)).filter(v=>!isNaN(v));
-  const mstsMean = mstsVals.length? (mstsVals.reduce((a,b)=>a+b,0)/mstsVals.length) : null;
-  const opCount=R.filter(r=>r.dateSurg).length;
-  const recCount=R.filter(r=>{const l=(r.lc_tumor||'').toLowerCase();return l.includes('recurrence')||l.includes('metastasis');}).length;
-  host.innerHTML =
-    '<p class="muted small">Across '+R.length+' registry case'+(R.length===1?'':'s')+' · '+opCount+' with a recorded surgery date · local-recurrence/metastasis rate '+
-      (opCount?Math.round(recCount/opCount*100):0)+'%'+(mstsMean!=null?' · mean MSTS '+mstsMean.toFixed(1)+'/30':'')+'.</p>'+
-    regBar('Primary tissue of origin', tissue)+
-    regBar('Surgical margin (R status)', margin.filter(m=>m[1]>0).length?margin:[['(none recorded)',0]])+
-    regBar('Top sites', site)+
-    regBar('Surgery type', surg);
+  const host = $('regAnalytics'); if(!host) return;
+  const R = raCases();
+  const bar = '<div class="ra-tabs">' + RA_TABS.map(function(t){
+    return '<button class="btn btn-sm '+(raTab===t[0]?'btn-primary':'btn-ghost')+'" onclick="raSetTab(\''+t[0]+'\')">'+esc(t[1])+'</button>';
+  }).join('') + '</div>';
+  if(!R.length){
+    host.innerHTML = bar + '<div class="empty"><span class="ei">📊</span><b>No registry cases yet</b><br>Add or import entries to see analytics.</div>';
+    return;
+  }
+  let body = '';
+  try{
+    if(raTab==='survival') body = raRenderSurvival(R);
+    else if(raTab==='outcomes') body = raRenderOutcomes(R);
+    else if(raTab==='health') body = raRenderHealth(R);
+    else if(raTab==='service') body = raRenderService(R);
+    else body = raRenderTable1(R);
+  }catch(e){
+    body = '<p class="ra-warn">Something in this pane could not be worked out: '+esc(e&&e.message||'error')+
+           '. The other panes are unaffected.</p>';
+  }
+  host.innerHTML = bar + body;
 }
 
 /* ---- import the GTTH Excel registry (embedded 104 rows) ---- */
@@ -25156,6 +25803,7 @@ _initStep(()=>{ if(typeof cardsInit==='function') cardsInit(); });
 _initStep(()=>{ if(typeof syncNoticeMaybe==='function') syncNoticeMaybe(); });
 _initStep(()=>{ if(typeof renderNotif==='function') renderNotif(); });
 _initStep(()=>{ if(typeof txtToolsAttach==='function') txtToolsAttach(); });
+_initStep(()=>{ if(typeof brandCycle==='function') brandCycle(); });
 /* app finished starting up — from here, a stray click-time error must NOT show the "startup problem" bar */
 try{ window.__appReady = true; var _beb=document.getElementById('bootErrBar'); if(_beb) _beb.style.display='none'; }catch(e){}
 /* initAuth() has run: either the lock screen is up or the doctor's own first tab is. Show it. */
